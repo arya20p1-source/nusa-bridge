@@ -504,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
     agentRow.className = 'chat-bubble-row';
     agentRow.innerHTML = `
       <div class="agent-avatar-icon">
-        <img src="assets/icons/icon-1.png" alt="AI Agent Icon">
+        <img src="assets/icons/icon-1.webp" alt="AI Agent Icon">
       </div>
       <div class="chat-bubble agent-bubble">${formatAiText(text)}</div>
     `;
@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const msg = currentLang === 'en' ? 'NusaBridge AI is analyzing trade data...' : 'NusaBridge AI sedang menganalisis data...';
     typingRow.innerHTML = `
       <div class="agent-avatar-icon">
-        <img src="assets/icons/icon-1.png" alt="AI Agent Icon">
+        <img src="assets/icons/icon-1.webp" alt="AI Agent Icon">
       </div>
       <div class="chat-bubble agent-bubble" style="font-style: italic; color: #64748b;">
         ${msg}
