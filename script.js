@@ -712,4 +712,249 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ==================== 8. CARGO SHIP MARINE RADAR & TELEMETRY ====================
+  const vesselsData = {
+    baruna: {
+      name: 'KM Baruna Nusantara (IMO 9482104)',
+      status: '🟢 Berlayar (On Schedule)',
+      route: 'Tanjung Priok, ID ➔ Hamburg, DE',
+      speed: 'Kecepatan: 19.4 knots',
+      progress: '68%',
+      eta: 'ETA: 4 Hari Lagi (24 Okt 2026)',
+      cargo: '20 Kontainer (500 MT) Kopi Arabika Gayo',
+      fullRoute: 'Tanjung Priok ➔ Selat Malaka ➔ Terusan Suez ➔ Port of Hamburg'
+    },
+    samudera: {
+      name: 'MV Samudera Raya (IMO 9628101)',
+      status: '🟢 Berlayar Menyeberang Pasifik',
+      route: 'Tanjung Perak, ID ➔ Los Angeles, US',
+      speed: 'Kecepatan: 21.2 knots',
+      progress: '45%',
+      eta: 'ETA: 9 Hari Lagi (29 Okt 2026)',
+      cargo: '15 Kontainer Kerajinan Rotan & Furnitur Ramah Lingkungan',
+      fullRoute: 'Tanjung Perak Surabaya ➔ Laut Banda ➔ Samudera Pasifik ➔ Port of Los Angeles'
+    },
+    celebes: {
+      name: 'KM Celebes Express (IMO 9319800)',
+      status: '🟢 Mendekati Perairan Jepang',
+      route: 'Pelabuhan Belawan, ID ➔ Tokyo, JP',
+      speed: 'Kecepatan: 17.8 knots',
+      progress: '82%',
+      eta: 'ETA: 2 Hari Lagi (20 Okt 2026)',
+      cargo: '12 Kontainer Rempah Cengkeh & Minyak Atsiri Nilam',
+      fullRoute: 'Belawan Medan ➔ Laut Natuna ➔ Taiwan Strait ➔ Port of Tokyo'
+    }
+  };
+
+  const vthShipName = document.getElementById('vthShipName');
+  const vthShipStatus = document.getElementById('vthShipStatus');
+  const vthShipRoute = document.getElementById('vthShipRoute');
+  const vthProgressPct = document.getElementById('vthProgressPct');
+  const vthEtaLabel = document.getElementById('vthEtaLabel');
+  const vthProgressFill = document.getElementById('vthProgressFill');
+
+  function selectVessel(vKey) {
+    const v = vesselsData[vKey];
+    if (!v) return;
+
+    if (vthShipName) vthShipName.innerText = v.name;
+    if (vthShipStatus) vthShipStatus.innerText = v.status;
+    if (vthShipRoute) {
+      vthShipRoute.innerHTML = `<span>${v.route}</span><span class="vth-speed">${v.speed}</span>`;
+    }
+    if (vthProgressPct) vthProgressPct.innerText = v.progress;
+    if (vthEtaLabel) vthEtaLabel.innerText = v.eta;
+    if (vthProgressFill) vthProgressFill.style.width = v.progress;
+
+    // Update active button state
+    document.querySelectorAll('.vqs-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-vessel') === vKey);
+    });
+
+    // Update modal if open
+    const rTitle = document.getElementById('radModalShipTitle');
+    const rCargo = document.getElementById('radModalCargo');
+    const rRoute = document.getElementById('radModalRoute');
+    const rSpeed = document.getElementById('radModalSpeed');
+    const rEta = document.getElementById('radModalEta');
+    if (rTitle) rTitle.innerText = v.name;
+    if (rCargo) rCargo.innerText = v.cargo;
+    if (rRoute) rRoute.innerText = v.fullRoute;
+    if (rSpeed) rSpeed.innerText = v.speed;
+    if (rEta) rEta.innerText = v.eta;
+  }
+
+  // Quick switch buttons
+  document.querySelectorAll('.vqs-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const vKey = btn.getAttribute('data-vessel');
+      selectVessel(vKey);
+    });
+  });
+
+  // Click on SVG vessels directly
+  ['vessel1', 'vessel2', 'vessel3'].forEach((id, idx) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('click', () => {
+        const keys = ['baruna', 'samudera', 'celebes'];
+        selectVessel(keys[idx]);
+        showToast(`📍 Kapal dipilih: ${vesselsData[keys[idx]].name}`);
+      });
+    }
+  });
+
+  // Radar Fullscreen Modal
+  const radarModal = document.getElementById('radarModal');
+  const btnOpenRadarModal = document.getElementById('btnOpenRadarModal');
+  const closeRadarModal = document.getElementById('closeRadarModal');
+
+  if (btnOpenRadarModal && radarModal) {
+    btnOpenRadarModal.addEventListener('click', () => {
+      openModal(radarModal);
+    });
+  }
+  if (closeRadarModal && radarModal) {
+    closeRadarModal.addEventListener('click', () => {
+      closeModal(radarModal);
+    });
+  }
+
+  // ==================== 9. TRANSAKSI ESCROW INTERACTIVE DETAIL ====================
+  const txData = {
+    gayo: {
+      title: 'Kontrak Ekspor #TRX-2026-GY-01',
+      product: 'Kopi Arabika Gayo Specialty Grade 1',
+      buyer: 'Hanseatic Coffee Importers GmbH (Hamburg, Jerman 🇩🇪)',
+      value: 'USD 12,000 (FOB Belawan Port)',
+      volume: '1,400 Kg (GrainPro Hermetic Bags)',
+      status: 'Tahap Negosiasi Sales Contract Akhir',
+      step: 1,
+      escrowPaid: 'USD 3,600 (30% DP siap ditransfer buyer ke Escrow Vault)',
+      docs: ['Draft Sales Contract #SC-088', 'Proforma Invoice #INV-049', 'Sertifikat Uji Organik']
+    },
+    rempah: {
+      title: 'Kontrak Ekspor #TRX-2026-RP-04',
+      product: 'Cengkeh Lal Maluku Kering Pilihan (Cloves)',
+      buyer: 'Spice Orient FZE (Dubai, Uni Emirat Arab 🇦🇪)',
+      value: 'USD 8,750 (CIF Jebel Ali Port)',
+      volume: '1,400 Kg (Double PP Bags)',
+      status: 'Proses Dokumen Kepabeanan & PEB',
+      step: 2,
+      escrowPaid: 'USD 5,250 (Tahap 1 & 2 Tercairkan ke Rekening UMKM)',
+      docs: ['Commercial Invoice Resmi', 'Packing List 56 Colly', 'Draft PEB Beacukai', 'Phytosanitary Cert']
+    },
+    tenun: {
+      title: 'Kontrak Ekspor #TRX-2026-TN-09',
+      product: 'Kain Tenun Ikat Pewarna Alami Sumba',
+      buyer: 'Artisan Heritage Gallery (Amsterdam, Belanda 🇳🇱)',
+      value: 'USD 24,000 (Air Freight Door to Port)',
+      volume: '960 Lembar Tenun Pewarna Herbal',
+      status: 'Dalam Pengiriman Kapal & Pelacakan Laut',
+      step: 3,
+      escrowPaid: 'USD 19,200 (80% Dana Berhasil Masuk Rekening UMKM)',
+      docs: ['Bill of Lading #BL-99214', 'COO Form A/D', 'Insurance Policy', 'Customs Clearance NPE']
+    }
+  };
+
+  const txDetailModal = document.getElementById('txDetailModal');
+  const closeTxModal = document.getElementById('closeTxModal');
+  const btnOkTx = document.getElementById('btnOkTx');
+  const txModalTitle = document.getElementById('txModalTitle');
+  const txModalSub = document.getElementById('txModalSub');
+  const txModalBody = document.getElementById('txModalBody');
+
+  function openTxModal(txKey) {
+    const t = txData[txKey] || txData.gayo;
+    if (!txDetailModal) return;
+
+    if (txModalTitle) txModalTitle.innerText = t.title;
+    if (txModalSub) txModalSub.innerText = `${t.product} • Nilai: ${t.value}`;
+
+    if (txModalBody) {
+      txModalBody.innerHTML = `
+        <div style="background:var(--bg-card-subtle); padding:14px; border-radius:var(--radius-md); font-size:13px; display:flex; flex-direction:column; gap:6px;">
+          <div><strong>Global Buyer:</strong> ${t.buyer}</div>
+          <div><strong>Volume Muatan:</strong> ${t.volume}</div>
+          <div><strong>Status Saat Ini:</strong> <span style="color:#10b981; font-weight:700;">${t.status}</span></div>
+          <div><strong>Pencairan Escrow Vault:</strong> <strong>${t.escrowPaid}</strong></div>
+        </div>
+
+        <div style="margin-top:6px;">
+          <h5 style="font-size:13px; color:var(--navy-title); margin-bottom:8px;">Dokumen Terintegrasi AI Agent:</h5>
+          <div style="display:flex; flex-direction:column; gap:6px; font-size:12.5px;">
+            ${t.docs.map(d => `<div style="display:flex; align-items:center; gap:8px;"><span style="color:#10b981; font-weight:800;">✓</span> ${d} <span style="font-size:10.5px; background:#eff6ff; color:#1b68f8; padding:2px 6px; border-radius:4px; margin-left:auto;">Terverifikasi</span></div>`).join('')}
+          </div>
+        </div>
+
+        <div style="margin-top:8px;">
+          <button class="btn btn-outline btn-block" onclick="alert('Mengunduh paket dokumen ekspor resmi #PDF...')">📄 Download Salinan Dokumen Perdagangan (PDF)</button>
+        </div>
+      `;
+    }
+
+    openModal(txDetailModal);
+  }
+
+  document.querySelectorAll('.interactive-tx').forEach(row => {
+    row.addEventListener('click', () => {
+      const key = row.getAttribute('data-tx');
+      openTxModal(key);
+    });
+  });
+
+  const btnLihatSemuaTx = document.getElementById('btnLihatSemuaTx');
+  if (btnLihatSemuaTx) {
+    btnLihatSemuaTx.addEventListener('click', () => {
+      openTxModal('gayo');
+    });
+  }
+
+  if (closeTxModal) closeTxModal.addEventListener('click', () => closeModal(txDetailModal));
+  if (btnOkTx) btnOkTx.addEventListener('click', () => closeModal(txDetailModal));
+
+  // ==================== 10. MOCKUP SIDEBAR & WIDGET INTERACTIONS ====================
+  document.querySelectorAll('.mockup-nav-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelectorAll('.mockup-nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+
+      const label = item.querySelector('span')?.innerText || '';
+      if (label === 'Produk') {
+        window.location.href = 'produk.html';
+      } else if (label === 'Logistik') {
+        document.querySelector('.marine-radar-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast('🚢 Menampilkan Radar Logistik Maritim Real-Time');
+      } else if (label === 'RFQ Studio') {
+        document.querySelector('.mockup-chat-window')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast('🤖 AI RFQ Studio aktif siap menganalisis permintaan buyer');
+      } else if (label === 'Dokumen') {
+        openModal(demoModal);
+      } else if (label === 'KYC Hub') {
+        showToast('🛡️ KYC Hub: NIB & NPWP Pelaku Usaha Terverifikasi 100%');
+      } else if (label === 'Pengaturan') {
+        showToast('⚙️ Pengaturan profil ekspor dan rekening bank Escrow');
+      } else {
+        showToast('🏠 Dashboard Utama NusaBridge');
+      }
+    });
+  });
+
+  // Notification Icon Click in Mockup
+  const mockupBell = document.querySelector('.mockup-icon-btn');
+  if (mockupBell) {
+    mockupBell.addEventListener('click', () => {
+      showToast('🔔 2 Pesan Baru: Buyer Hamburg menyetujui RFQ; Kapal KM Baruna memasuki rute Selat Malaka.');
+    });
+  }
+
+  // Profile Click in Mockup
+  const mockupProfile = document.querySelector('.mockup-user-profile');
+  if (mockupProfile) {
+    mockupProfile.addEventListener('click', () => {
+      showToast('👤 Akun UMKM Indonesia • Status: Verified Seller (NIB: 129480192841)');
+    });
+  }
+
 });

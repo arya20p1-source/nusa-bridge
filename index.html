@@ -115,11 +115,11 @@
       </a>
 
       <nav class="nav-menu" id="navMenu">
-        <a href="#hero" class="nav-link active" data-i18n="nav_home">Beranda</a>
-        <a href="#produk" class="nav-link" data-i18n="nav_products">Produk</a>
-        <a href="#solusi" class="nav-link" data-i18n="nav_solutions">Solusi AI</a>
+        <a href="index.html" class="nav-link active" data-i18n="nav_home">Beranda</a>
+        <a href="produk.html" class="nav-link" data-i18n="nav_products">Produk</a>
+        <a href="solusi.html" class="nav-link" data-i18n="nav_solutions">Solusi AI</a>
         <a href="#alur-ekspor" class="nav-link" data-i18n="nav_workflow">Alur Ekspor</a>
-        <a href="#harga" class="nav-link" data-i18n="nav_pricing">Harga</a>
+        <a href="harga.html" class="nav-link" data-i18n="nav_pricing">Harga</a>
         <a href="#tentang" class="nav-link" data-i18n="nav_about">Tentang</a>
         <div class="mobile-nav-auth">
           <button class="btn btn-outline btn-block" id="btnMasukMobile" type="button" data-i18n="btn_login">Masuk</button>
@@ -452,7 +452,7 @@
             untuk Pasar Global
           </h2>
         </div>
-        <a href="#produk" class="link-view-all">
+        <a href="produk.html" class="link-view-all">
           <span data-i18n="products_view_all">Lihat Semua Produk</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -883,19 +883,180 @@
 
             <!-- Two Sub-Widgets: Map & Transactions -->
             <div class="mockup-widgets-row">
-              <!-- Left: Peta Logistik -->
-              <div class="mwidget-card">
-                <h4 class="widget-title">Peta Logistik</h4>
-                <div class="widget-map-box">
-                  <img src="assets/map-preview.webp" alt="Peta Logistik Dunia NusaBridge" class="widget-map-img">
+              <!-- Left: Peta Logistik & Radar Kapal Kargo Real-Time -->
+              <div class="mwidget-card marine-radar-card">
+                <div class="radar-card-header">
+                  <div class="radar-title-wrap">
+                    <h4 class="widget-title">Radar Pelayaran Kapal Kargo</h4>
+                    <span class="live-ais-badge">
+                      <span class="live-dot-pulse"></span> LIVE AIS
+                    </span>
+                  </div>
+                  <div class="radar-quick-actions">
+                    <button class="btn-radar-fullscreen" id="btnOpenRadarModal" type="button" title="Perbesar Radar Maritim">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                      <span>Layar Penuh</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Interactive Maritime AIS Radar Canvas Container -->
+                <div class="marine-radar-display" id="marineRadarDisplay">
+                  <!-- Radar Sweep Animation Overlay -->
+                  <div class="radar-sweep-beam"></div>
+
+                  <!-- Grid Lat/Long Lines Overlay -->
+                  <div class="radar-grid-lines"></div>
+
+                  <!-- Ocean SVG Map with Landmasses and Shipping Arcs -->
+                  <svg class="marine-svg-map" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet">
+                    <!-- World Ocean Background & Grid -->
+                    <defs>
+                      <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#0a192f"/>
+                        <stop offset="100%" stop-color="#050e1d"/>
+                      </linearGradient>
+                      <linearGradient id="routeGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#10b981" stop-opacity="0.8"/>
+                        <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.9"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                      </linearGradient>
+                    </defs>
+
+                    <!-- Background Rect -->
+                    <rect width="600" height="340" fill="url(#oceanGrad)"/>
+
+                    <!-- Continent Outlines (Abstract Stylized Vector) -->
+                    <!-- Eurasia & Africa -->
+                    <path class="continent-land" d="M120,40 Q160,35 220,50 Q280,60 360,70 Q420,60 480,90 Q470,130 430,140 Q400,120 370,150 Q340,180 320,180 Q300,160 260,180 Q220,200 200,240 Q170,220 160,170 Q140,150 120,110 Z" fill="#132743" opacity="0.6"/>
+                    <!-- Americas (West) -->
+                    <path class="continent-land" d="M30,60 Q60,80 70,130 Q80,180 60,220 Q40,260 50,300 Q20,280 15,200 Q20,120 30,60 Z" fill="#132743" opacity="0.6"/>
+                    <!-- Indonesian Archipelago & SE Asia (Center-Right Highlighted) -->
+                    <g class="indo-archipelago" transform="translate(350, 190) scale(0.8)">
+                      <!-- Sumatra -->
+                      <path d="M10,25 Q30,10 60,40 Q45,55 15,35 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                      <!-- Java -->
+                      <path d="M55,55 Q90,52 130,60 Q110,68 60,65 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                      <!-- Kalimantan / Borneo -->
+                      <path d="M75,15 Q105,10 115,35 Q95,50 75,30 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                      <!-- Sulawesi -->
+                      <path d="M130,20 Q145,15 140,40 Q155,50 135,55 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                      <!-- Maluku & Papua -->
+                      <path d="M165,30 Q210,25 240,45 Q210,65 170,55 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                    </g>
+                    <!-- Australia (Bottom Right) -->
+                    <path class="continent-land" d="M440,250 Q490,240 520,270 Q510,310 460,315 Q430,290 440,250 Z" fill="#132743" opacity="0.6"/>
+
+                    <!-- Global Shipping Lanes (Curved Geodesic Flight-Radar Style Lines) -->
+                    <!-- Route 1: Jakarta/Priok -> Singapore -> Suez -> Rotterdam/Hamburg -->
+                    <path id="route1" class="shipping-lane animated-lane" d="M395,240 Q330,190 260,170 T150,110 T90,75" fill="none" stroke="url(#routeGlow)" stroke-width="2.2" stroke-dasharray="6,4"/>
+                    <!-- Route 2: Surabaya/Perak -> Pacific -> Los Angeles -->
+                    <path id="route2" class="shipping-lane animated-lane" d="M420,245 Q500,210 560,160 T595,120" fill="none" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="5,3" opacity="0.8"/>
+                    <!-- Route 3: Medan/Belawan -> East Asia / Tokyo -->
+                    <path id="route3" class="shipping-lane animated-lane" d="M375,215 Q410,160 460,120 T510,95" fill="none" stroke="#a7f3d0" stroke-width="1.8" stroke-dasharray="5,3" opacity="0.8"/>
+
+                    <!-- Major Ports (Pusat Pelabuhan Hub) -->
+                    <!-- Tanjung Priok (Jakarta) -->
+                    <g class="port-marker" transform="translate(395, 240)">
+                      <circle r="7" fill="none" stroke="#10b981" stroke-width="1.5" class="port-ping"/>
+                      <circle r="3.5" fill="#10b981"/>
+                      <text x="8" y="4" fill="#ffffff" font-size="8.5" font-weight="700" font-family="'Plus Jakarta Sans', sans-serif">Tanjung Priok (ID)</text>
+                    </g>
+                    <!-- Port of Rotterdam / Hamburg -->
+                    <g class="port-marker" transform="translate(90, 75)">
+                      <circle r="6" fill="none" stroke="#f59e0b" stroke-width="1.5" class="port-ping"/>
+                      <circle r="3" fill="#f59e0b"/>
+                      <text x="-80" y="4" fill="#cbd5e1" font-size="8" font-family="'Plus Jakarta Sans', sans-serif">Hamburg (DE)</text>
+                    </g>
+                    <!-- Port of Tokyo -->
+                    <g class="port-marker" transform="translate(510, 95)">
+                      <circle r="5" fill="none" stroke="#38bdf8" stroke-width="1.5" class="port-ping"/>
+                      <circle r="2.5" fill="#38bdf8"/>
+                      <text x="8" y="4" fill="#cbd5e1" font-size="8" font-family="'Plus Jakarta Sans', sans-serif">Tokyo (JP)</text>
+                    </g>
+                    <!-- Port of Los Angeles (Offshore Indicator) -->
+                    <g class="port-marker" transform="translate(585, 120)">
+                      <circle r="5" fill="none" stroke="#a855f7" stroke-width="1.5" class="port-ping"/>
+                      <circle r="2.5" fill="#a855f7"/>
+                      <text x="-65" y="-6" fill="#cbd5e1" font-size="8" font-family="'Plus Jakarta Sans', sans-serif">Los Angeles (US)</text>
+                    </g>
+
+                    <!-- Active Cargo Ships (Vessels) on Routes -->
+                    <!-- VESSEL 1: KM Baruna Nusantara (En Route to Hamburg) -->
+                    <g class="vessel-icon-group active-vessel" id="vessel1" transform="translate(235, 155)" data-vessel="baruna">
+                      <circle r="14" fill="rgba(16, 185, 129, 0.2)" class="vessel-sonar"/>
+                      <circle r="6" fill="#10b981"/>
+                      <path d="M-5,-3 L7,0 L-5,3 L-3,0 Z" fill="#ffffff" transform="rotate(-150)"/>
+                      <g class="vessel-tag" transform="translate(10, -8)">
+                        <rect width="98" height="18" rx="4" fill="#0f172a" fill-opacity="0.85" stroke="#10b981" stroke-width="1"/>
+                        <text x="6" y="12" fill="#ffffff" font-size="7.5" font-weight="700">🚢 KM Baruna (19.4 kn)</text>
+                      </g>
+                    </g>
+
+                    <!-- VESSEL 2: MV Samudera Raya (En Route to Los Angeles) -->
+                    <g class="vessel-icon-group" id="vessel2" transform="translate(490, 205)" data-vessel="samudera">
+                      <circle r="12" fill="rgba(56, 189, 248, 0.2)" class="vessel-sonar"/>
+                      <circle r="5" fill="#38bdf8"/>
+                      <path d="M-5,-3 L7,0 L-5,3 L-3,0 Z" fill="#ffffff" transform="rotate(-40)"/>
+                      <g class="vessel-tag" transform="translate(8, -8)">
+                        <rect width="104" height="18" rx="4" fill="#0f172a" fill-opacity="0.85" stroke="#38bdf8" stroke-width="1"/>
+                        <text x="6" y="12" fill="#ffffff" font-size="7.5" font-weight="700">🚢 MV Samudera (21.2 kn)</text>
+                      </g>
+                    </g>
+
+                    <!-- VESSEL 3: KM Celebes Express (En Route to Tokyo) -->
+                    <g class="vessel-icon-group" id="vessel3" transform="translate(425, 150)" data-vessel="celebes">
+                      <circle r="12" fill="rgba(245, 158, 11, 0.2)" class="vessel-sonar"/>
+                      <circle r="5" fill="#f59e0b"/>
+                      <path d="M-5,-3 L7,0 L-5,3 L-3,0 Z" fill="#ffffff" transform="rotate(-65)"/>
+                      <g class="vessel-tag" transform="translate(8, -8)">
+                        <rect width="102" height="18" rx="4" fill="#0f172a" fill-opacity="0.85" stroke="#f59e0b" stroke-width="1"/>
+                        <text x="6" y="12" fill="#ffffff" font-size="7.5" font-weight="700">🚢 KM Celebes (17.8 kn)</text>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+
+                <!-- Vessel Telemetry Quick Status Strip (Clickable to switch vessels) -->
+                <div class="vessel-telemetry-hud" id="vesselTelemetryHud">
+                  <div class="vth-vessel-info">
+                    <div class="vth-badge-row">
+                      <span class="vth-name" id="vthShipName">KM Baruna Nusantara</span>
+                      <span class="vth-status-pill green" id="vthShipStatus">🟢 Berlayar (On Schedule)</span>
+                    </div>
+                    <div class="vth-route-row" id="vthShipRoute">
+                      <span>Tanjung Priok, ID ➔ Hamburg, DE</span>
+                      <span class="vth-speed" id="vthShipSpeed">Kecepatan: 19.4 knots</span>
+                    </div>
+                  </div>
+                  
+                  <div class="vth-progress-wrap">
+                    <div class="vth-progress-label">
+                      <span>Progres Pelayaran: <strong id="vthProgressPct">68%</strong></span>
+                      <span id="vthEtaLabel">ETA: 4 Hari Lagi</span>
+                    </div>
+                    <div class="vth-progress-bar">
+                      <div class="vth-progress-fill" id="vthProgressFill" style="width: 68%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Quick Switcher Tabs -->
+                  <div class="vessel-quick-selector">
+                    <button class="vqs-btn active" data-vessel="baruna" type="button">KM Baruna (Eropa)</button>
+                    <button class="vqs-btn" data-vessel="samudera" type="button">MV Samudera (USA)</button>
+                    <button class="vqs-btn" data-vessel="celebes" type="button">KM Celebes (Asia)</button>
+                  </div>
                 </div>
               </div>
 
               <!-- Right: Transaksi Terbaru -->
               <div class="mwidget-card">
-                <h4 class="widget-title">Transaksi Terbaru</h4>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                  <h4 class="widget-title" style="margin-bottom:0;">Transaksi Terbaru</h4>
+                  <small style="color:var(--primary); font-weight:700; cursor:pointer;" id="btnLihatSemuaTx">Lihat Detail →</small>
+                </div>
                 <div class="tx-list">
-                  <div class="tx-row">
+                  <div class="tx-row interactive-tx" data-tx="gayo" style="cursor:pointer;" title="Klik untuk lihat detail transaksi">
                     <img src="assets/tx-thumb-1.webp" alt="Kopi Arabika Gayo" class="tx-thumb">
                     <div class="tx-details">
                       <span class="tx-name">Kopi Arabika Gayo</span>
@@ -904,7 +1065,7 @@
                     <span class="tx-badge badge-blue">Negosiasi</span>
                   </div>
 
-                  <div class="tx-row">
+                  <div class="tx-row interactive-tx" data-tx="rempah" style="cursor:pointer;" title="Klik untuk lihat detail transaksi">
                     <img src="assets/tx-thumb-2.webp" alt="Rempah Nusantara" class="tx-thumb">
                     <div class="tx-details">
                       <span class="tx-name">Rempah Nusantara</span>
@@ -913,7 +1074,7 @@
                     <span class="tx-badge badge-blue">Proses Dokumen</span>
                   </div>
 
-                  <div class="tx-row">
+                  <div class="tx-row interactive-tx" data-tx="tenun" style="cursor:pointer;" title="Klik untuk lihat detail transaksi">
                     <img src="assets/tx-thumb-3.webp" alt="Tenun Ikat" class="tx-thumb">
                     <div class="tx-details">
                       <span class="tx-name">Tenun Ikat</span>
@@ -1139,10 +1300,11 @@
         <div class="footer-col-links">
           <h4 class="footer-col-title">Navigasi</h4>
           <ul class="footer-links-list">
-            <li><a href="#hero">Beranda</a></li>
-            <li><a href="#produk">Produk</a></li>
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="produk.html">Katalog Produk</a></li>
+            <li><a href="solusi.html">Solusi AI</a></li>
             <li><a href="#alur-ekspor">Alur Ekspor</a></li>
-            <li><a href="#harga">Harga</a></li>
+            <li><a href="harga.html">Paket &amp; Harga</a></li>
             <li><a href="#tentang">Tentang Kami</a></li>
           </ul>
         </div>
@@ -1270,6 +1432,133 @@
       </div>
       <div style="text-align: right; margin-top: 20px;">
         <button class="btn btn-primary" id="btnOkInfo">Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Cargo Ship Live Radar Modal -->
+  <div class="modal-overlay" id="radarModal">
+    <div class="modal-card radar-modal-card">
+      <button class="modal-close-btn" id="closeRadarModal">&times;</button>
+      <div class="modal-header">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+          <div>
+            <div class="pill-badge pill-blue">MARITIME AIS FLIGHT-RADAR SYSTEM</div>
+            <h3 class="modal-title" style="color:#ffffff; margin-top:4px;">Peta Pelayaran Kapal Kargo Real-Time</h3>
+          </div>
+          <span class="live-ais-badge" style="font-size:12px; padding:4px 12px;">
+            <span class="live-dot-pulse"></span> SATELLITE LIVE TRACKING
+          </span>
+        </div>
+      </div>
+      
+      <div class="radar-modal-body">
+        <div class="radar-modal-canvas-box">
+          <div class="marine-radar-display" style="height: 100%;">
+            <div class="radar-sweep-beam"></div>
+            <div class="radar-grid-lines"></div>
+            <svg class="marine-svg-map" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet">
+              <rect width="600" height="340" fill="#071224"/>
+              <!-- Continents -->
+              <path d="M120,40 Q160,35 220,50 Q280,60 360,70 Q420,60 480,90 Q470,130 430,140 Q400,120 370,150 Q340,180 320,180 Q300,160 260,180 Q220,200 200,240 Q170,220 160,170 Q140,150 120,110 Z" fill="#142c4c" opacity="0.8"/>
+              <path d="M30,60 Q60,80 70,130 Q80,180 60,220 Q40,260 50,300 Q20,280 15,200 Q20,120 30,60 Z" fill="#142c4c" opacity="0.8"/>
+              <g transform="translate(350, 190) scale(0.8)">
+                <path d="M10,25 Q30,10 60,40 Q45,55 15,35 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                <path d="M55,55 Q90,52 130,60 Q110,68 60,65 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                <path d="M75,15 Q105,10 115,35 Q95,50 75,30 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                <path d="M130,20 Q145,15 140,40 Q155,50 135,55 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                <path d="M165,30 Q210,25 240,45 Q210,65 170,55 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+              </g>
+              <path d="M440,250 Q490,240 520,270 Q510,310 460,315 Q430,290 440,250 Z" fill="#142c4c" opacity="0.8"/>
+              <!-- Routes -->
+              <path d="M395,240 Q330,190 260,170 T150,110 T90,75" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="6,4" class="animated-lane"/>
+              <path d="M420,245 Q500,210 560,160 T595,120" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6,4" class="animated-lane"/>
+              <path d="M375,215 Q410,160 460,120 T510,95" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4" class="animated-lane"/>
+              <!-- Ports -->
+              <circle cx="395" cy="240" r="5" fill="#10b981"/>
+              <text x="404" y="244" fill="#ffffff" font-size="9" font-weight="700">Tanjung Priok, ID</text>
+              <circle cx="90" cy="75" r="5" fill="#f59e0b"/>
+              <text x="12" y="78" fill="#cbd5e1" font-size="9">Hamburg, DE</text>
+              <circle cx="510" cy="95" r="5" fill="#38bdf8"/>
+              <text x="518" y="99" fill="#cbd5e1" font-size="9">Tokyo, JP</text>
+              <!-- Ships -->
+              <g id="modalVessel1" transform="translate(235, 155)">
+                <circle r="16" fill="rgba(16, 185, 129, 0.25)" class="vessel-sonar"/>
+                <circle r="7" fill="#10b981"/>
+                <path d="M-6,-4 L8,0 L-6,4 L-4,0 Z" fill="#ffffff" transform="rotate(-150)"/>
+                <text x="12" y="4" fill="#34d399" font-size="9" font-weight="700">KM Baruna (19.4 kn)</text>
+              </g>
+              <g id="modalVessel2" transform="translate(490, 205)">
+                <circle r="14" fill="rgba(56, 189, 248, 0.25)" class="vessel-sonar"/>
+                <circle r="6" fill="#38bdf8"/>
+                <path d="M-6,-4 L8,0 L-6,4 L-4,0 Z" fill="#ffffff" transform="rotate(-40)"/>
+                <text x="12" y="4" fill="#38bdf8" font-size="9" font-weight="700">MV Samudera (21.2 kn)</text>
+              </g>
+              <g id="modalVessel3" transform="translate(425, 150)">
+                <circle r="14" fill="rgba(245, 158, 11, 0.25)" class="vessel-sonar"/>
+                <circle r="6" fill="#f59e0b"/>
+                <path d="M-6,-4 L8,0 L-6,4 L-4,0 Z" fill="#ffffff" transform="rotate(-65)"/>
+                <text x="12" y="4" fill="#f59e0b" font-size="9" font-weight="700">KM Celebes (17.8 kn)</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="radar-telemetry-panel">
+          <h4 style="color:#ffffff; font-size:14px; margin-bottom:4px;" id="radModalShipTitle">KM Baruna Nusantara (IMO 9482104)</h4>
+          <span style="color:#10b981; font-size:11.5px; font-weight:700;">🟢 Sea Voyage (Dalam Pelayaran Samudera)</span>
+          
+          <div class="rtp-row">
+            <span>Muatan Kontainer:</span>
+            <span id="radModalCargo">20 Kontainer Kopi Arabika Gayo</span>
+          </div>
+          <div class="rtp-row">
+            <span>Rute &amp; Koridor:</span>
+            <span id="radModalRoute">Tanjung Priok ➔ Terusan Suez ➔ Hamburg</span>
+          </div>
+          <div class="rtp-row">
+            <span>Kecepatan Saat Ini:</span>
+            <span id="radModalSpeed">19.4 Knots (36.0 km/h)</span>
+          </div>
+          <div class="rtp-row">
+            <span>Haluan Kapal:</span>
+            <span>285° WNW (Barat Laut)</span>
+          </div>
+          <div class="rtp-row">
+            <span>Kondisi Cuaca Maritim:</span>
+            <span>Ombak 1.2m • Angin 14 Knots (Tenang)</span>
+          </div>
+          <div class="rtp-row">
+            <span>Suhu Kontainer (Reefer):</span>
+            <span style="color:#38bdf8;">21.5°C • Kelembapan 62% (Optimal)</span>
+          </div>
+          <div class="rtp-row">
+            <span>Estimasi Tiba (ETA):</span>
+            <span style="color:#f59e0b;" id="radModalEta">24 Oktober 2026 (4 Hari)</span>
+          </div>
+          
+          <div style="margin-top:8px;">
+            <button class="btn btn-primary btn-block" onclick="alert('Laporan telemetri sensor maritim lengkap terverifikasi oleh NusaBridge AI.')">Download Laporan Manifest Pelayaran (PDF)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detail Transaksi Escrow -->
+  <div class="modal-overlay" id="txDetailModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="closeTxModal">&times;</button>
+      <div class="modal-header">
+        <div class="pill-badge pill-blue">ESCROW VAULT TRANSACTION</div>
+        <h3 class="modal-title" id="txModalTitle">Detail Transaksi Ekspor</h3>
+        <p class="modal-subtitle" id="txModalSub">Status verifikasi dokumen, pencairan dana bertahap, dan pelacakan pesanan.</p>
+      </div>
+      <div class="modal-body-tx" id="txModalBody" style="display:flex; flex-direction:column; gap:14px; margin-top:12px;">
+        <!-- Rendered by JS -->
+      </div>
+      <div style="text-align:right; margin-top:18px;">
+        <button class="btn btn-primary" id="btnOkTx">Tutup</button>
       </div>
     </div>
   </div>
