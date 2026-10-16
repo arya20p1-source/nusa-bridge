@@ -19,8 +19,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
   
-  <!-- Main CSS -->
+  <!-- Main & Modular CSS -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/harga.css">
 </head>
 <body class="page-harga">
 
@@ -428,108 +429,10 @@
     </div>
   </div>
 
-  <!-- Main JavaScript -->
+  <!-- Main Global JavaScript -->
   <script src="script.js"></script>
 
-  <!-- Pricing Calculator & Toggle Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1. Billing Toggle (Monthly vs Yearly)
-      const btnBillingToggle = document.getElementById('btnBillingToggle');
-      const labelMonthly = document.getElementById('labelMonthly');
-      const labelYearly = document.getElementById('labelYearly');
-      const pricePro = document.getElementById('pricePro');
-      const periodPro = document.getElementById('periodPro');
-
-      let isYearly = false;
-
-      function updatePricing() {
-        if (isYearly) {
-          btnBillingToggle.classList.add('active');
-          labelMonthly.classList.remove('active');
-          labelYearly.classList.add('active');
-          pricePro.innerText = '239.000';
-          periodPro.innerText = '/ bulan (ditagih tahunan)';
-        } else {
-          btnBillingToggle.classList.remove('active');
-          labelMonthly.classList.add('active');
-          labelYearly.classList.remove('active');
-          pricePro.innerText = '299.000';
-          periodPro.innerText = '/ bulan';
-        }
-      }
-
-      if (btnBillingToggle) {
-        btnBillingToggle.addEventListener('click', () => {
-          isYearly = !isYearly;
-          updatePricing();
-        });
-      }
-
-      // 2. Select Plan Buttons
-      const authModal = document.getElementById('authModal');
-      const selectedPlanInput = document.getElementById('selectedPlanInput');
-
-      document.querySelectorAll('.btn-select-plan').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const planName = btn.getAttribute('data-plan');
-          if (selectedPlanInput) selectedPlanInput.value = `${planName} (${isYearly ? 'Tahunan' : 'Bulanan'})`;
-          if (authModal) authModal.classList.add('show');
-        });
-      });
-
-      // 3. Margin & Profit Calculator
-      const calcContractVal = document.getElementById('calcContractVal');
-      const calcProdCost = document.getElementById('calcProdCost');
-      const calcFreightCost = document.getElementById('calcFreightCost');
-      const calcEscrowFee = document.getElementById('calcEscrowFee');
-      const calcNetProfitUSD = document.getElementById('calcNetProfitUSD');
-      const calcNetProfitIDR = document.getElementById('calcNetProfitIDR');
-      const calcMarginPct = document.getElementById('calcMarginPct');
-      const calcDpAmount = document.getElementById('calcDpAmount');
-
-      const USD_TO_IDR = 16000;
-
-      function recalculate() {
-        const contract = parseFloat(calcContractVal.value) || 0;
-        const prod = parseFloat(calcProdCost.value) || 0;
-        const freight = parseFloat(calcFreightCost.value) || 0;
-
-        const escrow = contract * 0.012; // 1.2%
-        const totalCost = prod + freight + escrow;
-        const netProfit = Math.max(0, contract - totalCost);
-        const marginPct = contract > 0 ? ((netProfit / contract) * 100).toFixed(1) : 0;
-        const dp = contract * 0.3; // 30%
-
-        calcEscrowFee.value = `USD ${escrow.toLocaleString('en-US', { maximumFractionDigits: 1 })}`;
-        calcNetProfitUSD.innerText = `USD ${netProfit.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-        calcNetProfitIDR.innerText = `≈ Rp ${(netProfit * USD_TO_IDR).toLocaleString('id-ID')} ,-`;
-        calcMarginPct.innerText = `${marginPct}%`;
-        calcDpAmount.innerText = `USD ${dp.toLocaleString('en-US')} (Rp ${(dp * USD_TO_IDR / 1000000).toFixed(1)} Jt)`;
-      }
-
-      [calcContractVal, calcProdCost, calcFreightCost].forEach(inp => {
-        if (inp) inp.addEventListener('input', recalculate);
-      });
-
-      const btnKonsul = document.getElementById('btnKonsultasiKalkulator');
-      if (btnKonsul) {
-        btnKonsul.addEventListener('click', () => {
-          const contract = calcContractVal.value;
-          const profit = calcNetProfitUSD.innerText;
-          const waUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Tim NusaBridge, saya telah menghitung estimasi transaksi ekspor senilai USD ${contract} dengan estimasi net profit ${profit}. Mohon asistensi untuk eksekusi kontrak ini.`)}`;
-          window.open(waUrl, '_blank');
-        });
-      }
-
-      // 4. Accordion FAQ
-      document.querySelectorAll('.faq-question').forEach(qBtn => {
-        qBtn.addEventListener('click', () => {
-          const item = qBtn.parentElement;
-          item.classList.toggle('active');
-        });
-      });
-    });
-  </script>
+  <!-- Pricing Page Specific JavaScript -->
+  <script src="js/harga.js"></script>
 </body>
 </html>

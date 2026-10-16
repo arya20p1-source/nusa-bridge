@@ -19,8 +19,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
   
-  <!-- Main CSS -->
+  <!-- Main & Modular CSS -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/solusi.css">
 </head>
 <body class="page-solusi">
 
@@ -535,118 +536,8 @@
     </div>
   </div>
 
-  <!-- Main JavaScript -->
+  <!-- Main JavaScript & Modular Scripts -->
   <script src="script.js"></script>
-
-  <!-- Simulator Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const btnRun = document.getElementById('btnRunSimulator');
-      const sopGrid = document.getElementById('sopGridContent');
-
-      const simDatabase = {
-        kopi: {
-          hs: '0901.11.10 (Biji Kopi Arabika)',
-          jerman: {
-            route: 'Belawan ➔ Singapore ➔ Port of Rotterdam / Hamburg',
-            transit: '26 - 28 Hari Pelayaran Laut',
-            docs: ['Commercial Invoice & Packing List', 'Certificate of Origin (COO Form A/D)', 'Phytosanitary Certificate', 'Sertifikat Uji Residu Bebas Pestisida EU'],
-            duty: '0% (GSP Scheme / IEU-CEPA Pending)',
-            compliance: 'EU Deforestation Regulation (EUDR) Geolocation Tagging Wajib'
-          },
-          usa: {
-            route: 'Tanjung Priok ➔ Los Angeles / Long Beach',
-            transit: '22 - 25 Hari Pelayaran Laut',
-            docs: ['FDA Prior Notice Confirmation', 'Commercial Invoice', 'Packing List', 'Bill of Lading'],
-            duty: '0% Tarif Masuk Biji Kopi',
-            compliance: 'Registrasi Fasilitas Pangan FDA USA & Bioterrorism Act Compliance'
-          },
-          jepang: {
-            route: 'Tanjung Priok ➔ Tokyo / Yokohama',
-            transit: '12 - 14 Hari Pelayaran Laut',
-            docs: ['Certificate of Origin (IJEPPA Form)', 'Phytosanitary', 'CoA Uji Ochratoxin A'],
-            duty: '0% dengan Skema IJEPPA',
-            compliance: 'Pemeriksaan Positif List MRL (Maksimum Residu Pestisida) MHLW Jepang'
-          }
-        },
-        rempah: {
-          hs: '0907.10.00 (Cengkeh) / 0908.11.00 (Pala)',
-          jerman: {
-            route: 'Tanjung Perak ➔ Hamburg Port',
-            transit: '28 Hari Pelayaran',
-            docs: ['Invoice & Packing List', 'Phytosanitary Certificate', 'Aflatoxin Lab Test Certificate'],
-            duty: '0%',
-            compliance: 'Batas Maksimum Mikotoksin & Fumigasi Bebas Serangga'
-          },
-          usa: {
-            route: 'Tanjung Priok ➔ Port of New York',
-            transit: '32 Hari (via Suez)',
-            docs: ['FDA Food Facility Reg', 'Phytosanitary', 'Packing List'],
-            duty: '0%',
-            compliance: 'Uji ASTA Cleanliness Standard & Bebas Logam Berat'
-          }
-        }
-      };
-
-      function renderAnalysis() {
-        const comm = document.getElementById('simCommodity').value;
-        const country = document.getElementById('simCountry').value;
-        const vol = document.getElementById('simVolume').value;
-
-        const dataComm = simDatabase[comm] || simDatabase.kopi;
-        const dataCountry = dataComm[country] || dataComm.jerman || simDatabase.kopi.jerman;
-
-        sopGrid.innerHTML = `
-          <div class="sop-col">
-            <h5>Jalur &amp; Estimasi Transit</h5>
-            <div class="sop-val-big">${dataCountry.transit}</div>
-            <p class="sop-desc"><strong>Rute Pelayaran:</strong> ${dataCountry.route}</p>
-            <p class="sop-desc"><strong>Volume Pengiriman:</strong> ${vol}</p>
-            <div class="sop-badge green">🚢 Jalur Kapal Kargo Terjadwal</div>
-          </div>
-          <div class="sop-col">
-            <h5>Dokumen Ekspor yang Wajib Diterbitkan AI:</h5>
-            <ul class="sop-list">
-              ${dataCountry.docs.map(d => `<li><span>✓</span> ${d}</li>`).join('')}
-            </ul>
-          </div>
-          <div class="sop-col">
-            <h5>Tarif Bea Cukai &amp; Kepatuhan Mutu:</h5>
-            <div class="sop-highlight-box">
-              <div class="shb-row"><span>Perkiraan Bea Masuk:</span> <strong>${dataCountry.duty}</strong></div>
-              <div class="shb-row"><span>Ketentuan Khusus:</span> <strong>${dataCountry.compliance}</strong></div>
-              <div class="shb-row"><span>HS Code Rekomendasi:</span> <code>${dataComm.hs || '0901.11.10'}</code></div>
-            </div>
-            <div class="sop-btn-wrap">
-              <a href="https://wa.me/6281234567890?text=${encodeURIComponent(`Halo Tim NusaBridge AI, saya telah menjalankan simulasi ekspor komoditas ${comm} ke negara ${country} volume ${vol}. Mohon asistensi penerbitan dokumen ekspor.`)}" target="_blank" class="btn btn-primary btn-sm btn-block">Konsultasikan Hasil via WhatsApp</a>
-            </div>
-          </div>
-        `;
-      }
-
-      if (btnRun) {
-        btnRun.addEventListener('click', () => {
-          btnRun.innerText = 'Menganalisis Parameter...';
-          setTimeout(() => {
-            renderAnalysis();
-            btnRun.innerText = 'Jalankan Analisis AI Agent';
-            document.getElementById('simOutputPanel').scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 400);
-        });
-      }
-
-      // Initial run
-      renderAnalysis();
-
-      // CTA button
-      const btnDaftarSolusi = document.getElementById('btnDaftarSolusi');
-      if (btnDaftarSolusi) {
-        btnDaftarSolusi.addEventListener('click', () => {
-          const authModal = document.getElementById('authModal');
-          if (authModal) authModal.classList.add('show');
-        });
-      }
-    });
-  </script>
+  <script src="js/solusi.js"></script>
 </body>
 </html>
