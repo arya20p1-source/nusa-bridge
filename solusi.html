@@ -127,63 +127,24 @@
       
       <div class="gemini-chat-container">
         
-        <!-- Sidebar Skenario & Quick Prompts -->
-        <aside class="gemini-chat-sidebar">
-          <div class="gcs-title">Skenario Ekspor Cepat</div>
-          
-          <div class="scenario-list">
-            <button class="btn-scenario-item active" data-scenario="hamburg" type="button">
-              <span class="bsi-tag">BUYER JERMAN (CIF)</span>
-              <span class="bsi-name">Hanseatic Importers Hamburg</span>
-              <span class="bsi-desc">20 MT Kopi Robusta Lampung CIF Hamburg</span>
-            </button>
-
-            <button class="btn-scenario-item" data-scenario="los-angeles" type="button">
-              <span class="bsi-tag">BUYER USA (FDA)</span>
-              <span class="bsi-name">Pacific Spice Los Angeles</span>
-              <span class="bsi-desc">5 MT Cengkeh Lalpari CIF LA Port</span>
-            </button>
-
-            <button class="btn-scenario-item" data-scenario="tokyo" type="button">
-              <span class="bsi-tag">BUYER JEPANG (FOB)</span>
-              <span class="bsi-name">Tokyo Living Design Co.</span>
-              <span class="bsi-desc">2.000 Pcs Kursi Rotan FOB Tg Priok</span>
-            </button>
-
-            <button class="btn-scenario-item" data-scenario="kyc" type="button">
-              <span class="bsi-tag">AUDIT LEGALITAS</span>
-              <span class="bsi-name">Cek Status NIB &amp; Standar Mutu</span>
-              <span class="bsi-desc">Validasi OSS NIB &amp; Regulasi EUDR Eropa</span>
-            </button>
-
-            <button class="btn-scenario-item" data-scenario="escrow" type="button">
-              <span class="bsi-tag">SMART ESCROW</span>
-              <span class="bsi-name">Simulasi 4 Fase Escrow Vault</span>
-              <span class="bsi-desc">Alur Pencairan DP 30% s/d Pelunasan</span>
-            </button>
-          </div>
-
-          <div class="gcs-sdk-badge">
-            <strong>⚡ Powered by Google GenAI</strong>
-            <span>Model: Gemini 1.5 Flash (@google/genai SDK) dengan 4 Pilar NusaBridge.</span>
-          </div>
-        </aside>
-
-        <!-- Main Chat Area -->
+        <!-- Main Chat Area (Gemini-Style Clean Interface) -->
         <main class="gemini-chat-main">
           
           <!-- Chat Header -->
           <div class="gcm-header">
             <div class="gcm-agent-info">
-              <div class="gcm-avatar">🤖</div>
+              <div class="gcm-avatar">✨</div>
               <div class="gcm-agent-text">
-                <strong>NusaBridge Gemini AI Agent</strong>
-                <span>Aktif &bull; Terhubung ke Google GenAI Engine</span>
+                <strong>NusaBridge Gemini AI</strong>
+                <span>Aktif &bull; Asisten Ekspor-Impor Cerdas UMKM</span>
               </div>
             </div>
             <div class="gcm-actions">
               <button class="btn-clear-chat" id="btnClearChatHistory" type="button" title="Bersihkan riwayat percakapan">
-                🔄 Bersihkan Chat
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                <span>Bersihkan Chat</span>
               </button>
             </div>
           </div>
@@ -195,24 +156,9 @@
 
           <!-- Chat Input Footer -->
           <div class="gcm-footer">
-            <!-- Quick Suggestion Chips -->
-            <div class="quick-suggestion-chips">
-              <span class="qsc-label">Rekomendasi Prompt:</span>
-              <button class="btn-chip-prompt" data-prompt="Halo NusaBridge AI, saya Hanseatic Importers dari Hamburg, Jerman. Saya bermaksud mengimpor 20 Metric Ton (MT) Kopi Robusta Lampung dari UMKM Indonesia dengan skema pengiriman CIF Hamburg Port. Tolong hitungkan estimasi biayanya, cek verifikasi seller, dan buatkan draf kontrak serta skema pembayarannya." type="button">
-                ☕ Buyer Hamburg: 20 MT Kopi Robusta CIF
-              </button>
-              <button class="btn-chip-prompt" data-prompt="Berapa estimasi biaya ekspor 5 MT Cengkeh Lalpari ke Los Angeles dan apa syarat izin FDA?" type="button">
-                🌿 Cengkeh ke USA (FDA)
-              </button>
-              <button class="btn-chip-prompt" data-prompt="Jelaskan alur pencairan dana bertahap 4 fase di Escrow Vault NusaBridge!" type="button">
-                🔒 Alur 4 Fase Escrow
-              </button>
-            </div>
-
-            <!-- Form Input Chat -->
             <form class="chat-input-form" id="geminiChatForm" onsubmit="return false;">
-              <textarea id="geminiUserPromptInput" class="chat-textarea" placeholder="Ketik pesan atau konsultasikan penawaran ekspor Anda di sini... (Tekan Enter untuk mengirim)" rows="1"></textarea>
-              <button class="btn-send-message" id="btnSendGeminiPrompt" type="button">
+              <textarea id="geminiUserPromptInput" class="chat-textarea" placeholder="Tanyakan apa saja seputar ekspor, harga komoditas, atau perhitungan biaya... (Tekan Enter untuk kirim)" rows="1"></textarea>
+              <button class="btn-send-message" id="btnSendGeminiPrompt" type="button" aria-label="Kirim Pesan">
                 <span>Kirim</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -220,6 +166,9 @@
                 </svg>
               </button>
             </form>
+            <div class="chat-input-disclaimer">
+              <span>NusaBridge Gemini AI siap membantu analisis ekspor real-time. Ketik pertanyaan Anda secara bebas untuk memulai konsultasi.</span>
+            </div>
           </div>
 
         </main>
@@ -783,6 +732,7 @@
   </div>
 
   <!-- Main JavaScript & Modular Scripts -->
+  <script src="js/products-data.js"></script>
   <script src="js/script.js"></script>
   <script src="js/solusi.js"></script>
 </body>

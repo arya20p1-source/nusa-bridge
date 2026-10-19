@@ -31,77 +31,30 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /**
-   * Parser Markdown sederhana untuk menghasilkan tampilan khas Google Gemini:
-   * - Heading (###, ##, #)
-   * - Blockquote / Tips Callout (> quote)
-   * - Bold (**teks**) dan Italic (*teks*)
-   * - List bernomor dan bullet points
-   * - Inline code tag
+   * Pembersih & Pemformat Teks Gemini Alami (Tanpa Tag HTML Rumit)
+   * Menampilkan teks percakapan alami, santun, dan bersih persis seperti Google Gemini resmi.
    */
-  function renderGeminiMarkdown(rawText) {
+  function formatGeminiText(rawText) {
     if (!rawText) return '';
-    // Jika teks sudah berisi struktur kartu HTML visual kustom, return langsung
-    if (rawText.includes('<div class="chat-pilar-card"') || rawText.includes('<div class="gemini-callout-box"')) {
-      return rawText;
-    }
+    let text = String(rawText);
 
-    let text = String(rawText).trim();
+    // 1. Bersihkan semua tag HTML jika ada agar tidak ada tag yang terlihat di layar
+    text = text.replace(/<[^>]*>/g, '');
 
-    // Escape tag HTML berisiko
-    text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-    // Headings
-    text = text.replace(/^### (.*$)/gim, '<h5 class="gemini-heading"><span class="gh-icon">🔹</span> $1</h5>');
-    text = text.replace(/^## (.*$)/gim, '<h4 class="gemini-heading"><span class="gh-icon">📌</span> $1</h4>');
-    text = text.replace(/^# (.*$)/gim, '<h4 class="gemini-heading-main">$1</h4>');
-
-    // Callout Box (> kutipan / tips)
-    text = text.replace(/^&gt; (.*$)/gim, '<div class="gemini-callout-box"><span class="gcb-icon">💡</span><div class="gcb-text">$1</div></div>');
-
-    // Bold, Italic, Code
+    // 2. Format markdown bold standar: **teks** menjadi <strong>teks</strong>
     text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    text = text.replace(/`([^`]+)`/g, '<code class="gemini-inline-code">$1</code>');
 
-    // List and Paragraph processing
-    const lines = text.split('\n');
-    const processed = [];
-    let inUl = false;
-    let inOl = false;
+    // 3. Rapikan markdown header (### Judul -> <strong>Judul</strong>)
+    text = text.replace(/^#{1,6}\s*(.*$)/gm, '<strong>$1</strong>');
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      const trimmed = line.trim();
+    // 4. Rapikan kutipan markdown (> teks -> 💡 teks)
+    text = text.replace(/^>\s*/gm, '💡 ');
 
-      const bulletMatch = line.match(/^(\s*)([-*•])\s+(.*)/);
-      const numberMatch = line.match(/^(\s*)(\d+)\.\s+(.*)/);
+    // 5. Ubah baris baru menjadi <br>
+    text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    text = text.replace(/\n/g, '<br>');
 
-      if (bulletMatch) {
-        if (inOl) { processed.push('</ol>'); inOl = false; }
-        if (!inUl) { processed.push('<ul class="gemini-list">'); inUl = true; }
-        processed.push(`<li>${bulletMatch[3]}</li>`);
-      } else if (numberMatch) {
-        if (inUl) { processed.push('</ul>'); inUl = false; }
-        if (!inOl) { processed.push('<ol class="gemini-ordered-list">'); inOl = true; }
-        processed.push(`<li>${numberMatch[3]}</li>`);
-      } else {
-        if (inUl) { processed.push('</ul>'); inUl = false; }
-        if (inOl) { processed.push('</ol>'); inOl = false; }
-
-        if (trimmed.length > 0) {
-          if (trimmed.startsWith('<h') || trimmed.startsWith('<div') || trimmed.startsWith('<ul') || trimmed.startsWith('<ol')) {
-            processed.push(trimmed);
-          } else {
-            processed.push(`<p class="gemini-p">${trimmed}</p>`);
-          }
-        }
-      }
-    }
-
-    if (inUl) processed.push('</ul>');
-    if (inOl) processed.push('</ol>');
-
-    return processed.join('\n');
+    return text;
   }
 
   function appendChatBubble(sender, rawText, headerLabel) {
@@ -111,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     row.className = `chat-bubble-row ${isUser ? 'user-row' : 'agent-row'}`;
 
     const formattedTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    const renderedContent = isUser ? rawText.trim().replace(/\n/g, '<br>') : renderGeminiMarkdown(rawText);
+    const renderedContent = formatGeminiText(rawText);
 
     row.innerHTML = `
       <div class="cbr-avatar">${isUser ? '👤' : '🤖'}</div>
@@ -137,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="cbr-avatar">🤖</div>
       <div class="cbr-content" style="padding:10px 14px;">
         <div class="typing-indicator">
-          <span>Gemini AI Agent menganalisis parameter 4 Pilar Ekspor</span>
+          <span>Gemini AI Agent sedang mengetik</span>
           <div class="typing-dot"></div>
           <div class="typing-dot"></div>
           <div class="typing-dot"></div>
@@ -155,345 +108,363 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
-   * Knowledge Engine Respons Cerdas Berbahasa Alami (Mirip Gemini Resmi)
-   * Menyajikan jawaban komprehensif, santun, dan mudah dibaca untuk setiap pertanyaan pengguna.
+   * Helper Pencari Produk Cerdas dari Database 120 Komoditas Ekspor
+   */
+  function findMatchingProducts(query) {
+    const list = window.NUSA_PRODUCTS_DATA || [];
+    if (!list.length) return [];
+    const qLower = (query || '').toLowerCase().trim();
+
+    // Kata-kata stopword yang diabaikan saat pencarian
+    const stopwords = ['dan', 'yang', 'untuk', 'dengan', 'dari', 'bisa', 'tolong', 'halo', 'info', 'harga', 'berapa', 'apakah', 'jual', 'kami', 'saya', 'ekspor', 'mau', 'ingin', 'kirim', 'buatkan', 'spesifikasi', 'spek', 'ada', 'cari', 'tentang', 'produk'];
+    const keywords = qLower
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length >= 3 && !stopwords.includes(w));
+
+    if (!keywords.length && qLower.length < 3) return [];
+
+    const scored = list.map(item => {
+      let score = 0;
+      const name = item.name.toLowerCase();
+      const cat = (item.category || '').toLowerCase();
+      const origin = (item.origin || '').toLowerCase();
+      const desc = (item.desc || '').toLowerCase();
+
+      // Cocok langsung dengan frasa lengkap
+      if (name.includes(qLower)) score += 60;
+      if (cat.includes(qLower)) score += 30;
+
+      // Cocok per kata kunci
+      keywords.forEach(kw => {
+        if (name.includes(kw)) score += 15;
+        if (cat.includes(kw)) score += 8;
+        if (origin.includes(kw)) score += 8;
+        if (desc.includes(kw)) score += 3;
+      });
+
+      return { item, score };
+    }).filter(r => r.score > 0);
+
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 2).map(r => r.item);
+  }
+
+  /**
+   * Knowledge Engine Respons Cerdas Berbahasa Alami (Mirip Gemini Resmi - Tanpa Tag Rumit)
    */
   function generateSmartAgentReply(userMessage) {
-    const q = (userMessage || '').toLowerCase().trim();
+    const raw = (userMessage || '').trim();
+    const q = raw.toLowerCase();
 
-    // 1. Skenario Hamburg / Kopi Robusta Lampung (CIF Hamburg)
-    if (q.includes('hamburg') || (q.includes('robusta') && (q.includes('cif') || q.includes('kopi')))) {
-      return `
-        <p class="gemini-p"><strong>Halo Hanseatic Coffee Importers!</strong> Salam hangat dari NusaBridge Indonesia. Terima kasih telah memilih komoditas Kopi Nusantara untuk memenuhi kebutuhan pasar Eropa Anda.</p>
-        <p class="gemini-p">Berikut adalah analisis komprehensif transaksi ekspor <strong>20 Metric Ton (MT) Kopi Robusta Lampung Grade 1</strong> dengan skema pengiriman <strong>CIF Hamburg Port, Jerman</strong>, yang dirangkum dalam <strong>4 Pilar Utama NusaBridge</strong>:</p>
+    // Periksa apakah pertanyaan adalah tentang panduan, regulasi, kalkulasi, atau konsep
+    const isLegalityOrGuide = (
+      q.includes('cara ekspor') || q.includes('bagaimana ekspor') || q.includes('memulai ekspor') || q.includes('langkah ekspor') || q.includes('pemula') ||
+      q.includes('incoterm') || q.includes('apa itu') || q.includes('beda fob') || q.includes('perbedaan') ||
+      q.includes('legalitas') || q.includes('karantina') || q.includes('fitosanitari') || q.includes('sertifikat') || q.includes('izin') || q.includes('syarat') ||
+      q.includes('escrow') || q.includes('bayar') || q.includes('pembayaran') || q.includes('keamanan') ||
+      q.includes('dokumen') || q.includes('surat ekspor') || q.includes('berkas') ||
+      q.includes('hamburg') || q.includes('los angeles') || q.includes('tokyo') || q.includes('hitung') || q.includes('kalkulasi')
+    );
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-1">📊 1. Kalkulasi RFQ Studio &amp; Incoterms 2020 (Pilar 1)</div>
-          <div class="cpc-row"><span>Harga Dasar FOB Tanjung Priok:</span> <strong>$3.85 / Kg ($77,000 USD)</strong></div>
-          <div class="cpc-row"><span>Ocean Freight &amp; Asuransi Maritim:</span> <strong>$0.42 / Kg ($8,400 USD)</strong></div>
-          <div class="cpc-row"><span>Total Penawaran CIF Hamburg Port:</span> <strong style="color:#2563eb; font-size:13.5px;">$85,400 USD ($4.27 / Kg)</strong></div>
-          <div class="cpc-row"><span>Rekomendasi Margin Bersih Aman UMKM:</span> <span class="cpc-badge-green">+18.5% Net Profit</span></div>
-        </div>
+    // 1. Pencarian Produk Langsung dari Katalog 120 Komoditas
+    const matchedProducts = findMatchingProducts(raw);
+    const isAskingProduct = (
+      q.includes('harga') || q.includes('produk') || q.includes('kopi') || q.includes('rempah') ||
+      q.includes('cengkeh') || q.includes('kayu') || q.includes('rotan') || q.includes('batik') ||
+      q.includes('tenun') || q.includes('songket') || q.includes('ulos') || q.includes('vanila') ||
+      q.includes('lada') || q.includes('pala') || q.includes('nilam') || q.includes('atsiri') ||
+      q.includes('kapulaga') || q.includes('jahe') || q.includes('kunyit') || q.includes('gayo') ||
+      q.includes('toraja') || q.includes('mandheling') || q.includes('lampung') || q.includes('dampit') ||
+      q.includes('kintamani') || q.includes('bajawa') || q.includes('wamena') || q.includes('spek') ||
+      q.includes('spesifikasi') || q.includes('moq') || q.includes('minimal order') || q.includes('jual')
+    );
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-3">🛡️ 2. Audit Legalitas &amp; KYC Hub Kepatuhan Global (Pilar 3)</div>
-          <div class="cpc-row"><span>NIB Pelaku Usaha (OSS RBA):</span> <strong>0120268840001 (Valid &amp; Aktif Ekspor)</strong></div>
-          <div class="cpc-row"><span>NPWP Terdaftar:</span> <strong>01.234.567.8-012.000 (DJP Kemenkeu Aktif)</strong></div>
-          <div class="cpc-row"><span>Sertifikasi Saniter:</span> <strong>Phytosanitary &amp; Karantina Lolos (Bebas PBKo)</strong></div>
-          <div class="cpc-row"><span>Regulasi Deforestasi Uni Eropa:</span> <strong>EUDR GIS Geolocation Mapped &amp; Verified</strong></div>
-          <div class="cpc-row"><span>Skor Kepatuhan Mutu:</span> <span class="cpc-badge-blue">100% Score (Verified Seller Shield)</span></div>
-        </div>
+    if (!isLegalityOrGuide && matchedProducts.length > 0 && isAskingProduct) {
+      const p = matchedProducts[0];
+      const idrEst = Math.round(p.price * 16250).toLocaleString('id-ID');
+      const specsText = Array.isArray(p.specs) ? p.specs.map(s => `${s.k}: ${s.v}`).join(' | ') : 'Standar Ekspor';
+      const certsText = Array.isArray(p.certs) ? p.certs.join(', ') : 'Tersertifikasi Ekspor';
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-2">📄 3. Otomatisasi Dokumen Legal Ekspor (Pilar 2)</div>
-          <p style="margin:0 0 6px; color:#334155;">Draf berkas perdagangan resmi berstandar ICC telah diterbitkan otomatis dan siap diunduh berformat PDF:</p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-            <span class="seal-stamp">✓ Proforma Invoice #PI-2026-DE-088</span>
-            <span class="seal-stamp">✓ Sales Contract #SC-2026-DE-088 (CIF Hamburg)</span>
-          </div>
-        </div>
+      return `Halo! Berikut adalah informasi komoditas ekspor yang Anda tanyakan:
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-4">🔒 4. Skema Pengamanan Dana Escrow Vault 4 Fase (Pilar 4)</div>
-          <p style="margin:0 0 8px; color:#334155;">Pembayaran sebesar <strong>$85,400 USD</strong> akan dikunci di Escrow Vault dan dicairkan bertahap berdasarkan milestone pelayaran:</p>
-          <div class="cpc-row"><span>• Tahap 1 (30% - $25,620 USD):</span> <strong>DP Cair saat Kontrak Ditandatangani</strong></div>
-          <div class="cpc-row"><span>• Tahap 2 (30% - $25,620 USD):</span> <strong>Cair saat Dokumen PEB &amp; Stuffing Selesai</strong></div>
-          <div class="cpc-row"><span>• Tahap 3 (20% - $17,080 USD):</span> <strong>Cair saat Kapal Berlayar &amp; Bill of Lading (B/L) Terbit</strong></div>
-          <div class="cpc-row"><span>• Tahap 4 (20% - $17,080 USD):</span> <strong>Settlement Final saat Kontainer Sandar di Hamburg</strong></div>
-        </div>
+📦 **${p.name}**
+• **Kategori Komoditas**: ${p.category ? p.category.toUpperCase() : 'Unggulan Ekspor'}
+• **Harga Acuan Ekspor**: $${p.price.toFixed(2)} USD / ${p.unit} (sekitar Rp ${idrEst} / ${p.unit})
+• **Minimum Pemesanan (MOQ)**: ${p.moq} ${p.unit}
+• **Asal Daerah**: ${p.origin}
+• **Kode HS**: ${p.hsCode || '-'}
+• **Sertifikasi & Kepatuhan**: ${certsText}
+• **Standar Pengiriman**: ${p.shipping || 'FOB Pelabuhan Indonesia'}
+• **Spesifikasi Utama**: ${specsText}
 
-        <div class="gemini-callout-box">
-          <span class="gcb-icon">💡</span>
-          <div class="gcb-text">
-            <strong>Rekomendasi Ahli Ekspor NusaBridge:</strong> Rute pelayaran Tanjung Priok menuju Hamburg Port membutuhkan estimasi waktu 24-28 hari pelayaran (Transit Time). Anda dapat memantau pergerakan kapal pengangkut secara real-time di fitur <strong>Radar Maritim AIS NusaBridge</strong>.
-          </div>
-        </div>
-        <p class="gemini-p" style="margin-top:10px;">Apakah Anda memerlukan kustomisasi kemasan khusus (seperti <em>GrainPro Bags 60 Kg</em>) atau ingin menerbitkan berkas PDF sekarang?</p>
-      `;
+${p.desc}
+
+💡 **Langkah Selanjutnya**:
+Apakah Anda ingin saya buatkan kalkulasi estimasi pengiriman (Incoterms FOB atau CIF), rincian ocean freight, asuransi, dan margin aman untuk produk ini? Cukup sebutkan jumlah kuantitas dan negara/pelabuhan tujuannya!`;
     }
 
-    // 2. Skenario Los Angeles / Cengkeh Lalpari Maluku
-    if (q.includes('los angeles') || (q.includes('clove') || q.includes('cengkeh'))) {
-      return `
-        <p class="gemini-p"><strong>Halo Pacific Spice Importers!</strong> Salam hangat dari tim NusaBridge. Kami senang dapat membantu rencana pengadaan rempah berkualitas tinggi Anda dari kepulauan Maluku.</p>
-        <p class="gemini-p">Berikut adalah rincian analisis transaksi ekspor <strong>5 Metric Ton (MT) Cengkeh Lalpari Maluku Grade A</strong> dengan skema pengiriman <strong>CIF Port of Los Angeles, USA</strong>:</p>
+    // 2. Rute Ekspor Khusus: Hamburg / Jerman / Uni Eropa (Kopi Robusta/Arabika)
+    if (q.includes('hamburg') || q.includes('jerman') || (q.includes('robusta') && (q.includes('cif') || q.includes('20 mt') || q.includes('ton')))) {
+      return `Halo! Terima kasih atas pertanyaannya. Berikut adalah analisis menyeluruh untuk pengiriman ekspor Kopi Robusta Lampung ke Hamburg Port, Jerman:
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-1">📊 1. Kalkulasi Incoterms 2020 CIF Los Angeles</div>
-          <div class="cpc-row"><span>Harga Dasar FOB Tanjung Perak:</span> <strong>$12.50 / Kg ($62,500 USD)</strong></div>
-          <div class="cpc-row"><span>Ocean Freight Pasifik &amp; Asuransi:</span> <strong>$1.15 / Kg ($5,750 USD)</strong></div>
-          <div class="cpc-row"><span>Total Penawaran CIF Los Angeles:</span> <strong style="color:#2563eb; font-size:13.5px;">$68,250 USD ($13.65 / Kg)</strong></div>
-          <div class="cpc-row"><span>Margin Aman UMKM Eksportir:</span> <span class="cpc-badge-green">+19.2% Net Profit</span></div>
-        </div>
+**1. Perhitungan Biaya & Incoterms 2020 (CIF Hamburg)**
+• Volume Pengiriman: 20 Metric Ton (20.000 Kg) / 1 Kontainer 20ft FCL
+• Harga Dasar FOB Pelabuhan Tanjung Priok: $3.85 / Kg (Total: $77.000 USD)
+• Ocean Freight & Asuransi Kargo Laut: $0.42 / Kg ($8.400 USD)
+• Total Nilai CIF Hamburg Port: $85.400 USD ($4.27 / Kg)
+• Rekomendasi Margin Aman UMKM: +18.5% Net Profit
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-3">🛡️ 2. Kepatuhan Regulasi US FDA &amp; Standar Mutu ASTA</div>
-          <div class="cpc-row"><span>Registrasi Fasilitas US FDA:</span> <strong>Food Facility Registration (FFR) Aktif</strong></div>
-          <div class="cpc-row"><span>Standar Kebersihan ASTA:</span> <strong>Lolos Uji Bebas Logam Berat &amp; Kadar Air &lt; 12%</strong></div>
-          <div class="cpc-row"><span>Karantina &amp; Fitosanitari:</span> <strong>Phytosanitary Certificate RI Valid</strong></div>
-          <div class="cpc-row"><span>Status Verifikasi:</span> <span class="cpc-badge-blue">100% Score (Verified Global Exporter)</span></div>
-        </div>
+**2. Audit Legalitas & Regulasi Uni Eropa (EUDR)**
+• Legalitas Eksportir: NIB OSS RBA aktif dengan Hak Akses Kepabeanan & Angka Pengenal Eksportir
+• Sertifikat Saniter: Phytosanitary Certificate resmi dari Karantina Tumbuhan Indonesia
+• Kepatuhan EUDR: Peta poligon geolokasi kebun terdaftar bebas deforestasi
+• Skor Kepatuhan: 100% Lolos Verifikasi Ekspor
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-2">📄 3. Otomatisasi Dokumen Resmi</div>
-          <p style="margin:0 0 6px; color:#334155;">Dokumen resmi ICC diterbitkan otomatis berformat PDF:</p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-            <span class="seal-stamp">✓ Proforma Invoice #PI-2026-US-104</span>
-            <span class="seal-stamp">✓ Export Sales Contract (CIF Los Angeles)</span>
-          </div>
-        </div>
+**3. Dokumen Legal yang Diterbitkan**
+Draf Commercial Invoice #INV-2026-DE-088 dan Sales Contract berstandar ICC Incoterms 2020 otomatis diterbitkan dalam format PDF.
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-4">🔒 4. Rekening Escrow Vault Multivalas (USD)</div>
-          <div class="cpc-row"><span>Total Kontrak Terkunci:</span> <strong>$68,250 USD</strong></div>
-          <div class="cpc-row"><span>Alur Pencairan Bertahap:</span> <strong>30% DP ➔ 30% PEB ➔ 20% B/L Terbit ➔ 20% Tiba di LA Port</strong></div>
-        </div>
+**4. Skema Pembayaran Aman via Escrow Vault**
+Dana pembayaran buyer sebesar $85.400 USD dikunci di Escrow Vault dan dicairkan dalam 4 tahap:
+• Tahap 1 (30% - $25.620): Down Payment (DP) cair saat kontrak ditandatangani untuk modal kerja.
+• Tahap 2 (30% - $25.620): Cair saat pemeriksaan stuffing kontainer selesai dan PEB Bea Cukai terbit.
+• Tahap 3 (20% - $17.080): Cair saat peti kemas naik ke kapal kargo dan Bill of Lading (B/L) terbit.
+• Tahap 4 (20% - $17.080): Pelunasan final saat kapal sandar di Hamburg Port dan kontainer diterima.
 
-        <div class="gemini-callout-box">
-          <span class="gcb-icon">💡</span>
-          <div class="gcb-text">
-            <strong>Catatan Logistik Trans-Pasifik:</strong> Muatan cengkeh 5 MT dikemas dalam 200 karung goni laminasi @ 25 Kg, dilengkapi <em>silica gel dry-bags</em> untuk menjaga aroma dan kekeringan selama 28 hari pelayaran menuju California.
-          </div>
-        </div>
-      `;
+Waktu pelayaran laut dari Tanjung Priok ke Hamburg Port berkisar antara 24 hingga 28 hari via Jalur Terusan Suez.`;
     }
 
-    // 3. Skenario Tokyo / Furnitur Rotan Cirebon
-    if (q.includes('tokyo') || (q.includes('rotan') || q.includes('rattan'))) {
-      return `
-        <p class="gemini-p"><strong>Konnichiwa Tokyo Living Design Co.!</strong> Terima kasih telah mempercayakan pengadaan furnitur kerajinan rotan alami khas Cirebon kepada kami.</p>
-        <p class="gemini-p">Berikut adalah analisis kuotasi pesanan <strong>2.000 Pcs Kursi Rotan Alami Cirebon (Skandinavia Minimalis)</strong> skema <strong>FOB Tanjung Priok, Jakarta</strong>:</p>
+    // 3. Rute Ekspor Khusus: Los Angeles / USA (Cengkeh Lalpari / Rempah / Kopi)
+    if (q.includes('los angeles') || q.includes('amerika') || q.includes('usa') || (q.includes('cengkeh') && q.includes('cif'))) {
+      return `Halo! Berikut adalah analisis kalkulasi ekspor Cengkeh Lalpari Maluku menuju Port of Los Angeles, Amerika Serikat:
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-1">📊 1. Kalkulasi Kuotasi FOB Tanjung Priok</div>
-          <div class="cpc-row"><span>Harga Satuan FOB:</span> <strong>$78.00 / Pcs</strong></div>
-          <div class="cpc-row"><span>Total Nilai Kontrak:</span> <strong style="color:#2563eb; font-size:13.5px;">$156,000 USD</strong></div>
-          <div class="cpc-row"><span>Kapasitas Kontainer:</span> <strong>2 x 40ft High Cube Container (~136 CBM)</strong></div>
-          <div class="cpc-row"><span>Margin Aman Pengrajin:</span> <span class="cpc-badge-green">+22.0% Net Profit</span></div>
-        </div>
+**1. Perhitungan Biaya & Incoterms 2020 (CIF Los Angeles)**
+• Volume: 5 Metric Ton (5.000 Kg) dalam 200 karung goni laminasi @ 25 Kg
+• Harga Dasar FOB Pelabuhan Tanjung Perak: $12.50 / Kg (Total: $62.500 USD)
+• Ocean Freight & Asuransi Rute Pasifik: $1.15 / Kg ($5.750 USD)
+• Total Nilai Penawaran CIF Los Angeles: $68.250 USD ($13.65 / Kg)
+• Rekomendasi Margin Aman: +19.2% Net Profit
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-3">🛡️ 2. Legalitas Kelestarian Kayu &amp; Rotan (V-Legal)</div>
-          <div class="cpc-row"><span>Sertifikat SVLK Kemenhut:</span> <strong>V-Legal Aktif (Bahan Baku Berkelanjutan)</strong></div>
-          <div class="cpc-row"><span>Fumigasi Standar ISPM 15:</span> <strong>Sertifikat Resmi Bebas Rayap &amp; Jamur</strong></div>
-          <div class="cpc-row"><span>Skor Kepatuhan:</span> <span class="cpc-badge-blue">100% Score (Verified Seller Shield)</span></div>
-        </div>
+**2. Kepatuhan Regulasi US FDA**
+• Registrasi US FDA Food Facility Registration terverifikasi aktif
+• Prior Notice of Imported Food dikirim sebelum kontainer tiba
+• Bebas cemaran aflatoksin dan kadar air terkontrol ketat (<12%)
+• Sertifikat Uji Lab & Karantina Indonesia terlampir lengkap
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-2">📄 3. Otomatisasi Dokumen &amp; Packing List CBM</div>
-          <p style="margin:0 0 6px; color:#334155;">Draf berkas Commercial Invoice &amp; Packing List kubikasi peti kemas telah siap diunduh berformat PDF.</p>
-        </div>
+**3. Dokumen Ekspor Resmi**
+Proforma Invoice #PI-2026-US-104, Sales Contract, Packing List CBM, dan formulir PEB siap diterbitkan otomatis.
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-4">🔒 4. Skema Escrow Vault 4 Fase</div>
-          <div class="cpc-row"><span>Tahap 1 (30% - $46,800):</span> <strong>DP Produksi Anyaman Rotan Lokal</strong></div>
-          <div class="cpc-row"><span>Tahap 2 (30% - $46,800):</span> <strong>Pemeriksaan Kualitas (QC) &amp; Terbit PEB</strong></div>
-          <div class="cpc-row"><span>Tahap 3 (20% - $31,200):</span> <strong>Peti Kemas On-Board Kapal &amp; B/L Terbit</strong></div>
-          <div class="cpc-row"><span>Tahap 4 (20% - $31,200):</span> <strong>Settlement Akhir saat Sandar di Port of Tokyo</strong></div>
-        </div>
-      `;
+**4. Pencairan Dana Escrow Vault 4 Tahap**
+Total nilai transaksi $68.250 USD dikunci secara aman:
+• Tahap 1 (30% - $20.475): DP cair saat kontrak disepakati.
+• Tahap 2 (30% - $20.475): Cair saat selesai stuffing kontainer dan PEB Bea Cukai terbit.
+• Tahap 3 (20% - $13.650): Cair saat kapal bertolak dan On-Board Bill of Lading terbit.
+• Tahap 4 (20% - $13.650): Settlement akhir saat kontainer tiba di Los Angeles Port.
+
+Estimasi transit pelayaran laut dari Surabaya ke Los Angeles Port adalah 22-26 hari.`;
     }
 
-    // 4. Panduan Langkah Ekspor Pemula
-    if (q.includes('cara ekspor') || q.includes('bagaimana ekspor') || q.includes('memulai ekspor') || q.includes('langkah ekspor') || q.includes('pemula') || q.includes('alur ekspor') || q.includes('tahapan')) {
-      return `
-        <p class="gemini-p"><strong>Halo Rekan Eksportir!</strong> Memulai ekspor adalah langkah besar yang sangat membanggakan untuk mengembangkan skala bisnis UMKM Anda.</p>
-        <p class="gemini-p">NusaBridge telah menyusun <strong>5 Langkah Praktis Go-Global</strong> yang terstruktur agar proses ekspor berjalan mulus dan minim risiko:</p>
+    // 4. Rute Ekspor Khusus: Tokyo / Jepang (Kursi Rotan / Kriya / Kayu Jati)
+    if (q.includes('tokyo') || q.includes('jepang') || q.includes('japan') || (q.includes('rotan') && q.includes('fob'))) {
+      return `Halo! Berikut analisis penawaran ekspor Furnitur Kursi Rotan Alami Cirebon ke Port of Tokyo, Jepang:
 
-        <ol class="gemini-ordered-list">
-          <li><strong>Persiapan Legalitas Usaha (KYC Hub)</strong>:
-            Pastikan Anda memiliki <strong>NIB (Nomor Induk Berusaha)</strong> 13 digit dari sistem OSS RBA. Di era sekarang, NIB otomatis berfungsi ganda sebagai Angka Pengenal Importir/Eksportir (API) dan Hak Akses Kepabeanan. Pastikan pula NPWP usaha Anda aktif.
-          </li>
-          <li><strong>Standardisasi &amp; Sertifikasi Mutu Produk</strong>:
-            Sesuaikan produk dengan negara tujuan. Untuk komoditas pangan/rempah/kopi, lengkapi dengan <strong>Sertifikat Fitosanitari</strong> (Badan Karantina) dan uji lab Sucofindo. Untuk produk kayu/rotan, lengkapi dengan sertifikat <strong>V-Legal SVLK</strong>.
-          </li>
-          <li><strong>Penetapan Harga &amp; Negosiasi Incoterms 2020 (RFQ Studio)</strong>:
-            Gunakan fitur <strong>RFQ Studio NusaBridge</strong> untuk menghitung struktur biaya secara transparan: harga pokok produksi, biaya pengiriman lokal, hingga tarif kargo laut. Bagi pemula, mulailah dengan skema <strong>FOB</strong> atau <strong>CIF</strong> dengan margin aman minimal 15-20%.
-          </li>
-          <li><strong>Otomatisasi Dokumen Resmi (Auto-PDF Generator)</strong>:
-            Terbitkan dokumen perdagangan resmi secara instan: <em>Proforma Invoice, Sales Contract, Commercial Invoice, Packing List</em>, dan formulir <em>Pemberitahuan Ekspor Barang (PEB)</em>.
-          </li>
-          <li><strong>Pengamanan Dana Transaksi (Escrow Vault)</strong>:
-            Hindari mengirim barang sebelum kepastian pembayaran jelas. Gunakan <strong>Escrow Vault NusaBridge</strong> dengan mekanisme pencairan 4 fase (30% DP ➔ 30% PEB ➔ 20% Bill of Lading ➔ 20% Tiba di Tujuan).
-          </li>
-        </ol>
+**1. Perhitungan Biaya & Incoterms 2020 (FOB Tanjung Priok)**
+• Kuantitas: 2.000 Pcs Kursi Rotan Alami (Muatan 2 x 40ft High Cube Container ~136 CBM)
+• Harga Satuan FOB Tanjung Priok: $78.00 / Pcs (Total: $156.000 USD)
+• Biaya Ocean Freight: Ditanggung oleh buyer dari Tokyo (skema FOB)
+• Margin Aman Pengrajin UMKM: +22.0% Net Profit
 
-        <div class="gemini-callout-box">
-          <span class="gcb-icon">💡</span>
-          <div class="gcb-text">
-            <strong>Tips Memulai Tanpa Modal Besar:</strong> Jika volume komoditas Anda belum mencukupi untuk menyewa 1 kontainer penuh (FCL), Anda bisa memilih opsi pengiriman kargo konsolidasi <strong>LCL (Less than Container Load)</strong> melalui komunitas ekspor NusaBridge!
-          </div>
-        </div>
-      `;
+**2. Audit Legalitas & Standar Mutu Jepang**
+• Dokumen V-Legal SVLK Kementerian Lingkungan Hidup & Kehutanan RI aktif
+• Perlakuan Fumigasi Standar Internasional ISPM 15 (Bebas Rayap & Jamur Kayu)
+• Penggunaan silica gel kargo di setiap kemasan untuk mencegah kelembapan laut
+
+**3. Skema Pencairan Dana Escrow Vault**
+Pembayaran senilai $156.000 USD dikunci di awal dan dicairkan bertahap:
+• Tahap 1 (30% - $46.800): DP modal pengrajin dan anyaman rotan.
+• Tahap 2 (30% - $46.800): Pemeriksaan QC lolos dan dokumen PEB terbit.
+• Tahap 3 (20% - $31.200): Kontainer termuat di kapal dan Bill of Lading terbit.
+• Tahap 4 (20% - $31.200): Pelunasan saat kontainer tiba di Port of Tokyo.
+
+Estimasi waktu pelayaran Tanjung Priok menuju Tokyo Port berkisar antara 10 hingga 14 hari.`;
     }
 
-    // 5. Penjelasan Incoterms 2020 (FOB vs CIF vs CFR)
-    if (q.includes('incoterm') || q.includes('fob') || q.includes('cif') || q.includes('cfr') || q.includes('exw') || q.includes('ddp') || q.includes('beda fob') || q.includes('apa itu fob')) {
-      return `
-        <p class="gemini-p"><strong>Halo!</strong> Pertanyaan yang sangat penting dalam perdagangan internasional. <strong>Incoterms 2020</strong> adalah serangkaian aturan baku dari <em>International Chamber of Commerce (ICC)</em> yang mengatur pembagian biaya, tanggung jawab, dan titik peralihan risiko antara Penjual (Eksportir) dan Pembeli (Buyer luar negeri).</p>
+    // 5. Perhitungan Biaya Umum / Kalkulator Incoterms
+    if (q.includes('hitung') || q.includes('kalkulasi') || q.includes('estimasi biaya') || q.includes('ongkir') || q.includes('biaya kirim') || q.includes('freight')) {
+      return `Halo! Untuk menghitung estimasi biaya ekspor secara akurat, sistem NusaBridge membagi komponen biaya ke dalam 4 pos utama:
 
-        <p class="gemini-p">Berikut adalah perbandingan 3 istilah Incoterms yang paling sering digunakan dalam transaksi ekspor UMKM:</p>
+**1. Biaya Dasar Modal & FOB (Free on Board)**
+• Harga pokok produksi komoditas di tingkat petani/pengrajin
+• Biaya kemasan standar ekspor (karung goni laminasi / box karton 5-ply / pallet ISPM 15)
+• Biaya transportasi darat (trucking) dari gudang ke pelabuhan muat
+• Biaya penanganan pelabuhan (THC - Terminal Handling Charges) & pembuatan dokumen PEB
 
-        <ul class="gemini-list">
-          <li><strong>FOB (Free on Board - Pelabuhan Muat Indonesia)</strong>:
-            Kewajiban Anda sebagai eksportir hanya sampai barang dinaikkan ke atas kapal di pelabuhan muat Indonesia (misal: Tanjung Priok, Jakarta atau Tanjung Perak, Surabaya). Biaya kapal laut internasional (Ocean Freight) dan asuransi ditanggung sepenuhnya oleh pembeli. <em>Sangat disarankan untuk UMKM pemula!</em>
-          </li>
-          <li><strong>CIF (Cost, Insurance, and Freight - Pelabuhan Tujuan Buyer)</strong>:
-            Anda bertanggung jawab menanggung harga barang, biaya pengiriman lokal, ongkos sewa kapal kargo internasional (Ocean Freight), dan polis asuransi maritim hingga kapal tiba di pelabuhan tujuan pembeli (misal: Hamburg Port atau Port of Los Angeles). Namun, risiko kerusakan barang beralih ke pembeli saat barang telah termuat di atas kapal di Indonesia.
-          </li>
-          <li><strong>CFR (Cost and Freight)</strong>:
-            Mirip dengan skema CIF, namun Anda hanya menanggung ongkos kapal tanpa polis asuransi kargo (asuransi ditutup sendiri oleh pembeli).
-          </li>
-        </ul>
+**2. Ocean Freight (Ongkos Kapal Internasional)**
+• Kontainer 20ft FCL (kapasitas s/d 28 CBM / 20 ton): berkisar $1.200 - $3.500 USD tergantung jarak negara tujuan
+• Kontainer 40ft High Cube (kapasitas s/d 68 CBM): berkisar $2.200 - $5.500 USD
+• Muatan LCL (kubikasi kecil): dihitung per CBM (sekitar $80 - $180 USD/CBM)
 
-        <div class="gemini-callout-box info-box">
-          <span class="gcb-icon">💡</span>
-          <div class="gcb-text">
-            <strong>Rekomendasi NusaBridge:</strong> Untuk buyer baru, gunakan skema <strong>FOB</strong> agar Anda tidak terbebani risiko fluktuasi biaya logistik laut. Jika buyer meminta <strong>CIF</strong>, gunakan <strong>Tab 1: RFQ Studio NusaBridge</strong> untuk menghitung margin pelindung secara akurat.
-          </div>
-        </div>
-      `;
+**3. Marine Cargo Insurance (Asuransi Pengangkutan Laut)**
+• Premi asuransi biasanya berkisar 0,3% - 0,5% dari total nilai barang (Invoice + Freight).
+
+**4. Rekomendasi Margin Aman UMKM**
+• NusaBridge merekomendasikan margin laba bersih 15% - 22% setelah seluruh biaya tertutupi.
+
+Jika Anda ingin saya hitungkan untuk komoditas tertentu, cukup sebutkan nama produk, estimasi jumlah kuantitas, dan negara/pelabuhan tujuannya!`;
     }
 
-    // 6. Legalitas, NIB OSS, NPWP, dan Kepatuhan Global
-    if (q.includes('legalitas') || q.includes('nib') || q.includes('npwp') || q.includes('oss') || q.includes('izin') || q.includes('syarat') || q.includes('kyc') || q.includes('fda') || q.includes('eudr') || q.includes('jas')) {
-      return `
-        <p class="gemini-p"><strong>Halo Rekan Eksportir!</strong> Memastikan legalitas dan kepatuhan regulasi sejak awal adalah kunci agar produk UMKM Anda dapat diterima dengan mudah di negara tujuan tanpa risiko denda atau penahanan peti kemas di pelabuhan.</p>
+    // 6. Penjelasan Konsep Incoterms 2020 (FOB, CIF, CFR, EXW)
+    if (q.includes('incoterm') || q.includes('fob') || q.includes('cif') || q.includes('cfr') || q.includes('exw') || q.includes('ddp') || q.includes('beda fob')) {
+      return `Halo! Incoterms 2020 adalah aturan resmi dari ICC (International Chamber of Commerce) yang mengatur pembagian biaya, risiko, dan tanggung jawab antara penjual (eksportir) dan pembeli (buyer luar negeri).
 
-        <p class="gemini-p">Berikut adalah daftar persyaratan legalitas dan standar kepatuhan yang diverifikasi oleh modul <strong>KYC Hub NusaBridge</strong>:</p>
+Berikut penjelasan skema yang paling sering digunakan:
 
-        <ul class="gemini-list">
-          <li><strong>NIB (Nomor Induk Berusaha) 13 Digit</strong>:
-            Diterbitkan melalui sistem perizinan berusaha terintegrasi secara elektronik (OSS RBA). NIB Anda otomatis berfungsi sebagai izin ekspor dan Hak Akses Kepabeanan.
-          </li>
-          <li><strong>NPWP (Nomor Pokok Wajib Pajak)</strong>:
-            NPWP Badan Usaha atau Perorangan yang valid dan berstatus aktif di Direktorat Jenderal Pajak Kementerian Keuangan RI.
-          </li>
-          <li><strong>Sertifikat Fitosanitari (Phytosanitary Certificate)</strong>:
-            Wajib untuk seluruh komoditas hasil perkebunan, pertanian, dan rempah, yang diterbitkan oleh Badan Karantina Indonesia setelah proses inspeksi bebas hama penyakit.
-          </li>
-          <li><strong>Standar Spesifik Negara Tujuan</strong>:
-            <ul style="margin-top:6px;">
-              <li><strong>Pasar Amerika Serikat (USA)</strong>: Registrasi fasilitas pangan <em>US FDA Food Facility Registration (FFR)</em>.</li>
-              <li><strong>Pasar Uni Eropa (EU)</strong>: Kepatuhan regulasi anti-deforestasi <em>EUDR (European Union Deforestation Regulation)</em> dengan pemetaan poligon GIS lahan kebun.</li>
-              <li><strong>Pasar Jepang</strong>: Sertifikasi standar pertanian organik/mutu <em>JAS (Japanese Agricultural Standards)</em>.</li>
-            </ul>
-          </li>
-        </ul>
+• **FOB (Free on Board - Pelabuhan Indonesia)**
+Tanggung jawab Anda selesai setelah barang termuat di atas kapal di pelabuhan muat Indonesia (misal: Tanjung Priok atau Tanjung Perak). Ongkos kapal laut internasional dan asuransi kargo ditanggung penuh oleh pembeli. Skema ini sangat direkomendasikan untuk eksportir pemula karena minim risiko fluktuasi biaya kapal!
 
-        <div class="gemini-callout-box">
-          <span class="gcb-icon">🛡️</span>
-          <div class="gcb-text">
-            <strong>Verified Global Exporter Shield:</strong> Anda dapat menguji validitas NIB usaha Anda pada fitur <strong>Tab 3: KYC Hub Sandbox</strong> di bawah untuk mendapatkan skor kepatuhan 100%!
-          </div>
-        </div>
-      `;
+• **CIF (Cost, Insurance, and Freight - Pelabuhan Tujuan Buyer)**
+Anda menanggung harga barang, ongkos kapal laut internasional, dan premi asuransi hingga kapal tiba di pelabuhan tujuan pembeli (misal: Hamburg, Tokyo, atau Los Angeles). Namun peralihan risiko kerusakan barang tetap beralih ke pembeli begitu barang termuat di kapal di Indonesia.
+
+• **CFR (Cost and Freight)**
+Mirip dengan skema CIF, tetapi tanpa asuransi. Biaya asuransi diurus dan ditanggung oleh pembeli sendiri.
+
+• **EXW (Ex Works - Gudang Penjual)**
+Pembeli mengambil barang langsung di pintu pabrik atau gudang Anda. Seluruh biaya pengangkutan lokal, perizinan ekspor, dan kapal ditanggung pembeli.
+
+Saran terbaik bagi UMKM adalah menawarkan skema FOB terlebih dahulu, atau CIF jika pembeli meminta penawaran lengkap terima di pelabuhan tujuan.`;
     }
 
-    // 7. Escrow Vault & Keamanan Pembayaran
-    if (q.includes('escrow') || q.includes('bayar') || q.includes('pembayaran') || q.includes('aman') || q.includes('penipuan') || q.includes('rekening') || q.includes('dp')) {
-      return `
-        <p class="gemini-p"><strong>Halo!</strong> Kekhawatiran terbesar bagi setiap pelaku usaha ekspor adalah risiko barang sudah dikirim melintasi samudera, namun pembeli luar negeri tidak kunjung melunasi pembayaran.</p>
+    // 7. Legalitas, NIB OSS, NPWP, dan Kepatuhan Karantina
+    if (q.includes('legalitas') || q.includes('nib') || q.includes('npwp') || q.includes('oss') || q.includes('izin') || q.includes('syarat') || q.includes('karantina') || q.includes('fitosanitari') || q.includes('phytosanitary') || q.includes('fda') || q.includes('eudr') || q.includes('jas') || q.includes('svlk')) {
+      return `Halo! Memiliki legalitas yang lengkap adalah kunci utama agar komoditas ekspor Anda tidak tertahan di Bea Cukai maupun pelabuhan negara tujuan.
 
-        <p class="gemini-p"><strong>Escrow Vault NusaBridge</strong> hadir sebagai platform rekening bersama netral multi-valas (USD, EUR, IDR) yang melindungi hak eksportir dan pembeli melalui sistem pencairan <strong>4 Tahapan Pencapaian (Milestones)</strong>:</p>
+Berikut adalah persyaratan legalitas pokok untuk ekspor:
 
-        <div class="chat-pilar-card">
-          <div class="cpc-title pilar-4">🔒 Mekanisme Pelepasan Dana 4 Fase Escrow Vault</div>
-          <div class="cpc-row"><span>Fase 1 (30% DP Awal):</span> <strong>Dicairkan saat Sales Contract ditandatangani kedua pihak (sebagai modal kerja produksi).</strong></div>
-          <div class="cpc-row"><span>Fase 2 (30% Kargo Siap):</span> <strong>Dicairkan saat stuffing kontainer selesai dan dokumen PEB Bea Cukai diterbitkan.</strong></div>
-          <div class="cpc-row"><span>Fase 3 (20% Kapal Berlayar):</span> <strong>Dicairkan saat kapal kargo bertolak dan Bill of Lading (B/L) resmi terbit.</strong></div>
-          <div class="cpc-row"><span>Fase 4 (20% Pelunasan Akhir):</span> <strong>Dicairkan saat kontainer sandar di pelabuhan tujuan dan lolos inspeksi penerimaan.</strong></div>
-        </div>
+• **NIB (Nomor Induk Berusaha) 13 Digit OSS RBA**
+Saat ini NIB berbasis risiko otomatis berfungsi sebagai identitas berusaha, Hak Akses Kepabeanan di Ditjen Bea Cukai, serta Angka Pengenal Eksportir/Importir (API).
 
-        <div class="gemini-callout-box">
-          <span class="gcb-icon">🔒</span>
-          <div class="gcb-text">
-            <strong>Jaminan Keamanan:</strong> Dana pembeli dikunci 100% di Escrow Vault sebelum Anda memuat barang ke peti kemas. Dengan begitu, Anda terlindungi sepenuhnya dari risiko penipuan atau pembatalan sepihak.
-          </div>
-        </div>
-      `;
+• **NPWP Usaha Aktif**
+NPWP badan usaha (PT, CV, Koperasi) atau perorangan yang telah berstatus valid di Direktorat Jenderal Pajak.
+
+• **Sertifikat Fitosanitari (Phytosanitary Certificate)**
+Wajib untuk seluruh komoditas hasil perkebunan, pertanian, kopi, dan rempah. Diterbitkan oleh Badan Karantina Indonesia setelah melalui uji laboratorium untuk memastikan bebas dari organisme pengganggu tumbuhan.
+
+• **Sertifikasi Khusus Komoditas & Negara Tujuan**:
+- **Produk Kayu & Rotan**: Wajib memiliki dokumen sertifikasi kelestarian V-Legal SVLK dari Kemenhut.
+- **Tujuan Amerika Serikat**: Wajib mendaftarkan fasilitas produksi ke US FDA (Food Facility Registration).
+- **Tujuan Uni Eropa**: Wajib mematuhi regulasi bebas deforestasi EUDR dilengkapi koordinat lokasi kebun.
+- **Tujuan Jepang**: Memenuhi standar batas residu pestisida JAS (Japanese Agricultural Standards).
+
+Anda dapat menguji validitas NIB usaha Anda pada tab menu KYC Hub di bawah untuk mendapatkan badge Verified Global Exporter.`;
     }
 
-    // 8. Dokumen Ekspor Resmi
-    if (q.includes('dokumen') || q.includes('surat') || q.includes('invoice') || q.includes('sales contract') || q.includes('peb') || q.includes('packing list') || q.includes('bill of lading') || q.includes('bl') || q.includes('ska') || q.includes('coo')) {
-      return `
-        <p class="gemini-p"><strong>Halo!</strong> Dalam dunia perdagangan internasional, kelengkapan berkas resmi adalah syarat utama agar barang dapat melewati pengawasan Bea Cukai Indonesia dan kepabeanan negara tujuan.</p>
+    // 8. Escrow Vault & Keamanan Pembayaran
+    if (q.includes('escrow') || q.includes('bayar') || q.includes('pembayaran') || q.includes('aman') || q.includes('penipuan') || q.includes('rekening') || q.includes('dp') || q.includes('uang muka') || q.includes('fase')) {
+      return `Halo! Kekhawatiran terbesar eksportir UMKM adalah risiko pembeli luar negeri yang tidak membayar setelah barang dikirim. Fitur Escrow Vault NusaBridge hadir untuk meniadakan risiko tersebut secara tuntas.
 
-        <p class="gemini-p">Berikut adalah <strong>6 Dokumen Pokok Ekspor</strong> yang dapat diterbitkan secara instan melalui <strong>Auto-PDF Document Generator NusaBridge</strong>:</p>
+**Bagaimana Cara Kerjanya?**
+Sebelum proses produksi atau pengiriman dilakukan, buyer wajib menyetorkan 100% nilai transaksi ke rekening penampung aman Escrow Vault (multivalas USD/EUR).
 
-        <ol class="gemini-ordered-list">
-          <li><strong>Proforma Invoice (PI)</strong>: Faktur penawaran komersial awal yang mencantumkan kuantitas, harga satuan, Incoterms, serta rekening bank eksportir.</li>
-          <li><strong>Export Sales Contract (SC)</strong>: Kontrak kesepakatan jual beli resmi yang mengikat kedua pihak berdasarkan yurisdiksi International Chamber of Commerce (ICC).</li>
-          <li><strong>Commercial Invoice (CI)</strong>: Faktur tagihan resmi yang menjadi dasar penilaian bea masuk dan pajak impor di negara tujuan.</li>
-          <li><strong>Packing List (PL)</strong>: Rincian spesifikasi fisik kemasan peti kemas (jumlah koli/karung, berat bersih/net weight, berat kotor/gross weight, dan volume CBM).</li>
-          <li><strong>PEB (Pemberitahuan Ekspor Barang)</strong>: Dokumen pelaporan ke Kantor Pabean Bea Cukai Indonesia untuk mendapatkan Nota Pelayanan Ekspor (NPE).</li>
-          <li><strong>Bill of Lading (B/L)</strong>: Bukti tanda terima barang di atas kapal sekaligus dokumen kepemilikan komoditas yang diterbitkan oleh perusahaan pelayaran kargo laut.</li>
-        </ol>
+Dana tersebut kemudian dicairkan kepada rekening eksportir dalam **4 Tahap Transparan**:
+• **Tahap 1 (30% Down Payment)**: Cair seketika setelah Sales Contract ditandatangani oleh kedua pihak untuk dijadikan modal kerja dan persiapan stok.
+• **Tahap 2 (30% Stuffing & PEB)**: Cair saat barang selesai dimuat ke kontainer dan dokumen Pemberitahuan Ekspor Barang (PEB) terbit dari Bea Cukai.
+• **Tahap 3 (20% Kapal Bertolak)**: Cair saat kontainer sudah berada di atas kapal dan On-Board Bill of Lading (B/L) resmi diterbitkan maskapai pelayaran.
+• **Tahap 4 (20% Settlement Final)**: Cair saat kapal sandar di pelabuhan tujuan dan kontainer lolos pemeriksaan kepabeanan setempat.
 
-        <div class="gemini-callout-box info-box">
-          <span class="gcb-icon">📄</span>
-          <div class="gcb-text">
-            <strong>Otomatisasi 1-Klik:</strong> Anda dapat mencoba membuat draf berkas ini secara langsung pada menu <strong>Tab 2: Auto-PDF Generator</strong> di halaman ini!
-          </div>
-        </div>
-      `;
+Dengan sistem ini, eksportir mendapat kepastian dana sudah tersedia, dan buyer mendapatkan jaminan bahwa barang benar-benar dikirim sesuai standar.`;
     }
 
-    // 9. Katalog & Komoditas 120 Produk
-    if (q.includes('katalog') || q.includes('produk') || q.includes('komoditas') || q.includes('kopi') || q.includes('rempah') || q.includes('kriya') || q.includes('tekstil') || q.includes('apa saja')) {
-      return `
-        <p class="gemini-p"><strong>Halo!</strong> NusaBridge mengurasi tepat <strong>120 komoditas ekspor unggulan Indonesia</strong> yang telah terverifikasi melalui seleksi mutu dan audit legalitas KYC Hub, terbagi dalam 4 kategori strategis:</p>
+    // 9. Dokumen Pokok Ekspor Resmi
+    if (q.includes('dokumen') || q.includes('surat') || q.includes('invoice') || q.includes('sales contract') || q.includes('peb') || q.includes('packing list') || q.includes('bill of lading') || q.includes('bl') || q.includes('coo') || q.includes('ska')) {
+      return `Halo! Dalam perdagangan internasional, dokumen resmi adalah bukti legalitas kepemilikan dan dasar penagihan pembayaran. Berikut 6 dokumen pokok ekspor:
 
-        <ul class="gemini-list">
-          <li><strong>☕ Kopi Ekspor Unggulan (30 Produk)</strong>:
-            Varian Arabika Specialty dan Robusta Premium (Gayo Aceh, Toraja Kalosi, Mandheling, Lampung, Dampit Malang, Kintamani Bali, Bajawa Flores, Wamena Papua, dll.) dengan opsi <em>Green Beans</em> standar ekspor maupun <em>Artisan Roasted</em>.
-          </li>
-          <li><strong>🌿 Rempah-Rempah &amp; Hasil Alam (30 Produk)</strong>:
-            Cengkeh Lalpari Maluku, Kayu Manis Korintji Grade A, Lada Putih Muntok Bangka, Vanila Gourmet Papua, Pala Banda, Kapulaga Jawa, serta Minyak Atsiri Nilam Aceh (Patchouli Oil).
-          </li>
-          <li><strong>🪵 Kriya &amp; Kerajinan Ramah Lingkungan (30 Produk)</strong>:
-            Anyaman Rotan Alami Cirebon, Kerajinan Kayu Jati Blora bersertifikat SVLK, Anyaman Enceng Gondok Kulon Progo, Mangkuk Batok Kelapa Bali, dan Keranjang Seagrass Lombok.
-          </li>
-          <li><strong>🧵 Tekstil &amp; Wastra Nusantara (30 Produk)</strong>:
-            Karya adiluhung warisan budaya: Batik Tulis Sutra Solo/Yogya, Batik Cap Pekalongan, Tenun Ikat Troso Jepara, Tenun Sumba Pewarna Alami, Songket Palembang Benang Emas, dan Ulos Batak Tarutung.
-          </li>
-        </ul>
+1. **Proforma Invoice**: Penawaran harga resmi di awal yang memuat kuantitas, harga per unit, spesifikasi produk, dan termin pembayaran.
+2. **Sales Contract (Kontrak Penjualan)**: Perjanjian jual-beli yang mengikat hak dan kewajiban hukum antara eksportir dan buyer.
+3. **Commercial Invoice**: Faktur tagihan resmi yang digunakan untuk proses kepabeanan (clearance) serta dasar penghitungan bea masuk di negara tujuan.
+4. **Packing List**: Rincian fisik muatan seperti jenis kemasan, jumlah koli/karung, berat bersih (net weight), berat kotor (gross weight), dan volume CBM.
+5. **PEB (Pemberitahuan Ekspor Barang)**: Dokumen pemberitahuan kepabeanan ke Kantor Bea Cukai untuk memperoleh Nota Pelayanan Ekspor (NPE).
+6. **Bill of Lading (B/L)**: Bukti tanda terima muatan dan surat kepemilikan barang yang diterbitkan oleh perusahaan pelayaran pengangkut.
 
-        <p class="gemini-p">Seluruh produk dapat Anda eksplorasi secara mendalam pada halaman <strong>Katalog Produk</strong>!</p>
-      `;
+Di NusaBridge, Anda dapat menerbitkan draf Proforma Invoice dan Sales Contract berstandar ICC secara otomatis berformat PDF pada fitur Auto-PDF Generator!`;
     }
 
-    // 10. Konsultasi Bebas / Pertanyaan Umum (General Friendly Fallback)
-    return `
-      <p class="gemini-p">Halo! Saya <strong>NusaBridge Gemini AI Agent</strong>, asisten perdagangan ekspor-impor pintar yang siap membantu dan mengawal transaksi UMKM Indonesia menembus pasar global.</p>
+    // 10. Panduan Langkah Ekspor untuk Pemula
+    if (q.includes('cara ekspor') || q.includes('bagaimana ekspor') || q.includes('memulai ekspor') || q.includes('langkah ekspor') || q.includes('pemula') || q.includes('panduan') || q.includes('alur ekspor')) {
+      return `Halo Rekan Eksportir! Menembus pasar global sebenarnya sangat bisa dilakukan oleh UMKM jika mengikuti tahapan yang terstruktur. Berikut 5 langkah praktis untuk memulai:
 
-      <p class="gemini-p">Saya dapat membantu Anda memecahkan berbagai tantangan ekspor secara instan dengan mengintegrasikan <strong>4 Pilar Utama NusaBridge</strong>:</p>
+**1. Persiapan Legalitas Dasar**
+Pastikan Anda memiliki NIB (Nomor Induk Berusaha) dari sistem OSS RBA dan NPWP aktif. NIB kini otomatis berfungsi ganda sebagai izin ekspor dan Hak Akses Kepabeanan.
 
-      <ul class="gemini-list">
-        <li><strong>Pilar 1 (RFQ Studio &amp; Incoterms 2020)</strong>: Menghitung struktur biaya FOB, biaya kapal kargo laut, asuransi, hingga total harga penawaran CIF dengan margin aman UMKM.</li>
-        <li><strong>Pilar 2 (Otomatisasi Dokumen Legal)</strong>: Menerbitkan draf berkas resmi Proforma Invoice, Commercial Invoice, dan Sales Contract berformat PDF standar ICC secara instan.</li>
-        <li><strong>Pilar 3 (KYC Hub &amp; Kepatuhan Global)</strong>: Memeriksa validitas NIB OSS RBA, NPWP, Phytosanitary, izin US FDA, sertifikasi JAS Jepang, atau regulasi anti-deforestasi EUDR Uni Eropa.</li>
-        <li><strong>Pilar 4 (Escrow Vault Multivalas)</strong>: Memberikan simulasi penguncian dana dan skema pencairan bertahap 4 fase agar transaksi bebas dari risiko gagal bayar.</li>
-      </ul>
+**2. Standarisasi Mutu & Kemasan**
+Riset standar komoditas Anda. Untuk kopi dan rempah, pastikan kadar air terkontrol (<12%) dan siapkan kemasan ekspor berkualitas (seperti karung goni berlaminasi GrainPro).
 
-      <div class="gemini-callout-box info-box">
-        <span class="gcb-icon">💬</span>
-        <div class="gcb-text">
-          <strong>Coba tanyakan hal-hal berikut:</strong><br>
-          • <em>"Berapa estimasi biaya kirim 20 MT Kopi Robusta ke Hamburg?"</em><br>
-          • <em>"Apa perbedaan antara skema FOB dan CIF?"</em><br>
-          • <em>"Bagaimana alur pencairan dana di Escrow Vault?"</em><br>
-          • <em>"Apa syarat izin ekspor rempah ke Amerika Serikat?"</em>
-        </div>
-      </div>
-      <p class="gemini-p">Silakan ketik pertanyaan spesifik Anda atau pilih skenario cepat di panel kiri!</p>
-    `;
+**3. Penentuan Harga Penawaran**
+Hitung harga modal dasar, biaya antar ke pelabuhan, dan gunakan skema penawaran FOB (Free on Board) terlebih dahulu agar Anda tidak terbebani risiko fluktuasi biaya kapal laut internasional.
+
+**4. Terbitkan Dokumen Penawaran Resmi**
+Saat ada calon buyer yang berminat, kirimkan Proforma Invoice dan Sales Contract resmi berformat PDF yang mencantumkan spesifikasi jelas, nomor rekening, dan klausul pengiriman.
+
+**5. Gunakan Pembayaran Aman Escrow**
+Hindari mengirim barang tanpa uang muka. Selalu gunakan sistem Escrow Vault agar dana buyer sudah terkunci 100% dan dicairkan bertahap (30% DP, 30% PEB, 20% B/L, 20% Tiba).
+
+Jika barang Anda belum mencapai kuantitas 1 kontainer penuh (FCL), Anda bisa memulai dengan skema kargo LCL (konsolidasi muatan) bersama eksportir lain.`;
+    }
+
+    // 11. Informasi Katalog 120 Komoditas Ekspor
+    if (q.includes('katalog') || q.includes('daftar komoditas') || q.includes('daftar produk') || q.includes('apa saja yang dijual') || q.includes('pilihan komoditas')) {
+      return `Halo! NusaBridge menyediakan etalase kurasi 120 komoditas ekspor unggulan Indonesia yang telah lolos verifikasi standar mutu dan legalitas:
+
+• ☕ **Kopi Ekspor Unggulan (30 Produk)**:
+Kopi Arabika & Robusta Specialty pilihan (Gayo Aceh, Toraja Sapan, Mandheling, Robusta Lampung ELB, Dampit Malang, Kintamani Bali, Bajawa Flores, Wamena Papua, dll.) dengan opsi Green Beans mentah maupun Roasted Beans.
+
+• 🌿 **Rempah-Rempah & Hasil Alam (30 Produk)**:
+Cengkeh Lalpari Maluku Grade AA, Kayu Manis Korintji Cassia Vera, Lada Putih Muntok Double Washed, Vanila Gourmet Papua, Pala Banda ABCD, Kapulaga Putih Super, dan Minyak Atsiri Nilam Aceh.
+
+• 🪵 **Kriya & Kerajinan Ramah Lingkungan (30 Produk)**:
+Kursi & Furnitur Anyaman Rotan Cirebon, Mebel Kayu Jati SVLK Jepara, Kerajinan Anyaman Enceng Gondok, Mangkuk Batok Kelapa Eco-Polished, dan Keranjang Seagrass.
+
+• 🧵 **Tekstil & Wastra Nusantara (30 Produk)**:
+Kain Batik Tulis Sutra Solo/Yogya Motif Keraton, Batik Cap Pekalongan Katun Primisima, Tenun Ikat Troso Jepara, Tenun Sumba Pewarna Alami, Songket Palembang Benang Emas, dan Ulos Batak Tradisional.
+
+Anda dapat menanyakan harga atau spesifikasi komoditas mana pun secara spesifik, dan saya akan memberikan informasi lengkapnya!`;
+    }
+
+    // 12. Sapaan Ramah & Percakapan Kasual
+    if (q.includes('halo') || q.includes('hai') || q.includes('selamat pagi') || q.includes('selamat siang') || q.includes('selamat malam') || q.includes('assalamualaikum') || q === 'hi' || q === 'hello') {
+      return `Halo! Selamat datang di NusaBridge Gemini AI. Saya adalah asisten pintar perdagangan ekspor-impor untuk UMKM Indonesia.
+
+Ada yang bisa saya bantu hari ini? Anda dapat menanyakan seputar:
+• Informasi harga, spesifikasi, dan MOQ dari 120 komoditas ekspor Indonesia.
+• Perhitungan kalkulasi Incoterms (FOB / CIF), ocean freight, dan proteksi margin aman.
+• Pengecekan syarat perizinan dan kepatuhan global (NIB OSS, Karantina, FDA, EUDR, JAS).
+• Panduan transaksi aman dengan sistem Escrow Vault 4 tahap.
+
+Silakan ketik pertanyaan Anda secara bebas!`;
+    }
+
+    if (q.includes('terima kasih') || q.includes('makasih') || q.includes('thanks') || q.includes('ok') || q.includes('oke') || q.includes('siap')) {
+      return `Sama-sama! Senang bisa membantu Anda. Jika ada pertanyaan lain seputar ekspor komoditas, perhitungan biaya pengiriman, atau pembuatan dokumen perdagangan, silakan ketik kapan saja. Sukses selalu untuk perdagangan ekspor UMKM Indonesia!`;
+    }
+
+    // 13. Respons Analitis Kontekstual Bebas (Tidak Ngawur)
+    return `Halo! Mengenai pertanyaan Anda tentang "${raw}":
+
+Dalam praktik perdagangan ekspor-impor UMKM bersama NusaBridge:
+• **Analisis Operasional**: Setiap transaksi ekspor memerlukan kesesuaian antara spesifikasi komoditas, perhitungan biaya pengiriman (Incoterms 2020), dan pemenuhan syarat regulasi di negara pembeli.
+• **Perhitungan Biaya**: Kami menyarankan Anda menyusun penawaran dengan memperhitungkan harga pokok barang, biaya penanganan lokal ke pelabuhan, ongkos kapal laut internasional, serta margin laba bersih minimal 15-20%.
+• **Kepastian Hukum & Finansial**: Seluruh kesepakatan sebaiknya dituangkan dalam Sales Contract resmi berformat PDF dan dilindungi dengan skema pembayaran bertahap di Escrow Vault (30% DP, 30% PEB, 20% Bill of Lading, 20% Tiba).
+
+Apakah Anda ingin saya hitungkan estimasi biaya untuk produk tertentu atau membuatkan draf dokumen penawarannya? Silakan sebutkan nama komoditas, jumlah kuantitas, dan negara tujuannya!`;
   }
 
   async function processGeminiQuery(userMessage) {
     if (!userMessage || !userMessage.trim()) return;
-    appendChatBubble('user', userMessage.trim());
-    if (geminiInput) geminiInput.value = '';
+    const promptText = userMessage.trim();
+    appendChatBubble('user', promptText);
+    if (geminiInput) {
+      geminiInput.value = '';
+      geminiInput.style.height = 'auto';
+    }
 
     showTypingIndicator();
 
@@ -502,13 +473,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage })
+        body: JSON.stringify({ message: promptText })
       });
       if (res.ok) {
         const data = await res.json();
-        if (data.reply) {
+        if (data && data.reply) {
           removeTypingIndicator();
-          appendChatBubble('agent', data.reply, `NusaBridge Gemini AI Agent • ${data.model || '@google/genai'}`);
+          appendChatBubble('agent', data.reply, 'NusaBridge Gemini AI');
           return;
         }
       }
@@ -519,8 +490,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Fallback ke Knowledge Engine Cerdas
     setTimeout(() => {
       removeTypingIndicator();
-      const reply = generateSmartAgentReply(userMessage);
-      appendChatBubble('agent', reply, 'NusaBridge Gemini AI Agent • Live Connected');
+      const reply = generateSmartAgentReply(promptText);
+      appendChatBubble('agent', reply, 'NusaBridge Gemini AI');
     }, 450);
   }
 
@@ -538,27 +509,13 @@ document.addEventListener('DOMContentLoaded', () => {
         processGeminiQuery(geminiInput.value);
       }
     });
+
+    // Auto resize textarea
+    geminiInput.addEventListener('input', () => {
+      geminiInput.style.height = 'auto';
+      geminiInput.style.height = Math.min(geminiInput.scrollHeight, 120) + 'px';
+    });
   }
-
-  // Tombol Skenario Cepat di Sidebar
-  scenarioItems.forEach(item => {
-    item.addEventListener('click', () => {
-      scenarioItems.forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      const scKey = item.getAttribute('data-scenario');
-      if (SCENARIO_MAP[scKey]) {
-        processGeminiQuery(SCENARIO_MAP[scKey]);
-      }
-    });
-  });
-
-  // Tombol Suggestion Chips
-  chipPrompts.forEach(chip => {
-    chip.addEventListener('click', () => {
-      const p = chip.getAttribute('data-prompt');
-      if (p) processGeminiQuery(p);
-    });
-  });
 
   // Bersihkan Chat
   if (btnClearHistory) {
@@ -571,25 +528,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderInitialAgentGreeting() {
-    appendChatBubble('agent', `
-      <p class="gemini-p"><strong>Halo! Selamat datang di NusaBridge.</strong> Saya adalah <strong>NusaBridge Gemini AI Agent</strong>, asisten perdagangan ekspor-impor pintar yang siap memfasilitasi komoditas UMKM Indonesia menuju pasar dunia.</p>
+    appendChatBubble('agent', `Halo! Saya NusaBridge Gemini AI, asisten perdagangan ekspor-impor pintar untuk UMKM Indonesia.
 
-      <p class="gemini-p">Didukung oleh teknologi <strong>Google Gemini AI (@google/genai SDK)</strong>, saya siap membantu Anda mengawal seluruh tahapan ekspor melalui <strong>4 Pilar Utama NusaBridge</strong>:</p>
+Saya siap membantu Anda dalam:
+• Mengecek harga, spesifikasi, dan MOQ dari 120 komoditas ekspor unggulan (Kopi, Rempah, Kriya, Tekstil).
+• Menghitung estimasi biaya pengiriman, ocean freight kapal, asuransi, dan penawaran CIF/FOB dengan margin aman.
+• Memberikan panduan kepatuhan dan audit perizinan negara tujuan (NIB OSS, Sertifikat Karantina, US FDA, EUDR Eropa, JAS Jepang).
+• Menjelaskan skema pembayaran bertahap 4 fase via Escrow Vault agar transaksi Anda aman dari risiko penipuan.
 
-      <ul class="gemini-list">
-        <li><strong>Pilar 1 (RFQ Studio)</strong>: Kalkulasi otomatis Incoterms 2020 (FOB, CFR, CIF) lengkap dengan proteksi margin aman eksportir.</li>
-        <li><strong>Pilar 2 (Otomatisasi Dokumen)</strong>: Penerbitan instan draf berkas resmi Proforma Invoice &amp; Sales Contract PDF berstandar ICC.</li>
-        <li><strong>Pilar 3 (KYC Hub &amp; Kepatuhan)</strong>: Validasi legalitas OSS NIB, NPWP, Phytosanitary, hingga regulasi US FDA &amp; EUDR Uni Eropa.</li>
-        <li><strong>Pilar 4 (Escrow Vault)</strong>: Rekening penampung bersama multivalas dengan pencairan dana bertahap 4 fase pelayaran.</li>
-      </ul>
-
-      <div class="gemini-callout-box info-box">
-        <span class="gcb-icon">⚡</span>
-        <div class="gcb-text">
-          <strong>Coba Eksplorasi Cepat:</strong> Klik salah satu kartu di panel <strong>"Skenario Ekspor Cepat"</strong> di samping kiri (misal: <em>Buyer Jerman: Kopi Robusta Hamburg</em>) atau tanyakan panduan ekspor Anda langsung di kolom pesan bawah!
-        </div>
-      </div>
-    `, 'NusaBridge Gemini AI Agent • Live Connected');
+Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`, 'NusaBridge Gemini AI');
   }
 
   // Tampilkan sambutan awal saat pertama load
