@@ -61,12 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function getCategoryLabel(cat) {
     const map = {
-      kopi: 'Kopi Specialty',
-      rempah: 'Rempah & Herbal',
-      kriya: 'Kriya & Rotan',
-      tekstil: 'Tekstil & Tenun',
-      makanan: 'Makanan Organik',
-      perkebunan: 'Perkebunan & Laut'
+      kopi: 'Kopi Ekspor Unggulan',
+      rempah: 'Rempah & Hasil Alam',
+      kriya: 'Kriya & Kerajinan',
+      tekstil: 'Tekstil & Wastra Nusantara'
     };
     return map[cat] || 'Komoditas Unggulan';
   }

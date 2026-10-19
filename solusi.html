@@ -121,6 +121,114 @@
     </div>
   </section>
 
+  <!-- ==================== RUANG PERCAKAPAN GEMINI AI AGENT ==================== -->
+  <section class="section-gemini-chat-workspace" id="ai-conversation-room">
+    <div class="site-container">
+      
+      <div class="gemini-chat-container">
+        
+        <!-- Sidebar Skenario & Quick Prompts -->
+        <aside class="gemini-chat-sidebar">
+          <div class="gcs-title">Skenario Ekspor Cepat</div>
+          
+          <div class="scenario-list">
+            <button class="btn-scenario-item active" data-scenario="hamburg" type="button">
+              <span class="bsi-tag">BUYER JERMAN (CIF)</span>
+              <span class="bsi-name">Hanseatic Importers Hamburg</span>
+              <span class="bsi-desc">20 MT Kopi Robusta Lampung CIF Hamburg</span>
+            </button>
+
+            <button class="btn-scenario-item" data-scenario="los-angeles" type="button">
+              <span class="bsi-tag">BUYER USA (FDA)</span>
+              <span class="bsi-name">Pacific Spice Los Angeles</span>
+              <span class="bsi-desc">5 MT Cengkeh Lalpari CIF LA Port</span>
+            </button>
+
+            <button class="btn-scenario-item" data-scenario="tokyo" type="button">
+              <span class="bsi-tag">BUYER JEPANG (FOB)</span>
+              <span class="bsi-name">Tokyo Living Design Co.</span>
+              <span class="bsi-desc">2.000 Pcs Kursi Rotan FOB Tg Priok</span>
+            </button>
+
+            <button class="btn-scenario-item" data-scenario="kyc" type="button">
+              <span class="bsi-tag">AUDIT LEGALITAS</span>
+              <span class="bsi-name">Cek Status NIB &amp; Standar Mutu</span>
+              <span class="bsi-desc">Validasi OSS NIB &amp; Regulasi EUDR Eropa</span>
+            </button>
+
+            <button class="btn-scenario-item" data-scenario="escrow" type="button">
+              <span class="bsi-tag">SMART ESCROW</span>
+              <span class="bsi-name">Simulasi 4 Fase Escrow Vault</span>
+              <span class="bsi-desc">Alur Pencairan DP 30% s/d Pelunasan</span>
+            </button>
+          </div>
+
+          <div class="gcs-sdk-badge">
+            <strong>⚡ Powered by Google GenAI</strong>
+            <span>Model: Gemini 1.5 Flash (@google/genai SDK) dengan 4 Pilar NusaBridge.</span>
+          </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="gemini-chat-main">
+          
+          <!-- Chat Header -->
+          <div class="gcm-header">
+            <div class="gcm-agent-info">
+              <div class="gcm-avatar">🤖</div>
+              <div class="gcm-agent-text">
+                <strong>NusaBridge Gemini AI Agent</strong>
+                <span>Aktif &bull; Terhubung ke Google GenAI Engine</span>
+              </div>
+            </div>
+            <div class="gcm-actions">
+              <button class="btn-clear-chat" id="btnClearChatHistory" type="button" title="Bersihkan riwayat percakapan">
+                🔄 Bersihkan Chat
+              </button>
+            </div>
+          </div>
+
+          <!-- Chat Conversation History -->
+          <div class="gcm-history" id="geminiChatHistory">
+            <!-- Messages rendered by JavaScript -->
+          </div>
+
+          <!-- Chat Input Footer -->
+          <div class="gcm-footer">
+            <!-- Quick Suggestion Chips -->
+            <div class="quick-suggestion-chips">
+              <span class="qsc-label">Rekomendasi Prompt:</span>
+              <button class="btn-chip-prompt" data-prompt="Halo NusaBridge AI, saya Hanseatic Importers dari Hamburg, Jerman. Saya bermaksud mengimpor 20 Metric Ton (MT) Kopi Robusta Lampung dari UMKM Indonesia dengan skema pengiriman CIF Hamburg Port. Tolong hitungkan estimasi biayanya, cek verifikasi seller, dan buatkan draf kontrak serta skema pembayarannya." type="button">
+                ☕ Buyer Hamburg: 20 MT Kopi Robusta CIF
+              </button>
+              <button class="btn-chip-prompt" data-prompt="Berapa estimasi biaya ekspor 5 MT Cengkeh Lalpari ke Los Angeles dan apa syarat izin FDA?" type="button">
+                🌿 Cengkeh ke USA (FDA)
+              </button>
+              <button class="btn-chip-prompt" data-prompt="Jelaskan alur pencairan dana bertahap 4 fase di Escrow Vault NusaBridge!" type="button">
+                🔒 Alur 4 Fase Escrow
+              </button>
+            </div>
+
+            <!-- Form Input Chat -->
+            <form class="chat-input-form" id="geminiChatForm" onsubmit="return false;">
+              <textarea id="geminiUserPromptInput" class="chat-textarea" placeholder="Ketik pesan atau konsultasikan penawaran ekspor Anda di sini... (Tekan Enter untuk mengirim)" rows="1"></textarea>
+              <button class="btn-send-message" id="btnSendGeminiPrompt" type="button">
+                <span>Kirim</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </form>
+          </div>
+
+        </main>
+
+      </div>
+
+    </div>
+  </section>
+
   <!-- ==================== 4 PILAR UTAMA SOLUSI ==================== -->
   <section class="section-solution-pillars">
     <div class="site-container">
@@ -367,60 +475,188 @@
   </section>
 
   <!-- ==================== INTERACTIVE AI SIMULATOR ==================== -->
-  <section class="section-ai-simulator">
+  <!-- ==================== GEMINI AI AGENT INTERACTIVE SUITE ==================== -->
+  <section class="section-ai-simulator" id="ai-interactive-suite">
     <div class="site-container">
       <div class="section-header text-center">
-        <div class="pill-badge pill-blue">SIMULATOR EKSPOR LIVE</div>
-        <h2 class="section-title">Uji Coba AI Agent Ekspor Sekarang</h2>
-        <p class="section-subtitle">Pilih komoditas Anda dan lihat rekomendasi dokumen, syarat izin ekspor, dan estimasi waktu kapal secara real-time.</p>
+        <div class="pill-badge pill-blue">GEMINI AI AGENT SUITE (GTNIC 2026)</div>
+        <h2 class="section-title">Studio Operasional Ekspor Berbasis Gemini AI Agent</h2>
+        <p class="section-subtitle">Uji coba interaktif 4 kemampuan inti AI: Konversi RFQ Incoterms 2020, penerbitan draf berkas PDF resmi, audit legalitas KYC Hub, dan notifikasi 4 fase Escrow Vault.</p>
       </div>
 
-      <div class="sim-wrapper-card">
-        <div class="sim-form-grid">
-          <div class="sim-group">
-            <label>Pilih Komoditas UMKM:</label>
-            <select id="simCommodity" class="custom-select">
-              <option value="kopi">Kopi Arabika / Robusta</option>
-              <option value="rempah">Cengkeh &amp; Pala Nusantara</option>
-              <option value="rotan">Kerajinan Rotan &amp; Furnitur</option>
-              <option value="nilam">Minyak Atsiri (Patchouli Oil)</option>
-              <option value="makanan">Gula Aren &amp; Makanan Olahan Organik</option>
-            </select>
-          </div>
-          <div class="sim-group">
-            <label>Negara Tujuan Ekspor:</label>
-            <select id="simCountry" class="custom-select">
-              <option value="jerman">Jerman (Uni Eropa)</option>
-              <option value="usa">Amerika Serikat (USA)</option>
-              <option value="jepang">Jepang</option>
-              <option value="uea">Uni Emirat Arab (Timur Tengah)</option>
-              <option value="australia">Australia</option>
-            </select>
-          </div>
-          <div class="sim-group">
-            <label>Volume Rencana Kirim:</label>
-            <input type="text" id="simVolume" value="2.000 Kg (LCL)" class="custom-input">
-          </div>
-        </div>
+      <!-- Tab Buttons Navigation -->
+      <div class="ai-tabs-nav">
+        <button class="ai-tab-btn active" data-tab="tab-rfq" type="button">
+          <span class="atb-icon">📊</span>
+          <span class="atb-text">1. AI Sales Assistant &amp; RFQ Studio</span>
+        </button>
+        <button class="ai-tab-btn" data-tab="tab-pdf" type="button">
+          <span class="atb-icon">📄</span>
+          <span class="atb-text">2. Auto-PDF Document Generator</span>
+        </button>
+        <button class="ai-tab-btn" data-tab="tab-kyc" type="button">
+          <span class="atb-icon">🛡️</span>
+          <span class="atb-text">3. KYC Hub &amp; Kepatuhan Global</span>
+        </button>
+        <button class="ai-tab-btn" data-tab="tab-escrow" type="button">
+          <span class="atb-icon">💬</span>
+          <span class="atb-text">4. Escrow Vault &amp; AI Chat (4 Fase)</span>
+        </button>
+      </div>
 
-        <div style="text-align: center; margin: 24px 0 16px;">
-          <button class="btn btn-primary btn-lg" id="btnRunSimulator">
-            <span>Jalankan Analisis AI Agent</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </button>
-        </div>
-
-        <!-- Output Result Panel -->
-        <div class="sim-output-panel" id="simOutputPanel">
-          <div class="sop-header">
-            <span class="sop-dot"></span>
-            <strong>Hasil Rekomendasi Ekspor AI NusaBridge:</strong>
+      <!-- ==================== TAB 1: RFQ STUDIO & INCOTERMS 2020 ==================== -->
+      <div class="ai-tab-pane active" id="tab-rfq">
+        <div class="sim-wrapper-card">
+          <div style="margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <label style="font-weight:700; font-size:13px; color:var(--navy-title);">Pesan / Permintaan Informal dari Buyer Luar Negeri:</label>
+            <div class="rfq-sample-chips">
+              <span style="font-size:11px; color:var(--text-muted);">Contoh Cepat:</span>
+              <button class="rfq-sample-btn" data-sample="kopi" type="button">Kopi Robusta (Hamburg, DE)</button>
+              <button class="rfq-sample-btn" data-sample="rempah" type="button">Cengkeh Lalpari (Los Angeles, US)</button>
+              <button class="rfq-sample-btn" data-sample="kriya" type="button">Kursi Rotan (Tokyo, JP)</button>
+            </div>
           </div>
-          <div class="sop-grid" id="sopGridContent">
-            <!-- Rendered by JS -->
+
+          <textarea id="rfqBuyerRawInput" class="rfq-input-area" placeholder="Masukkan pesan chat/email dari buyer luar negeri (cth: Looking for 20 MT Robusta green beans CIF Hamburg port, packaging 60kg gunny bags)...">Looking for 20 MT Robusta green beans CIF Hamburg port, packaging 60kg gunny bags, delivery schedule November 2026.</textarea>
+
+          <div style="text-align: center; margin-bottom: 20px;">
+            <button class="btn btn-primary btn-lg" id="btnConvertRFQ" type="button">
+              <span>⚡ Konversi Pesan Buyer Menjadi RFQ Resmi (Incoterms 2020)</span>
+            </button>
+          </div>
+
+          <!-- Output RFQ Studio Result -->
+          <div class="sim-output-panel" id="rfqResultPanel">
+            <div class="sop-header">
+              <span class="sop-dot"></span>
+              <strong>Request for Quotation (RFQ) Terbit Otomatis &bull; Incoterms 2020</strong>
+            </div>
+            <div class="sop-grid" id="rfqResultGrid">
+              <!-- Rendered by JS -->
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- ==================== TAB 2: AUTO-PDF DOCUMENT GENERATOR ==================== -->
+      <div class="ai-tab-pane" id="tab-pdf">
+        <div class="sim-wrapper-card">
+          <div class="doc-pdf-controls">
+            <div class="doc-type-selector">
+              <button class="doc-type-btn active" data-doctype="pi" type="button">Proforma Invoice (PI)</button>
+              <button class="doc-type-btn" data-doctype="sc" type="button">Export Sales Contract (SC)</button>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-outline btn-sm" id="btnCopyDocText" type="button">📋 Salin Teks</button>
+              <button class="btn btn-primary btn-sm" id="btnPrintPdfDoc" type="button" style="background:#059669; border-color:#059669;">
+                🖨️ Cetak / Unduh Draf PDF Resmi
+              </button>
+            </div>
+          </div>
+
+          <!-- Printable Sheet Area -->
+          <div class="doc-paper-sheet" id="docPaperSheet">
+            <!-- Rendered by JS based on selected doc type -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 3: KYC HUB & KEPATUHAN GLOBAL ==================== -->
+      <div class="ai-tab-pane" id="tab-kyc">
+        <div class="sim-wrapper-card">
+          <div class="kyc-audit-grid">
+            <div class="kyc-input-card">
+              <h4 style="margin:0 0 14px; font-size:15px; color:var(--navy-title);">Audit Legalitas Pelaku Usaha (OSS):</h4>
+              <div class="calc-group" style="margin-bottom:12px;">
+                <label style="font-size:12px; font-weight:700;">Nomor Induk Berusaha (NIB 13 Digit):</label>
+                <input type="text" id="kycNibInput" value="0120268840001" class="custom-input">
+              </div>
+              <div class="calc-group" style="margin-bottom:12px;">
+                <label style="font-size:12px; font-weight:700;">NPWP Badan Usaha (16 Digit):</label>
+                <input type="text" id="kycNpwpInput" value="01.234.567.8-012.000" class="custom-input">
+              </div>
+              <div class="calc-group" style="margin-bottom:16px;">
+                <label style="font-size:12px; font-weight:700;">Target Negara Tujuan Ekspor:</label>
+                <select id="kycTargetCountry" class="custom-select">
+                  <option value="usa">Amerika Serikat (USA) - Standar FDA &amp; Bioterrorism Act</option>
+                  <option value="jepang">Jepang - Standar Mutu JAS &amp; MHLW Positive List</option>
+                  <option value="jerman">Jerman (Uni Eropa) - Regulasi Deforestasi EUDR &amp; CE</option>
+                  <option value="uea">Uni Emirat Arab (Dubai) - Sertifikasi Halal BPJPH &amp; ESMA</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-block" id="btnRunKycAudit" type="button">
+                <span>🔍 Jalankan Audit Kepatuhan Regulasi Global</span>
+              </button>
+            </div>
+
+            <div class="kyc-result-card" id="kycResultCard">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TAB 4: ESCROW VAULT & AI CHAT (4 FASE) ==================== -->
+      <div class="ai-tab-pane" id="tab-escrow">
+        <div class="sim-wrapper-card">
+          <div class="escrow-chat-layout">
+            <div class="escrow-triggers-col">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h4 style="margin:0; font-size:14.5px; color:var(--navy-title);">Simulasi 4 Fase Smart Escrow:</h4>
+                <span class="seal-stamp" id="escrowTotalVaultStatus">VAULT AKTIF</span>
+              </div>
+              <p style="font-size:12px; color:var(--text-muted); margin:0;">
+                Klik tombol fase di bawah untuk melihat notifikasi resmi AI Agent dan progres pencairan dana bertahap:
+              </p>
+
+              <button class="escrow-btn-phase active" data-phase="1" type="button">
+                <span class="ebp-tag">Fase 1 (30% DP Cair)</span>
+                <span class="ebp-title">Kontrak Disepakati &amp; Escrow Terkunci</span>
+                <span class="ebp-sub">Pencairan USD 6,000 untuk modal kerja produksi UMKM</span>
+              </button>
+
+              <button class="escrow-btn-phase" data-phase="2" type="button">
+                <span class="ebp-tag">Fase 2 (30% PEB Cair)</span>
+                <span class="ebp-title">Pemberitahuan Ekspor Barang (PEB) Terbit</span>
+                <span class="ebp-sub">Pencairan USD 6,000 saat kargo masuk pelabuhan muat</span>
+              </button>
+
+              <button class="escrow-btn-phase" data-phase="3" type="button">
+                <span class="ebp-tag">Fase 3 (20% B/L Cair)</span>
+                <span class="ebp-title">Kapal Berlayar &amp; Bill of Lading On-Board</span>
+                <span class="ebp-sub">Pencairan USD 4,000 saat kargo resmi dalam pelayaran laut</span>
+              </button>
+
+              <button class="escrow-btn-phase" data-phase="4" type="button">
+                <span class="ebp-tag">Fase 4 (20% Tiba Final)</span>
+                <span class="ebp-title">Kargo Tiba di Tujuan &amp; Buyer Konfirmasi</span>
+                <span class="ebp-sub">Pencairan USD 4,000 sisa pelunasan 100% tuntas</span>
+              </button>
+            </div>
+
+            <!-- Chat Window -->
+            <div class="escrow-chat-box">
+              <div class="ecb-header">
+                <div>
+                  <strong style="font-size:13px;">🤖 NusaBridge Escrow AI Agent</strong>
+                  <div style="font-size:10.5px; color:#94a3b8;">Smart Contract Vault Multivalas (USD/IDR)</div>
+                </div>
+                <span class="ecb-status">● Live WebSocket Connected</span>
+              </div>
+
+              <div class="ecb-messages" id="escrowChatMessages">
+                <!-- Rendered by JS -->
+              </div>
+
+              <div class="ecb-footer">
+                <input type="text" id="escrowChatInput" class="ecb-input" placeholder="Tanyakan status pelepasan dana atau klausul escrow...">
+                <button class="ecb-send-btn" id="btnSendEscrowChat" type="button">Kirim</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 

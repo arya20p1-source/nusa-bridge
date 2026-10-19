@@ -145,22 +145,50 @@ Fitur ini mensimulasikan undian diskon hoki perusahaan dari 5% s/d 25%+:
   $$\theta = \text{atan2}(\Delta \text{Lng}, \Delta \text{Lat}) \times \frac{180}{\pi}$$
   Ikon kapal berputar secara realistis menghadap arah pelayaran yang dituju.
 
-### D. AI Agent Gemini & Dual-Mode Fallback
-- **Mode Online**: Terhubung langsung ke Google Generative AI (Gemini 1.5 Flash) via `@google/genai`.
-- **Mode Offline (Heuristic Rule-Based)**: Jika komputer juri tidak ada internet atau tanpa API Key, backend tetap memberikan jawaban cerdas berbasis kamus regulasi ekspor (EUDR Eropa, FDA Amerika, HS Code, Sertifikasi Halal BPJPH).
+### D. AI Agent Gemini & Dual-Mode Fallback (`js/solusi.js` & `server.js`)
+NusaBridge mengimplementasikan **Gemini AI Agent** dengan arsitektur **4 Pilar Ekspor Cerdas**:
+1. **Pilar 1 (AI Sales Assistant & RFQ Studio)**: Kalkulasi harga Incoterms 2020 (FOB, Ocean Freight, Asuransi maritim, CIF, dan rekomendasi margin aman UMKM).
+2. **Pilar 2 (Otomatisasi Dokumen Legal)**: Penerbitan otomatis draf berkas resmi Proforma Invoice & Export Sales Contract PDF.
+3. **Pilar 3 (KYC Hub & Kepatuhan Global)**: Audit otomatis legalitas NIB (OSS), NPWP, Phytosanitary, izin US FDA, sertifikasi JAS Jepang, atau EUDR Eropa dengan skor 100%.
+4. **Pilar 4 (Escrow Vault Multivalas)**: Skema penguncian dana dan pencairan bertahap 4 fase (30% DP ➔ 30% PEB ➔ 20% Bill of Lading ➔ 20% Tiba di Pelabuhan Tujuan).
+
+**Integrasi Resmi Google GenAI SDK (`@google/genai`)**:
+```javascript
+import { GoogleGenAI } from "@google/genai";
+
+const ai = new GoogleGenAI({
+  httpOptions: { apiVersion: "v1" },
+});
+
+async function main() {
+  const interaction = await ai.interactions.create({
+    model: "gemini-1.5-flash",
+    input: "Explain how AI works",
+  });
+  console.log(interaction.output_text);
+}
+
+await main();
+```
+
+- **Mode Online**: Terhubung langsung ke Google Generative AI Engine via `@google/genai`.
+- **Mode Offline (Heuristic 4-Pillar Fallback)**: Jika komputer juri tidak ada internet atau tanpa API Key, antarmuka chat dan backend tetap memberikan jawaban cerdas dan terstruktur secara instan (termasuk skenario Hamburg Robusta, Los Angeles Cengkeh, Tokyo Rotan, Audit KYC, dan Simulasi Escrow).
 
 ---
 
 ## 6. TRIK MENJAWAB PERTANYAAN JURI GTNIC 2026
 
 1. **Juri Tanya: "Di mana databasenya disimpan? Kok tidak pakai MySQL?"**
-   > *Jawaban Juara*: "Kami merancang NusaBridge dengan arsitektur **Zero-Friction Deployment**. Database kami bangun 100% menggunakan native JavaScript Engine (`database/db.js`) yang mengelola file JSON terstruktur dengan prinsip ACID-lightweight dan Asynchronous I/O. Ini membuat sistem sangat portabel, hemat memori server, dan siap dijalankan di perangkat manapun tanpa konfigurasi DBMS rumit."
+   > *Jawaban Juara*: "Kami merancang NusaBridge dengan arsitektur **Zero-Friction Deployment**. Database kami bangun 100% menggunakan native JavaScript Engine terpisah di folder `database/` (`database/db.js`) yang mengelola file JSON terstruktur dengan prinsip ACID-lightweight dan Asynchronous I/O. Ini membuat sistem sangat portabel, hemat memori server, dan siap dijalankan di perangkat manapun tanpa konfigurasi DBMS rumit."
 
-2. **Juri Tanya: "Bagaimana cara memastikan gambar produk tidak rusak saat presentasi?"**
-   > *Jawaban Juara*: "Kami menerapkan **Dual-Layer Asset Resiliency**. Pertama, kami menyediakan 36 asset visual WebP terkompresi tinggi. Kedua, pada layer JavaScript kami memasang event handler `onerror` fallback otomatis modulo ke asset lokal, sehingga probabilitas *broken image icon* adalah 0%."
+2. **Juri Tanya: "Bagaimana integrasi AI Gemini bekerja di halaman Solusi AI?"**
+   > *Jawaban Juara*: "Halaman Solusi AI kami rancang sebagai **Ruang Percakapan Interaktif (Interactive Conversational AI Room)** yang ditenagai oleh Google GenAI SDK (`@google/genai`). AI Agent kami bertindak sebagai konsultan ekspor 24/7 yang merangkul 4 pilar sekaligus: menghitung RFQ Incoterms 2020, menerbitkan draf kontrak PDF, memvalidasi NIB/kepatuhan global, dan memandu alur pencairan dana bertahap 4 fase di Escrow Vault. Jika koneksi offline saat penjurian, sistem otomatis menggunakan *deterministic rule engine* sehingga demo tidak pernah gagal."
 
-3. **Juri Tanya: "Bagaimana alur bisnis paket harga di NusaBridge?"**
-   > *Jawaban Juara*: "NusaBridge menggunakan model *Freemium to Growth*:
-   > - **1 Bulan Free Trial**: Edukasi awal UMKM agar berani ekspor.
-   > - **Paket 5 Bulan (Rp 350.000)** & **1 Tahun (Rp 845.000)**: Didukung sistem gamifikasi kupon hoki (diskon 5% - 25%).
-   > - **Paket Multi-Tahun (> 1 Tahun)**: Khusus Koperasi & Asosiasi dengan tombol direct chat WhatsApp ke Admin untuk skema kolaborasi B2B jangka panjang."
+3. **Juri Tanya: "Berapa banyak produk yang dikurasi dalam katalog NusaBridge?"**
+   > *Jawaban Juara*: "Terdapat tepat **120 produk komoditas ekspor terkurasi** yang terbagi rata dalam 4 kategori unggulan Indonesia: 30 Kopi Nusantara (Green Beans & Roasted), 30 Rempah-Rempah Kering & Minyak Atsiri, 30 Kriya & Kerajinan Ramah Lingkungan, serta 30 Tekstil & Wastra Tradisional."
+
+4. **Juri Tanya: "Bagaimana model bisnis SaaS dan harga NusaBridge?"**
+   > *Jawaban Juara*: "NusaBridge menyediakan 3 paket fleksibel:
+   > - **Paket Starter / Sandbox (Rp 0 / Gratis)**: Disediakan khusus untuk pengujian UMKM pemula dan evaluasi dewan juri GTNIC 2026.
+   > - **Paket UMKM Eksportir / Professional (Rp 250.000 / Bulan)**: Akses tanpa batas ke RFQ Studio, kalkulator Incoterms, otomatisasi PDF, dan proteksi Escrow Vault.
+   > - **Paket Enterprise (Kustom / Hubungi Kami)**: Ditujukan untuk koperasi ekspor besar atau asosiasi dagang dengan integrasi multi-user dan tombol langsung ke WhatsApp Admin."
