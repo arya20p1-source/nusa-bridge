@@ -1,0 +1,3052 @@
+[
+  {
+    "id": "prod_001",
+    "name": "Kopi Arabika Gayo Specialty Grade 1",
+    "category": "kopi",
+    "price": 9.5,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Takengon, Aceh Tengah",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-2.webp",
+    "desc": "Biji kopi arabika dataran tinggi 1.400 mdpl dengan aroma floral dan tingkat keasaman seimbang.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.8%"
+      },
+      {
+        "k": "Defect",
+        "v": "<4%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "84.75"
+      }
+    ],
+    "certs": [
+      "USDA Organic",
+      "EU Organic",
+      "Rainforest Alliance",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Belawan",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_002",
+    "name": "Kopi Arabika Mandheling Triple Picked",
+    "category": "kopi",
+    "price": 9.8,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Mandailing Natal, Sumatera Utara",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-3.webp",
+    "desc": "Body tebal khas kopi Sumatera, aroma cokelat rempah pekat dan earthy notes.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "12.0%"
+      },
+      {
+        "k": "Defect",
+        "v": "<2%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "85.20"
+      }
+    ],
+    "certs": [
+      "Fair Trade",
+      "Rainforest Alliance",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Belawan",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_003",
+    "name": "Kopi Arabika Toraja Kalosi Grade 1",
+    "category": "kopi",
+    "price": 10.2,
+    "unit": "Kg",
+    "moq": 800,
+    "origin": "Tana Toraja, Sulawesi Selatan",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-4.webp",
+    "desc": "Karakteristik rempah manis dengan aftertaste dark chocolate yang kaya.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.5%"
+      },
+      {
+        "k": "Defect",
+        "v": "<3%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "85.80"
+      }
+    ],
+    "certs": [
+      "Indonesian GI (Indikasi Geografis)",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_004",
+    "name": "Kopi Arabika Kintamani Natural Bali",
+    "category": "kopi",
+    "price": 10.5,
+    "unit": "Kg",
+    "moq": 600,
+    "origin": "Kintamani, Bangli, Bali",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-5.webp",
+    "desc": "Aroma citrus jeruk khas Kintamani dari sistem tumpang sari jeruk bali.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.2%"
+      },
+      {
+        "k": "Defect",
+        "v": "<3%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "86.10"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Bali",
+      "USDA Organic",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Benoa / Tg Perak",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_005",
+    "name": "Kopi Arabika Flores Bajawa Organic",
+    "category": "kopi",
+    "price": 9.4,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Bajawa, Ngada, NTT",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-6.webp",
+    "desc": "Ditanam di lereng Gunung Inerie vulkanik subur dengan aroma tembakau manis dan karamel.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.9%"
+      },
+      {
+        "k": "Defect",
+        "v": "<4%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "84.50"
+      }
+    ],
+    "certs": [
+      "EU Organic Traces",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_006",
+    "name": "Kopi Arabika Java Preanger Malabar",
+    "category": "kopi",
+    "price": 9.6,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Pangalengan, Bandung, Jawa Barat",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-1.webp",
+    "desc": "Kopi legendaris Jawa Barat sejak era Hindia Belanda, rasa manis buah beri dan vanila.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.7%"
+      },
+      {
+        "k": "Defect",
+        "v": "<3%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "85.00"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Jabar",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_007",
+    "name": "Kopi Arabika Ijen Raung Banyuwangi",
+    "category": "kopi",
+    "price": 8.9,
+    "unit": "Kg",
+    "moq": 1200,
+    "origin": "Gunung Ijen, Banyuwangi, Jatim",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-2.webp",
+    "desc": "Keasaman sejuk khas pegunungan Ijen dengan sentuhan aroma bunga kopi.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "12.2%"
+      },
+      {
+        "k": "Defect",
+        "v": "<5%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "83.90"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Ijen",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_008",
+    "name": "Kopi Arabika Papua Wamena Highland",
+    "category": "kopi",
+    "price": 12,
+    "unit": "Kg",
+    "moq": 500,
+    "origin": "Lembah Baliem, Wamena, Papua",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-3.webp",
+    "desc": "Organik liar murni tanpa bahan kimia dari ketinggian 1.800 mdpl pegunungan Jayawijaya.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.0%"
+      },
+      {
+        "k": "Defect",
+        "v": "<2%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "87.20"
+      }
+    ],
+    "certs": [
+      "100% Wild Organic",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok / Jayapura",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_009",
+    "name": "Kopi Robusta Lampung Super Fine Grade",
+    "category": "kopi",
+    "price": 4.5,
+    "unit": "Kg",
+    "moq": 5000,
+    "origin": "Liwa, Lampung Barat",
+    "hsCode": "0901.11.20",
+    "image": "assets/products/kopi-4.webp",
+    "desc": "Robusta unggulan untuk industri espresso blend dunia, crema tebal dan aroma kakao pekat.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "12.5%"
+      },
+      {
+        "k": "Defect",
+        "v": "<6%"
+      },
+      {
+        "k": "Screen Size",
+        "v": "18 (Large Bean)"
+      }
+    ],
+    "certs": [
+      "4C Association",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Panjang Lampung",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_010",
+    "name": "Kopi Robusta Dampit Malang Premium",
+    "category": "kopi",
+    "price": 4.8,
+    "unit": "Kg",
+    "moq": 3000,
+    "origin": "Dampit, Malang, Jawa Timur",
+    "hsCode": "0901.11.20",
+    "image": "assets/products/kopi-5.webp",
+    "desc": "Robusta lereng Gunung Semeru yang sangat diminati pasar roastery Eropa.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "12.0%"
+      },
+      {
+        "k": "Defect",
+        "v": "<5%"
+      },
+      {
+        "k": "Flavor",
+        "v": "Nutty & Dark Cocoa"
+      }
+    ],
+    "certs": [
+      "Rainforest Alliance",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_011",
+    "name": "Kopi Robusta Temanggung Wine Process",
+    "category": "kopi",
+    "price": 7.2,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Temanggung, Jawa Tengah",
+    "hsCode": "0901.11.20",
+    "image": "assets/products/kopi-6.webp",
+    "desc": "Fermentasi buah kopi anaerobik menghasilkan rasa eksotis seperti wine anggur merah.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.8%"
+      },
+      {
+        "k": "Defect",
+        "v": "<3%"
+      },
+      {
+        "k": "Fermentation",
+        "v": "30 Hari Hermetic"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "SCA Verified"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_012",
+    "name": "Kopi Arabika Kerinci Honey Process",
+    "category": "kopi",
+    "price": 10.8,
+    "unit": "Kg",
+    "moq": 800,
+    "origin": "Kayu Aro, Kerinci, Jambi",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-1.webp",
+    "desc": "Ditanam di lereng Gunung Kerinci 1.600 mdpl, manis legit nektar madu alami.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.4%"
+      },
+      {
+        "k": "Defect",
+        "v": "<2%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "86.50"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Kerinci",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Teluk Bayur Padang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_013",
+    "name": "Kopi Luwak Liar Gayo Autentik",
+    "category": "kopi",
+    "price": 75,
+    "unit": "Kg",
+    "moq": 50,
+    "origin": "Bener Meriah, Aceh",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-2.webp",
+    "desc": "Kopi luwak liar dari hutan lindung Gayo, diproses higienis bersertifikasi laboratorium.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "10.8%"
+      },
+      {
+        "k": "Purity",
+        "v": "100% Wild Luwak Certified"
+      },
+      {
+        "k": "SCA",
+        "v": "88.00"
+      }
+    ],
+    "certs": [
+      "Authentic Wildlife Certificate",
+      "Halal BPJPH"
+    ],
+    "shipping": "CIF Hamburg / Los Angeles",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_014",
+    "name": "Kopi Arabika Sindoro Sumbing Anaerob",
+    "category": "kopi",
+    "price": 11.2,
+    "unit": "Kg",
+    "moq": 600,
+    "origin": "Lereng Gunung Sindoro, Jateng",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-3.webp",
+    "desc": "Profil rasa buah tropis mangga dan nanas matang dari fermentasi suhu dingin.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.3%"
+      },
+      {
+        "k": "Defect",
+        "v": "<2%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "86.00"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "SCA Certificate"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_015",
+    "name": "Kopi Robusta Flores Manggarai Fine",
+    "category": "kopi",
+    "price": 5.2,
+    "unit": "Kg",
+    "moq": 2000,
+    "origin": "Manggarai Barat, NTT",
+    "hsCode": "0901.11.20",
+    "image": "assets/products/kopi-4.webp",
+    "desc": "Robusta petik merah murni dengan notes rasa karamel bakar dan kacang hazelnut.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "12.1%"
+      },
+      {
+        "k": "Defect",
+        "v": "<5%"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "Fair Trade"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_016",
+    "name": "Green Coffee Bean Extract Powder",
+    "category": "kopi",
+    "price": 18,
+    "unit": "Kg",
+    "moq": 200,
+    "origin": "Sukabumi, Jawa Barat",
+    "hsCode": "0901.90.10",
+    "image": "assets/products/kopi-5.webp",
+    "desc": "Ekstrak asam klorogenat dari biji kopi hijau untuk industri nutraseutikal dan diet herbal.",
+    "specs": [
+      {
+        "k": "Chlorogenic Acid",
+        "v": ">50%"
+      },
+      {
+        "k": "Purity",
+        "v": "100% Non-GMO"
+      }
+    ],
+    "certs": [
+      "GMP Certified",
+      "ISO 22000",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_017",
+    "name": "Kopi Arabika Lintong Nihuta Grade 1",
+    "category": "kopi",
+    "price": 9.7,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Humbang Hasundutan, Sumut",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-6.webp",
+    "desc": "Kopi khas Danau Toba dengan body mantap dan keasaman jeruk nipis segar.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.8%"
+      },
+      {
+        "k": "Defect",
+        "v": "<3%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "84.90"
+      }
+    ],
+    "certs": [
+      "Rainforest Alliance",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Belawan",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_018",
+    "name": "Kopi Arabika Papandayan Garut Natural",
+    "category": "kopi",
+    "price": 10,
+    "unit": "Kg",
+    "moq": 700,
+    "origin": "Gunung Papandayan, Garut, Jabar",
+    "hsCode": "0901.11.10",
+    "image": "assets/products/kopi-1.webp",
+    "desc": "Aroma manis buah kismis dan berry dengan sentuhan jasmine floral.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "11.5%"
+      },
+      {
+        "k": "Defect",
+        "v": "<3%"
+      },
+      {
+        "k": "SCA Score",
+        "v": "85.40"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "Indikasi Geografis"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_019",
+    "name": "Cengkeh Lal Maluku Super (Cloves Handpick)",
+    "category": "rempah",
+    "price": 8.5,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Ambon, Maluku",
+    "hsCode": "0907.10.00",
+    "image": "assets/products/rempah-2.webp",
+    "desc": "Cengkeh kering pilihan kadar minyak atsiri eugenol di atas 19.5% bebas batang dan jamur.",
+    "specs": [
+      {
+        "k": "Eugenol",
+        "v": ">19.5%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<11%"
+      },
+      {
+        "k": "Head Intact",
+        "v": ">90%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Certificate of Origin",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak / Makassar",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_020",
+    "name": "Biji Pala Siau Ekspor Grade ABCD",
+    "category": "rempah",
+    "price": 11.5,
+    "unit": "Kg",
+    "moq": 500,
+    "origin": "Kepulauan Siau, Sulut",
+    "hsCode": "0908.11.00",
+    "image": "assets/products/rempah-3.webp",
+    "desc": "Biji pala terbaik dunia tanpa aflatoksin, aroma tajam dan kandungan minyak tinggi.",
+    "specs": [
+      {
+        "k": "Aflatoxin",
+        "v": "<5 ppb (EU Standard)"
+      },
+      {
+        "k": "Moisture",
+        "v": "<10%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "EU Traces Certificate",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Bitung",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_021",
+    "name": "Fuli Pala Banda Super (Nutmeg Mace)",
+    "category": "rempah",
+    "price": 22,
+    "unit": "Kg",
+    "moq": 300,
+    "origin": "Banda Neira, Maluku Tengah",
+    "hsCode": "0908.12.00",
+    "image": "assets/products/rempah-4.webp",
+    "desc": "Bunga pala merah cerah utuh dikeringkan alami tanpa pewarna sintetis.",
+    "specs": [
+      {
+        "k": "Color",
+        "v": "Deep Red Natural"
+      },
+      {
+        "k": "Moisture",
+        "v": "<9%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_022",
+    "name": "Kayu Manis Kerinci Korintje Stick AA",
+    "category": "rempah",
+    "price": 7.8,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Gunung Kerinci, Jambi",
+    "hsCode": "0906.11.00",
+    "image": "assets/products/rempah-5.webp",
+    "desc": "Kulit kayu manis Cassia kualitas ekspor nomor satu dunia dengan cinnamaldehyde tinggi.",
+    "specs": [
+      {
+        "k": "Volatile Oil",
+        "v": ">2.8%"
+      },
+      {
+        "k": "Length",
+        "v": "8-10 cm Uniform"
+      }
+    ],
+    "certs": [
+      "USDA NOP",
+      "FDA Food Facility",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Teluk Bayur / Tg Priok",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_023",
+    "name": "Lada Hitam Lampung ASTA Grade (Black Pepper)",
+    "category": "rempah",
+    "price": 6.8,
+    "unit": "Kg",
+    "moq": 2000,
+    "origin": "Lampung",
+    "hsCode": "0904.11.10",
+    "image": "assets/products/rempah-6.webp",
+    "desc": "Biji lada hitam utuh berdensitas 550 g/L standar American Spice Trade Association (ASTA).",
+    "specs": [
+      {
+        "k": "Density",
+        "v": "550-570 g/L"
+      },
+      {
+        "k": "Piperine",
+        "v": ">4.5%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<12%"
+      }
+    ],
+    "certs": [
+      "ASTA Certified",
+      "Phytosanitary",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Panjang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_024",
+    "name": "Lada Putih Muntok Double Washed",
+    "category": "rempah",
+    "price": 9.5,
+    "unit": "Kg",
+    "moq": 1500,
+    "origin": "Bangka Belitung",
+    "hsCode": "0904.11.20",
+    "image": "assets/products/rempah-1.webp",
+    "desc": "Lada putih legendaris Muntok bercita rasa pedas bersih dengan bau aromatik murni.",
+    "specs": [
+      {
+        "k": "Density",
+        "v": "620-640 g/L"
+      },
+      {
+        "k": "Piperine",
+        "v": ">5.0%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<12%"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Muntok",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Pangkal Balam",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_025",
+    "name": "Kapulaga Jawa Putih Kering (Cardamom)",
+    "category": "rempah",
+    "price": 14.5,
+    "unit": "Kg",
+    "moq": 500,
+    "origin": "Ciamis, Jawa Barat",
+    "hsCode": "0908.31.00",
+    "image": "assets/products/rempah-2.webp",
+    "desc": "Buah kapulaga matang pilihan dikeringkan oven suhu rendah untuk menjaga kadar atsiri.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "<11%"
+      },
+      {
+        "k": "Purity",
+        "v": ">98%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_026",
+    "name": "Jahe Merah Kering Simplisia (Dried Red Ginger)",
+    "category": "rempah",
+    "price": 6.2,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Karanganyar, Jawa Tengah",
+    "hsCode": "0910.11.00",
+    "image": "assets/products/rempah-3.webp",
+    "desc": "Irisan jahe merah kaya senyawa gingerol dan shogaol untuk bahan baku farmasi dan jamu.",
+    "specs": [
+      {
+        "k": "Gingerol",
+        "v": ">2.2%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<10%"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_027",
+    "name": "Kunyit Kuning Iris Kering (Turmeric Slice)",
+    "category": "rempah",
+    "price": 3.8,
+    "unit": "Kg",
+    "moq": 2000,
+    "origin": "Sukoharjo, Jawa Tengah",
+    "hsCode": "0910.30.00",
+    "image": "assets/products/rempah-4.webp",
+    "desc": "Kunyit murni tanpa pewarna, kandungan kurkumin alami di atas 4.5% untuk industri kosmetik.",
+    "specs": [
+      {
+        "k": "Curcumin",
+        "v": ">4.5%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<10%"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "ISO 22000",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_028",
+    "name": "Temulawak Kering Ekspor (Curcuma Xanthorrhiza)",
+    "category": "rempah",
+    "price": 4.2,
+    "unit": "Kg",
+    "moq": 1500,
+    "origin": "Boyolali, Jawa Tengah",
+    "hsCode": "0910.99.10",
+    "image": "assets/products/rempah-5.webp",
+    "desc": "Herbal endemik Indonesia berkhasiat menjaga kesehatan organ hati dan penambah nafsu makan.",
+    "specs": [
+      {
+        "k": "Xanthorrhizol",
+        "v": "Positive Active"
+      },
+      {
+        "k": "Moisture",
+        "v": "<10%"
+      }
+    ],
+    "certs": [
+      "GMP Certified",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_029",
+    "name": "Bunga Lawang / Pekak (Star Anise)",
+    "category": "rempah",
+    "price": 9.2,
+    "unit": "Kg",
+    "moq": 800,
+    "origin": "Solok, Sumatera Barat",
+    "hsCode": "0909.61.10",
+    "image": "assets/products/rempah-6.webp",
+    "desc": "Bunga lawang bintang 8 utuh dengan aroma anetol manis rempah untuk kuliner dan farmasi.",
+    "specs": [
+      {
+        "k": "Whole Star",
+        "v": ">85%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<12%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Teluk Bayur Padang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_030",
+    "name": "Ketumbar Jawa Butir (Coriander Seed)",
+    "category": "rempah",
+    "price": 2.8,
+    "unit": "Kg",
+    "moq": 3000,
+    "origin": "Bojonegoro, Jawa Timur",
+    "hsCode": "0909.21.00",
+    "image": "assets/products/rempah-1.webp",
+    "desc": "Butiran ketumbar kering wangi alami bebas kotoran dan serangga gudang.",
+    "specs": [
+      {
+        "k": "Purity",
+        "v": ">99%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<10%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_031",
+    "name": "Asam Jawa Tanpa Biji (Tamarind Seedless)",
+    "category": "rempah",
+    "price": 3.2,
+    "unit": "Kg",
+    "moq": 2000,
+    "origin": "Kupang, NTT",
+    "hsCode": "0813.40.90",
+    "image": "assets/products/rempah-2.webp",
+    "desc": "Daging asam jawa matang pekat dikemas higienis vacuum pack untuk bumbu makanan.",
+    "specs": [
+      {
+        "k": "Tartaric Acid",
+        "v": "12-14%"
+      },
+      {
+        "k": "Brix",
+        "v": ">65%"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_032",
+    "name": "Lengkuas Merah Kering (Dried Galangal)",
+    "category": "rempah",
+    "price": 3.5,
+    "unit": "Kg",
+    "moq": 1500,
+    "origin": "Purworejo, Jawa Tengah",
+    "hsCode": "0910.99.20",
+    "image": "assets/products/rempah-3.webp",
+    "desc": "Irisan rimpang lengkuas merah beraroma tajam untuk industri ekstrak herbal Eropa.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "<10%"
+      },
+      {
+        "k": "Essential Oil",
+        "v": ">1.2%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_033",
+    "name": "Sereh Kering Potong (Dried Lemongrass)",
+    "category": "rempah",
+    "price": 4.8,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Minahasa, Sulawesi Utara",
+    "hsCode": "1211.90.99",
+    "image": "assets/products/rempah-4.webp",
+    "desc": "Batang dan daun serai potong kering higienis untuk campuran teh herbal internasional.",
+    "specs": [
+      {
+        "k": "Citral Content",
+        "v": ">75%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<9%"
+      }
+    ],
+    "certs": [
+      "EU Organic",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Bitung",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_034",
+    "name": "Kencur Segar & Kering (Kaempferia Galanga)",
+    "category": "rempah",
+    "price": 5.5,
+    "unit": "Kg",
+    "moq": 800,
+    "origin": "Kulon Progo, D.I. Yogyakarta",
+    "hsCode": "0910.99.30",
+    "image": "assets/products/rempah-5.webp",
+    "desc": "Aroma khas kencur kaya etil p-metoksisinamat untuk industri kosmetik tradisional.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "<10%"
+      },
+      {
+        "k": "EPMS Content",
+        "v": ">2.8%"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_035",
+    "name": "Adas Manis Alami (Fennel Seeds)",
+    "category": "rempah",
+    "price": 4.5,
+    "unit": "Kg",
+    "moq": 1200,
+    "origin": "Malang, Jawa Timur",
+    "hsCode": "0909.61.20",
+    "image": "assets/products/rempah-6.webp",
+    "desc": "Biji adas manis pilihan dengan aroma segar untuk farmasi dan bahan teh seduh.",
+    "specs": [
+      {
+        "k": "Purity",
+        "v": ">98.5%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<10%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_036",
+    "name": "Daun Jeruk Purut Kering (Kaffir Lime Leaves)",
+    "category": "rempah",
+    "price": 12.5,
+    "unit": "Kg",
+    "moq": 300,
+    "origin": "Tulungagung, Jawa Timur",
+    "hsCode": "0910.99.90",
+    "image": "assets/products/rempah-1.webp",
+    "desc": "Daun jeruk purut hijau segar dikeringkan freeze-dry menjaga warna dan aroma minyak asiri.",
+    "specs": [
+      {
+        "k": "Color",
+        "v": "Fresh Green Preserved"
+      },
+      {
+        "k": "Moisture",
+        "v": "<6%"
+      }
+    ],
+    "certs": [
+      "ISO 22000",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_037",
+    "name": "Kayu Manis Bubuk Ekspor (Cinnamon Powder)",
+    "category": "rempah",
+    "price": 9,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Kerinci, Jambi",
+    "hsCode": "0906.20.00",
+    "image": "assets/products/rempah-2.webp",
+    "desc": "Bubuk kayu manis 80 mesh murni 100% tanpa campuran pati, lolos uji mikrobiologi.",
+    "specs": [
+      {
+        "k": "Mesh Size",
+        "v": "80-100 Mesh"
+      },
+      {
+        "k": "Coumarin",
+        "v": "Low Safe Limit"
+      }
+    ],
+    "certs": [
+      "USDA NOP",
+      "FDA Registered",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_038",
+    "name": "Lada Hitam Bubuk Organik (Ground Black Pepper)",
+    "category": "rempah",
+    "price": 8.2,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Lampung",
+    "hsCode": "0904.12.00",
+    "image": "assets/products/rempah-3.webp",
+    "desc": "Bubuk lada hitam murni aroma tajam untuk industri bumbu dan pengemasan bumbu ritel.",
+    "specs": [
+      {
+        "k": "Mesh",
+        "v": "60 Mesh"
+      },
+      {
+        "k": "Salmonella",
+        "v": "Negative / 25g"
+      }
+    ],
+    "certs": [
+      "BRCGS Food Safety",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Panjang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_039",
+    "name": "Kunyit Bubuk Ekspor (Pure Turmeric Powder)",
+    "category": "rempah",
+    "price": 5.2,
+    "unit": "Kg",
+    "moq": 1500,
+    "origin": "Wonogiri, Jawa Tengah",
+    "hsCode": "0910.30.00",
+    "image": "assets/products/rempah-4.webp",
+    "desc": "Bubuk kunyit warna kuning emas cerah dengan uji residu pestisida bebas batas ambang.",
+    "specs": [
+      {
+        "k": "Curcumin",
+        "v": ">5.0%"
+      },
+      {
+        "k": "Mesh",
+        "v": "100 Mesh Fine"
+      }
+    ],
+    "certs": [
+      "USDA NOP",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_040",
+    "name": "Minyak Cengkeh Eugenol 85% (Clove Oil)",
+    "category": "rempah",
+    "price": 28,
+    "unit": "Kg",
+    "moq": 200,
+    "origin": "Purwokerto, Jawa Tengah",
+    "hsCode": "3301.29.10",
+    "image": "assets/products/rempah-5.webp",
+    "desc": "Minyak atsiri hasil destilasi daun cengkeh berstandar kemurnian internasional.",
+    "specs": [
+      {
+        "k": "Eugenol Content",
+        "v": ">85%"
+      },
+      {
+        "k": "Refractive Index",
+        "v": "1.530 - 1.540"
+      }
+    ],
+    "certs": [
+      "CoA GC-MS",
+      "IFRA Certified",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_041",
+    "name": "Minyak Pala Murni (Nutmeg Essential Oil)",
+    "category": "rempah",
+    "price": 68,
+    "unit": "Kg",
+    "moq": 100,
+    "origin": "Siau, Sulawesi Utara",
+    "hsCode": "3301.29.20",
+    "image": "assets/products/rempah-6.webp",
+    "desc": "Destilasi uap biji pala dengan kadar sabinene dan myristicin tinggi.",
+    "specs": [
+      {
+        "k": "Myristicin",
+        "v": "10-12%"
+      },
+      {
+        "k": "Specific Gravity",
+        "v": "0.880 - 0.910"
+      }
+    ],
+    "certs": [
+      "CoA GC-MS",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_042",
+    "name": "Minyak Kayu Putih Asli Pulau Buru",
+    "category": "rempah",
+    "price": 35,
+    "unit": "Kg",
+    "moq": 150,
+    "origin": "Namlea, Pulau Buru, Maluku",
+    "hsCode": "3301.29.30",
+    "image": "assets/products/rempah-1.webp",
+    "desc": "Minyak kayu putih liar murni dengan cineole di atas 65% untuk aroma terapi kesehatan.",
+    "specs": [
+      {
+        "k": "Cineole",
+        "v": ">65%"
+      },
+      {
+        "k": "Optical Rotation",
+        "v": "-3° to -1°"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Buru",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_043",
+    "name": "Set Kursi & Meja Rotan Alami Cirebon",
+    "category": "kriya",
+    "price": 185,
+    "unit": "Set",
+    "moq": 10,
+    "origin": "Cirebon, Jawa Barat",
+    "hsCode": "9401.52.00",
+    "image": "assets/products/kriya-2.webp",
+    "desc": "Furnitur rotan anyaman tangan ramah lingkungan dilapisi finishing water-based non-toxic.",
+    "specs": [
+      {
+        "k": "Material",
+        "v": "100% Natural Rattan"
+      },
+      {
+        "k": "Fumigation",
+        "v": "AFAS Certified"
+      }
+    ],
+    "certs": [
+      "SVLK V-Legal",
+      "Fumigation Cert"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_044",
+    "name": "Keranjang Anyaman Serat Pisang Abaca",
+    "category": "kriya",
+    "price": 14.5,
+    "unit": "Pieces",
+    "moq": 300,
+    "origin": "Sleman, D.I. Yogyakarta",
+    "hsCode": "4602.19.00",
+    "image": "assets/products/kriya-3.webp",
+    "desc": "Keranjang serbaguna dari pelepah pisang abaca kuat dan memiliki nilai estetika tinggi.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "<12% (Anti Jamur)"
+      },
+      {
+        "k": "Tensile Strength",
+        "v": "High Load"
+      }
+    ],
+    "certs": [
+      "SVLK V-Legal",
+      "Sedex Ethical"
+    ],
+    "shipping": "FOB Tanjung Perak / Tg Mas",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_045",
+    "name": "Piring & Mangkuk Kayu Jati Perhutani",
+    "category": "kriya",
+    "price": 6.8,
+    "unit": "Pieces",
+    "moq": 500,
+    "origin": "Blora, Jawa Tengah",
+    "hsCode": "4419.90.00",
+    "image": "assets/products/kriya-4.webp",
+    "desc": "Peralatan makan kayu jati solid dengan food-grade beeswax finish aman bersentuhan makanan.",
+    "specs": [
+      {
+        "k": "Finishing",
+        "v": "100% Organic Beeswax"
+      },
+      {
+        "k": "Wood Grade",
+        "v": "Legal Teak A"
+      }
+    ],
+    "certs": [
+      "SVLK FSC Timber",
+      "FDA Food Contact Safe"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_046",
+    "name": "Lampu Gantung Anyaman Bambu Bali",
+    "category": "kriya",
+    "price": 28,
+    "unit": "Pieces",
+    "moq": 100,
+    "origin": "Gianyar, Bali",
+    "hsCode": "9405.19.00",
+    "image": "assets/products/kriya-5.webp",
+    "desc": "Kap lampu gantung eksotis karya perajin Ubud untuk dekorasi hotel dan kafe mancanegara.",
+    "specs": [
+      {
+        "k": "Treatment",
+        "v": "Anti-Powder Post Beetle"
+      },
+      {
+        "k": "CE Wiring",
+        "v": "Compliant"
+      }
+    ],
+    "certs": [
+      "SVLK V-Legal",
+      "CE Marking Ready"
+    ],
+    "shipping": "FOB Pelabuhan Benoa Bali",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_047",
+    "name": "Dekorasi Dinding Macrame Katun Daur Ulang",
+    "category": "kriya",
+    "price": 12,
+    "unit": "Pieces",
+    "moq": 200,
+    "origin": "Kasihan, Bantul, D.I. Yogyakarta",
+    "hsCode": "5609.00.00",
+    "image": "assets/products/kriya-6.webp",
+    "desc": "Hiasan dinding macrame bohemian dari benang katun ramah lingkungan tanpa limbah kimia.",
+    "specs": [
+      {
+        "k": "Thread",
+        "v": "100% Recycled Cotton"
+      },
+      {
+        "k": "Color",
+        "v": "Natural Ivory Unbleached"
+      }
+    ],
+    "certs": [
+      "OEKO-TEX Standard 100"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_048",
+    "name": "Patung Ukir Kayu Suar Elegan Bali",
+    "category": "kriya",
+    "price": 45,
+    "unit": "Pieces",
+    "moq": 50,
+    "origin": "Tegallalang, Gianyar, Bali",
+    "hsCode": "4420.10.00",
+    "image": "assets/products/kriya-1.webp",
+    "desc": "Seni pahat kayu suar bergaris serat eksotis dengan pengeringan oven kiln-dry sempurna.",
+    "specs": [
+      {
+        "k": "MC",
+        "v": "10-12% Kiln Dried"
+      },
+      {
+        "k": "Wood Origin",
+        "v": "Sustainable Plantation"
+      }
+    ],
+    "certs": [
+      "SVLK V-Legal",
+      "Fumigation Cert"
+    ],
+    "shipping": "FOB Pelabuhan Benoa Bali",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_049",
+    "name": "Keramik Stoneware Kasongan Handmade",
+    "category": "kriya",
+    "price": 18,
+    "unit": "Pieces",
+    "moq": 200,
+    "origin": "Kasongan, Bantul, D.I. Yogyakarta",
+    "hsCode": "6912.00.00",
+    "image": "assets/products/kriya-2.webp",
+    "desc": "Vas dan pot keramik stoneware glasir artistik tahan suhu tinggi dan tidak mudah retak.",
+    "specs": [
+      {
+        "k": "Firing Temp",
+        "v": "1250°C Vitrified"
+      },
+      {
+        "k": "Lead Free",
+        "v": "Glaze Certified"
+      }
+    ],
+    "certs": [
+      "ISO 9001",
+      "FDA Lead/Cadmium Free"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_050",
+    "name": "Tas Anyaman Daun Pandan & Kulit Sapi",
+    "category": "kriya",
+    "price": 22,
+    "unit": "Pieces",
+    "moq": 150,
+    "origin": "Tasikmalaya, Jawa Barat",
+    "hsCode": "4202.22.00",
+    "image": "assets/products/kriya-3.webp",
+    "desc": "Kombinasi anyaman daun pandan wangi halus dengan aksen kulit sapi nabati asli Garut.",
+    "specs": [
+      {
+        "k": "Leather",
+        "v": "Vegetable Tanned Cowhide"
+      },
+      {
+        "k": "Lining",
+        "v": "Suede Fabric"
+      }
+    ],
+    "certs": [
+      "SVLK V-Legal",
+      "Sedex Audit"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_051",
+    "name": "Placemat & Coaster Serat Enceng Gondok",
+    "category": "kriya",
+    "price": 3.5,
+    "unit": "Set",
+    "moq": 1000,
+    "origin": "Ambarawa, Semarang, Jawa Tengah",
+    "hsCode": "4601.29.00",
+    "image": "assets/products/kriya-4.webp",
+    "desc": "Alas piring dari pemanfaatan gulma eceng gondok Rawa Pening berkonsep circular economy.",
+    "specs": [
+      {
+        "k": "Treatment",
+        "v": "Anti Fungal Baking Oven"
+      },
+      {
+        "k": "Diameter",
+        "v": "38 cm"
+      }
+    ],
+    "certs": [
+      "Eco-Friendly Certificate"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_052",
+    "name": "Cermin Dinding Bingkai Kerang Laut MOP",
+    "category": "kriya",
+    "price": 55,
+    "unit": "Pieces",
+    "moq": 40,
+    "origin": "Situbondo, Jawa Timur",
+    "hsCode": "7009.92.00",
+    "image": "assets/products/kriya-5.webp",
+    "desc": "Bingkai cermin mewah dari mozaik kerang Mother of Pearl mutiara laut Indonesia.",
+    "specs": [
+      {
+        "k": "Shell",
+        "v": "Pinctada Maxima Shell Waste"
+      },
+      {
+        "k": "Backing",
+        "v": "MDF E0 Low Formaldehyde"
+      }
+    ],
+    "certs": [
+      "CITES Non-Endangered Compliant"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_053",
+    "name": "Wastafel Batu Marmer Kali Alami Tulungagung",
+    "category": "kriya",
+    "price": 85,
+    "unit": "Pieces",
+    "moq": 20,
+    "origin": "Campurdarat, Tulungagung, Jatim",
+    "hsCode": "6815.99.00",
+    "image": "assets/products/kriya-6.webp",
+    "desc": "Wastafel unik dipahat langsung dari batu kali marmer alami dengan polesan halus higienis.",
+    "specs": [
+      {
+        "k": "Weight",
+        "v": "25-35 Kg"
+      },
+      {
+        "k": "Coating",
+        "v": "Water Repellent Sealant"
+      }
+    ],
+    "certs": [
+      "Export Crating Wood Fumigated"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_054",
+    "name": "Meja Konsol Kayu Jati Daur Ulang (Recycled Teak)",
+    "category": "kriya",
+    "price": 210,
+    "unit": "Pieces",
+    "moq": 15,
+    "origin": "Jepara, Jawa Tengah",
+    "hsCode": "9403.60.00",
+    "image": "assets/products/kriya-1.webp",
+    "desc": "Meja antik modern dari kayu jati bekas rumah panggung tua berusia lebih dari 50 tahun.",
+    "specs": [
+      {
+        "k": "FSC Recycled",
+        "v": "100% Reclaimed Teak"
+      },
+      {
+        "k": "MC",
+        "v": "<10%"
+      }
+    ],
+    "certs": [
+      "FSC Recycled Timber",
+      "SVLK V-Legal"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_055",
+    "name": "Wayang Kulit Kerbau Tatah Sungging Souvenir",
+    "category": "kriya",
+    "price": 32,
+    "unit": "Set",
+    "moq": 100,
+    "origin": "Godean, Sleman, D.I. Yogyakarta",
+    "hsCode": "9505.90.00",
+    "image": "assets/products/kriya-2.webp",
+    "desc": "Kerajinan wayang kulit asli dipahat tangan dengan cat prada emas dan gagang tanduk kerbau.",
+    "specs": [
+      {
+        "k": "Leather",
+        "v": "Buffalo Rawhide Sun Dried"
+      },
+      {
+        "k": "Handle",
+        "v": "Water Buffalo Horn"
+      }
+    ],
+    "certs": [
+      "Indonesian Cultural GI"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_056",
+    "name": "Kotak Perhiasan Kayu Eboni Bertatahkan Perak",
+    "category": "kriya",
+    "price": 65,
+    "unit": "Pieces",
+    "moq": 50,
+    "origin": "Kotagede, Yogyakarta",
+    "hsCode": "4420.90.00",
+    "image": "assets/products/kriya-3.webp",
+    "desc": "Kombinasi kayu eboni hitam eksotis dengan ornamen filigri perak 925 khas Kotagede.",
+    "specs": [
+      {
+        "k": "Silver Purity",
+        "v": "92.5% Sterling Silver"
+      },
+      {
+        "k": "Wood",
+        "v": "Licensed Plantation Ebony"
+      }
+    ],
+    "certs": [
+      "SVLK V-Legal",
+      "Silver Assay Cert"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_057",
+    "name": "Diffuser Aromaterapi Tembaga Tempa Boyolali",
+    "category": "kriya",
+    "price": 38,
+    "unit": "Pieces",
+    "moq": 100,
+    "origin": "Tumang, Cepogo, Boyolali, Jateng",
+    "hsCode": "7419.80.00",
+    "image": "assets/products/kriya-4.webp",
+    "desc": "Wadah diffuser aromaterapi tembaga murni hasil tempaan tangan tradisional.",
+    "specs": [
+      {
+        "k": "Copper Purity",
+        "v": ">99.2%"
+      },
+      {
+        "k": "Finish",
+        "v": "Antique Patina Oxidation"
+      }
+    ],
+    "certs": [
+      "RoHS Compliant",
+      "Lead Free"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_058",
+    "name": "Tikar Mendong Lipat Ramah Lingkungan",
+    "category": "kriya",
+    "price": 8.5,
+    "unit": "Pieces",
+    "moq": 500,
+    "origin": "Wlingi, Blitar, Jawa Timur",
+    "hsCode": "4601.21.00",
+    "image": "assets/products/kriya-5.webp",
+    "desc": "Tikar lipat santai dari serat mendong lembut dengan pewarna alami ramah lingkungan.",
+    "specs": [
+      {
+        "k": "Natural Dye",
+        "v": "Indigo & Soga Wood"
+      },
+      {
+        "k": "Foldable",
+        "v": "Yes"
+      }
+    ],
+    "certs": [
+      "Eco Friendly Cert"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_059",
+    "name": "Set Alat Makan Sedotan Bambu Reusable",
+    "category": "kriya",
+    "price": 1.8,
+    "unit": "Set",
+    "moq": 5000,
+    "origin": "Tabanan, Bali",
+    "hsCode": "4421.91.00",
+    "image": "assets/products/kriya-6.webp",
+    "desc": "Set sedotan bambu, sendok garpu, dan sikat pembersih sabut kelapa dalam kantong blacu.",
+    "specs": [
+      {
+        "k": "Bacteriological Test",
+        "v": "Pass Safe"
+      },
+      {
+        "k": "Zero Plastic",
+        "v": "100%"
+      }
+    ],
+    "certs": [
+      "FDA Food Contact Safe",
+      "LFGB Germany"
+    ],
+    "shipping": "FOB Benoa / Tg Perak",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_060",
+    "name": "Topeng Kayu Batik Tradisional Bobung",
+    "category": "kriya",
+    "price": 15,
+    "unit": "Pieces",
+    "moq": 200,
+    "origin": "Patuk, Gunungkidul, D.I. Yogyakarta",
+    "hsCode": "4420.10.00",
+    "image": "assets/products/kriya-1.webp",
+    "desc": "Topeng hiasan dinding kayu sengon dibatik malam secara tradisional dengan motif klasik.",
+    "specs": [
+      {
+        "k": "Wood",
+        "v": "Sengon / Pule Oven Dried"
+      },
+      {
+        "k": "Batik Wax",
+        "v": "Traditional Hot Wax"
+      }
+    ],
+    "certs": [
+      "SVLK V-Legal"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_061",
+    "name": "Batik Tulis Sutra Pewarna Alami Solo",
+    "category": "tekstil",
+    "price": 145,
+    "unit": "Meter",
+    "moq": 30,
+    "origin": "Laweyan, Surakarta, Jawa Tengah",
+    "hsCode": "5208.52.00",
+    "image": "assets/products/tekstil-2.webp",
+    "desc": "Kain batik tulis halus 100% sutra ATBM dengan pewarna alami daun indigo dan kulit soga.",
+    "specs": [
+      {
+        "k": "Fabric",
+        "v": "100% Silk ATBM"
+      },
+      {
+        "k": "Dye",
+        "v": "100% Natural Plant Dyes"
+      }
+    ],
+    "certs": [
+      "Batik Mark Indonesia",
+      "OEKO-TEX Eco Passport"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_062",
+    "name": "Kain Tenun Ikat Flores Tradisional NTT",
+    "category": "tekstil",
+    "price": 85,
+    "unit": "Meter",
+    "moq": 50,
+    "origin": "Sikka, Maumere, NTT",
+    "hsCode": "5208.51.00",
+    "image": "assets/products/tekstil-3.webp",
+    "desc": "Tenun ikat motif kuno Flores ditenun benang katun pintal tangan dengan pewarna akar pohon.",
+    "specs": [
+      {
+        "k": "Yarn",
+        "v": "Handspun Cotton"
+      },
+      {
+        "k": "Weaving Time",
+        "v": "2-3 Months per Piece"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Sikka"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_063",
+    "name": "Kain Songket Palembang Benang Emas Halus",
+    "category": "tekstil",
+    "price": 220,
+    "unit": "Pieces",
+    "moq": 15,
+    "origin": "Palembang, Sumatera Selatan",
+    "hsCode": "5007.20.00",
+    "image": "assets/products/tekstil-4.webp",
+    "desc": "Kemewahan songket Palembang warisan Kerajaan Sriwijaya ditenun dengan benang emas berkualitas.",
+    "specs": [
+      {
+        "k": "Metallic Yarn",
+        "v": "Japanese Gold Thread Grade 1"
+      },
+      {
+        "k": "Base",
+        "v": "Pure Silk"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Palembang"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_064",
+    "name": "Batik Cap Katun Primissima Pekalongan",
+    "category": "tekstil",
+    "price": 8.5,
+    "unit": "Meter",
+    "moq": 500,
+    "origin": "Pekalongan, Jawa Tengah",
+    "hsCode": "5208.52.00",
+    "image": "assets/products/tekstil-5.webp",
+    "desc": "Batik cap motif pesisir warna cerah tahan luntur, cocok untuk bahan kemeja dan busana ekspor.",
+    "specs": [
+      {
+        "k": "Fabric",
+        "v": "100% Cotton Primissima 40s"
+      },
+      {
+        "k": "Colorfastness",
+        "v": "Grade 4-5 (ISO 105)"
+      }
+    ],
+    "certs": [
+      "Batik Mark",
+      "OEKO-TEX 100"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_065",
+    "name": "Kain Tenun Sutra Bugis Wajo Sulawesi",
+    "category": "tekstil",
+    "price": 65,
+    "unit": "Meter",
+    "moq": 100,
+    "origin": "Sengkang, Wajo, Sulawesi Selatan",
+    "hsCode": "5007.20.00",
+    "image": "assets/products/tekstil-6.webp",
+    "desc": "Sutra khas Wajo berkilau halus dengan motif kotak lagosi kontemporer.",
+    "specs": [
+      {
+        "k": "Fiber",
+        "v": "100% Bombyx Mori Silk"
+      },
+      {
+        "k": "Width",
+        "v": "115 cm"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Wajo"
+    ],
+    "shipping": "FOB Pelabuhan Makassar",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_066",
+    "name": "Kain Lurik Prasojo Pedan Klaten",
+    "category": "tekstil",
+    "price": 6.2,
+    "unit": "Meter",
+    "moq": 300,
+    "origin": "Pedan, Klaten, Jawa Tengah",
+    "hsCode": "5208.42.00",
+    "image": "assets/products/tekstil-1.webp",
+    "desc": "Kain lurik garis klasik ditenun alat tenun bukan mesin (ATBM) dengan sentuhan modern.",
+    "specs": [
+      {
+        "k": "Weave",
+        "v": "ATBM Handloom"
+      },
+      {
+        "k": "Yarn Count",
+        "v": "Ne 30/2 Combed Cotton"
+      }
+    ],
+    "certs": [
+      "Indonesian Handloom Cert"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_067",
+    "name": "Kain Tapis Lampung Bordir Benang Emas",
+    "category": "tekstil",
+    "price": 175,
+    "unit": "Pieces",
+    "moq": 20,
+    "origin": "Pugung Raharjo, Lampung Timur",
+    "hsCode": "5208.59.00",
+    "image": "assets/products/tekstil-2.webp",
+    "desc": "Kain tenun sarung tradisional Lampung dihiasi sulaman benang emas motif kapal nabi.",
+    "specs": [
+      {
+        "k": "Embroidery",
+        "v": "Handcrafted Gold Stitching"
+      },
+      {
+        "k": "Fabric",
+        "v": "Handspun Cotton"
+      }
+    ],
+    "certs": [
+      "National Heritage Mark"
+    ],
+    "shipping": "FOB Pelabuhan Panjang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_068",
+    "name": "Kain Ulos Batak Ragidup Tenun Tangan",
+    "category": "tekstil",
+    "price": 95,
+    "unit": "Pieces",
+    "moq": 40,
+    "origin": "Tarutung, Tapanuli Utara, Sumut",
+    "hsCode": "5208.41.00",
+    "image": "assets/products/tekstil-3.webp",
+    "desc": "Ulos sakral motif Ragidup berfilosofi kehidupan, ditenun benang katun pilihan berpewarna alami.",
+    "specs": [
+      {
+        "k": "Technique",
+        "v": "Traditional Gedogan Weave"
+      },
+      {
+        "k": "Dimension",
+        "v": "220 x 90 cm"
+      }
+    ],
+    "certs": [
+      "Batak Cultural GI"
+    ],
+    "shipping": "FOB Pelabuhan Belawan",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_069",
+    "name": "Kain Sasirangan Khas Banjarmasin Katun",
+    "category": "tekstil",
+    "price": 14,
+    "unit": "Meter",
+    "moq": 200,
+    "origin": "Banjarmasin, Kalimantan Selatan",
+    "hsCode": "5208.52.00",
+    "image": "assets/products/tekstil-4.webp",
+    "desc": "Kain jelujur ikat celup khas suku Banjar dengan motif bayam raja dan naga balimbur.",
+    "specs": [
+      {
+        "k": "Technique",
+        "v": "Stitch-Resist Dyeing"
+      },
+      {
+        "k": "Fabric",
+        "v": "Cotton Satin Premium"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Sasirangan"
+    ],
+    "shipping": "FOB Tanjung Perak / Banjarmasin",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_070",
+    "name": "Kain Tenun Gringsing Tenganan Pegringsingan",
+    "category": "tekstil",
+    "price": 450,
+    "unit": "Pieces",
+    "moq": 5,
+    "origin": "Tenganan, Karangasem, Bali",
+    "hsCode": "5007.90.00",
+    "image": "assets/products/tekstil-5.webp",
+    "desc": "Satu-satunya tenun ikat ganda di Asia Tenggara, ditenun hingga bertahun-tahun penuh ritual.",
+    "specs": [
+      {
+        "k": "Technique",
+        "v": "Double Ikat Rare Ancient"
+      },
+      {
+        "k": "Dyes",
+        "v": "Taum, Babakan, Minyak Jarak"
+      }
+    ],
+    "certs": [
+      "World Heritage Masterpiece"
+    ],
+    "shipping": "FOB Pelabuhan Benoa Bali",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_071",
+    "name": "Sarung Pantai Rayon Bali Printing Ekspor",
+    "category": "tekstil",
+    "price": 3.8,
+    "unit": "Pieces",
+    "moq": 2000,
+    "origin": "Denpasar, Bali",
+    "hsCode": "5408.24.00",
+    "image": "assets/products/tekstil-6.webp",
+    "desc": "Kain pantai rayon 100% super lembut dan sejuk dengan motif mandala dan floral tropis.",
+    "specs": [
+      {
+        "k": "Material",
+        "v": "100% Viscose Rayon First Grade"
+      },
+      {
+        "k": "Size",
+        "v": "165 x 115 cm Fringe"
+      }
+    ],
+    "certs": [
+      "OEKO-TEX Standard 100"
+    ],
+    "shipping": "FOB Benoa / Tg Perak",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_072",
+    "name": "Kain Tenun Ikat Troso Jepara Etnik",
+    "category": "tekstil",
+    "price": 9.5,
+    "unit": "Meter",
+    "moq": 400,
+    "origin": "Troso, Pecangaan, Jepara, Jateng",
+    "hsCode": "5208.52.00",
+    "image": "assets/products/tekstil-1.webp",
+    "desc": "Kain tenun ikat motif etnik Nusantara serbaguna untuk pakaian fashion musim semi dan gugur.",
+    "specs": [
+      {
+        "k": "Material",
+        "v": "Cotton Mercerized"
+      },
+      {
+        "k": "Shrinkage",
+        "v": "<2% Preshrunk"
+      }
+    ],
+    "certs": [
+      "Indonesian Handloom"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_073",
+    "name": "Kain Batik Tulis Motif Parang Rusak Jogja",
+    "category": "tekstil",
+    "price": 110,
+    "unit": "Pieces",
+    "moq": 35,
+    "origin": "Giriloyo, Imogiri, Bantul, DIY",
+    "hsCode": "5208.52.00",
+    "image": "assets/products/tekstil-2.webp",
+    "desc": "Batik tulis klasik keraton motif Parang Barong di atas katun Primissima halus 2.5 meter.",
+    "specs": [
+      {
+        "k": "Process",
+        "v": "100% Canting Tulis Halus"
+      },
+      {
+        "k": "Time",
+        "v": "45 Hari Pengerjaan"
+      }
+    ],
+    "certs": [
+      "Batik Mark Yogyakarta"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_074",
+    "name": "Selendang Sutra Shibori Pewarna Mangrove",
+    "category": "tekstil",
+    "price": 24,
+    "unit": "Pieces",
+    "moq": 150,
+    "origin": "Surabaya, Jawa Timur",
+    "hsCode": "5007.20.00",
+    "image": "assets/products/tekstil-3.webp",
+    "desc": "Selendang sutra elegan diwarnai menggunakan limbah buah bakau mangrove pesisir Wonorejo.",
+    "specs": [
+      {
+        "k": "Material",
+        "v": "100% Silk Chiffon"
+      },
+      {
+        "k": "Dye Source",
+        "v": "Rhizophora Mangrove Fruit"
+      }
+    ],
+    "certs": [
+      "Eco Friendly Sustainable"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_075",
+    "name": "Kain Tenun Baduy Luar Warna Indigo Alami",
+    "category": "tekstil",
+    "price": 28,
+    "unit": "Meter",
+    "moq": 100,
+    "origin": "Kanekes, Leuwidamar, Lebak, Banten",
+    "hsCode": "5208.41.00",
+    "image": "assets/products/tekstil-4.webp",
+    "desc": "Kain tenun polos dan garis biru tua dicelup ekstrak daun tarum nila oleh perajin Baduy.",
+    "specs": [
+      {
+        "k": "Yarn",
+        "v": "Organic Unprocessed Cotton"
+      },
+      {
+        "k": "Dye",
+        "v": "100% Indigofera Tinctoria"
+      }
+    ],
+    "certs": [
+      "Indigenous Peoples Heritage"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_076",
+    "name": "Pashmina Katun Bambu Lembut Antibakteri",
+    "category": "tekstil",
+    "price": 11.5,
+    "unit": "Pieces",
+    "moq": 500,
+    "origin": "Bandung, Jawa Barat",
+    "hsCode": "5516.14.00",
+    "image": "assets/products/tekstil-5.webp",
+    "desc": "Syal pashmina dari serat serat bambu alami selembut sutra dengan sifat antibakteri alami.",
+    "specs": [
+      {
+        "k": "Fiber",
+        "v": "70% Bamboo Fiber, 30% Cotton"
+      },
+      {
+        "k": "UV Protection",
+        "v": "UPF 50+"
+      }
+    ],
+    "certs": [
+      "OEKO-TEX Standard 100"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_077",
+    "name": "Gula Semut Aren Organik (Organic Palm Sugar)",
+    "category": "makanan",
+    "price": 3.8,
+    "unit": "Kg",
+    "moq": 2000,
+    "origin": "Cilacap, Jawa Tengah",
+    "hsCode": "1702.90.99",
+    "image": "assets/products/makanan-6.webp",
+    "desc": "Gula kristal dari nira aren pohon hutan alami, indeks glikemik rendah (GI 35) dan non-sulfit.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "<2%"
+      },
+      {
+        "k": "Granulation",
+        "v": "Mesh 16-18"
+      },
+      {
+        "k": "Purity",
+        "v": "100% Aren"
+      }
+    ],
+    "certs": [
+      "USDA Organic",
+      "EU Organic (Traces)",
+      "HACCP",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok / Tg Perak",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_078",
+    "name": "Keripik Tempe Renyah Oven Bebas Kolesterol",
+    "category": "makanan",
+    "price": 4.5,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Sanan, Malang, Jawa Timur",
+    "hsCode": "2008.99.90",
+    "image": "assets/products/makanan-1.webp",
+    "desc": "Keripik tempe kedelai fermentasi alami tanpa MSG dipanggang oven dengan minyak kelapa.",
+    "specs": [
+      {
+        "k": "Fat Content",
+        "v": "Low Fat Oven Baked"
+      },
+      {
+        "k": "Shelf Life",
+        "v": "12 Bulan"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "ISO 22000",
+      "FDA Registered",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_079",
+    "name": "Cokelat Batangan Single Origin Berau 70%",
+    "category": "makanan",
+    "price": 2.5,
+    "unit": "Pieces",
+    "moq": 2000,
+    "origin": "Berau, Kalimantan Timur",
+    "hsCode": "1806.32.00",
+    "image": "assets/products/makanan-2.webp",
+    "desc": "Dark chocolate bean-to-bar dengan biji kakao fermentasi Berau rasa berry alami.",
+    "specs": [
+      {
+        "k": "Cocoa Solids",
+        "v": "70%"
+      },
+      {
+        "k": "Ingredients",
+        "v": "Cocoa Mass, Cocoa Butter, Palm Sugar"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_080",
+    "name": "Sarang Burung Walet Mangkok Bersih 6A",
+    "category": "makanan",
+    "price": 1850,
+    "unit": "Kg",
+    "moq": 10,
+    "origin": "Pontianak, Kalimantan Barat",
+    "hsCode": "0410.00.10",
+    "image": "assets/products/makanan-3.webp",
+    "desc": "Sarang burung walet putih mangkok bentuk sempurna tanpa pemutih kimiawi dan bebas nitrit.",
+    "specs": [
+      {
+        "k": "Nitrite Content",
+        "v": "<30 ppm (China GACC)"
+      },
+      {
+        "k": "Water Content",
+        "v": "<15%"
+      }
+    ],
+    "certs": [
+      "GACC China Registered",
+      "Veterinary Certificate"
+    ],
+    "shipping": "CIF Guangzhou / Hong Kong",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_081",
+    "name": "Madu Hutan Liar Murni Sumbawa (Wild Honey)",
+    "category": "makanan",
+    "price": 12,
+    "unit": "Kg",
+    "moq": 500,
+    "origin": "Sumbawa, NTB",
+    "hsCode": "0409.00.00",
+    "image": "assets/products/makanan-4.webp",
+    "desc": "Madu dari lebah liar raksasa Apis dorsata hutan Sumbawa kaya enzim diastase dan antioksidan.",
+    "specs": [
+      {
+        "k": "Diastase Activity",
+        "v": ">8.3 DN"
+      },
+      {
+        "k": "Moisture",
+        "v": "<19%"
+      }
+    ],
+    "certs": [
+      "Organic Honey Standard",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_082",
+    "name": "Keripik Pisang Cavendish Aneka Rasa Lampung",
+    "category": "makanan",
+    "price": 3.8,
+    "unit": "Kg",
+    "moq": 1500,
+    "origin": "Way Kanan, Lampung",
+    "hsCode": "2008.99.10",
+    "image": "assets/products/makanan-5.webp",
+    "desc": "Keripik pisang cavendish renyah tanpa pengawet dengan cokelat murni dan keju asli.",
+    "specs": [
+      {
+        "k": "Oil Content",
+        "v": "Spin Dry Degreased"
+      },
+      {
+        "k": "Moisture",
+        "v": "<3%"
+      }
+    ],
+    "certs": [
+      "BPOM MD",
+      "Halal BPJPH",
+      "HACCP"
+    ],
+    "shipping": "FOB Pelabuhan Panjang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_083",
+    "name": "Teh Hitam Kayu Aro Orthodox Grade BOP1",
+    "category": "makanan",
+    "price": 6.2,
+    "unit": "Kg",
+    "moq": 2000,
+    "origin": "Kayu Aro, Kerinci, Jambi",
+    "hsCode": "0902.30.00",
+    "image": "assets/products/makanan-6.webp",
+    "desc": "Teh hitam perkebunan tertinggi kedua di dunia (1.600 mdpl) kesukaan bangsawan Eropa.",
+    "specs": [
+      {
+        "k": "Grade",
+        "v": "BOP1 Orthodox Black Tea"
+      },
+      {
+        "k": "Moisture",
+        "v": "<6%"
+      }
+    ],
+    "certs": [
+      "Rainforest Alliance",
+      "ISO 22000",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Teluk Bayur Padang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_084",
+    "name": "Kerupuk Udang Sidoarjo Spesial Ekspor",
+    "category": "makanan",
+    "price": 5.5,
+    "unit": "Kg",
+    "moq": 2000,
+    "origin": "Sidoarjo, Jawa Timur",
+    "hsCode": "1905.90.80",
+    "image": "assets/products/makanan-1.webp",
+    "desc": "Kerupuk olahan udang segar tambak Sidoarjo dengan persentase daging udang tinggi.",
+    "specs": [
+      {
+        "k": "Shrimp Meat",
+        "v": ">45%"
+      },
+      {
+        "k": "Expansion Rate",
+        "v": "Tinggi Gurih"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "FDA USA Food Facility",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_085",
+    "name": "Bawang Goreng Brebes Crispy Tanpa Tepung",
+    "category": "makanan",
+    "price": 8.5,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Brebes, Jawa Tengah",
+    "hsCode": "2005.99.90",
+    "image": "assets/products/makanan-2.webp",
+    "desc": "Bawang merah varietas Bima Brebes digoreng minyak kelapa higienis tanpa campuran tepung.",
+    "specs": [
+      {
+        "k": "Flour Adulteration",
+        "v": "0% (100% Pure Shallots)"
+      },
+      {
+        "k": "Moisture",
+        "v": "<2%"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_086",
+    "name": "Sambal Roa Khas Manado Botol Kaca",
+    "category": "makanan",
+    "price": 2.8,
+    "unit": "Pieces",
+    "moq": 3000,
+    "origin": "Manado, Sulawesi Utara",
+    "hsCode": "2103.90.19",
+    "image": "assets/products/makanan-3.webp",
+    "desc": "Sambal khas Manado dengan ikan roa asap Pulau Tagulandang aroma smoky gurih tahan lama.",
+    "specs": [
+      {
+        "k": "Fish Content",
+        "v": "40% Smoked Roa Fish"
+      },
+      {
+        "k": "Sterilization",
+        "v": "Retort Packaging"
+      }
+    ],
+    "certs": [
+      "BPOM MD",
+      "US FDA Registered",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Bitung",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_087",
+    "name": "Dodol Garut Tradisional Ketan Hitam",
+    "category": "makanan",
+    "price": 3.2,
+    "unit": "Kg",
+    "moq": 1500,
+    "origin": "Garut, Jawa Barat",
+    "hsCode": "1905.90.90",
+    "image": "assets/products/makanan-4.webp",
+    "desc": "Kudapan legit dari tepung beras ketan hitam, santan kelapa murni, dan gula aren.",
+    "specs": [
+      {
+        "k": "Texture",
+        "v": "Chewy Non Sticky"
+      },
+      {
+        "k": "Shelf Life",
+        "v": "6 Bulan Vacuum"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "HACCP"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_088",
+    "name": "Kopi Jahe Merah Instan Ekstrak Herbal",
+    "category": "makanan",
+    "price": 6.5,
+    "unit": "Kg",
+    "moq": 800,
+    "origin": "Kudus, Jawa Tengah",
+    "hsCode": "2101.12.00",
+    "image": "assets/products/makanan-5.webp",
+    "desc": "Serbuk minuman kesehatan perpaduan robusta pilihan dan ekstrak jahe merah murni.",
+    "specs": [
+      {
+        "k": "Solubility",
+        "v": "100% Instan Panas/Dingin"
+      },
+      {
+        "k": "No Artificial Flavor",
+        "v": "Yes"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "BPOM MD",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_089",
+    "name": "Kacang Mede Sulawesi Panggang Bawang",
+    "category": "makanan",
+    "price": 13.5,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Kendari, Sulawesi Tenggara",
+    "hsCode": "0801.32.00",
+    "image": "assets/products/makanan-6.webp",
+    "desc": "Kacang mete utuh grade WW-240 disangrai renyah dengan bawang putih asli.",
+    "specs": [
+      {
+        "k": "Grade",
+        "v": "WW-240 (White Whole Large)"
+      },
+      {
+        "k": "Moisture",
+        "v": "<4%"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "ISO 22000",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Makassar",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_090",
+    "name": "Keripik Nangka Organik Vacuum Frying",
+    "category": "makanan",
+    "price": 8.9,
+    "unit": "Kg",
+    "moq": 800,
+    "origin": "Batu, Malang, Jawa Timur",
+    "hsCode": "2008.99.20",
+    "image": "assets/products/makanan-1.webp",
+    "desc": "Keripik buah nangka matang pohon digoreng vakum suhu rendah tanpa merusak nutrisi buah.",
+    "specs": [
+      {
+        "k": "Method",
+        "v": "Vacuum Frying 70°C"
+      },
+      {
+        "k": "Ingredients",
+        "v": "100% Nangka & Minyak Kelapa"
+      }
+    ],
+    "certs": [
+      "HACCP",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_091",
+    "name": "Gula Kelapa Cair Kristal Nektar (Coconut Nectar)",
+    "category": "makanan",
+    "price": 4.2,
+    "unit": "Liter",
+    "moq": 2000,
+    "origin": "Banyumas, Jawa Tengah",
+    "hsCode": "1702.90.91",
+    "image": "assets/products/makanan-2.webp",
+    "desc": "Pemanis cair alami kaya mineral kalium dan magnesium alternatif sirup maple dan madu.",
+    "specs": [
+      {
+        "k": "Brix",
+        "v": "75-78°"
+      },
+      {
+        "k": "Low Glycemic Index",
+        "v": "GI 35"
+      }
+    ],
+    "certs": [
+      "USDA NOP",
+      "EU Organic",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok Jakarta",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_092",
+    "name": "Briket Arang Tempurung Kelapa Shisha Hexagonal",
+    "category": "perkebunan",
+    "price": 1350,
+    "unit": "Ton",
+    "moq": 25,
+    "origin": "Semarang, Jawa Tengah",
+    "hsCode": "4402.90.10",
+    "image": "assets/products/perkebunan-3.webp",
+    "desc": "Briket arang batok kelapa 100% murni, abu putih tipis (<2.2%), kalori di atas 7.500 kcal.",
+    "specs": [
+      {
+        "k": "Fixed Carbon",
+        "v": ">80%"
+      },
+      {
+        "k": "Ash Content",
+        "v": "<2.2% White"
+      },
+      {
+        "k": "Burning Time",
+        "v": ">2.5 Jam"
+      }
+    ],
+    "certs": [
+      "SGS Inspection",
+      "MSDS Non-Spontaneous Combustion Cert"
+    ],
+    "shipping": "FOB Tanjung Emas Semarang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_093",
+    "name": "Vanilla Bean Planifolia Gourmet Grade A",
+    "category": "perkebunan",
+    "price": 145,
+    "unit": "Kg",
+    "moq": 50,
+    "origin": "Alor & Wamena, NTT & Papua",
+    "hsCode": "0905.10.00",
+    "image": "assets/products/perkebunan-4.webp",
+    "desc": "Polong vanila basah berminyak panjang 16-20 cm dengan kadar vanilin alami di atas 2.2%.",
+    "specs": [
+      {
+        "k": "Vanillin Content",
+        "v": ">2.2%"
+      },
+      {
+        "k": "Moisture",
+        "v": "30-33% Gourmet"
+      },
+      {
+        "k": "Length",
+        "v": "16-20 cm"
+      }
+    ],
+    "certs": [
+      "USDA NOP Organic",
+      "Phytosanitary",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Tanjung Priok / Benoa Bali",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_094",
+    "name": "Virgin Coconut Oil (VCO) Cold Pressed Organic",
+    "category": "perkebunan",
+    "price": 4.5,
+    "unit": "Liter",
+    "moq": 2000,
+    "origin": "Minahasa Selatan, Sulawesi Utara",
+    "hsCode": "1513.11.00",
+    "image": "assets/products/perkebunan-5.webp",
+    "desc": "Minyak kelapa murni diekstrak sentrifugasi dingin tanpa pemanasan, asam laurat > 50%.",
+    "specs": [
+      {
+        "k": "Lauric Acid",
+        "v": ">50.5%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<0.1% Crystal Clear"
+      }
+    ],
+    "certs": [
+      "USDA NOP",
+      "EU Organic",
+      "Halal BPJPH",
+      "Kosher"
+    ],
+    "shipping": "FOB Pelabuhan Bitung",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_095",
+    "name": "Biji Kakao Fermentasi Sulawesi Grade 1",
+    "category": "perkebunan",
+    "price": 7.5,
+    "unit": "Kg",
+    "moq": 5000,
+    "origin": "Kolaka, Sulawesi Tenggara",
+    "hsCode": "1801.00.00",
+    "image": "assets/products/perkebunan-6.webp",
+    "desc": "Biji kakao terfermentasi sempurna 6 hari kotak kayu bersuhu tinggi, aroma cokelat tajam.",
+    "specs": [
+      {
+        "k": "Bean Count",
+        "v": "95-100 biji / 100g"
+      },
+      {
+        "k": "Fermentation Degree",
+        "v": ">80%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<7.5%"
+      }
+    ],
+    "certs": [
+      "Indonesian Cocoa Board Cert",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Pelabuhan Makassar",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_096",
+    "name": "Minyak Atsiri Nilam Aceh (Patchouli Oil PA 32%)",
+    "category": "perkebunan",
+    "price": 65,
+    "unit": "Kg",
+    "moq": 100,
+    "origin": "Aceh Selatan",
+    "hsCode": "3301.29.90",
+    "image": "assets/products/perkebunan-1.webp",
+    "desc": "Minyak nilam fiksatif parfum terbaik dunia dengan kadar Patchouli Alcohol di atas 32%.",
+    "specs": [
+      {
+        "k": "Patchouli Alcohol (PA)",
+        "v": ">32.5%"
+      },
+      {
+        "k": "Acid Value",
+        "v": "<5.0"
+      }
+    ],
+    "certs": [
+      "CoA GC-MS",
+      "IFRA Certificate",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Belawan Medan",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_097",
+    "name": "Ikan Tuna Yellowfin Loin Beku (Sashimi Grade)",
+    "category": "perkebunan",
+    "price": 16.5,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Bitung, Sulawesi Utara",
+    "hsCode": "0303.42.00",
+    "image": "assets/products/perkebunan-2.webp",
+    "desc": "Daging tuna sirip kuning potong loin dibekukan cepat individual quick freezing (IQF) -40°C.",
+    "specs": [
+      {
+        "k": "Histamine",
+        "v": "<10 ppm"
+      },
+      {
+        "k": "Color",
+        "v": "Bright Ruby Red Grade 1"
+      }
+    ],
+    "certs": [
+      "HACCP EU Listed",
+      "FDA USA Seafood HACCP"
+    ],
+    "shipping": "FOB Pelabuhan Bitung",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_098",
+    "name": "Udang Vaname Kupas Beku (PDTO Quick Frozen)",
+    "category": "perkebunan",
+    "price": 11.2,
+    "unit": "Kg",
+    "moq": 2000,
+    "origin": "Tarakan, Kalimantan Utara",
+    "hsCode": "0306.17.00",
+    "image": "assets/products/perkebunan-3.webp",
+    "desc": "Udang tambak vaname segar kupas sisip ekor bebas antibiotik nitrofuran dan kloramfenikol.",
+    "specs": [
+      {
+        "k": "Antibiotic Residue",
+        "v": "ND (Not Detected)"
+      },
+      {
+        "k": "Glazing",
+        "v": "10-15%"
+      }
+    ],
+    "certs": [
+      "BAP 4-Star",
+      "ASC Certified",
+      "BRC Food"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_099",
+    "name": "Rumput Laut Kering Eucheuma Cottonii Ekspor",
+    "category": "perkebunan",
+    "price": 1.6,
+    "unit": "Kg",
+    "moq": 10000,
+    "origin": "Sumba Timur, NTT",
+    "hsCode": "1212.21.00",
+    "image": "assets/products/perkebunan-4.webp",
+    "desc": "Bahan baku karagenan kualitas tinggi kadar kotoran rendah dan yield gel strengh kuat.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "35-38%"
+      },
+      {
+        "k": "Impurity",
+        "v": "<3%"
+      },
+      {
+        "k": "Yield Gel",
+        "v": ">1200 g/cm²"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Certificate of Quality"
+    ],
+    "shipping": "FOB Tanjung Perak Surabaya",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_100",
+    "name": "Garam Laut Organik Piramida Kusamba Bali",
+    "category": "perkebunan",
+    "price": 6.8,
+    "unit": "Kg",
+    "moq": 500,
+    "origin": "Kusamba, Klungkung, Bali",
+    "hsCode": "2501.00.90",
+    "image": "assets/products/perkebunan-5.webp",
+    "desc": "Kristal garam laut bentuk piramida unik hasil evaporasi tenaga surya di bilah batang kelapa.",
+    "specs": [
+      {
+        "k": "NaCl Content",
+        "v": "98.2%"
+      },
+      {
+        "k": "Mineral",
+        "v": "Rich Magnesium & Calcium"
+      }
+    ],
+    "certs": [
+      "Indikasi Geografis Garam Bali",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Benoa Bali",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_101",
+    "name": "Damar Mata Kucing Asli Krui Pesisir Barat",
+    "category": "perkebunan",
+    "price": 3.5,
+    "unit": "Kg",
+    "moq": 5000,
+    "origin": "Krui, Pesisir Barat, Lampung",
+    "hsCode": "1301.90.00",
+    "image": "assets/products/perkebunan-6.webp",
+    "desc": "Getah damar bening jernih kelas ekspor untuk bahan baku vernis, cat kapal, dan pelapis obat.",
+    "specs": [
+      {
+        "k": "Grade",
+        "v": "Mata Kucing Super Clear A"
+      },
+      {
+        "k": "Melting Point",
+        "v": "95-105°C"
+      }
+    ],
+    "certs": [
+      "Forestry Sustainable Permit"
+    ],
+    "shipping": "FOB Pelabuhan Panjang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_102",
+    "name": "Karet Alam Lembaran Asap Bergaris (RSS-1)",
+    "category": "perkebunan",
+    "price": 2.1,
+    "unit": "Kg",
+    "moq": 10000,
+    "origin": "Asahan, Sumatera Utara",
+    "hsCode": "4001.21.00",
+    "image": "assets/products/perkebunan-1.webp",
+    "desc": "Ribbed Smoked Sheet Grade 1 bebas gelembung udara dan kotoran untuk industri ban dunia.",
+    "specs": [
+      {
+        "k": "Dirt Content",
+        "v": "<0.05%"
+      },
+      {
+        "k": "Ash Content",
+        "v": "<0.5%"
+      }
+    ],
+    "certs": [
+      "Green Book Standard (IRSG)"
+    ],
+    "shipping": "FOB Pelabuhan Belawan",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_103",
+    "name": "Minyak Sawit Merah Alami (Virgin Red Palm Oil)",
+    "category": "perkebunan",
+    "price": 2.2,
+    "unit": "Liter",
+    "moq": 5000,
+    "origin": "Riau, Sumatera",
+    "hsCode": "1511.10.00",
+    "image": "assets/products/perkebunan-2.webp",
+    "desc": "Minyak kelapa sawit merah non-transfat alami kaya provitamin A karotenoid dan vitamin E.",
+    "specs": [
+      {
+        "k": "Carotene Content",
+        "v": ">500 ppm"
+      },
+      {
+        "k": "Free Fatty Acid (FFA)",
+        "v": "<1.5%"
+      }
+    ],
+    "certs": [
+      "RSPO Certified",
+      "ISPO Registered",
+      "Halal BPJPH"
+    ],
+    "shipping": "FOB Pelabuhan Dumai",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_104",
+    "name": "Arang Kayu Halaban Kering Hardwood Charcoal",
+    "category": "perkebunan",
+    "price": 580,
+    "unit": "Ton",
+    "moq": 20,
+    "origin": "Kotabaru, Kalimantan Selatan",
+    "hsCode": "4402.90.90",
+    "image": "assets/products/perkebunan-3.webp",
+    "desc": "Arang kayu keras alami tanpa asap dan tanpa percikan untuk industri panggangan restoran.",
+    "specs": [
+      {
+        "k": "Moisture",
+        "v": "<5%"
+      },
+      {
+        "k": "Carbon",
+        "v": ">75%"
+      },
+      {
+        "k": "Sparks",
+        "v": "None"
+      }
+    ],
+    "certs": [
+      "SVLK V-Legal",
+      "MSDS Certified"
+    ],
+    "shipping": "FOB Tanjung Perak / Banjarmasin",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_105",
+    "name": "Kopra Putih Kering Oven (Edible White Copra)",
+    "category": "perkebunan",
+    "price": 1.4,
+    "unit": "Kg",
+    "moq": 10000,
+    "origin": "Halmahera Utara, Maluku Utara",
+    "hsCode": "1203.00.00",
+    "image": "assets/products/perkebunan-4.webp",
+    "desc": "Daging kelapa kering warna putih bersih dikeringkan mesin blower tanpa asap belerang.",
+    "specs": [
+      {
+        "k": "Oil Content",
+        "v": ">65%"
+      },
+      {
+        "k": "Moisture",
+        "v": "<5%"
+      },
+      {
+        "k": "FFA",
+        "v": "<0.5%"
+      }
+    ],
+    "certs": [
+      "Phytosanitary",
+      "Certificate of Origin"
+    ],
+    "shipping": "FOB Pelabuhan Bitung",
+    "verifiedExporter": true
+  }
+]

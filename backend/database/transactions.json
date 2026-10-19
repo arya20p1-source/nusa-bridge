@@ -1,0 +1,22 @@
+[
+  {
+    "id": "tx_2026_089",
+    "contractNo": "NB/EXP/2026/X/089",
+    "exporter": "CV Kopi Nusantara Mandiri (ID)",
+    "buyer": "Nordic Coffee Importers GmbH (DE)",
+    "product": "Kopi Arabika Gayo Specialty Grade 1",
+    "volume": "18.000 Kg (1x20ft Container)",
+    "incoterms": "CIF Hamburg",
+    "contractValueUSD": 165600,
+    "escrowStages": [
+      { "stage": 1, "pct": 30, "amountUSD": 49680, "status": "released", "label": "Uang Muka (DP) Penandatanganan Kontrak" },
+      { "stage": 2, "pct": 30, "amountUSD": 49680, "status": "released", "label": "Barang Dimuat & Bill of Lading (B/L) Terbit" },
+      { "stage": 3, "pct": 20, "amountUSD": 33120, "status": "in_vault", "label": "Kapal Melewati Terusan Suez & Bea Cukai Kliring" },
+      { "stage": 4, "pct": 20, "amountUSD": 33120, "status": "pending", "label": "Barang Diterima & Uji Mutu Lab Hamburg Selesai" }
+    ],
+    "vesselName": "KM Baruna Nusantara",
+    "eta": "24 Oktober 2026",
+    "status": "in_transit",
+    "createdAt": "2026-10-12T00:00:00.000Z"
+  }
+]

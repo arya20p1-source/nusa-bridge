@@ -1,0 +1,36 @@
+[
+  {
+    "id": "use_1792387445560_531",
+    "createdAt": "2026-10-19T05:24:05.556Z",
+    "name": "arya20p1@gmail.com",
+    "email": "owner@bisnis.id",
+    "company": "arya20p1@gmail.com",
+    "role": "seller",
+    "nib": "1294801928415",
+    "npwp": "01.861.639.0-012.000",
+    "status": "verified",
+    "plan": "Free Trial (1 Bulan)"
+  },
+  {
+    "id": "usr_001",
+    "name": "Budi Santoso",
+    "email": "budi@kopinusantara.id",
+    "company": "CV Kopi Nusantara Mandiri",
+    "role": "seller",
+    "nib": "1294801928415",
+    "npwp": "01.234.567.8-012.000",
+    "status": "verified",
+    "plan": "Paket 5 Bulan",
+    "createdAt": "2026-10-15T08:00:00.000Z"
+  },
+  {
+    "id": "usr_002",
+    "name": "Heinrich Schmidt",
+    "email": "h.schmidt@nordictrade.de",
+    "company": "Nordic Coffee Importers GmbH",
+    "role": "buyer",
+    "country": "Germany",
+    "status": "verified",
+    "createdAt": "2026-10-16T10:30:00.000Z"
+  }
+]

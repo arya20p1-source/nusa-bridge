@@ -1,0 +1,25 @@
+{
+  "name": "nusabridge-backend",
+  "version": "1.0.0",
+  "description": "NusaBridge AI Agent & Trade Facilitation REST API - Built for GTNIC 2026",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "keywords": [
+    "nusabridge",
+    "umkm",
+    "ekspor",
+    "ai-agent",
+    "gemini",
+    "gtnic-2026"
+  ],
+  "author": "Tim Arjika Labs - SMK Antartika 1 Sidoarjo",
+  "license": "MIT"
+}
