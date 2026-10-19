@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  <!-- Primary Meta Tags -->
+  <title>NusaBridge - Platform Ekspor-Impor UMKM Indonesia Berbasis AI Agent</title>
+  <meta name="title" content="NusaBridge - Platform Ekspor-Impor UMKM Indonesia Berbasis AI Agent">
+  <meta name="description" content="NusaBridge adalah platform intermediasi ekspor-impor pintar berbasis AI Agent yang membantu UMKM Indonesia mengelola transaksi, verifikasi legalitas, otomasi dokumen perdagangan, dan pelacakan logistik secara efisien.">
+  <meta name="keywords" content="NusaBridge, ekspor UMKM, impor Indonesia, AI Agent ekspor, perdagangan internasional, otomasi dokumen ekspor, verifikasi NIB, logistik global, UMKM go global">
+  <meta name="author" content="NusaBridge Indonesia">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <meta name="language" content="Indonesian">
+  <meta name="geo.region" content="ID">
+  <meta name="geo.placename" content="Indonesia">
+  <meta name="theme-color" content="#1b68f8">
+  <meta name="msapplication-TileColor" content="#1b68f8">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://nusa-bridge-rpl.vercel.app/">
+  
+  <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nusa-bridge-rpl.vercel.app/">
+  <meta property="og:site_name" content="NusaBridge">
+  <meta property="og:title" content="NusaBridge - Platform Ekspor-Impor UMKM Indonesia Berbasis AI Agent">
+  <meta property="og:description" content="Bantu UMKM Indonesia Go Global lebih mudah, cepat, dan aman dengan teknologi AI Agent: verifikasi legalitas kilat, otomasi dokumen ekspor, dan pelacakan logistik real-time.">
+  <meta property="og:image" content="https://nusa-bridge-rpl.vercel.app/assets/og-preview.png">
+  <meta property="og:image:secure_url" content="https://nusa-bridge-rpl.vercel.app/assets/og-preview.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="NusaBridge Logo & Platform Preview">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:locale:alternate" content="en_US">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://nusa-bridge-rpl.vercel.app/">
+  <meta name="twitter:title" content="NusaBridge - Platform Ekspor-Impor UMKM Indonesia Berbasis AI Agent">
+  <meta name="twitter:description" content="Bantu UMKM Indonesia Go Global lebih mudah, cepat, dan aman dengan teknologi AI Agent: verifikasi legalitas kilat, otomasi dokumen ekspor, dan pelacakan logistik real-time.">
+  <meta name="twitter:image" content="https://nusa-bridge-rpl.vercel.app/assets/og-preview.png">
+  <meta name="twitter:image:alt" content="NusaBridge Logo & AI Platform">
+  
+  <!-- Favicons & Apple Touch Icon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/webp" href="assets/logo-transparent.webp">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-192.png">
+  
+  <!-- Structured Data JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://nusa-bridge-rpl.vercel.app/#organization",
+        "name": "NusaBridge",
+        "url": "https://nusa-bridge-rpl.vercel.app/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://nusa-bridge-rpl.vercel.app/assets/logo.png",
+          "width": 2172,
+          "height": 724
+        },
+        "description": "Platform intermediasi ekspor-impor UMKM Indonesia berbasis AI Agent.",
+        "sameAs": []
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://nusa-bridge-rpl.vercel.app/#website",
+        "url": "https://nusa-bridge-rpl.vercel.app/",
+        "name": "NusaBridge",
+        "description": "Platform Ekspor-Impor UMKM Indonesia Berbasis AI Agent",
+        "publisher": {
+          "@id": "https://nusa-bridge-rpl.vercel.app/#organization"
+        },
+        "inLanguage": "id-ID"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "NusaBridge AI Agent",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "url": "https://nusa-bridge-rpl.vercel.app/",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "IDR"
+        },
+        "description": "Platform berbasis AI Agent yang membantu UMKM Indonesia mengelola transaksi ekspor, verifikasi legalitas, otomasi dokumen perdagangan, dan pelacakan logistik internasional."
+      }
+    ]
+  }
+  </script>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Caveat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/radar.css">
+</head>
+<body>
+
+  <!-- ==================== TOP NAVIGATION ==================== -->
+  <header class="navbar-header" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-brand">
+        <img src="assets/logo-transparent.webp" alt="NusaBridge Logo" class="brand-logo" onerror="this.src='assets/logo.webp'">
+      </a>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html" class="nav-link active" data-i18n="nav_home">Beranda</a>
+        <a href="produk.html" class="nav-link" data-i18n="nav_products">Produk</a>
+        <a href="solusi.html" class="nav-link" data-i18n="nav_solutions">Solusi AI</a>
+        <a href="#alur-ekspor" class="nav-link" data-i18n="nav_workflow">Alur Ekspor</a>
+        <a href="harga.html" class="nav-link" data-i18n="nav_pricing">Harga</a>
+        <a href="#tentang" class="nav-link" data-i18n="nav_about">Tentang</a>
+        <div class="mobile-nav-auth">
+          <button class="btn btn-outline btn-block" id="btnMasukMobile" type="button" data-i18n="btn_login">Masuk</button>
+          <button class="btn btn-primary btn-block" id="btnDaftarMobile" type="button">
+            <span data-i18n="btn_register">Daftar Gratis</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Interactive Language Selector Dropdown -->
+        <div class="lang-dropdown-wrapper" id="langDropdownWrapper">
+          <button class="lang-selector-btn" id="langSelectorBtn" aria-label="Pilih Bahasa" aria-expanded="false" type="button">
+            <svg class="globe-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span id="currentLangLabel">ID</span>
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          
+          <div class="lang-dropdown-menu" id="langDropdownMenu">
+            <button class="lang-option-item active" data-lang="id" type="button">
+              <span class="flag-icon">🇮🇩</span>
+              <span class="lang-name">Indonesia</span>
+              <span class="lang-code">ID</span>
+              <span class="lang-check">✓</span>
+            </button>
+            <button class="lang-option-item" data-lang="en" type="button">
+              <span class="flag-icon">🇬🇧</span>
+              <span class="lang-name">English</span>
+              <span class="lang-code">EN</span>
+              <span class="lang-check"></span>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-outline nav-desktop-auth" id="btnMasuk" data-i18n="btn_login">Masuk</button>
+        <button class="btn btn-primary nav-desktop-auth" id="btnDaftar">
+          <span data-i18n="btn_register">Daftar Gratis</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+        <!-- Logged-In User Profile State in Navbar -->
+        <div class="user-logged-profile" id="userLoggedNav" style="display:none;">
+          <img src="assets/avatar.webp" alt="Avatar" class="ulp-avatar">
+          <div class="ulp-info">
+            <span class="ulp-name" id="navUserCompanyName">CV Kopi Nusantara</span>
+            <span class="ulp-badge">● Terverifikasi OSS</span>
+          </div>
+          <button class="btn-logout" id="btnLogoutNav" type="button" title="Keluar dari sesi akun">Keluar</button>
+        </div>
+
+        <!-- Mobile Hamburger Toggle -->
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu" type="button">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="hero-section" id="hero">
+    <div class="hero-bg-glow"></div>
+    <div class="site-container hero-grid">
+      <!-- Left Hero Content -->
+      <div class="hero-content">
+        <div class="pill-badge pill-blue" data-i18n="hero_pill">
+          Platform Ekspor-Impor UMKM Indonesia
+        </div>
+
+        <h1 class="hero-title" data-i18n="hero_title">
+          UMKM Indonesia<br>
+          Go Global,<br>
+          Lebih Mudah<br>
+          dengan <span class="text-accent">AI Agent</span>
+        </h1>
+
+        <p class="hero-description" data-i18n="hero_desc">
+          NusaBridge adalah platform intermediasi ekspor-impor berbasis AI Agent yang membantu UMKM Indonesia mengelola transaksi, verifikasi legalitas, otomasi dokumen perdagangan, dan pelacakan logistik secara efisien.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" id="btnHeroExport">
+            <span data-i18n="hero_btn_export">Mulai Ekspor Sekarang</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+          <button class="btn btn-secondary btn-lg" id="btnHeroDemo">
+            <span class="play-icon-circle">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </span>
+            <span data-i18n="hero_btn_demo">Lihat Demo</span>
+          </button>
+        </div>
+
+        <div class="hero-trust-list">
+          <div class="trust-item">
+            <span class="trust-check">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span data-i18n="trust_1">Aman & Terpercaya</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-check">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span data-i18n="trust_2">Mudah Digunakan</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-check">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span data-i18n="trust_3">Dibuat untuk UMKM</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Hero Visual - Bleeds to screen top & right edges on Desktop -->
+    <div class="hero-visual-container">
+      <div class="hero-image-wrapper">
+        <img src="assets/visual-1.webp" alt="Ekspor UMKM Indonesia dengan NusaBridge AI" class="hero-main-visual">
+        
+        <!-- Floating Verified Seller Card -->
+        <div class="floating-verified-card">
+          <div class="verified-card-header">
+            <div class="verified-title-wrap">
+              <span class="verified-title">Verified Seller</span>
+            </div>
+            <div class="verified-shield-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+          <ul class="verified-checklist">
+            <li>
+              <span class="check-dot">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span data-i18n="verif_1">NIB Terverifikasi</span>
+            </li>
+            <li>
+              <span class="check-dot">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span data-i18n="verif_2">NPWP Terverifikasi</span>
+            </li>
+            <li>
+              <span class="check-dot">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span data-i18n="verif_3">Data Usaha Valid</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== STATS METRICS STRIP ==================== -->
+  <section class="stats-section">
+    <div class="site-container">
+      <div class="stats-card">
+        <!-- Stat Item 1 -->
+        <div class="stat-item">
+          <div class="stat-icon-wrap">
+            <svg class="stat-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1b68f8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-number">500+</h3>
+            <p class="stat-label" data-i18n="stat_1_label">Produk UMKM</p>
+          </div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <!-- Stat Item 2 -->
+        <div class="stat-item">
+          <div class="stat-icon-wrap">
+            <svg class="stat-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1b68f8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-number">20+</h3>
+            <p class="stat-label" data-i18n="stat_2_label">Negara Tujuan</p>
+          </div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <!-- Stat Item 3 -->
+        <div class="stat-item">
+          <div class="stat-icon-wrap">
+            <svg class="stat-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1b68f8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <line x1="10" y1="9" x2="8" y2="9"></line>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-number">98%</h3>
+            <p class="stat-label" data-i18n="stat_3_label">Efisiensi Dokumen</p>
+          </div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <!-- Stat Item 4 -->
+        <div class="stat-item">
+          <div class="stat-icon-wrap">
+            <svg class="stat-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1b68f8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-number">24/7</h3>
+            <p class="stat-label" data-i18n="stat_4_label">Dukungan AI</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SOLUSI NUSABRIDGE ==================== -->
+  <section class="section-solutions" id="solusi">
+    <div class="site-container">
+      <div class="section-header text-center">
+        <div class="pill-badge pill-blue" data-i18n="solutions_pill">
+          SOLUSI NUSABRIDGE
+        </div>
+        <h2 class="section-title" data-i18n="solutions_title">
+          Semua <span class="text-accent">Kebutuhan</span> Ekspor UMKM<br>
+          dalam <span class="text-accent">Satu Platform</span>
+        </h2>
+        <p class="section-subtitle" data-i18n="solutions_sub">
+          Didukung AI Agent, NusaBridge mempermudah proses ekspor mulai dari pencarian buyer, negosiasi, hingga otomatisasi dokumen.
+        </p>
+      </div>
+
+      <!-- Solutions 4 Cards Grid (Interactive Links to Solutions Page) -->
+      <div class="solutions-grid">
+        <!-- Card 1 -->
+        <a href="solusi.html#pilar-1" class="solution-card">
+          <div class="solution-icon-wrap">
+            <img src="assets/icons/icon-1.webp" alt="AI Sales Assistant & RFQ Studio" class="solution-icon-img">
+          </div>
+          <h3 class="solution-card-title" data-i18n="sol_1_title">AI Sales Assistant<br>& RFQ Studio</h3>
+          <p class="solution-card-desc" data-i18n="sol_1_desc">
+            Analisis permintaan, rekomendasi harga, dan negosiasi berbasis AI.
+          </p>
+          <span class="solution-card-link">Pelajari Selengkapnya &rarr;</span>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="solusi.html#pilar-2" class="solution-card">
+          <div class="solution-icon-wrap">
+            <img src="assets/icons/icon-6.webp" alt="Otomatisasi Dokumen Perdagangan" class="solution-icon-img">
+          </div>
+          <h3 class="solution-card-title" data-i18n="sol_2_title">Otomatisasi Dokumen<br>Perdagangan</h3>
+          <p class="solution-card-desc" data-i18n="sol_2_desc">
+            Generate Proforma Invoice, Sales Contract, dan dokumen ekspor sesuai standar internasional.
+          </p>
+          <span class="solution-card-link">Pelajari Selengkapnya &rarr;</span>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="solusi.html#pilar-3" class="solution-card">
+          <div class="solution-icon-wrap">
+            <img src="assets/icons/icon-3.webp" alt="KYC Hub Sandbox" class="solution-icon-img">
+          </div>
+          <h3 class="solution-card-title" data-i18n="sol_3_title">KYC Hub<br>(Sandbox)</h3>
+          <p class="solution-card-desc" data-i18n="sol_3_desc">
+            Validasi format NIB/NPWP untuk membangun kepercayaan buyer.
+          </p>
+          <span class="solution-card-link">Pelajari Selengkapnya &rarr;</span>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="solusi.html#pilar-4" class="solution-card">
+          <div class="solution-icon-wrap">
+            <img src="assets/icons/icon-4.webp" alt="Escrow Vault & Manajemen Transaksi" class="solution-icon-img">
+          </div>
+          <h3 class="solution-card-title" data-i18n="sol_4_title">Escrow Vault<br>& Manajemen Transaksi</h3>
+          <p class="solution-card-desc" data-i18n="sol_4_desc">
+            Transaksi aman dengan pelepasan dana bertahap (30% / 30% / 20% / 20%).
+          </p>
+          <span class="solution-card-link">Pelajari Selengkapnya &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRODUK UNGGULAN ==================== -->
+  <section class="section-products" id="produk">
+    <div class="site-container">
+      <div class="products-header">
+        <div class="products-header-left">
+          <div class="pill-badge pill-blue" data-i18n="products_pill">
+            PRODUK UNGGULAN
+          </div>
+          <h2 class="section-title" data-i18n="products_title">
+            Produk UMKM Indonesia<br>
+            untuk Pasar Global
+          </h2>
+        </div>
+        <a href="produk.html" class="link-view-all">
+          <span data-i18n="products_view_all">Lihat Semua Produk</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-tabs" id="categoryTabs">
+        <button class="cat-pill active" data-category="all" data-i18n="cat_all">Semua</button>
+        <button class="cat-pill" data-category="kopi" data-i18n="cat_coffee">Kopi</button>
+        <button class="cat-pill" data-category="rempah" data-i18n="cat_spices">Rempah</button>
+        <button class="cat-pill" data-category="kriya" data-i18n="cat_craft">Kriya</button>
+        <button class="cat-pill" data-category="tekstil" data-i18n="cat_textile">Tekstil</button>
+        <button class="cat-pill" data-category="makanan" data-i18n="cat_food">Makanan</button>
+        <button class="cat-pill" data-category="lainnya" data-i18n="cat_others">Lainnya</button>
+      </div>
+
+      <!-- Products Carousel / Slider Wrapper -->
+      <div class="products-slider-wrapper">
+        <button class="slider-arrow slider-arrow-left" id="btnPrevProduct" aria-label="Produk Sebelumnya">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="products-carousel" id="productsCarousel">
+          <!-- Card 1: Kopi Arabika Gayo -->
+          <div class="product-card" data-category="kopi">
+            <div class="product-thumb-wrap">
+              <img src="assets/product-1.webp" alt="Kopi Arabika Gayo" class="product-img">
+              <div class="product-category-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                  <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                  <line x1="6" y1="1" x2="6" y2="4"></line>
+                  <line x1="10" y1="1" x2="10" y2="4"></line>
+                  <line x1="14" y1="1" x2="14" y2="4"></line>
+                </svg>
+              </div>
+            </div>
+            <div class="product-body">
+              <h4 class="product-name">Kopi Arabika Gayo</h4>
+              <p class="product-price">USD 8.5 / Kg</p>
+              <p class="product-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Aceh, Indonesia
+              </p>
+              <div class="product-verified-badge">
+                <span class="v-check">✓</span> Verified Seller
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Rempah Nusantara -->
+          <div class="product-card" data-category="rempah">
+            <div class="product-thumb-wrap">
+              <img src="assets/product-2.webp" alt="Rempah Nusantara" class="product-img">
+              <div class="product-category-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="product-body">
+              <h4 class="product-name">Rempah Nusantara</h4>
+              <p class="product-price">USD 6.2 / Kg</p>
+              <p class="product-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Indonesia
+              </p>
+              <div class="product-verified-badge">
+                <span class="v-check">✓</span> Verified Seller
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Kerajinan Rotan -->
+          <div class="product-card" data-category="kriya">
+            <div class="product-thumb-wrap">
+              <img src="assets/product-3.webp" alt="Kerajinan Rotan" class="product-img">
+              <div class="product-category-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="product-body">
+              <h4 class="product-name">Kerajinan Rotan</h4>
+              <p class="product-price">USD 12.0 / pcs</p>
+              <p class="product-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Indonesia
+              </p>
+              <div class="product-verified-badge">
+                <span class="v-check">✓</span> Verified Seller
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Tenun Ikat -->
+          <div class="product-card" data-category="tekstil">
+            <div class="product-thumb-wrap">
+              <img src="assets/product-4.webp" alt="Tenun Ikat" class="product-img">
+              <div class="product-category-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="product-body">
+              <h4 class="product-name">Tenun Ikat</h4>
+              <p class="product-price">USD 25.0 / pcs</p>
+              <p class="product-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Indonesia
+              </p>
+              <div class="product-verified-badge">
+                <span class="v-check">✓</span> Verified Seller
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5: Oleh-oleh Organik -->
+          <div class="product-card" data-category="makanan">
+            <div class="product-thumb-wrap">
+              <img src="assets/product-5.webp" alt="Oleh-oleh Organik" class="product-img">
+              <div class="product-category-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="product-body">
+              <h4 class="product-name">Oleh-oleh Organik</h4>
+              <p class="product-price">USD 4.5 / Kg</p>
+              <p class="product-location">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Indonesia
+              </p>
+              <div class="product-verified-badge">
+                <span class="v-check">✓</span> Verified Seller
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="slider-arrow slider-arrow-right" id="btnNextProduct" aria-label="Produk Selanjutnya">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ALUR EKSPOR (CARA KERJA NUSABRIDE/NUSABRIDESIA) ==================== -->
+  <section class="section-workflow" id="alur-ekspor">
+    <!-- Top Wave Curve SVG -->
+    <div class="workflow-wave-top">
+      <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
+        <path d="M0,0 L1440,0 L1440,24 C1360,34 1280,58 1160,60 C960,64 820,14 620,18 C380,22 220,64 0,44 Z" fill="#ffffff"></path>
+      </svg>
+    </div>
+
+    <!-- Background Port Sunset Visual -->
+    <div class="workflow-backdrop">
+      <img src="assets/Global Shipping at Sunset.webp" alt="Global Shipping at Sunset" class="workflow-bg-img">
+    </div>
+
+    <div class="site-container workflow-content">
+      <div class="workflow-header">
+        <div class="pill-badge pill-translucent" data-i18n="workflow_pill">
+          ALUR EKSPOR
+        </div>
+        <h2 class="workflow-title" data-i18n="workflow_title">
+          Cara Kerja NusaBridge
+        </h2>
+        <p class="workflow-subtitle" data-i18n="workflow_sub">
+          Dari menemukan buyer hingga dokumen siap, semua dalam satu platform.
+        </p>
+      </div>
+
+      <!-- 6 Steps Timeline -->
+      <div class="workflow-steps-timeline">
+        <div class="timeline-line"></div>
+
+        <!-- Step 1 -->
+        <div class="workflow-step-item">
+          <div class="step-circle-wrap">
+            <div class="step-circle">
+              <img src="assets/icons/icon-5.webp" alt="Daftar Data Usaha" class="step-icon">
+            </div>
+            <span class="step-number-badge">1</span>
+          </div>
+          <p class="step-title" data-i18n="step_1">Daftar & Lengkapi<br>Data Usaha</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="workflow-step-item">
+          <div class="step-circle-wrap">
+            <div class="step-circle">
+              <img src="assets/icons/icon-2.webp" alt="Analisis RFQ dengan AI" class="step-icon">
+            </div>
+            <span class="step-number-badge">2</span>
+          </div>
+          <p class="step-title" data-i18n="step_2">Analisis RFQ<br>dengan AI</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="workflow-step-item">
+          <div class="step-circle-wrap">
+            <div class="step-circle">
+              <img src="assets/icons/icon-7.webp" alt="Negosiasi & Pilih Incoterms" class="step-icon">
+            </div>
+            <span class="step-number-badge">3</span>
+          </div>
+          <p class="step-title" data-i18n="step_3">Negosiasi & Pilih<br>Incoterms</p>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="workflow-step-item">
+          <div class="step-circle-wrap">
+            <div class="step-circle">
+              <img src="assets/icons/icon-8.webp" alt="Generate Dokumen Otomatis" class="step-icon">
+            </div>
+            <span class="step-number-badge">4</span>
+          </div>
+          <p class="step-title" data-i18n="step_4">Generate Dokumen<br>Otomatis</p>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="workflow-step-item">
+          <div class="step-circle-wrap">
+            <div class="step-circle">
+              <img src="assets/icons/icon-9.webp" alt="Pantau Logistik & Escrow" class="step-icon">
+            </div>
+            <span class="step-number-badge">5</span>
+          </div>
+          <p class="step-title" data-i18n="step_5">Pantau Logistik<br>& Escrow</p>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="workflow-step-item">
+          <div class="step-circle-wrap">
+            <div class="step-circle">
+              <img src="assets/icons/icon-4.webp" alt="Produk Tiba di Pasar Global" class="step-icon">
+            </div>
+            <span class="step-number-badge">6</span>
+          </div>
+          <p class="step-title" data-i18n="step_6">Produk Tiba<br>di Pasar Global</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== APP DASHBOARD & AI AGENT SHOWCASE ==================== -->
+  <section class="section-dashboard-showcase">
+    <div class="site-container dashboard-showcase-container">
+      <div class="dashboard-grid">
+        
+        <!-- Left Panel: NusaBridge Dashboard App UI -->
+        <div class="mockup-app-window">
+          <!-- Sidebar Mockup -->
+          <aside class="mockup-sidebar">
+            <div class="mockup-brand">
+              <img src="assets/logo-transparent.webp" alt="NusaBridge" class="mockup-logo-img">
+            </div>
+            <nav class="mockup-nav">
+              <a href="javascript:void(0)" class="mockup-nav-item active" data-view="overview">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Beranda</span>
+              </a>
+              <a href="javascript:void(0)" class="mockup-nav-item" data-view="products">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+                <span>Produk</span>
+              </a>
+              <a href="javascript:void(0)" class="mockup-nav-item" data-view="rfq">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>RFQ Studio</span>
+              </a>
+              <a href="javascript:void(0)" class="mockup-nav-item" data-view="docs">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span>Dokumen</span>
+              </a>
+              <a href="javascript:void(0)" class="mockup-nav-item" data-view="logistics">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+                <span>Logistik</span>
+              </a>
+              <a href="javascript:void(0)" class="mockup-nav-item" data-view="kyc">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span>KYC Hub</span>
+              </a>
+              <a href="javascript:void(0)" class="mockup-nav-item" data-view="settings">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                <span>Pengaturan</span>
+              </a>
+            </nav>
+          </aside>
+
+          <!-- Main App Content -->
+          <div class="mockup-content">
+            <!-- App Header -->
+            <div class="mockup-topbar">
+              <div class="mockup-search">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" placeholder="Cari produk, buyer, atau dokumen..." readonly>
+              </div>
+
+              <div class="mockup-user-bar">
+                <button class="mockup-icon-btn" aria-label="Notifikasi">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                  </svg>
+                </button>
+                <div class="mockup-user-profile">
+                  <img src="assets/avatar.webp" alt="Avatar UMKM Indonesia" class="user-avatar-img">
+                  <div class="user-meta">
+                    <span class="user-name">UMKM Indonesia</span>
+                    <span class="user-role">Seller <span class="arrow-sub">→</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW 1: OVERVIEW DASHBOARD -->
+            <div id="mockupViewOverview" class="mockup-sandbox-view">
+              <!-- Welcome Greeting -->
+              <div class="mockup-welcome">
+                <h3 class="welcome-heading">Selamat datang, UMKM Indonesia 👋</h3>
+                <p class="welcome-sub">Kelola transaksi ekspor Anda dengan bantuan AI Agent.</p>
+              </div>
+
+            <!-- 4 Quick Stats Badges -->
+            <div class="mockup-stats-row">
+              <div class="mstat-card">
+                <div class="mstat-icon blue">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <div class="mstat-texts">
+                  <span class="mstat-val">12</span>
+                  <span class="mstat-lbl">Permintaan RFQ</span>
+                </div>
+              </div>
+
+              <div class="mstat-card">
+                <div class="mstat-icon blue">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  </svg>
+                </div>
+                <div class="mstat-texts">
+                  <span class="mstat-val">7</span>
+                  <span class="mstat-lbl">Dokumen Dibuat</span>
+                </div>
+              </div>
+
+              <div class="mstat-card">
+                <div class="mstat-icon blue">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                  </svg>
+                </div>
+                <div class="mstat-texts">
+                  <span class="mstat-val">3</span>
+                  <span class="mstat-lbl">Transaksi Berjalan</span>
+                </div>
+              </div>
+
+              <div class="mstat-card">
+                <div class="mstat-icon blue">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <div class="mstat-texts">
+                  <span class="mstat-val">98%</span>
+                  <span class="mstat-lbl">Efisiensi Waktu</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Two Sub-Widgets: Map & Transactions -->
+            <div class="mockup-widgets-row">
+              <!-- Left: Peta Logistik & Radar Kapal Kargo Real-Time -->
+              <div class="mwidget-card marine-radar-card">
+                <div class="radar-card-header">
+                  <div class="radar-title-wrap">
+                    <h4 class="widget-title">Radar Pelayaran Kapal Kargo</h4>
+                    <span class="live-ais-badge">
+                      <span class="live-dot-pulse"></span> LIVE AIS
+                    </span>
+                  </div>
+                  <div class="radar-quick-actions">
+                    <button class="btn-radar-fullscreen" id="btnOpenRadarModal" type="button" title="Perbesar Radar Maritim">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                      <span>Layar Penuh</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Interactive Maritime AIS Radar Canvas Container -->
+                <div class="marine-radar-display" id="marineRadarDisplay">
+                  <!-- Radar Sweep Animation Overlay -->
+                  <div class="radar-sweep-beam"></div>
+
+                  <!-- Floating Tooltip Popover (Flightradar24 / MarineTraffic Style) -->
+                  <div class="vessel-popover-tooltip" id="vesselFloatingTooltip"></div>
+
+                  <!-- Grid Lat/Long Lines Overlay -->
+                  <div class="radar-grid-lines"></div>
+
+                  <!-- Ocean SVG Map with Landmasses and Shipping Arcs -->
+                  <svg class="marine-svg-map" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet">
+                    <!-- World Ocean Background & Grid -->
+                    <defs>
+                      <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#0a192f"/>
+                        <stop offset="100%" stop-color="#050e1d"/>
+                      </linearGradient>
+                      <linearGradient id="routeGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#10b981" stop-opacity="0.8"/>
+                        <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.9"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                      </linearGradient>
+                    </defs>
+
+                    <!-- Background Rect -->
+                    <rect width="600" height="340" fill="url(#oceanGrad)"/>
+
+                    <!-- Continent Outlines (Abstract Stylized Vector) -->
+                    <!-- Eurasia & Africa -->
+                    <path class="continent-land" d="M120,40 Q160,35 220,50 Q280,60 360,70 Q420,60 480,90 Q470,130 430,140 Q400,120 370,150 Q340,180 320,180 Q300,160 260,180 Q220,200 200,240 Q170,220 160,170 Q140,150 120,110 Z" fill="#132743" opacity="0.6"/>
+                    <!-- Americas (West) -->
+                    <path class="continent-land" d="M30,60 Q60,80 70,130 Q80,180 60,220 Q40,260 50,300 Q20,280 15,200 Q20,120 30,60 Z" fill="#132743" opacity="0.6"/>
+                    <!-- Indonesian Archipelago & SE Asia (Center-Right Highlighted) -->
+                    <g class="indo-archipelago" transform="translate(350, 190) scale(0.8)">
+                      <!-- Sumatra -->
+                      <path d="M10,25 Q30,10 60,40 Q45,55 15,35 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                      <!-- Java -->
+                      <path d="M55,55 Q90,52 130,60 Q110,68 60,65 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                      <!-- Kalimantan / Borneo -->
+                      <path d="M75,15 Q105,10 115,35 Q95,50 75,30 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                      <!-- Sulawesi -->
+                      <path d="M130,20 Q145,15 140,40 Q155,50 135,55 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                      <!-- Maluku & Papua -->
+                      <path d="M165,30 Q210,25 240,45 Q210,65 170,55 Z" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+                    </g>
+                    <!-- Australia (Bottom Right) -->
+                    <path class="continent-land" d="M440,250 Q490,240 520,270 Q510,310 460,315 Q430,290 440,250 Z" fill="#132743" opacity="0.6"/>
+
+                    <!-- Global Shipping Lanes (Curved Geodesic Flight-Radar Style Lines) -->
+                    <!-- Route 1: Jakarta/Priok -> Singapore -> Suez -> Rotterdam/Hamburg -->
+                    <path id="route1" class="shipping-lane animated-lane" d="M395,240 Q330,190 260,170 T150,110 T90,75" fill="none" stroke="url(#routeGlow)" stroke-width="2.2" stroke-dasharray="6,4"/>
+                    <!-- Route 2: Surabaya/Perak -> Pacific -> Los Angeles -->
+                    <path id="route2" class="shipping-lane animated-lane" d="M420,245 Q500,210 560,160 T595,120" fill="none" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="5,3" opacity="0.8"/>
+                    <!-- Route 3: Medan/Belawan -> East Asia / Tokyo -->
+                    <path id="route3" class="shipping-lane animated-lane" d="M375,215 Q410,160 460,120 T510,95" fill="none" stroke="#a7f3d0" stroke-width="1.8" stroke-dasharray="5,3" opacity="0.8"/>
+
+                    <!-- Major Ports (Pusat Pelabuhan Hub) -->
+                    <!-- Tanjung Priok (Jakarta) -->
+                    <g class="port-marker" transform="translate(395, 240)">
+                      <circle r="7" fill="none" stroke="#10b981" stroke-width="1.5" class="port-ping"/>
+                      <circle r="3.5" fill="#10b981"/>
+                      <text x="8" y="4" fill="#ffffff" font-size="8.5" font-weight="700" font-family="'Plus Jakarta Sans', sans-serif">Tanjung Priok (ID)</text>
+                    </g>
+                    <!-- Port of Rotterdam / Hamburg -->
+                    <g class="port-marker" transform="translate(90, 75)">
+                      <circle r="6" fill="none" stroke="#f59e0b" stroke-width="1.5" class="port-ping"/>
+                      <circle r="3" fill="#f59e0b"/>
+                      <text x="-80" y="4" fill="#cbd5e1" font-size="8" font-family="'Plus Jakarta Sans', sans-serif">Hamburg (DE)</text>
+                    </g>
+                    <!-- Port of Tokyo -->
+                    <g class="port-marker" transform="translate(510, 95)">
+                      <circle r="5" fill="none" stroke="#38bdf8" stroke-width="1.5" class="port-ping"/>
+                      <circle r="2.5" fill="#38bdf8"/>
+                      <text x="8" y="4" fill="#cbd5e1" font-size="8" font-family="'Plus Jakarta Sans', sans-serif">Tokyo (JP)</text>
+                    </g>
+                    <!-- Port of Los Angeles (Offshore Indicator) -->
+                    <g class="port-marker" transform="translate(585, 120)">
+                      <circle r="5" fill="none" stroke="#a855f7" stroke-width="1.5" class="port-ping"/>
+                      <circle r="2.5" fill="#a855f7"/>
+                      <text x="-65" y="-6" fill="#cbd5e1" font-size="8" font-family="'Plus Jakarta Sans', sans-serif">Los Angeles (US)</text>
+                    </g>
+
+                    <!-- Active Cargo Ships (Vessels) on Routes -->
+                    <!-- VESSEL 1: KM Baruna Nusantara (En Route to Hamburg) -->
+                    <g class="vessel-icon-group active-vessel" id="vessel1" transform="translate(235, 155)" data-vessel="baruna">
+                      <circle r="14" fill="rgba(16, 185, 129, 0.2)" class="vessel-sonar"/>
+                      <circle r="6" fill="#10b981"/>
+                      <path class="vessel-arrow" d="M-5,-3 L7,0 L-5,3 L-3,0 Z" fill="#ffffff" transform="rotate(-150)"/>
+                      <g class="vessel-tag" transform="translate(10, -8)">
+                        <rect width="98" height="18" rx="4" fill="#0f172a" fill-opacity="0.85" stroke="#10b981" stroke-width="1"/>
+                        <text x="6" y="12" fill="#ffffff" font-size="7.5" font-weight="700">🚢 KM Baruna (19.4 kn)</text>
+                      </g>
+                    </g>
+
+                    <!-- VESSEL 2: MV Samudera Raya (En Route to Los Angeles) -->
+                    <g class="vessel-icon-group" id="vessel2" transform="translate(490, 205)" data-vessel="samudera">
+                      <circle r="12" fill="rgba(56, 189, 248, 0.2)" class="vessel-sonar"/>
+                      <circle r="5" fill="#38bdf8"/>
+                      <path class="vessel-arrow" d="M-5,-3 L7,0 L-5,3 L-3,0 Z" fill="#ffffff" transform="rotate(-40)"/>
+                      <g class="vessel-tag" transform="translate(8, -8)">
+                        <rect width="104" height="18" rx="4" fill="#0f172a" fill-opacity="0.85" stroke="#38bdf8" stroke-width="1"/>
+                        <text x="6" y="12" fill="#ffffff" font-size="7.5" font-weight="700">🚢 MV Samudera (21.2 kn)</text>
+                      </g>
+                    </g>
+
+                    <!-- VESSEL 3: KM Celebes Express (En Route to Tokyo) -->
+                    <g class="vessel-icon-group" id="vessel3" transform="translate(425, 150)" data-vessel="celebes">
+                      <circle r="12" fill="rgba(245, 158, 11, 0.2)" class="vessel-sonar"/>
+                      <circle r="5" fill="#f59e0b"/>
+                      <path class="vessel-arrow" d="M-5,-3 L7,0 L-5,3 L-3,0 Z" fill="#ffffff" transform="rotate(-65)"/>
+                      <g class="vessel-tag" transform="translate(8, -8)">
+                        <rect width="102" height="18" rx="4" fill="#0f172a" fill-opacity="0.85" stroke="#f59e0b" stroke-width="1"/>
+                        <text x="6" y="12" fill="#ffffff" font-size="7.5" font-weight="700">🚢 KM Celebes (17.8 kn)</text>
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+
+                <!-- Vessel Telemetry Quick Status Strip (Clickable to switch vessels) -->
+                <div class="vessel-telemetry-hud" id="vesselTelemetryHud">
+                  <div class="vth-vessel-info">
+                    <div class="vth-badge-row">
+                      <span class="vth-name" id="vthShipName">KM Baruna Nusantara</span>
+                      <span class="vth-status-pill green" id="vthShipStatus">🟢 Berlayar (On Schedule)</span>
+                    </div>
+                    <div class="vth-route-row" id="vthShipRoute">
+                      <span>Tanjung Priok, ID ➔ Hamburg, DE</span>
+                      <span class="vth-speed" id="vthShipSpeed">Kecepatan: 19.4 knots</span>
+                    </div>
+                  </div>
+                  
+                  <div class="vth-progress-wrap">
+                    <div class="vth-progress-label">
+                      <span>Progres Pelayaran: <strong id="vthProgressPct">68%</strong></span>
+                      <span id="vthEtaLabel">ETA: 4 Hari Lagi</span>
+                    </div>
+                    <div class="vth-progress-bar">
+                      <div class="vth-progress-fill" id="vthProgressFill" style="width: 68%;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Quick Switcher Tabs -->
+                  <div class="vessel-quick-selector">
+                    <button class="vqs-btn active" data-vessel="baruna" type="button">KM Baruna (Eropa)</button>
+                    <button class="vqs-btn" data-vessel="samudera" type="button">MV Samudera (USA)</button>
+                    <button class="vqs-btn" data-vessel="celebes" type="button">KM Celebes (Asia)</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Transaksi Terbaru -->
+              <div class="mwidget-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                  <h4 class="widget-title" style="margin-bottom:0;">Transaksi Terbaru</h4>
+                  <small style="color:var(--primary); font-weight:700; cursor:pointer;" id="btnLihatSemuaTx">Lihat Detail →</small>
+                </div>
+                <div class="tx-list">
+                  <div class="tx-row interactive-tx" data-tx="gayo" style="cursor:pointer;" title="Klik untuk lihat detail transaksi">
+                    <img src="assets/tx-thumb-1.webp" alt="Kopi Arabika Gayo" class="tx-thumb">
+                    <div class="tx-details">
+                      <span class="tx-name">Kopi Arabika Gayo</span>
+                      <span class="tx-val">USD 12,000</span>
+                    </div>
+                    <span class="tx-badge badge-blue">Negosiasi</span>
+                  </div>
+
+                  <div class="tx-row interactive-tx" data-tx="rempah" style="cursor:pointer;" title="Klik untuk lihat detail transaksi">
+                    <img src="assets/tx-thumb-2.webp" alt="Rempah Nusantara" class="tx-thumb">
+                    <div class="tx-details">
+                      <span class="tx-name">Rempah Nusantara</span>
+                      <span class="tx-val">USD 8,750</span>
+                    </div>
+                    <span class="tx-badge badge-blue">Proses Dokumen</span>
+                  </div>
+
+                  <div class="tx-row interactive-tx" data-tx="tenun" style="cursor:pointer;" title="Klik untuk lihat detail transaksi">
+                    <img src="assets/tx-thumb-3.webp" alt="Tenun Ikat" class="tx-thumb">
+                    <div class="tx-details">
+                      <span class="tx-name">Tenun Ikat</span>
+                      <span class="tx-val">USD 24,000</span>
+                    </div>
+                    <span class="tx-badge badge-blue">Dalam Pengiriman</span>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /mockupViewOverview -->
+
+            <!-- VIEW 2: SANDBOX DOKUMEN EKSPOR -->
+            <div id="mockupViewDocs" class="mockup-sandbox-view" style="display:none;">
+              <div class="sandbox-header">
+                <div class="sandbox-title-wrap">
+                  <h4 class="sandbox-title">AI Trade Document Generator</h4>
+                  <span class="sandbox-badge">ICC Incoterms 2020 Standard</span>
+                </div>
+                <button class="btn btn-primary btn-sm" id="btnPrintExportDoc" type="button">
+                  <span>🖨️ Cetak / Unduh Dokumen (PDF)</span>
+                </button>
+              </div>
+
+              <div class="doc-sandbox-controls">
+                <div class="doc-ctrl-item">
+                  <label>Jenis Dokumen:</label>
+                  <select id="docTypeSelect">
+                    <option value="invoice">Proforma Invoice (PI)</option>
+                    <option value="contract">Sales Contract (SC)</option>
+                    <option value="peb">Pemberitahuan Ekspor Barang (PEB)</option>
+                    <option value="coo">Certificate of Origin (COO Form A)</option>
+                  </select>
+                </div>
+                <div class="doc-ctrl-item">
+                  <label>Komoditas Ekspor:</label>
+                  <select id="docCommoditySelect">
+                    <option value="Kopi Arabika Gayo Specialty Grade 1">Kopi Arabika Gayo Grade 1</option>
+                    <option value="Cengkeh Lal Maluku Super (Cloves)">Cengkeh Lal Maluku Super</option>
+                    <option value="Set Kursi &amp; Meja Rotan Cirebon">Set Kursi Rotan Cirebon</option>
+                    <option value="Briket Arang Tempurung Kelapa">Briket Arang Kelapa Shisha</option>
+                    <option value="Vanilla Bean Planifolia Gourmet">Vanilla Planifolia Gourmet</option>
+                  </select>
+                </div>
+                <div class="doc-ctrl-item">
+                  <label>Incoterms 2020:</label>
+                  <select id="docIncotermsSelect">
+                    <option value="CIF Hamburg, Germany">CIF Port of Hamburg, DE</option>
+                    <option value="FOB Pelabuhan Belawan, ID">FOB Pelabuhan Belawan, ID</option>
+                    <option value="CIF Port of Los Angeles, US">CIF Los Angeles Port, US</option>
+                    <option value="FOB Tanjung Priok Jakarta, ID">FOB Tanjung Priok, ID</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Live Rendered Document Paper -->
+              <div class="doc-paper-preview" id="docPaperPreview">
+                <div class="dpp-header">
+                  <div>
+                    <div class="dpp-title" id="dppTitle">PROFORMA INVOICE</div>
+                    <div class="dpp-docno" id="dppDocNo">No: NB-INV-2026-X-049 • Tanggal: 19 Oktober 2026</div>
+                  </div>
+                  <div class="digital-seal-box">
+                    <span>🛡️</span>
+                    <span>VERIFIED BY NUSABRIDGE AI</span>
+                  </div>
+                </div>
+
+                <div class="dpp-grid">
+                  <div class="dpp-box">
+                    <h6>Eksportir (Seller / Shipper):</h6>
+                    <p><strong id="dppExporterName">CV Kopi Nusantara Mandiri</strong><br>
+                    NIB: 1294801928415 • NPWP: 01.234.567.8-012.000<br>
+                    Medan / Takengon, Indonesia</p>
+                  </div>
+                  <div class="dpp-box">
+                    <h6>Pembeli (Consignee / Buyer):</h6>
+                    <p><strong id="dppBuyerName">Nordic Coffee Importers GmbH</strong><br>
+                    Grosse Elbstrasse 145, 22767 Hamburg, Germany<br>
+                    VAT ID: DE 294 810 293</p>
+                  </div>
+                </div>
+
+                <table class="dpp-table">
+                  <thead>
+                    <tr>
+                      <th>Deskripsi Komoditas &amp; Kode HS</th>
+                      <th>Kuantitas</th>
+                      <th>Harga Satuan</th>
+                      <th>Total Nilai (USD)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong id="dppItemDesc">Kopi Arabika Gayo Specialty Grade 1</strong><br><small style="color:#64748b;">HS Code: 0901.11.10 • Double Picked Organic</small></td>
+                      <td id="dppQty">18.000 Kg (1 FCL)</td>
+                      <td id="dppUnitPrice">USD 9.20 / Kg</td>
+                      <td><strong id="dppTotalUSD">USD 165.600</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="dpp-footer">
+                  <div>
+                    <small style="color:#64748b;">Syarat Pembayaran &amp; Perlindungan:</small><br>
+                    <strong style="color:var(--primary); font-size:11px;" id="dppPaymentTerms">100% Guaranteed Escrow Vault (30% DP / 30% BL / 20% Suez / 20% Final)</strong>
+                  </div>
+                  <div style="text-align:right;">
+                    <span style="font-family:'Caveat', cursive; font-size:20px; color:#1b68f8; font-weight:700;">NusaBridge AI Agent</span><br>
+                    <small style="font-size:10px; color:#64748b;">Electronic Trade Verification Authority</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW 3: SANDBOX KYC HUB (OSS NIB & NPWP) -->
+            <div id="mockupViewKyc" class="mockup-sandbox-view" style="display:none;">
+              <div class="sandbox-header">
+                <div class="sandbox-title-wrap">
+                  <h4 class="sandbox-title">AI KYC &amp; Legality Verification Hub</h4>
+                  <span class="sandbox-badge green">OSS RBA Sandbox Active</span>
+                </div>
+              </div>
+
+              <div class="kyc-sandbox-card">
+                <p style="font-size:12.5px; color:var(--text-muted); margin:0;">
+                  Validasi format Nomor Induk Berusaha (NIB 13 Digit) dan NPWP pelaku usaha untuk menerbitkan lencana <strong>Verified Global Exporter Shield</strong> agar diakui oleh buyer luar negeri.
+                </p>
+
+                <div class="kyc-sample-btns">
+                  <span style="font-size:11px; font-weight:700; color:var(--text-muted);">Pilih Contoh Uji Coba:</span>
+                  <button class="btn-sample-nib" id="btnSampleNibValid" type="button">✓ NIB Terdaftar (1294801928415 - CV Kopi Nusantara)</button>
+                  <button class="btn-sample-nib" id="btnSampleNibInvalid" type="button">✕ NIB Tidak Valid (9999000011112)</button>
+                </div>
+
+                <div class="kyc-form-row">
+                  <div class="kyc-input-item">
+                    <label>Nomor Induk Berusaha (NIB 13 Digit):</label>
+                    <input type="text" id="kycNibInput" value="1294801928415" maxlength="13" placeholder="13 digit angka OSS">
+                  </div>
+                  <div class="kyc-input-item">
+                    <label>NPWP Perusahaan / Koperasi:</label>
+                    <input type="text" id="kycNpwpInput" value="01.234.567.8-012.000" placeholder="15/16 digit NPWP">
+                  </div>
+                </div>
+
+                <div class="kyc-input-item">
+                  <label>Nama Badan Usaha / UMKM:</label>
+                  <input type="text" id="kycCompanyInput" value="CV Kopi Nusantara Mandiri" placeholder="Nama usaha">
+                </div>
+
+                <div>
+                  <button class="btn btn-primary btn-block" id="btnVerifyKyc" type="button">
+                    <span>🛡️ Verifikasi Legalitas Usaha Sekarang</span>
+                  </button>
+                </div>
+
+                <!-- Live Result Box -->
+                <div class="kyc-result-box" id="kycResultBox">
+                  <div class="krb-icon">🛡️</div>
+                  <div class="krb-content" style="flex:1;">
+                    <h5 id="kycResultTitle">VERIFIED GLOBAL EXPORTER (VGE-2026)</h5>
+                    <p id="kycResultMsg">Badan usaha telah terdaftar resmi pada Sistem OSS Berbasis Risiko. Memiliki izin sah untuk melakukan kegiatan kepabeanan ekspor-impor internasional.</p>
+                    <div class="krb-details" id="kycResultDetails">
+                      <div><strong>Status OSS:</strong> <span style="color:#059669;">AKTIF &amp; VALID</span></div>
+                      <div><strong>Klasifikasi:</strong> KBLI 46311 (Kopi &amp; Rempah)</div>
+                      <div><strong>Hak Akses:</strong> Angka Pengenal Ekspor (API)</div>
+                      <div><strong>Tingkat Kepatuhan:</strong> 100% Low Risk</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW 4: SANDBOX RFQ STUDIO -->
+            <div id="mockupViewRfq" class="mockup-sandbox-view" style="display:none;">
+              <div class="sandbox-header">
+                <div class="sandbox-title-wrap">
+                  <h4 class="sandbox-title">AI RFQ Negotiation Studio</h4>
+                  <span class="sandbox-badge">Live Buyer Inquiry</span>
+                </div>
+                <a href="solusi.html" class="btn btn-primary btn-sm">Buka Studio Lengkap &rarr;</a>
+              </div>
+
+              <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
+                  <div>
+                    <span style="font-size:11px; background:#eff6ff; color:#1b68f8; font-weight:700; padding:2px 8px; border-radius:10px;">INCOMING BUYER INQUIRY #RFQ-2026-DE-049</span>
+                    <h5 style="font-size:14px; margin:4px 0; color:var(--navy-title);">Nordic Coffee Importers GmbH (Hamburg, Germany)</h5>
+                    <p style="font-size:12px; color:var(--text-muted); margin:0;">Permintaan: <strong>18.000 Kg (1 FCL) Kopi Arabika Gayo</strong> • Target: <strong>CIF Hamburg</strong></p>
+                  </div>
+                  <div style="text-align:right;">
+                    <span style="font-size:11px; color:#64748b;">Target Harga Buyer:</span>
+                    <div style="font-size:16px; font-weight:800; color:#059669;">USD 9.20 / Kg</div>
+                  </div>
+                </div>
+
+                <div style="background:#f8fafc; padding:12px; border-radius:6px; font-size:12px; display:flex; flex-direction:column; gap:6px; border:1px solid #e2e8f0;">
+                  <div><strong>Rekomendasi NusaBridge AI:</strong> Harga penawaran buyer USD 9.20 sangat layak dieksekusi!</div>
+                  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-top:4px;">
+                    <div><span>Biaya HPP Lokal:</span> <strong>USD 5.80 / Kg</strong></div>
+                    <div><span>Freight Belawan-Hamburg:</span> <strong>USD 0.85 / Kg</strong></div>
+                    <div><span>Fee Escrow NusaBridge (1.2%):</span> <strong>USD 0.11 / Kg</strong></div>
+                    <div><span>Net Profit UMKM:</span> <strong style="color:#059669;">USD 2.44 / Kg (26.5%)</strong></div>
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                  <button class="btn btn-outline btn-sm" id="btnNegoRfq" type="button">Tawar Harga (Counter Offer)</button>
+                  <button class="btn btn-primary btn-sm" id="btnAcceptRfq" type="button">✓ Setujui &amp; Terbitkan Proforma Invoice</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW 5: SANDBOX PENGATURAN -->
+            <div id="mockupViewSettings" class="mockup-sandbox-view" style="display:none;">
+              <div class="sandbox-header">
+                <div class="sandbox-title-wrap">
+                  <h4 class="sandbox-title">Pengaturan Profil &amp; Rekening Escrow</h4>
+                  <span class="sandbox-badge">Multi-Currency Vault</span>
+                </div>
+              </div>
+
+              <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:14px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                  <div>
+                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Rekening Penerima USD (Devisa Hasil Ekspor):</label>
+                    <input type="text" value="Bank Mandiri (DHE) - 137-00-1928410-1" readonly class="input-readonly" style="width:100%; padding:8px 10px; font-size:12.5px; border:1px solid var(--border-light); border-radius:6px; font-weight:600; margin-top:4px;">
+                  </div>
+                  <div>
+                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">SWIFT Code Bank:</label>
+                    <input type="text" value="BMRIIDJA (Bank Mandiri Head Office)" readonly class="input-readonly" style="width:100%; padding:8px 10px; font-size:12.5px; border:1px solid var(--border-light); border-radius:6px; font-weight:600; margin-top:4px;">
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Status Proteksi Escrow Vault:</label>
+                  <div style="display:flex; align-items:center; gap:8px; margin-top:4px; font-size:12px; color:#059669; font-weight:700;">
+                    <span>✓ Rekening Escrow Terkoneksi (Pencairan Otomatis Sesuai 4 Tahap B/L)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel: AI Agent Interactive Chat Widget -->
+        <div class="mockup-chat-window">
+          <div class="chat-header">
+            <span class="pill-badge pill-blue chat-agent-pill">AI Agent</span>
+            <h3 class="chat-header-title">Asisten AI untuk Ekspor Anda</h3>
+          </div>
+
+          <div class="chat-conversation-area" id="chatArea">
+            <!-- NusaBridge AI Greeting -->
+            <div class="chat-bubble-row">
+              <div class="agent-avatar-icon">
+                <img src="assets/icons/icon-1.webp" alt="AI Agent Icon">
+              </div>
+              <div class="chat-bubble agent-bubble">
+                Halo! Saya NusaBridge AI Agent. Saya dapat membantu analisis RFQ, rekomendasi harga, hingga pembuatan dokumen ekspor.
+              </div>
+            </div>
+          </div>
+
+          <!-- Suggested Action Prompts -->
+          <div class="chat-suggestions-box">
+            <button class="chat-suggest-btn" data-query="Analisis permintaan buyer (RFQ)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b68f8" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <circle cx="11" cy="14" r="2"></circle>
+              </svg>
+              <span>Analisis permintaan buyer (RFQ)</span>
+            </button>
+
+            <button class="chat-suggest-btn" data-query="Rekomendasi harga kompetitif">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b68f8" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+              <span>Rekomendasi harga kompetitif</span>
+            </button>
+
+            <button class="chat-suggest-btn" data-query="Penjelasan Incoterms 2020">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b68f8" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>Penjelasan Incoterms 2020</span>
+            </button>
+
+            <button class="chat-suggest-btn" data-query="Buat draft Proforma Invoice">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1b68f8" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Buat draft Proforma Invoice</span>
+            </button>
+          </div>
+
+          <!-- Chat Input Form -->
+          <form class="chat-input-bar" id="chatForm">
+            <input type="text" id="chatInput" placeholder="Tulis pertanyaan..." autocomplete="off">
+            <button type="submit" class="btn-send-chat" aria-label="Kirim Pesan">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MENGAPA NUSABRIDGE ==================== -->
+  <section class="section-why-us" id="tentang">
+    <div class="site-container">
+      <div class="section-header text-center">
+        <div class="pill-badge pill-blue" data-i18n="why_pill">
+          MENGAPA NUSABRIDGE
+        </div>
+        <h2 class="section-title" data-i18n="why_title">
+          Dipercaya untuk Mendukung UMKM Indonesia
+        </h2>
+      </div>
+
+      <div class="why-us-strip">
+        <!-- Item 1: Fokus pada UMKM -->
+        <div class="why-item">
+          <div class="why-icon-wrap">
+            <img src="assets/icons/icon-10.webp" alt="Fokus pada UMKM" class="why-icon-img">
+          </div>
+          <h3 class="why-item-title" data-i18n="why_1_title">Fokus pada UMKM</h3>
+          <p class="why-item-desc" data-i18n="why_1_desc">
+            Dirancang khusus untuk kebutuhan pelaku usaha mikro, kecil, dan menengah.
+          </p>
+        </div>
+
+        <div class="why-divider"></div>
+
+        <!-- Item 2: Teknologi AI Terdepan -->
+        <div class="why-item">
+          <div class="why-icon-wrap">
+            <img src="assets/icons/icon-11.webp" alt="Teknologi AI Terdepan" class="why-icon-img">
+          </div>
+          <h3 class="why-item-title" data-i18n="why_2_title">Teknologi AI Terdepan</h3>
+          <p class="why-item-desc" data-i18n="why_2_desc">
+            Menggunakan Google Gemini untuk analisis, rekomendasi, dan otomasi dokumen.
+          </p>
+        </div>
+
+        <div class="why-divider"></div>
+
+        <!-- Item 3: Standar Internasional -->
+        <div class="why-item">
+          <div class="why-icon-wrap">
+            <img src="assets/icons/icon-12.webp" alt="Standar Internasional" class="why-icon-img">
+          </div>
+          <h3 class="why-item-title" data-i18n="why_3_title">Standar Internasional</h3>
+          <p class="why-item-desc" data-i18n="why_3_desc">
+            Mengacu pada Incoterms 2020 dan praktik perdagangan global.
+          </p>
+        </div>
+
+        <div class="why-divider"></div>
+
+        <!-- Item 4: Aman & Transparan -->
+        <div class="why-item">
+          <div class="why-icon-wrap">
+            <img src="assets/icons/icon-13.webp" alt="Aman & Transparan" class="why-icon-img">
+          </div>
+          <h3 class="why-item-title" data-i18n="why_4_title">Aman & Transparan</h3>
+          <p class="why-item-desc" data-i18n="why_4_desc">
+            Simulasi escrow dan verifikasi legalitas dalam lingkungan sandbox yang aman.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CALL TO ACTION BANNER ==================== -->
+  <section class="section-cta-banner">
+    <!-- Top Wave Curve Across Full Width -->
+    <div class="cta-banner-wave">
+      <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
+        <path d="M0,0 L1440,0 L1440,24 C1360,34 1280,58 1160,60 C960,64 820,14 620,18 C380,22 220,64 0,44 Z" fill="#ffffff"></path>
+      </svg>
+    </div>
+
+    <!-- Background Image & Gradient Across Full Width -->
+    <div class="cta-banner-bg">
+      <img src="assets/Global Shipping at Sunset.webp" alt="Global Shipping at Sunset" class="cta-bg-image">
+    </div>
+
+    <div class="site-container cta-banner-container">
+      <div class="cta-banner-inner">
+        <div class="cta-text-col">
+          <div class="pill-badge pill-translucent-blue" data-i18n="cta_pill">
+            Bersama NusaBridge
+          </div>
+          <h2 class="cta-heading" data-i18n="cta_heading">
+            Wujudkan UMKM Indonesia<br>
+            yang Berdaya Saing Global
+          </h2>
+          <p class="cta-subtext" data-i18n="cta_subtext">
+            Teknologi AI untuk membuka lebih banyak peluang perdagangan internasional bagi produk lokal Indonesia.
+          </p>
+          <div class="cta-btn-group">
+            <button class="btn btn-primary btn-lg" id="btnCtaDaftar">
+              <span data-i18n="cta_btn_register">Daftar Sekarang</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+            <button class="btn btn-glass btn-lg" id="btnCtaContact" data-i18n="cta_btn_contact">
+              Hubungi Kami
+            </button>
+          </div>
+        </div>
+
+        <!-- Hand-written slogan decoration on right -->
+        <div class="cta-slogan-col">
+          <div class="handwritten-slogan">
+            <span data-i18n="cta_slogan_1">Produk Lokal</span><br>
+            <span data-i18n="cta_slogan_2">Menuju Global 🌍</span>
+            <svg class="handwritten-arrow" width="70" height="40" viewBox="0 0 100 60" fill="none" stroke="white" stroke-width="3" stroke-linecap="round">
+              <path d="M10,20 Q40,55 85,25"></path>
+              <polyline points="75,22 85,25 80,35"></polyline>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer">
+    <div class="site-container">
+      <div class="footer-top-grid">
+        <!-- Col 1: Brand Info -->
+        <div class="footer-col-brand">
+          <a href="#hero" class="footer-logo-link">
+            <img src="assets/logo-transparent.webp" alt="NusaBridge" class="footer-logo-img" onerror="this.src='assets/logo.webp'">
+          </a>
+          <p class="footer-brand-desc">
+            Platform AI untuk mempercepat ekspor UMKM Indonesia.
+          </p>
+        </div>
+
+        <!-- Col 2: Navigasi -->
+        <div class="footer-col-links">
+          <h4 class="footer-col-title">Navigasi</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="produk.html">Katalog Produk</a></li>
+            <li><a href="solusi.html">Solusi AI</a></li>
+            <li><a href="#alur-ekspor">Alur Ekspor</a></li>
+            <li><a href="harga.html">Paket &amp; Harga</a></li>
+            <li><a href="#tentang">Tentang Kami</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Sumber Daya -->
+        <div class="footer-col-links">
+          <h4 class="footer-col-title">Sumber Daya</h4>
+          <ul class="footer-links-list">
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Pusat Bantuan">Pusat Bantuan</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Dokumentasi">Dokumentasi</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Blog">Blog</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Kebijakan Privasi">Kebijakan Privasi</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Syarat & Ketentuan">Syarat & Ketentuan</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Ikuti Kami -->
+        <div class="footer-col-social">
+          <h4 class="footer-col-title">Ikuti Kami</h4>
+          <div class="footer-social-icons">
+            <!-- LinkedIn -->
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon-box" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37z"></path>
+              </svg>
+            </a>
+
+            <!-- Instagram -->
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-icon-box" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
+              </svg>
+            </a>
+
+            <!-- Discord -->
+            <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="social-icon-box" aria-label="Discord">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom Copyright Bar -->
+      <div class="footer-bottom-bar">
+        <p class="copyright-text">
+          © 2026 NusaBridge. Tim Arjika Labs - SMK Antartika 1 Sidoarjo.
+        </p>
+        <p class="prototype-note">
+          Platform ini adalah prototype untuk keperluan kompetisi GTNIC 2026.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODALS ==================== -->
+  <!-- Auth Modal (Masuk / Daftar) -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="closeAuthModal">&times;</button>
+      <div class="modal-header">
+        <img src="assets/logo-transparent.webp" alt="NusaBridge" class="modal-logo">
+        <h3 class="modal-title" id="authModalTitle">Masuk ke NusaBridge</h3>
+        <p class="modal-subtitle">Akses AI Agent untuk otomasi dan pengelolaan ekspor UMKM.</p>
+      </div>
+      <div class="modal-tabs">
+        <button class="modal-tab active" id="tabSeller">Pelaku UMKM (Seller)</button>
+        <button class="modal-tab" id="tabBuyer">Global Buyer</button>
+      </div>
+      <form class="modal-form" id="authForm">
+        <div class="form-group">
+          <label>Email atau Nomor Telepon</label>
+          <input type="text" placeholder="contoh: umkm@nusabridge.id" required>
+        </div>
+        <div class="form-group">
+          <label>Kata Sandi</label>
+          <input type="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Lanjutkan</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Demo Video / Interactive Showcase Modal -->
+  <div class="modal-overlay" id="demoModal">
+    <div class="modal-card modal-large">
+      <button class="modal-close-btn" id="closeDemoModal">&times;</button>
+      <div class="modal-header">
+        <div class="pill-badge pill-blue">LIVE DEMO</div>
+        <h3 class="modal-title">Simulasi Platform NusaBridge AI</h3>
+        <p class="modal-subtitle">Tonton alur otomatisasi RFQ, kalkulasi Incoterms, dan pembuatan Sales Contract dalam hitungan detik.</p>
+      </div>
+      <div class="demo-preview-frame">
+        <div class="demo-interactive-screen">
+          <div class="demo-header-strip">
+            <span class="demo-dot red"></span>
+            <span class="demo-dot yellow"></span>
+            <span class="demo-dot green"></span>
+            <span class="demo-title-text">NusaBridge AI Engine — Live Processing</span>
+          </div>
+          <div class="demo-body-content">
+            <div class="demo-step-badge">Status: AI Agent Aktif 🟢</div>
+            <h4>Analisis Permintaan Buyer Otomatis</h4>
+            <p>Buyer dari Hamburg, Jerman meminta kuotasi 1.000 kg Biji Kopi Arabika Gayo grade 1 CIF Hamburg.</p>
+            <div class="demo-terminal-box">
+              <code>&gt; AI mengkalkulasi biaya FOB Belawan + Freight Sea Cargo...</code><br>
+              <code>&gt; Rekomendasi harga aman: USD 9.20 / Kg</code><br>
+              <code>&gt; Proforma Invoice #INV-2026-DE-049 berhasil di-generate secara otomatis!</code>
+            </div>
+            <a href="solusi.html" class="btn btn-primary" style="display:inline-flex; align-items:center; justify-content:center; text-decoration:none;">Uji Coba Sandbox Sekarang</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Modal (Pusat Bantuan, Syarat, dll) -->
+  <div class="modal-overlay" id="infoModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="closeInfoModal">&times;</button>
+      <div class="modal-header">
+        <h3 class="modal-title" id="infoModalTitle">Informasi</h3>
+        <p class="modal-subtitle" id="infoModalBody">Halaman informasi sedang dipersiapkan untuk demonstrasi kompetisi GTNIC 2026.</p>
+      </div>
+      <div style="text-align: right; margin-top: 20px;">
+        <button class="btn btn-primary" id="btnOkInfo">Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Cargo Ship Live Radar Modal -->
+  <div class="modal-overlay" id="radarModal">
+    <div class="modal-card radar-modal-card">
+      <button class="modal-close-btn" id="closeRadarModal">&times;</button>
+      <div class="modal-header">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+          <div>
+            <div class="pill-badge pill-blue">MARITIME AIS FLIGHT-RADAR SYSTEM</div>
+            <h3 class="modal-title" style="color:#ffffff; margin-top:4px;">Peta Pelayaran Kapal Kargo Real-Time</h3>
+          </div>
+          <span class="live-ais-badge" style="font-size:12px; padding:4px 12px;">
+            <span class="live-dot-pulse"></span> SATELLITE LIVE TRACKING
+          </span>
+        </div>
+      </div>
+      
+      <div class="radar-modal-body">
+        <div class="radar-modal-canvas-box">
+          <!-- Live Interactive Control Toolbar (Flight Radar Style) -->
+          <div class="radar-toolbar-strip">
+            <div class="rt-left">
+              <button class="btn-radar-tool active" id="btnRadarPlayPause" type="button" title="Jeda/Lanjut Simulasi Pelayaran">
+                <span id="radarPlayPauseIcon">⏸️</span> <span id="radarPlayPauseText">Live Streaming AIS</span>
+              </button>
+              <div class="rt-speed-group">
+                <button class="btn-speed-pill active" id="btnSpeed1x" data-speed="1" type="button" title="Kecepatan 1x">1x</button>
+                <button class="btn-speed-pill" id="btnSpeed2x" data-speed="2" type="button" title="Kecepatan 2x">2x</button>
+                <button class="btn-speed-pill" id="btnSpeed5x" data-speed="5" type="button" title="Kecepatan 5x">5x</button>
+              </div>
+            </div>
+            <div class="rt-right">
+              <span class="rt-coords-display" id="radModalCoords">📍 Lat: 05°42'S • Long: 105°18'E</span>
+            </div>
+          </div>
+
+          <div class="marine-radar-display" style="height: calc(100% - 44px);">
+            <div class="radar-sweep-beam"></div>
+            <!-- Floating Popover inside Modal -->
+            <div class="vessel-popover-tooltip" id="modalVesselFloatingTooltip"></div>
+            <div class="radar-grid-lines"></div>
+            <svg class="marine-svg-map" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet">
+              <rect width="600" height="340" fill="#071224"/>
+              <!-- Continents -->
+              <path d="M120,40 Q160,35 220,50 Q280,60 360,70 Q420,60 480,90 Q470,130 430,140 Q400,120 370,150 Q340,180 320,180 Q300,160 260,180 Q220,200 200,240 Q170,220 160,170 Q140,150 120,110 Z" fill="#142c4c" opacity="0.8"/>
+              <path d="M30,60 Q60,80 70,130 Q80,180 60,220 Q40,260 50,300 Q20,280 15,200 Q20,120 30,60 Z" fill="#142c4c" opacity="0.8"/>
+              <g transform="translate(350, 190) scale(0.8)">
+                <path d="M10,25 Q30,10 60,40 Q45,55 15,35 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                <path d="M55,55 Q90,52 130,60 Q110,68 60,65 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                <path d="M75,15 Q105,10 115,35 Q95,50 75,30 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                <path d="M130,20 Q145,15 140,40 Q155,50 135,55 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+                <path d="M165,30 Q210,25 240,45 Q210,65 170,55 Z" fill="#2563eb" stroke="#60a5fa" stroke-width="1"/>
+              </g>
+              <path d="M440,250 Q490,240 520,270 Q510,310 460,315 Q430,290 440,250 Z" fill="#142c4c" opacity="0.8"/>
+              <!-- Routes with explicit IDs -->
+              <path id="modalRoute1" d="M395,240 Q330,190 260,170 T150,110 T90,75" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="6,4" class="animated-lane"/>
+              <path id="modalRoute2" d="M420,245 Q500,210 560,160 T595,120" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6,4" class="animated-lane"/>
+              <path id="modalRoute3" d="M375,215 Q410,160 460,120 T510,95" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4" class="animated-lane"/>
+              <!-- Ports -->
+              <circle cx="395" cy="240" r="5" fill="#10b981"/>
+              <text x="404" y="244" fill="#ffffff" font-size="9" font-weight="700">Tanjung Priok, ID</text>
+              <circle cx="90" cy="75" r="5" fill="#f59e0b"/>
+              <text x="12" y="78" fill="#cbd5e1" font-size="9">Hamburg, DE</text>
+              <circle cx="510" cy="95" r="5" fill="#38bdf8"/>
+              <text x="518" y="99" fill="#cbd5e1" font-size="9">Tokyo, JP</text>
+              <!-- Ships with data-vessel and clickable class -->
+              <g class="vessel-icon-group active-vessel" id="modalVessel1" transform="translate(235, 155)" data-vessel="baruna">
+                <circle r="16" fill="rgba(16, 185, 129, 0.25)" class="vessel-sonar"/>
+                <circle r="7" fill="#10b981"/>
+                <path class="vessel-arrow" d="M-6,-4 L8,0 L-6,4 L-4,0 Z" fill="#ffffff" transform="rotate(-150)"/>
+                <text x="12" y="4" fill="#34d399" font-size="9" font-weight="700">KM Baruna (19.4 kn)</text>
+              </g>
+              <g class="vessel-icon-group" id="modalVessel2" transform="translate(490, 205)" data-vessel="samudera">
+                <circle r="14" fill="rgba(56, 189, 248, 0.25)" class="vessel-sonar"/>
+                <circle r="6" fill="#38bdf8"/>
+                <path class="vessel-arrow" d="M-6,-4 L8,0 L-6,4 L-4,0 Z" fill="#ffffff" transform="rotate(-40)"/>
+                <text x="12" y="4" fill="#38bdf8" font-size="9" font-weight="700">MV Samudera (21.2 kn)</text>
+              </g>
+              <g class="vessel-icon-group" id="modalVessel3" transform="translate(425, 150)" data-vessel="celebes">
+                <circle r="14" fill="rgba(245, 158, 11, 0.25)" class="vessel-sonar"/>
+                <circle r="6" fill="#f59e0b"/>
+                <path class="vessel-arrow" d="M-6,-4 L8,0 L-6,4 L-4,0 Z" fill="#ffffff" transform="rotate(-65)"/>
+                <text x="12" y="4" fill="#f59e0b" font-size="9" font-weight="700">KM Celebes (17.8 kn)</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="radar-telemetry-panel">
+          <h4 style="color:#ffffff; font-size:14px; margin-bottom:4px;" id="radModalShipTitle">KM Baruna Nusantara (IMO 9482104)</h4>
+          <span style="color:#10b981; font-size:11.5px; font-weight:700;">🟢 Sea Voyage (Dalam Pelayaran Samudera)</span>
+          
+          <div class="rtp-row">
+            <span>Muatan Kontainer:</span>
+            <span id="radModalCargo">20 Kontainer Kopi Arabika Gayo</span>
+          </div>
+          <div class="rtp-row">
+            <span>Rute &amp; Koridor:</span>
+            <span id="radModalRoute">Tanjung Priok ➔ Terusan Suez ➔ Hamburg</span>
+          </div>
+          <div class="rtp-row">
+            <span>Kecepatan Saat Ini:</span>
+            <span id="radModalSpeed">19.4 Knots (36.0 km/h)</span>
+          </div>
+          <div class="rtp-row">
+            <span>Haluan Kapal:</span>
+            <span>285° WNW (Barat Laut)</span>
+          </div>
+          <div class="rtp-row">
+            <span>Kondisi Cuaca Maritim:</span>
+            <span>Ombak 1.2m • Angin 14 Knots (Tenang)</span>
+          </div>
+          <div class="rtp-row">
+            <span>Suhu Kontainer (Reefer):</span>
+            <span style="color:#38bdf8;">21.5°C • Kelembapan 62% (Optimal)</span>
+          </div>
+          <div class="rtp-row">
+            <span>Estimasi Tiba (ETA):</span>
+            <span style="color:#f59e0b;" id="radModalEta">24 Oktober 2026 (4 Hari)</span>
+          </div>
+          
+          <div style="margin-top:8px;">
+            <button class="btn btn-primary btn-block" id="btnDownloadManifest" type="button">Download Laporan Manifest Pelayaran (PDF)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detail Transaksi Escrow -->
+  <div class="modal-overlay" id="txDetailModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="closeTxModal">&times;</button>
+      <div class="modal-header">
+        <div class="pill-badge pill-blue">ESCROW VAULT TRANSACTION</div>
+        <h3 class="modal-title" id="txModalTitle">Detail Transaksi Ekspor</h3>
+        <p class="modal-subtitle" id="txModalSub">Status verifikasi dokumen, pencairan dana bertahap, dan pelacakan pesanan.</p>
+      </div>
+      <div class="modal-body-tx" id="txModalBody" style="display:flex; flex-direction:column; gap:14px; margin-top:12px;">
+        <!-- Rendered by JS -->
+      </div>
+      <div style="text-align:right; margin-top:18px;">
+        <button class="btn btn-primary" id="btnOkTx">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="langToast" class="toast-notification"></div>
+
+  <!-- Main JavaScript & Modules -->
+  <script src="js/script.js"></script>
+  <script src="js/radar.js"></script>
+</body>
+</html>

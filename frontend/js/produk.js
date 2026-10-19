@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.setAttribute('data-id', prod.id);
 
       // Gambar fallback cerdas berbasis kategori jika file spesifik belum ada
-      const fallbackImg = `assets/product-${((parseInt(prod.id.replace('prod_', ''), 10) - 1) % 8) + 1}.webp`;
+      const fallbackImg = `assets/product-${((parseInt(prod.id.replace('prod_', ''), 10) - 1) % 5) + 1}.webp`;
 
       card.innerHTML = `
         <div class="catalog-card-image">

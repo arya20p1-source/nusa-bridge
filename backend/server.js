@@ -11,7 +11,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const db = require('./database/db');
+const db = require('../database/db');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,8 +21,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve frontend static files if accessed directly from backend port
+// Serve frontend static files and root assets
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
+app.use(express.static(path.join(__dirname, '..')));
 
 // ==========================================================================
 // 1. HEALTH CHECK

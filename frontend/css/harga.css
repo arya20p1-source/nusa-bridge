@@ -291,10 +291,93 @@
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-  gap: 26px;
-  max-width: 1140px;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 24px;
+  max-width: 1280px;
   margin: 0 auto;
+}
+
+/* Banner Konsultasi Admin WA Langganan Panjang */
+.admin-wa-consult-banner {
+  max-width: 920px;
+  margin: 1.5rem auto 0;
+  background: rgba(16, 185, 129, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(52, 211, 153, 0.4);
+  border-radius: var(--radius-xl);
+  padding: 1rem 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  text-align: left;
+}
+
+.awc-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffffff;
+}
+
+.awc-icon {
+  font-size: 26px;
+}
+
+.awc-left strong {
+  display: block;
+  font-size: 13.5px;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.awc-left p {
+  margin: 0;
+  font-size: 12px;
+  color: #a7f3d0;
+}
+
+/* WhatsApp CTA Button & Enterprise Card */
+.btn-whatsapp {
+  background: #25D366;
+  color: #ffffff !important;
+  font-weight: 750;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  transition: all 0.25s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+}
+
+.btn-whatsapp:hover {
+  background: #1eb954;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(37, 211, 102, 0.45);
+  color: #ffffff !important;
+}
+
+.badge-wa {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+.enterprise-card {
+  border: 1.5px dashed rgba(16, 185, 129, 0.6);
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.enterprise-card:hover {
+  border-color: #10b981;
 }
 
 .price-plan-card {
