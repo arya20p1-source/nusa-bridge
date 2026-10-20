@@ -1,204 +1,195 @@
 /**
  * ==========================================================================
- * NUSABRIDGE - LOGIKA HALAMAN HARGA & SISTEM UNDIAN KEBERUNTUNGAN UMKM
+ * NUSABRIDGE - LOGIKA HALAMAN HARGA & SISTEM SUBSIDI EKSPOR UMKM
  * File: js/harga.js
- * Deskripsi: 
- * 1. Sistem Undian Hoki Diskon Perusahaan (5% s/d 25%+) real-time
- * 2. Pemotongan harga otomatis Paket 5 Bulan (Rp 350.000) & Paket 1 Tahun (Rp 845.000)
- * 3. Persistensi kupon di localStorage & integrasi modal pendaftaran
- * 4. Mode Demo Juri (Undi Ulang) untuk presentasi lomba GTNIC 2026
- * 5. Kalkulator Margin Ekspor & Accordion FAQ
- * 
- * Konsep Belajar Siswa:
- * - Event Handling: Menerima klik tombol undian & pemilihan paket
- * - Math Operations & Currency Formatting: Menghitung persentase diskon & format Rupiah
- * - Animation & Timing: setInterval untuk animasi rolling slot angka
- * - Web Storage API: localStorage untuk menyimpan hasil undian pengunjung
+ * Deskripsi:
+ * 1. Pilihan durasi fleksibel (1 Bulan, 5 Bulan, 1 Tahun) dengan harga makin lama makin murah
+ *    - 1 Bulan : Rp 120.000 / bln (Total: Rp 120.000)
+ *    - 5 Bulan : Rp 90.000 / bln (Total: Rp 450.000 — Hemat 25%)
+ *    - 1 Tahun : Rp 58.300 / bln (Total: Rp 700.000 — Hemat 51%)
+ * 2. Sistem Kupon Voucher Subsidi UMKM Resmi (15% Subsidi Digitalisasi)
+ * 3. Transparansi PPN 11% & Kebijakan Garansi Uang Kembali 7 Hari Penuh + Prorata Refund
+ * 4. Kalkulator Estimasi Margin Ekspor & Accordion FAQ
  * ==========================================================================
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
   // --------------------------------------------------------------------------
-  // 1. DATA MASTER HARGA & STATE APLIKASI
+  // 1. DATA MASTER DURASI & HARGA PAKET PROFESSIONAL
   // --------------------------------------------------------------------------
-  const BASE_PRICE_5_BULAN = 350000; // Rp 350.000 untuk 5 Bulan
-  const BASE_PRICE_1_TAHUN = 845000; // Rp 845.000 untuk 1 Tahun
+  const PLANS_DATA = {
+    '1': {
+      months: 1,
+      label: 'Paket UMKM Eksportir (1 Bulan)',
+      baseTotal: 120000,
+      monthlyRate: 120000,
+      savingsText: 'Ditagih bulanan Rp 120.000 &bull; Fleksibel tanpa komitmen jangka panjang',
+      monthlyDisplay: '120.000',
+      periodDisplay: '/ bulan'
+    },
+    '5': {
+      months: 5,
+      label: 'Paket UMKM Eksportir (5 Bulan)',
+      baseTotal: 450000,
+      monthlyRate: 90000,
+      savingsText: 'Ditagih Rp 450.000 / 5 bulan &bull; Hemat Rp 150.000 dibanding bulanan',
+      monthlyDisplay: '90.000',
+      periodDisplay: '/ bulan'
+    },
+    '12': {
+      months: 12,
+      label: 'Paket UMKM Eksportir (1 Tahun)',
+      baseTotal: 700000,
+      monthlyRate: 58333,
+      savingsText: 'Ditagih Rp 700.000 / tahun &bull; Hemat Rp 740.000 vs bulanan (Paling Hemat)',
+      monthlyDisplay: '58.300',
+      periodDisplay: '/ bulan'
+    }
+  };
 
-  // Pool persentase diskon acak (5% s/d 25%+)
-  const LUCKY_DISCOUNT_POOL = [5, 10, 12, 15, 20, 25];
+  let activeDuration = '12'; // Default: 1 Tahun (Paling Populer & Paling Hemat)
+  let voucherClaimed = false;
+  const VOUCHER_DISCOUNT_PCT = 15;
+  const VOUCHER_CODE = 'SUBSIDI-UMKM-15';
 
-  let currentDiscount = 0;
-  let currentPromoCode = '';
-
-  // Helper pemformat angka ke format mata uang Rupiah Indonesia
-  function formatNumber(num) {
+  function formatIDR(num) {
     return Number(num).toLocaleString('id-ID');
   }
 
   // --------------------------------------------------------------------------
-  // 2. ELEMEN DOM SISTEM UNDIAN & KARTU HARGA
+  // 2. ELEMEN DOM KARTU HARGA & SWITCHER DURASI
   // --------------------------------------------------------------------------
+  const bdsButtons = document.querySelectorAll('.bds-btn');
+  const priceAmountDisplay = document.getElementById('priceAmountDisplay');
+  const pricePeriodDisplay = document.getElementById('pricePeriodDisplay');
+  const billingSummaryText = document.getElementById('billingSummaryText');
+  const originWrapProfessional = document.getElementById('originWrapProfessional');
+  const pobStrikePrice = document.getElementById('pobStrikePrice');
+  const saveBadgeProfessional = document.getElementById('saveBadgeProfessional');
+  const btnSelectPlanDynamic = document.getElementById('btnSelectPlanDynamic');
+
+  // Widget Voucher Subsidi
   const btnSpinLucky = document.getElementById('btnSpinLucky');
-  const btnResetLucky = document.getElementById('btnResetLucky');
   const luckySlotVal = document.getElementById('luckySlotVal');
   const luckySlotSub = document.getElementById('luckySlotSub');
   const luckyAnnouncementBar = document.getElementById('luckyAnnouncementBar');
   const luckyAnnouncementTitle = document.getElementById('luckyAnnouncementTitle');
   const luckyAnnouncementMsg = document.getElementById('luckyAnnouncementMsg');
 
-  // Kartu Paket 5 Bulan
-  const price5Bulan = document.getElementById('price5Bulan');
-  const originWrap5Bulan = document.getElementById('originWrap5Bulan');
-  const saveBadge5Bulan = document.getElementById('saveBadge5Bulan');
-
-  // Kartu Paket 1 Tahun
-  const price1Tahun = document.getElementById('price1Tahun');
-  const originWrap1Tahun = document.getElementById('originWrap1Tahun');
-  const saveBadge1Tahun = document.getElementById('saveBadge1Tahun');
-
-  // Input modal pendaftaran
+  // Input modal
   const appliedDiscountInput = document.getElementById('appliedDiscountInput');
   const selectedPlanInput = document.getElementById('selectedPlanInput');
   const authModal = document.getElementById('authModal');
 
   // --------------------------------------------------------------------------
-  // 3. FUNGSI APLIKASI DISKON REAL-TIME KE SEMUA KARTU & FORM
+  // 3. FUNGSI UPDATE TAMPILAN KARTU HARGA PROFESSIONAL
   // --------------------------------------------------------------------------
-  function applyDiscount(discountPct, promoCode) {
-    currentDiscount = discountPct;
-    currentPromoCode = promoCode;
+  function updateProfessionalCard() {
+    const plan = PLANS_DATA[activeDuration] || PLANS_DATA['12'];
+    const hasDiscount = voucherClaimed && (activeDuration === '5' || activeDuration === '12');
 
-    if (discountPct > 0) {
-      // Hitung potongan Paket 5 Bulan
-      const disc5 = Math.round(BASE_PRICE_5_BULAN * (discountPct / 100));
-      const final5 = BASE_PRICE_5_BULAN - disc5;
-      if (price5Bulan) price5Bulan.innerText = formatNumber(final5);
-      if (originWrap5Bulan) originWrap5Bulan.style.display = 'flex';
-      if (saveBadge5Bulan) saveBadge5Bulan.innerText = `Hemat ${discountPct}% (-Rp ${formatNumber(disc5)})`;
+    let finalTotal = plan.baseTotal;
+    let finalMonthly = plan.monthlyRate;
 
-      // Hitung potongan Paket 1 Tahun
-      const disc1 = Math.round(BASE_PRICE_1_TAHUN * (discountPct / 100));
-      const final1 = BASE_PRICE_1_TAHUN - disc1;
-      if (price1Tahun) price1Tahun.innerText = formatNumber(final1);
-      if (originWrap1Tahun) originWrap1Tahun.style.display = 'flex';
-      if (saveBadge1Tahun) saveBadge1Tahun.innerText = `Hemat ${discountPct}% (-Rp ${formatNumber(disc1)})`;
+    if (hasDiscount) {
+      const discAmt = Math.round(plan.baseTotal * (VOUCHER_DISCOUNT_PCT / 100));
+      finalTotal = plan.baseTotal - discAmt;
+      finalMonthly = Math.round(finalTotal / plan.months);
 
-      // Update Tampilan Widget Undian
-      if (luckySlotVal) luckySlotVal.innerText = `${discountPct}%`;
-      if (luckySlotSub) luckySlotSub.innerText = `Kupon: ${promoCode}`;
-
-      // Update Bar Pengumuman
-      if (luckyAnnouncementBar) luckyAnnouncementBar.style.display = 'flex';
-      if (luckyAnnouncementTitle) luckyAnnouncementTitle.innerText = `🎉 Hoki Terverifikasi! Diskon ${discountPct}% Aktif!`;
-      if (luckyAnnouncementMsg) {
-        luckyAnnouncementMsg.innerText = `Kupon ${promoCode} berhasil memotong harga Paket 5 Bulan (menjadi Rp ${formatNumber(final5)}) dan Paket 1 Tahun (menjadi Rp ${formatNumber(final1)}). Potongan otomatis berlaku di form pendaftaran!`;
+      if (originWrapProfessional) originWrapProfessional.style.display = 'flex';
+      if (pobStrikePrice) pobStrikePrice.innerText = `Rp ${formatIDR(plan.baseTotal)}`;
+      if (saveBadgeProfessional) {
+        saveBadgeProfessional.innerText = `Subsidi 15% (-Rp ${formatIDR(discAmt)})`;
       }
-
-      // Update Input Tersembunyi di Formulir Modal
+      if (billingSummaryText) {
+        billingSummaryText.innerHTML = `Ditagih <strong>Rp ${formatIDR(finalTotal)}</strong> (Potongan Subsidi Kupon Rp ${formatIDR(discAmt)}) &bull; Hemat Maksimal!`;
+      }
       if (appliedDiscountInput) {
-        appliedDiscountInput.value = `Diskon ${discountPct}% (${promoCode}) - Hemat s/d Rp ${formatNumber(disc1)}`;
+        appliedDiscountInput.value = `Voucher Subsidi 15% (${VOUCHER_CODE}) - Hemat Rp ${formatIDR(discAmt)}`;
       }
+    } else {
+      if (originWrapProfessional) originWrapProfessional.style.display = 'none';
+      if (billingSummaryText) billingSummaryText.innerHTML = plan.savingsText;
+      if (appliedDiscountInput && !voucherClaimed) {
+        appliedDiscountInput.value = 'Tanpa Diskon Tambahan';
+      }
+    }
 
-      // Toggle Tombol Spin & Reset (Mode Demo Juri)
-      if (btnSpinLucky) btnSpinLucky.style.display = 'none';
-      if (btnResetLucky) btnResetLucky.style.display = 'inline-flex';
+    if (priceAmountDisplay) {
+      priceAmountDisplay.innerText = formatIDR(finalMonthly);
+      priceAmountDisplay.classList.add('discount-highlight');
+      setTimeout(() => priceAmountDisplay.classList.remove('discount-highlight'), 800);
+    }
+
+    if (pricePeriodDisplay) pricePeriodDisplay.innerText = plan.periodDisplay;
+
+    if (btnSelectPlanDynamic) {
+      btnSelectPlanDynamic.setAttribute('data-plan', plan.label);
+      btnSelectPlanDynamic.setAttribute('data-price', finalTotal);
+      btnSelectPlanDynamic.innerText = `Pilih ${plan.label} - Rp ${formatIDR(finalTotal)}`;
     }
   }
 
   // --------------------------------------------------------------------------
-  // 4. FUNGSI RESET DISKON (UNTUK DEMO PENILAIAN JURI LOMBA)
+  // 4. EVENT LISTENER SWITCHER DURASI
   // --------------------------------------------------------------------------
-  function resetDiscount() {
-    currentDiscount = 0;
-    currentPromoCode = '';
-    localStorage.removeItem('nusabridge_lucky_discount');
+  bdsButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      bdsButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-    // Kembalikan widget ke posisi awal
-    if (luckySlotVal) luckySlotVal.innerText = '0%';
-    if (luckySlotSub) luckySlotSub.innerText = 'Siap diundi';
-    if (luckyAnnouncementBar) luckyAnnouncementBar.style.display = 'none';
+      const dur = btn.getAttribute('data-dur') || '12';
+      activeDuration = dur;
+      updateProfessionalCard();
+    });
+  });
 
-    // Kembalikan harga Paket 5 Bulan ke normal
-    if (originWrap5Bulan) originWrap5Bulan.style.display = 'none';
-    if (price5Bulan) price5Bulan.innerText = formatNumber(BASE_PRICE_5_BULAN);
+  // --------------------------------------------------------------------------
+  // 5. EVENT LISTENER KLAIM VOUCHER SUBSIDI (15% PASTI)
+  // --------------------------------------------------------------------------
+  function activateVoucherSubsidy(showSuccessAlert = true) {
+    voucherClaimed = true;
 
-    // Kembalikan harga Paket 1 Tahun ke normal
-    if (originWrap1Tahun) originWrap1Tahun.style.display = 'none';
-    if (price1Tahun) price1Tahun.innerText = formatNumber(BASE_PRICE_1_TAHUN);
+    try {
+      localStorage.setItem('nusabridge_voucher_claimed', 'true');
+    } catch (e) {}
 
-    // Reset status di formulir
-    if (appliedDiscountInput) appliedDiscountInput.value = 'Tanpa Diskon Tambahan';
-
-    // Toggle tombol kembali
     if (btnSpinLucky) {
-      btnSpinLucky.style.display = 'inline-flex';
-      btnSpinLucky.disabled = false;
+      btnSpinLucky.disabled = true;
+      btnSpinLucky.innerHTML = '<span>✅ Voucher Subsidi 15% Aktif</span>';
+      btnSpinLucky.style.background = '#059669';
     }
-    if (btnResetLucky) btnResetLucky.style.display = 'none';
+
+    if (luckySlotVal) luckySlotVal.innerText = '15%';
+    if (luckySlotSub) luckySlotSub.innerText = `Kode Aktif: ${VOUCHER_CODE}`;
+
+    if (showSuccessAlert && luckyAnnouncementBar) {
+      luckyAnnouncementBar.style.display = 'flex';
+      if (luckyAnnouncementTitle) luckyAnnouncementTitle.innerText = '✅ Voucher Subsidi 15% Berhasil Diaktifkan!';
+      if (luckyAnnouncementMsg) {
+        luckyAnnouncementMsg.innerText = `Kupon ${VOUCHER_CODE} telah memotong harga Paket 5 Bulan menjadi Rp 382.500 dan Paket 1 Tahun menjadi Rp 595.000.`;
+      }
+    }
+
+    updateProfessionalCard();
   }
 
-  // --------------------------------------------------------------------------
-  // 5. EVENT LISTENER PUTAR UNDIAN DISKON (SLOT MACHINE ROLLER)
-  // --------------------------------------------------------------------------
   if (btnSpinLucky) {
     btnSpinLucky.addEventListener('click', () => {
-      // Cegah klik ganda selama proses rolling
-      btnSpinLucky.disabled = true;
-      if (luckySlotVal) luckySlotVal.classList.add('rolling');
-      if (luckySlotSub) luckySlotSub.innerText = 'Mengacak diskon hoki...';
-
-      let rollCount = 0;
-      const rollInterval = setInterval(() => {
-        // Tampilkan angka acak cepat saat animasi rolling
-        const randomTemp = LUCKY_DISCOUNT_POOL[Math.floor(Math.random() * LUCKY_DISCOUNT_POOL.length)];
-        if (luckySlotVal) luckySlotVal.innerText = `${randomTemp}%`;
-        rollCount++;
-
-        // Hentikan putaran setelah ~1.1 detik (15 putaran x 75ms)
-        if (rollCount >= 15) {
-          clearInterval(rollInterval);
-          if (luckySlotVal) luckySlotVal.classList.remove('rolling');
-
-          // Pilih diskon final secara adil
-          const finalDiscount = LUCKY_DISCOUNT_POOL[Math.floor(Math.random() * LUCKY_DISCOUNT_POOL.length)];
-          const finalCode = `HOKI${finalDiscount}EX`;
-
-          // Simpan ke localStorage agar tidak hilang saat reload halaman
-          try {
-            localStorage.setItem('nusabridge_lucky_discount', JSON.stringify({
-              discount: finalDiscount,
-              code: finalCode,
-              timestamp: Date.now()
-            }));
-          } catch (e) {
-            console.warn('LocalStorage error:', e);
-          }
-
-          // Terapkan diskon ke UI
-          applyDiscount(finalDiscount, finalCode);
-        }
-      }, 75);
+      activateVoucherSubsidy(true);
     });
   }
 
-  // Tombol Reset untuk Presentasi Lomba
-  if (btnResetLucky) {
-    btnResetLucky.addEventListener('click', resetDiscount);
-  }
-
-  // Periksa apakah user sudah pernah memutar undian sebelumnya di browser ini
+  // Cek apakah sudah pernah klaim voucher sebelumnya di browser ini
   try {
-    const savedPromo = localStorage.getItem('nusabridge_lucky_discount');
-    if (savedPromo) {
-      const parsed = JSON.parse(savedPromo);
-      if (parsed && parsed.discount) {
-        applyDiscount(parsed.discount, parsed.code);
-      }
+    if (localStorage.getItem('nusabridge_voucher_claimed') === 'true') {
+      activateVoucherSubsidy(false);
     }
-  } catch (e) {
-    console.warn('Error reading saved promo:', e);
-  }
+  } catch (e) {}
+
+  // Inisialisasi awal kartu
+  updateProfessionalCard();
 
   // --------------------------------------------------------------------------
   // 6. EVENT LISTENER PILIH PAKET (BUKA MODAL AUTH & ISI STATUS DISKON)
@@ -210,13 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let summaryText = planName;
       if (basePrice === 0) {
-        summaryText = `${planName} - Gratis 30 Hari Pertama`;
-      } else if (currentDiscount > 0) {
-        const discAmount = Math.round(basePrice * (currentDiscount / 100));
-        const finalPrice = basePrice - discAmount;
-        summaryText = `${planName} - Rp ${formatNumber(finalPrice)} (Diskon ${currentDiscount}% Hemat Rp ${formatNumber(discAmount)})`;
+        summaryText = `${planName} - Gratis Evaluasi (Termasuk PPN 11%)`;
       } else {
-        summaryText = `${planName} - Rp ${formatNumber(basePrice)}`;
+        summaryText = `${planName} - Rp ${formatIDR(basePrice)} (Termasuk PPN 11%)`;
       }
 
       if (selectedPlanInput) {
@@ -243,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const calcMarginPct = document.getElementById('calcMarginPct');
   const calcDpAmount = document.getElementById('calcDpAmount');
 
-  // Kurs referensi pasar (1 USD = Rp 16.000)
+  // Kurs acuan BI (1 USD = Rp 16.000)
   const USD_TO_IDR = 16000;
 
   function recalculateMargin() {
@@ -251,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const prod = parseFloat(calcProdCost?.value) || 0;
     const freight = parseFloat(calcFreightCost?.value) || 0;
 
-    // Biaya Administrasi Escrow Vault NusaBridge = 1.2%
+    // Biaya Administrasi Escrow Vault NusaBridge = 1.2% flat
     const escrow = contract * 0.012;
     const totalCost = prod + freight + escrow;
     const netProfit = Math.max(0, contract - totalCost);
@@ -275,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Hitung ulang setiap kali ada input angka yang diubah pengguna
   [calcContractVal, calcProdCost, calcFreightCost].forEach(inp => {
     if (inp) inp.addEventListener('input', recalculateMargin);
   });
@@ -286,9 +272,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btnKonsul.addEventListener('click', () => {
       const contract = calcContractVal ? calcContractVal.value : '15000';
       const profit = calcNetProfitUSD ? calcNetProfitUSD.innerText : 'USD 5,120';
-      const discInfo = currentDiscount > 0 ? ` (Dapat Kupon Diskon Hoki: ${currentPromoCode} - ${currentDiscount}%)` : '';
+      const discInfo = voucherClaimed ? ` (Voucher Subsidi Aktif: ${VOUCHER_CODE} 15%)` : '';
       const waMsg = `Halo Tim NusaBridge, saya pelaku UMKM telah menghitung estimasi transaksi ekspor senilai USD ${contract} dengan estimasi net profit ${profit}${discInfo}. Mohon asistensi untuk eksekusi kontrak ini. Terima kasih!`;
-      const waUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(waMsg)}`;
+      const waUrl = `https://wa.me/6285735800491?text=${encodeURIComponent(waMsg)}`;
       window.open(waUrl, '_blank');
     });
   }
@@ -301,12 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const item = qBtn.parentElement;
       const isActive = item.classList.contains('active');
 
-      // Tutup accordion lain agar tampilan tetap rapi
       document.querySelectorAll('.faq-item').forEach(other => {
         other.classList.remove('active');
       });
 
-      // Buka/tutup yang diklik
       if (!isActive) {
         item.classList.add('active');
       }

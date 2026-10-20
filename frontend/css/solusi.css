@@ -525,6 +525,61 @@
   gap: 8px;
 }
 
+.gcm-direct-badge {
+  background: #ecfdf5;
+  border: 1px solid #86efac;
+  color: #15803d;
+  border-radius: var(--radius-sm);
+  padding: 5px 11px;
+  font-size: 11.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gcm-direct-badge .direct-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.btn-api-key-config {
+  background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+  border: 1.5px solid #93c5fd;
+  color: #1d4ed8;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 750;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-api-key-config:hover {
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e40af;
+  transform: translateY(-1px);
+}
+
+.btn-api-key-config.connected {
+  background: #ecfdf5;
+  border-color: #86efac;
+  color: #15803d;
+}
+
 .btn-clear-chat {
   background: #f1f5f9;
   border: 1px solid #cbd5e1;

@@ -1,0 +1,27 @@
+{
+  "name": "nusa-bridge",
+  "version": "1.0.0",
+  "description": "Platform Intermediasi Ekspor-Impor UMKM Indonesia Berbasis AI Agent - Built for GTNIC 2026",
+  "main": "gemini.js",
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test-gemini": "node gemini.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arya20p1-source/nusa-bridge.git"
+  },
+  "keywords": [
+    "nusabridge",
+    "umkm",
+    "ekspor",
+    "gemini"
+  ],
+  "author": "Tim Arjika Labs - SMK Antartika 1 Sidoarjo",
+  "license": "MIT",
+  "dependencies": {
+    "@google/genai": "^2.30.0",
+    "dotenv": "^18.0.8"
+  }
+}

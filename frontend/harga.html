@@ -113,58 +113,52 @@
   <!-- ==================== BANNER HARGA & SISTEM UNDIAN DISKON ==================== -->
   <section class="page-hero-banner harga-hero">
     <div class="site-container">
-      <div class="pill-badge pill-blue">SKEMA RESMI KOMPETISI GTNIC 2026</div>
-      <h1 class="page-hero-title">Investasi Transparan &amp; Ramah Ekosistem UMKM</h1>
-      <p class="page-hero-subtitle">
+      <div class="pill-badge pill-blue" data-i18n="harga_hero_pill">SKEMA RESMI KOMPETISI GTNIC 2026</div>
+      <h1 class="page-hero-title" data-i18n="harga_hero_title">Investasi Transparan &amp; Ramah Ekosistem UMKM</h1>
+      <p class="page-hero-subtitle" data-i18n="harga_hero_sub">
         Mulai dengan uji coba gratis 1 bulan penuh. Perpanjang dengan paket hemat 5 bulan atau 1 tahun untuk menikmati otomasi dokumen kepabeanan dan pelacakan kapal kargo maritim tanpa batas.
       </p>
 
       <!-- Catatan Environment Evaluasi GTNIC 2026 -->
       <div class="gtnic-environment-note">
-        <span class="gen-badge">CATATAN EVALUASI GTNIC 2026</span>
-        <p><strong>Lingkungan Evaluasi Juri:</strong> Selama tahap evaluasi GTNIC 2026, seluruh simulasi kalkulator dan fitur AI dapat diuji coba secara gratis.</p>
+        <span class="gen-badge" data-i18n="eval_note_badge">CATATAN EVALUASI GTNIC 2026</span>
+        <p data-i18n="eval_note_text"><strong>Lingkungan Evaluasi Juri:</strong> Selama tahap evaluasi GTNIC 2026, seluruh simulasi kalkulator dan fitur AI dapat diuji coba secara gratis.</p>
       </div>
 
-      <!-- ==================== WIDGET UNDIAN DISKON HOKI PERUSAHAAN (GAMIFIKASI) ==================== -->
-      <div class="lucky-promo-container">
-        <div class="lucky-promo-card">
-          <div class="lucky-card-header">
-            <span class="lucky-sparkle-badge">🎰 SISTEM UNDIAN KEBERUNTUNGAN PERUSAHAAN (HOKIAN PROMO)</span>
-            <span class="lucky-live-status">● AKTIF UNTUK UMKM</span>
-          </div>
-          
-          <div class="lucky-promo-grid">
-            <div class="lucky-promo-text-col">
-              <h3 class="lucky-promo-title">Uji Keberuntungan Diskon Spesial Usaha Anda!</h3>
-              <p class="lucky-promo-desc">
-                Tekan tombol undian hoki untuk mengacak potongan diskon instan dari <strong>5% hingga 25%+</strong>. Diskon yang didapat akan <strong>otomatis memotong langsung</strong> harga Paket 5 Bulan &amp; Paket 1 Tahun secara <em>real-time</em>!
-              </p>
+      <!-- ==================== WIDGET VOUCHER SUBSIDI DIGITALISASI UMKM ==================== -->
+      <div class="b2b-voucher-section">
+        <div class="b2b-voucher-card">
+          <div class="b2b-voucher-info">
+            <div class="b2b-voucher-badge-wrap">
+              <span class="b2b-voucher-badge" data-i18n="voucher_badge">PROGRAM SUBSIDI DIGITALISASI EKSPOR GTNIC 2026</span>
+              <span class="b2b-voucher-status" data-i18n="voucher_status">● Kuota Subsidi Tersedia</span>
             </div>
-
-            <div class="lucky-promo-action-col">
-              <div class="lucky-slot-display">
-                <span class="ls-label">Diskon Hoki Didapat:</span>
-                <span class="ls-value" id="luckySlotVal">0%</span>
-                <span class="ls-sub" id="luckySlotSub">Siap diundi</span>
-              </div>
-              <div class="lucky-buttons-wrap">
-                <button class="btn btn-primary btn-spin-lucky" id="btnSpinLucky" type="button">
-                  <span>🎲 Putar Undian Diskon</span>
-                </button>
-                <button class="btn btn-outline btn-reset-lucky" id="btnResetLucky" type="button" style="display:none;" title="Putar ulang simulasi untuk penilaian juri lomba">
-                  <span>🔄 Undi Ulang (Demo Juri)</span>
-                </button>
-              </div>
-            </div>
+            <h3 class="b2b-voucher-title" data-i18n="voucher_title">Program Subsidi Ekspor Digital untuk UMKM Indonesia</h3>
+            <p class="b2b-voucher-desc" data-i18n="voucher_desc">
+              Dukung percepatan perdagangan global UMKM dengan kupon subsidi resmi <strong>15% pasti</strong> untuk Paket 5 Bulan dan Paket 1 Tahun. Potongan langsung diaplikasikan ke total biaya langganan secara transparan tanpa syarat tersembunyi.
+            </p>
           </div>
 
-          <!-- Alert Bar Hasil Undian -->
-          <div class="lucky-announcement-bar" id="luckyAnnouncementBar" style="display:none;">
-            <span class="lab-icon">🎉</span>
-            <div class="lab-content">
-              <strong id="luckyAnnouncementTitle">Hoki Terverifikasi!</strong>
-              <span id="luckyAnnouncementMsg">Perusahaan Anda beruntung mendapatkan potongan diskon. Harga paket telah otomatis terpotong!</span>
+          <div class="b2b-coupon-box">
+            <div class="b2b-coupon-inner">
+              <span class="b2b-coupon-label" data-i18n="voucher_val_label">POTONGAN SUBSIDI</span>
+              <div class="b2b-coupon-value" id="luckySlotVal">15%</div>
+              <div class="b2b-coupon-code" id="luckySlotSub">KODE: <strong>SUBSIDI-UMKM-15</strong></div>
             </div>
+            <div class="b2b-buttons-wrap">
+              <button class="btn btn-primary b2b-btn-apply" id="btnSpinLucky" type="button" data-i18n="voucher_btn_claim">
+                <span>Terapkan Voucher 15%</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alert Bar Hasil Klaim Voucher -->
+        <div class="b2b-voucher-alert" id="luckyAnnouncementBar" style="display:none;">
+          <span class="bva-icon">✓</span>
+          <div class="bva-content">
+            <strong id="luckyAnnouncementTitle">Voucher Subsidi 15% Berhasil Diaktifkan!</strong>
+            <span id="luckyAnnouncementMsg">Kupon SUBSIDI-UMKM-15 berhasil memotong harga Paket 5 Bulan (menjadi Rp 382.500) dan Paket 1 Tahun (menjadi Rp 595.000). Potongan otomatis berlaku di form pendaftaran!</span>
           </div>
         </div>
       </div>
@@ -174,12 +168,12 @@
         <div class="awc-left">
           <span class="awc-icon">💼</span>
           <div>
-            <strong>Ingin Berlangganan Lebih dari 1 Tahun atau Lisensi Koperasi UMKM?</strong>
-            <p>Dapatkan potongan harga volume khusus, multi-akun anggota, dan asistensi kepabeanan intensif.</p>
+            <strong data-i18n="wa_banner_title">Ingin Berlangganan Lebih dari 1 Tahun atau Lisensi Koperasi UMKM?</strong>
+            <p data-i18n="wa_banner_desc">Dapatkan potongan harga volume khusus, multi-akun anggota, dan asistensi kepabeanan intensif.</p>
           </div>
         </div>
-        <a href="https://wa.me/6281234567890?text=Halo%20Admin%20NusaBridge%2C%20saya%20ingin%20berlangganan%20paket%20jangka%20panjang%20(lebih%20dari%201%20tahun)%20untuk%20usaha%20kami.%20Mohon%20informasi%20penawaran%20dan%20asistensi%20khusus." target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" style="background:#10b981; border:none; text-decoration:none;">
-          <span>💬 Chat Admin via WhatsApp</span>
+        <a href="https://wa.me/6285735800491?text=Halo%20Admin%20NusaBridge%2C%20saya%20ingin%20berlangganan%20paket%20jangka%20panjang%20(lebih%20dari%201%20tahun)%20untuk%20usaha%20kami.%20Mohon%20informasi%20penawaran%20dan%20asistensi%20khusus." target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" style="background:#10b981; border:none; text-decoration:none;">
+          <span data-i18n="wa_banner_btn">💬 Chat Admin via WhatsApp</span>
         </a>
       </div>
 
@@ -194,109 +188,154 @@
         <!-- CARD 1: Paket Starter / Sandbox (Rp 0 / Gratis) -->
         <div class="price-plan-card">
           <div class="plan-header">
-            <span class="plan-badge">SANDBOX EVALUASI</span>
-            <h3 class="plan-name">Paket Starter / Sandbox</h3>
-            <p class="plan-desc">Akses uji coba simulasi KYC sandbox, kalkulator AI, dan pembuatan draf dokumen PDF terbatas (max 3/bulan) untuk UMKM pemula atau pengujian juri GTNIC 2026.</p>
+            <span class="plan-badge" data-i18n="plan_1_badge">SANDBOX EVALUASI</span>
+            <h3 class="plan-name" data-i18n="plan_1_name">Paket Starter / Sandbox</h3>
+            <p class="plan-desc" data-i18n="plan_1_desc">Akses uji coba simulasi KYC sandbox, kalkulator AI, dan pembuatan draf dokumen PDF terbatas (max 3/bulan) untuk UMKM pemula atau pengujian juri GTNIC 2026.</p>
             
             <div class="plan-price-box">
               <span class="currency">Rp</span>
               <span class="price-amount">0</span>
-              <span class="period">/ Gratis Evaluasi</span>
+              <span class="period" data-i18n="plan_1_period">/ Gratis Selamanya</span>
+            </div>
+            
+            <div class="vat-included-tag" data-i18n="plan_1_vat">
+              ✓ Termasuk PPN 11% &bull; Tanpa Kartu Kredit
             </div>
             
             <div class="plan-trial-notice">
               <span class="ptn-icon">⏱️</span>
-              <span class="ptn-text">Masa aktif uji coba gratis untuk eksplorasi juri GTNIC 2026 dan UMKM rintisan baru.</span>
+              <span class="ptn-text" data-i18n="plan_1_notice">Masa aktif uji coba gratis untuk eksplorasi juri GTNIC 2026 dan UMKM rintisan baru.</span>
             </div>
           </div>
 
           <div class="plan-divider"></div>
           
           <ul class="plan-features">
-            <li><span class="pf-check">✓</span> <strong>Akses Uji Coba Simulasi KYC Sandbox</strong></li>
-            <li><span class="pf-check">✓</span> <strong>Kalkulator AI Incoterms 2020 Dasar</strong></li>
-            <li><span class="pf-check">✓</span> <strong>Pembuatan Draf Dokumen PDF Terbatas (Max 3/bulan)</strong></li>
-            <li><span class="pf-check">✓</span> Simulasi Pencairan Escrow Vault 4 Fase</li>
-            <li><span class="pf-check">✓</span> Akses Showcase 120 Komoditas Unggulan</li>
-            <li class="pf-dimmed"><span class="pf-cross">✕</span> Verified Seller Badge Resmi di Katalog</li>
-            <li class="pf-dimmed"><span class="pf-cross">✕</span> Otomasi Dokumen PDF Sepuasnya</li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_1_f1">Akses Uji Coba Simulasi KYC Sandbox</strong></li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_1_f2">Kalkulator AI Incoterms 2020 Dasar</strong></li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_1_f3">Pembuatan Draf Dokumen PDF Terbatas (Max 3/bulan)</strong></li>
+            <li><span class="pf-check">✓</span> <span data-i18n="plan_1_f4">Simulasi Pencairan Escrow Vault 4 Fase</span></li>
+            <li><span class="pf-check">✓</span> <span data-i18n="plan_1_f5">Akses Showcase 120 Komoditas Unggulan</span></li>
+            <li class="pf-dimmed"><span class="pf-cross">✕</span> <span data-i18n="plan_1_f6">Verified Seller Badge Resmi di Katalog</span></li>
+            <li class="pf-dimmed"><span class="pf-cross">✕</span> <span data-i18n="plan_1_f7">Otomasi Dokumen PDF Sepuasnya</span></li>
           </ul>
 
           <div class="plan-action">
-            <button class="btn btn-outline btn-block btn-select-plan" data-plan="Paket Starter / Sandbox" data-price="0">Mulai Sandbox Gratis</button>
+            <button class="btn btn-outline btn-block btn-select-plan" data-plan="Paket Starter / Sandbox" data-price="0" data-i18n="plan_1_btn">Mulai Sandbox Gratis</button>
           </div>
         </div>
 
         <!-- CARD 2: Paket UMKM Eksportir / Professional (Featured) -->
         <div class="price-plan-card featured">
-          <div class="popular-ribbon">PALING POPULER</div>
+          <div class="popular-ribbon" data-i18n="popular_ribbon">PALING POPULER</div>
           <div class="plan-header">
-            <span class="plan-badge primary">REKOMENDASI EKSPORTIR</span>
-            <h3 class="plan-name">UMKM Eksportir / Professional</h3>
-            <p class="plan-desc">Akses penuh RFQ Studio, kalkulator harga ekspor-impor tanpa batas, otomatisasi dokumen PDF sepuasnya, Verified Seller Badge, dan penguncian transaksi di Escrow Vault.</p>
+            <span class="plan-badge primary" data-i18n="plan_2_badge">REKOMENDASI EKSPORTIR</span>
+            <h3 class="plan-name" data-i18n="plan_2_name">UMKM Eksportir / Professional</h3>
+            <p class="plan-desc" data-i18n="plan_2_desc">Akses penuh RFQ Studio, kalkulator harga ekspor-impor tanpa batas, otomatisasi dokumen PDF sepuasnya, Verified Seller Badge, dan penguncian transaksi di Escrow Vault.</p>
             
-            <!-- Harga Normal & Potongan Diskon Hoki -->
-            <div class="price-origin-box" id="originWrap5Bulan" style="display:none;">
-              <span class="pob-label">Harga Normal:</span>
-              <s class="pob-strike">Rp 250.000</s>
-              <span class="pob-badge" id="saveBadge5Bulan">Diskon 0%</span>
+            <!-- Duration Switcher: 1 Bulan, 5 Bulan, 1 Tahun -->
+            <div class="billing-duration-selector">
+              <span class="bds-label" data-i18n="duration_label">Pilih Durasi Paket:</span>
+              <div class="bds-options" id="bdsOptionGroup">
+                <button type="button" class="bds-btn" data-dur="1" data-base="120000" data-label="1 Bulan">
+                  <div class="bds-btn-left">
+                    <span class="bds-radio"></span>
+                    <span class="bds-name" data-i18n="dur_1m">1 Bulan</span>
+                  </div>
+                  <span class="bds-rate">Rp 120.000 / bln</span>
+                </button>
+
+                <button type="button" class="bds-btn" data-dur="5" data-base="450000" data-label="5 Bulan">
+                  <div class="bds-btn-left">
+                    <span class="bds-radio"></span>
+                    <span class="bds-name" data-i18n="dur_5m">5 Bulan</span>
+                    <span class="bds-badge save" data-i18n="save_25">Hemat 25%</span>
+                  </div>
+                  <span class="bds-rate">Rp 90.000 / bln</span>
+                </button>
+
+                <button type="button" class="bds-btn active" data-dur="12" data-base="700000" data-label="1 Tahun">
+                  <div class="bds-btn-left">
+                    <span class="bds-radio"></span>
+                    <span class="bds-name" data-i18n="dur_1y">1 Tahun</span>
+                    <span class="bds-badge best" data-i18n="save_51">Hemat 51%</span>
+                  </div>
+                  <span class="bds-rate">Rp 58.300 / bln</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Harga Normal & Potongan Diskon -->
+            <div class="price-origin-box" id="originWrapProfessional" style="display:none;">
+              <span class="pob-label" data-i18n="original_price_label">Harga Asli:</span>
+              <s class="pob-strike" id="pobStrikePrice">Rp 700.000</s>
+              <span class="pob-badge" id="saveBadgeProfessional">Subsidi 15%</span>
             </div>
 
             <div class="plan-price-box">
               <span class="currency">Rp</span>
-              <span class="price-amount" id="price5Bulan">250.000</span>
-              <span class="period" id="period5Bulan">/ bulan</span>
+              <span class="price-amount" id="priceAmountDisplay">58.300</span>
+              <span class="period" id="pricePeriodDisplay" data-i18n="per_month">/ bulan</span>
+            </div>
+
+            <div class="plan-billing-summary" id="billingSummaryText" style="margin-top: 6px; font-size: 12px; font-weight: 700; color: #1e3a8a; background: #eff6ff; padding: 6px 10px; border-radius: 6px; border: 1px solid #bfdbfe;">
+              Ditagih Rp 700.000 / tahun &bull; Hemat Rp 740.000 vs bulanan
             </div>
             
-            <div style="margin-top: 8px; font-size: 11.5px; color: var(--text-muted); background: #f8fafc; padding: 6px 10px; border-radius: 6px;">
-              Pilihan Multi-Bulan: <strong>5 Bulan Rp 350.000</strong> &bull; <strong>1 Tahun Rp 845.000</strong>
+            <div class="vat-included-tag" data-i18n="plan_2_vat">
+              ✓ Sudah Termasuk PPN 11% (Faktur Pajak Tersedia)
             </div>
           </div>
 
           <div class="plan-divider"></div>
 
           <ul class="plan-features">
-            <li><span class="pf-check">✓</span> <strong>Akses Penuh RFQ Studio &amp; AI Sales Assistant</strong></li>
-            <li><span class="pf-check">✓</span> <strong>Kalkulator Harga Ekspor-Impor Tanpa Batas</strong> (FOB, CFR, CIF, DDP)</li>
-            <li><span class="pf-check">✓</span> <strong>Otomatisasi Dokumen PDF Sepuasnya</strong> (Invoice &amp; Sales Contract)</li>
-            <li><span class="pf-check">✓</span> <strong>Verified Seller Badge Resmi</strong> di Katalog Global</li>
-            <li><span class="pf-check">✓</span> <strong>Penguncian Transaksi Aman di Escrow Vault Multivalas</strong></li>
-            <li><span class="pf-check">✓</span> Radar Pelacakan Kapal Kargo Maritim AIS Real-Time</li>
-            <li><span class="pf-check">✓</span> Asistensi Pendampingan Ekspor via WhatsApp Prioritas</li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_2_f1">Akses Penuh RFQ Studio &amp; AI Sales Assistant</strong></li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_2_f2">Kalkulator Harga Ekspor-Impor Tanpa Batas</strong> (FOB, CFR, CIF, DDP)</li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_2_f3">Otomatisasi Dokumen PDF Sepuasnya</strong> (Invoice &amp; Sales Contract)</li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_2_f4">Verified Seller Badge Resmi</strong> di Katalog Global</li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_2_f5">Penguncian Transaksi Aman di Escrow Vault Multivalas</strong></li>
+            <li><span class="pf-check">✓</span> <span data-i18n="plan_2_f6">Radar Pelacakan Kapal Kargo Maritim AIS Real-Time</span></li>
+            <li><span class="pf-check">✓</span> <span data-i18n="plan_2_f7">Asistensi Pendampingan Ekspor via WhatsApp Prioritas</span></li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_2_f8">Garansi 100% Uang Kembali 7 Hari &amp; Refund Prorata</strong></li>
           </ul>
 
           <div class="plan-action">
-            <button class="btn btn-primary btn-block btn-select-plan" data-plan="Paket UMKM Eksportir / Professional" data-price="250000" id="btnSelect5Bulan">Pilih Paket Professional</button>
+            <button class="btn btn-primary btn-block btn-select-plan" data-plan="Paket UMKM Eksportir / Professional (1 Tahun)" data-price="700000" id="btnSelectPlanDynamic" data-i18n="plan_2_btn">Pilih Paket Professional (1 Tahun)</button>
           </div>
         </div>
 
         <!-- CARD 3: Paket Enterprise (Kustom / Hubungi Kami) -->
         <div class="price-plan-card enterprise-card">
           <div class="plan-header">
-            <span class="plan-badge badge-wa">KORPORASI &amp; KOPERASI</span>
-            <h3 class="plan-name">Paket Enterprise</h3>
-            <p class="plan-desc">Fitur multi-user untuk korporasi, asosiasi, atau koperasi ekspor besar, analitik lanjutan, dan kustomisasi berkas perdagangan.</p>
+            <span class="plan-badge badge-wa" data-i18n="plan_3_badge">KORPORASI &amp; KOPERASI</span>
+            <h3 class="plan-name" data-i18n="plan_3_name">Paket Enterprise</h3>
+            <p class="plan-desc" data-i18n="plan_3_desc">Fitur multi-user untuk korporasi, asosiasi, atau koperasi ekspor besar, analitik lanjutan, dan kustomisasi berkas perdagangan.</p>
 
             <div class="plan-price-box">
-              <span class="currency">Skema</span>
-              <span class="price-amount" style="font-size: 1.85rem; color: #059669;">Kustom</span>
-              <span class="period">/ Hubungi Kami</span>
+              <span class="currency" data-i18n="scheme_custom">Skema</span>
+              <span class="price-amount" style="font-size: 1.85rem; color: #059669;" data-i18n="custom_val">Kustom</span>
+              <span class="period" data-i18n="custom_period">/ Hubungi Kami</span>
+            </div>
+
+            <div class="vat-included-tag" data-i18n="plan_3_vat">
+              ✓ Termasuk PPN 11% &bull; Penagihan Perusahaan Resmi
             </div>
           </div>
 
           <div class="plan-divider"></div>
 
           <ul class="plan-features">
-            <li><span class="pf-check">✓</span> <strong>Fitur Multi-User (10 - 50 Akun Petani &amp; Staff Ekspor)</strong></li>
-            <li><span class="pf-check">✓</span> <strong>Analitik Rantai Pasok &amp; Rute Pelayaran Lanjutan</strong></li>
-            <li><span class="pf-check">✓</span> <strong>Kustomisasi Berkas Perdagangan Sesuai Standar Global</strong></li>
-            <li><span class="pf-check">✓</span> Integrasi API Bea Cukai, Forwarder &amp; Gudang Khusus</li>
-            <li><span class="pf-check">✓</span> Pendampingan On-Site &amp; Kurasi Buyer B2B Tatap Muka</li>
-            <li><span class="pf-check">✓</span> Dedicated Account Manager &amp; Legal Specialist 24/7</li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_3_f1">Fitur Multi-User (10 - 50 Akun Petani &amp; Staff Ekspor)</strong></li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_3_f2">Analitik Rantai Pasok &amp; Rute Pelayaran Lanjutan</strong></li>
+            <li><span class="pf-check">✓</span> <strong data-i18n="plan_3_f3">Kustomisasi Berkas Perdagangan Sesuai Standar Global</strong></li>
+            <li><span class="pf-check">✓</span> <span data-i18n="plan_3_f4">Integrasi API Bea Cukai, Forwarder &amp; Gudang Khusus</span></li>
+            <li><span class="pf-check">✓</span> <span data-i18n="plan_3_f5">Pendampingan On-Site &amp; Kurasi Buyer B2B Tatap Muka</span></li>
+            <li><span class="pf-check">✓</span> <span data-i18n="plan_3_f6">Dedicated Account Manager &amp; Legal Specialist 24/7</span></li>
           </ul>
 
           <div class="plan-action">
-            <a href="https://wa.me/6281234567890?text=Halo%20Admin%20NusaBridge,%20kami%20tertarik%20dengan%20Paket%20Enterprise%20(Kustom)%20untuk%20Koperasi/Asosiasi%20Ekspor.%20Mohon%20informasi%20penawaran%20dan%20kustomisasi%20berkas%20perdagangan." 
+            <a href="https://wa.me/6285735800491?text=Halo%20Admin%20NusaBridge,%20kami%20tertarik%20dengan%20Paket%20Enterprise%20(Kustom)%20untuk%20Koperasi/Asosiasi%20Ekspor.%20Mohon%20informasi%20penawaran%20dan%20kustomisasi%20berkas%20perdagangan." 
                target="_blank" 
                rel="noopener noreferrer" 
                class="btn btn-whatsapp btn-block"
@@ -304,8 +343,41 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.101-.477-.15-.678.15-.201.3-.778.978-.954 1.179-.176.2-.351.226-.652.075s-1.272-.469-2.424-1.496c-.896-.799-1.501-1.787-1.677-2.088-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.2.05-.376-.025-.527-.075-.15-.678-1.631-.929-2.233-.244-.587-.492-.507-.678-.517-.176-.008-.376-.01-.577-.01s-.527.075-.803.376c-.276.301-1.054 1.03-1.054 2.511s1.079 2.912 1.23 3.113c.15.2 2.122 3.24 5.141 4.544.718.31 1.279.495 1.716.634.721.23 1.377.197 1.895.12.578-.087 1.78-.727 2.031-1.431.251-.703.251-1.305.176-1.431-.075-.126-.276-.201-.577-.351zM12.04 2C6.516 2 2.023 6.49 2.023 12.012c0 1.942.556 3.753 1.517 5.29L2 22l4.838-1.506a10.01 10.01 0 0 0 5.202 1.458h.005c5.522 0 10.015-4.49 10.015-10.012A9.957 9.957 0 0 0 12.04 2z"/>
               </svg>
-              Chat Admin WA (Paket Enterprise)
+              <span data-i18n="plan_3_btn">Chat Admin WA (Paket Enterprise)</span>
             </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TRUST, REFUND & TAX TRANSPARENCY SECTION ==================== -->
+  <section class="section-guarantee-transparency">
+    <div class="site-container">
+      <div class="guarantee-grid">
+        
+        <!-- Card 1: Money Back Guarantee -->
+        <div class="guarantee-box">
+          <div class="gb-icon">🛡️</div>
+          <div class="gb-content">
+            <h4 data-i18n="guarantee_title">Garansi 100% Uang Kembali 7 Hari &amp; Refund Prorata</h4>
+            <p data-i18n="guarantee_desc">
+              <strong>7 Hari Pertama:</strong> Jika Anda merasa fitur NusaBridge tidak sesuai dengan kebutuhan usaha ekspor Anda, hubungi tim kami dan 100% uang Anda dikembalikan penuh tanpa syarat.<br>
+              <strong>Setelah 7 Hari:</strong> Untuk paket multi-bulan (5 bulan atau 1 tahun), jika Anda berhenti di tengah jalan, sisa bulan yang belum berjalan akan <strong>dikembalikan secara prorata</strong> ke rekening Anda.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2: Pajak & Kurs Transparan -->
+        <div class="guarantee-box">
+          <div class="gb-icon">⚖️</div>
+          <div class="gb-content">
+            <h4 data-i18n="tax_transparency_title">Transparansi Pajak PPN 11% &amp; Kurs Pencairan Escrow</h4>
+            <p data-i18n="tax_transparency_desc">
+              <strong>Status PPN:</strong> Seluruh harga paket di atas sudah <strong>termasuk PPN 11%</strong> (e-Faktur Pajak resmi dapat diterbitkan untuk pelaporan SPT Badan/UMKM).<br>
+              <strong>Kurs Pencairan:</strong> Penukaran valas USD ke IDR saat pencairan transaksi Escrow mengacu pada <strong>Kurs Tengah Resmi Bank Indonesia (BI Jisdor)</strong> pada hari kerja pencairan, dengan spread transparan maksimal <strong>0.35%</strong> tanpa biaya administrasi tersembunyi.
+            </p>
           </div>
         </div>
 
@@ -318,62 +390,62 @@
     <div class="site-container">
       <div class="profit-calc-card">
         <div class="calc-header text-center">
-          <div class="pill-badge pill-blue">KALKULATOR MARGIN EKSPOR UMKM</div>
-          <h2 class="section-title">Hitung Potensi Keuntungan Ekspor Anda</h2>
-          <p class="section-subtitle">Simulasikan nilai kontrak penjualan, biaya freight, dan margin bersih yang diterima UMKM.</p>
+          <div class="pill-badge pill-blue" data-i18n="calc_pill">KALKULATOR MARGIN EKSPOR UMKM</div>
+          <h2 class="section-title" data-i18n="calc_title">Hitung Potensi Keuntungan Ekspor Anda</h2>
+          <p class="section-subtitle" data-i18n="calc_sub">Simulasikan nilai kontrak penjualan, biaya freight, dan margin bersih yang diterima UMKM.</p>
         </div>
 
         <div class="calc-body-grid">
           <div class="calc-inputs-col">
             <div class="calc-group">
-              <label>Estimasi Nilai Kontrak Penjualan (USD):</label>
+              <label data-i18n="calc_label_contract">Estimasi Nilai Kontrak Penjualan (USD):</label>
               <div class="input-prefix-box">
                 <span class="ip-curr">USD</span>
                 <input type="number" id="calcContractVal" value="15000" min="500" step="500">
               </div>
             </div>
             <div class="calc-group">
-              <label>Estimasi Biaya Produksi &amp; Kemasan Lokal (USD):</label>
+              <label data-i18n="calc_label_prod">Estimasi Biaya Produksi &amp; Kemasan Lokal (USD):</label>
               <div class="input-prefix-box">
                 <span class="ip-curr">USD</span>
                 <input type="number" id="calcProdCost" value="8500" min="100" step="100">
               </div>
             </div>
             <div class="calc-group">
-              <label>Biaya Freight &amp; Port Handling (FOB/CIF) (USD):</label>
+              <label data-i18n="calc_label_freight">Biaya Freight &amp; Port Handling (FOB/CIF) (USD):</label>
               <div class="input-prefix-box">
                 <span class="ip-curr">USD</span>
                 <input type="number" id="calcFreightCost" value="1200" min="50" step="50">
               </div>
             </div>
             <div class="calc-group">
-              <label>Biaya Layanan Escrow NusaBridge (1.2%):</label>
+              <label data-i18n="calc_label_escrow">Biaya Layanan Escrow NusaBridge (1.2%):</label>
               <input type="text" id="calcEscrowFee" readonly value="USD 180" class="input-readonly">
             </div>
           </div>
 
           <div class="calc-results-col">
             <div class="calc-summary-box">
-              <span class="cs-label">Estimasi Keuntungan Bersih (Net Profit):</span>
+              <span class="cs-label" data-i18n="calc_label_net">Estimasi Keuntungan Bersih (Net Profit):</span>
               <div class="cs-val-big" id="calcNetProfitUSD">USD 5,120</div>
               <div class="cs-val-idr" id="calcNetProfitIDR">≈ Rp 81.920.000,-</div>
               
               <div class="cs-breakdown">
                 <div class="cs-row">
-                  <span>Margin Keuntungan:</span>
+                  <span data-i18n="calc_row_margin">Margin Keuntungan:</span>
                   <strong id="calcMarginPct">34.1%</strong>
                 </div>
                 <div class="cs-row">
-                  <span>Pencairan Dana Tahap 1 (30% DP):</span>
+                  <span data-i18n="calc_row_dp">Pencairan Dana Tahap 1 (30% DP):</span>
                   <strong id="calcDpAmount">USD 4,500 (Rp 72 Jt)</strong>
                 </div>
                 <div class="cs-row">
-                  <span>Status Keamanan Dana:</span>
-                  <span class="cs-safe-tag">100% Guaranteed Escrow Vault</span>
+                  <span data-i18n="calc_row_status">Status Keamanan Dana:</span>
+                  <span class="cs-safe-tag" data-i18n="calc_safe_tag">100% Guaranteed Escrow Vault</span>
                 </div>
               </div>
 
-              <button class="btn btn-primary btn-block" id="btnKonsultasiKalkulator">Konsultasikan Simulasi Ini</button>
+              <button class="btn btn-primary btn-block" id="btnKonsultasiKalkulator" data-i18n="calc_btn_consult">Konsultasikan Simulasi Ini</button>
             </div>
           </div>
         </div>
@@ -385,49 +457,54 @@
   <section class="section-faq">
     <div class="site-container">
       <div class="section-header text-center">
-        <div class="pill-badge pill-blue">PERTANYAAN UMUM</div>
-        <h2 class="section-title">Pertanyaan Seputar Biaya &amp; Transaksi</h2>
+        <div class="pill-badge pill-blue" data-i18n="faq_pill">PERTANYAAN UMUM</div>
+        <h2 class="section-title" data-i18n="faq_main_title">Pertanyaan Seputar Biaya, Garansi &amp; Transaksi</h2>
       </div>
 
       <div class="faq-accordion-list">
         
         <div class="faq-item">
           <button class="faq-question">
-            <span>Apakah ada biaya tersembunyi selain harga paket bulanan?</span>
+            <span data-i18n="faq_q1">Apakah ada biaya tersembunyi selain harga paket langganan?</span>
             <span class="faq-toggle">+</span>
           </button>
           <div class="faq-answer">
-            <p>Tidak ada biaya tersembunyi. NusaBridge hanya mengenakan biaya langganan software sesuai paket yang Anda pilih, ditambah biaya administrasi escrow sebesar 1.2% saat transaksi pembayaran dari buyer berhasil dicairkan ke rekening Anda.</p>
+            <p data-i18n="faq_a1"><strong>Tidak ada biaya tersembunyi sama sekali.</strong> NusaBridge menerapkan transparansi biaya penuh:<br>
+            1. <strong>Langganan Software:</strong> Sesuai paket durasi yang Anda pilih (mulai Rp 58.300/bulan untuk paket tahunan) dan <strong>sudah termasuk PPN 11%</strong> (e-Faktur Pajak resmi tersedia).<br>
+            2. <strong>Biaya Escrow Vault:</strong> Flat 1.2% dari nilai pembayaran invoice yang berhasil dicairkan.<br>
+            3. <strong>Kurs Pencairan:</strong> Menggunakan Kurs Tengah Resmi Bank Indonesia (BI Jisdor) pada hari kerja pencairan dengan spread transparan maksimal 0.35% (tanpa potongan kurs terselubung).</p>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question">
-            <span>Kapan dana pembayaran dari pembeli luar negeri masuk ke rekening UMKM?</span>
+            <span data-i18n="faq_q2">Kapan dana dari buyer luar negeri masuk dan bagaimana acuan kursnya?</span>
             <span class="faq-toggle">+</span>
           </button>
           <div class="faq-answer">
-            <p>Dana dicairkan dalam 4 tahap bertahap (30% uang muka saat kontrak disepakati, 30% saat barang siap di pelabuhan dan PEB terbit, 20% saat kapal kargo berangkat membawa Bill of Lading, dan 20% pelunasan saat barang tiba di pelabuhan tujuan). Dana langsung ditransfer ke rekening bank lokal Anda dalam Rupiah (IDR) dengan kurs kompetitif.</p>
+            <p data-i18n="faq_a2">Dana dicairkan bertahap dalam 4 fase: 30% uang muka (DP) saat Sales Contract disepakati, 30% saat kargo masuk ke depo pelabuhan dan PEB Bea Cukai terbit, 20% saat On-Board Bill of Lading (B/L) terbit, dan 20% settlement final saat kapal sandar di pelabuhan tujuan. Dana langsung ditransfer ke rekening bank lokal Anda dalam Rupiah (IDR) mengacu pada <strong>Kurs Tengah Bank Indonesia (BI Jisdor)</strong> hari kerja berjalan dengan spread transparan maksimal 0.35%.</p>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question">
-            <span>Apakah saya bisa berhenti berlangganan sewaktu-waktu?</span>
+            <span data-i18n="faq_q3">Bagaimana jika saya ingin berhenti? Apakah ada kebijakan pengembalian dana (refund)?</span>
             <span class="faq-toggle">+</span>
           </button>
           <div class="faq-answer">
-            <p>Tentu saja. Anda dapat meningkatkan (upgrade), menurunkan (downgrade), atau membatalkan langganan kapan saja tanpa penalti atau komitmen jangka panjang yang mengikat.</p>
+            <p data-i18n="faq_a3">Ya, NusaBridge memiliki kebijakan refund yang sangat adil dan transparan:<br>
+            • <strong>Garansi 7 Hari 100% Uang Kembali (Full Refund):</strong> Jika dalam 7 hari pertama Anda merasa sistem tidak sesuai dengan alur bisnis Anda, dana kami kembalikan 100% tanpa potongan.<br>
+            • <strong>Refund Prorata untuk Paket 5 Bulan &amp; 1 Tahun:</strong> Jika Anda membatalkan paket prabayar setelah hari ke-7, sisa bulan yang belum berjalan akan kami kembalikan secara prorata ke rekening Anda tanpa penalti.</p>
           </div>
         </div>
 
         <div class="faq-item">
           <button class="faq-question">
-            <span>Apakah UMKM yang belum punya izin ekspor bisa mendaftar?</span>
+            <span data-i18n="faq_q4">Apakah UMKM yang baru memiliki NIB perorangan bisa langsung menggunakan layanan?</span>
             <span class="faq-toggle">+</span>
           </button>
           <div class="faq-answer">
-            <p>Bisa! Cukup dengan Nomor Induk Berusaha (NIB) standar dari OSS, AI Agent NusaBridge akan memandu Anda memenuhi persyaratan kepabeanan ekspor langkah demi langkah.</p>
+            <p data-i18n="faq_a4">Bisa! Cukup dengan Nomor Induk Berusaha (NIB) standar dari OSS RBA (perorangan maupun badan usaha), sistem AI Agent NusaBridge akan memandu Anda memenuhi seluruh persyaratan kepabeanan ekspor langkah demi langkah hingga siap menerbitkan dokumen perdagangan standar internasional.</p>
           </div>
         </div>
 
@@ -443,34 +520,34 @@
           <a href="index.html" class="footer-logo-link">
             <img src="assets/logo-transparent.webp" alt="NusaBridge" class="footer-logo-img" onerror="this.src='assets/logo.webp'">
           </a>
-          <p class="footer-brand-desc">Platform AI untuk mempercepat ekspor UMKM Indonesia ke panggung internasional.</p>
+          <p class="footer-brand-desc" data-i18n="footer_brand_desc">Platform AI untuk mempercepat ekspor UMKM Indonesia ke panggung internasional.</p>
         </div>
 
         <div class="footer-col-links">
-          <h4 class="footer-col-title">Navigasi</h4>
+          <h4 class="footer-col-title" data-i18n="footer_title_nav">Navigasi</h4>
           <ul class="footer-links-list">
-            <li><a href="index.html">Beranda</a></li>
-            <li><a href="produk.html">Katalog Produk</a></li>
-            <li><a href="solusi.html">Solusi AI</a></li>
-            <li><a href="index.html#alur-ekspor">Alur Ekspor</a></li>
-            <li><a href="harga.html">Paket &amp; Harga</a></li>
-            <li><a href="index.html#tentang">Tentang Kami</a></li>
+            <li><a href="index.html" data-i18n="nav_home">Beranda</a></li>
+            <li><a href="produk.html" data-i18n="nav_products">Katalog Produk</a></li>
+            <li><a href="solusi.html" data-i18n="nav_solutions">Solusi AI</a></li>
+            <li><a href="index.html#alur-ekspor" data-i18n="nav_workflow">Alur Ekspor</a></li>
+            <li><a href="harga.html" data-i18n="nav_pricing">Paket &amp; Harga</a></li>
+            <li><a href="index.html#tentang" data-i18n="nav_about">Tentang Kami</a></li>
           </ul>
         </div>
 
         <div class="footer-col-links">
-          <h4 class="footer-col-title">Sumber Daya</h4>
+          <h4 class="footer-col-title" data-i18n="footer_title_resources">Sumber Daya</h4>
           <ul class="footer-links-list">
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Pusat Bantuan">Pusat Bantuan</a></li>
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Dokumentasi">Dokumentasi</a></li>
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Blog">Blog</a></li>
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Kebijakan Privasi">Kebijakan Privasi</a></li>
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Syarat &amp; Ketentuan">Syarat &amp; Ketentuan</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Pusat Bantuan" data-i18n="res_help">Pusat Bantuan</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Dokumentasi" data-i18n="res_docs">Dokumentasi</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Blog" data-i18n="res_blog">Blog</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Kebijakan Privasi" data-i18n="res_privacy">Kebijakan Privasi</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Syarat &amp; Ketentuan" data-i18n="res_terms">Syarat &amp; Ketentuan</a></li>
           </ul>
         </div>
 
         <div class="footer-col-social">
-          <h4 class="footer-col-title">Ikuti Kami</h4>
+          <h4 class="footer-col-title" data-i18n="footer_title_social">Ikuti Kami</h4>
           <div class="footer-social-icons">
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon-box" aria-label="LinkedIn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37z"></path></svg>

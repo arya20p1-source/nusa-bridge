@@ -115,21 +115,21 @@
   <!-- ==================== BANNER HALAMAN PRODUK ==================== -->
   <section class="page-hero-banner">
     <div class="site-container">
-      <div class="pill-badge pill-blue">KATALOG EKSPOR RESMI</div>
-      <h1 class="page-hero-title">Produk & Komoditas Unggulan UMKM Nusantara</h1>
-      <p class="page-hero-subtitle">
+      <div class="pill-badge pill-blue" data-i18n="produk_hero_pill">KATALOG EKSPOR RESMI</div>
+      <h1 class="page-hero-title" data-i18n="produk_hero_title">Produk &amp; Komoditas Unggulan UMKM Nusantara</h1>
+      <p class="page-hero-subtitle" data-i18n="produk_hero_sub">
         Semua produk telah melewati audit legalitas NIB, standar uji mutu laboratorium, dan verifikasi profil oleh AI Agent NusaBridge siap kirim ke pasar global.
       </p>
       
       <!-- Stats Ringkas -->
       <div class="product-banner-stats">
-        <div class="pb-stat"><span class="pb-num">500+</span> Komoditas Terdaftar</div>
+        <div class="pb-stat" data-i18n="produk_stat_1"><span class="pb-num">500+</span> Komoditas Terdaftar</div>
         <div class="pb-divider"></div>
-        <div class="pb-stat"><span class="pb-num">100%</span> Terverifikasi NIB/NPWP</div>
+        <div class="pb-stat" data-i18n="produk_stat_2"><span class="pb-num">100%</span> Terverifikasi NIB/NPWP</div>
         <div class="pb-divider"></div>
-        <div class="pb-stat"><span class="pb-num">20+</span> Negara Tujuan Ekspor</div>
+        <div class="pb-stat" data-i18n="produk_stat_3"><span class="pb-num">20+</span> Negara Tujuan Ekspor</div>
         <div class="pb-divider"></div>
-        <div class="pb-stat"><span class="pb-num">FOB / CIF</span> Incoterms Ready</div>
+        <div class="pb-stat" data-i18n="produk_stat_4"><span class="pb-num">FOB / CIF</span> Incoterms Ready</div>
       </div>
     </div>
   </section>
@@ -146,16 +146,16 @@
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="productSearchInput" placeholder="Cari nama produk, daerah asal, atau HS Code (cth: Kopi Gayo, Cengkeh, Rotan)...">
+            <input type="text" id="productSearchInput" placeholder="Cari nama produk, daerah asal, atau HS Code (cth: Kopi Gayo, Cengkeh, Rotan)..." data-i18n-placeholder="produk_search_ph">
           </div>
           
           <div class="sort-select-field">
-            <label for="sortSelect">Urutkan:</label>
+            <label for="sortSelect" data-i18n="sort_label">Urutkan:</label>
             <select id="sortSelect" class="custom-select">
-              <option value="featured">Paling Populer</option>
-              <option value="price-low">Harga: Rendah ke Tinggi</option>
-              <option value="price-high">Harga: Tinggi ke Rendah</option>
-              <option value="moq-low">MOQ Terkecil</option>
+              <option value="featured" data-i18n="sort_featured">Paling Populer</option>
+              <option value="price-low" data-i18n="sort_price_low">Harga: Rendah ke Tinggi</option>
+              <option value="price-high" data-i18n="sort_price_high">Harga: Tinggi ke Rendah</option>
+              <option value="moq-low" data-i18n="sort_moq_low">MOQ Terkecil</option>
             </select>
           </div>
         </div>
@@ -602,36 +602,36 @@
           <a href="index.html" class="footer-logo-link">
             <img src="assets/logo-transparent.webp" alt="NusaBridge" class="footer-logo-img" onerror="this.src='assets/logo.webp'">
           </a>
-          <p class="footer-brand-desc">
+          <p class="footer-brand-desc" data-i18n="footer_brand_desc">
             Platform AI untuk mempercepat ekspor UMKM Indonesia ke panggung perdagangan global.
           </p>
         </div>
 
         <div class="footer-col-links">
-          <h4 class="footer-col-title">Navigasi</h4>
+          <h4 class="footer-col-title" data-i18n="footer_title_nav">Navigasi</h4>
           <ul class="footer-links-list">
-            <li><a href="index.html">Beranda</a></li>
-            <li><a href="produk.html">Katalog Produk</a></li>
-            <li><a href="solusi.html">Solusi AI</a></li>
-            <li><a href="index.html#alur-ekspor">Alur Ekspor</a></li>
-            <li><a href="harga.html">Paket & Harga</a></li>
-            <li><a href="index.html#tentang">Tentang Kami</a></li>
+            <li><a href="index.html" data-i18n="nav_home">Beranda</a></li>
+            <li><a href="produk.html" data-i18n="nav_products">Katalog Produk</a></li>
+            <li><a href="solusi.html" data-i18n="nav_solutions">Solusi AI</a></li>
+            <li><a href="index.html#alur-ekspor" data-i18n="nav_workflow">Alur Ekspor</a></li>
+            <li><a href="harga.html" data-i18n="nav_pricing">Paket &amp; Harga</a></li>
+            <li><a href="index.html#tentang" data-i18n="nav_about">Tentang Kami</a></li>
           </ul>
         </div>
 
         <div class="footer-col-links">
-          <h4 class="footer-col-title">Sumber Daya</h4>
+          <h4 class="footer-col-title" data-i18n="footer_title_resources">Sumber Daya</h4>
           <ul class="footer-links-list">
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Pusat Bantuan">Pusat Bantuan</a></li>
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Dokumentasi">Dokumentasi</a></li>
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Blog">Blog</a></li>
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Kebijakan Privasi">Kebijakan Privasi</a></li>
-            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Syarat & Ketentuan">Syarat & Ketentuan</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Pusat Bantuan" data-i18n="res_help">Pusat Bantuan</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Dokumentasi" data-i18n="res_docs">Dokumentasi</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Blog" data-i18n="res_blog">Blog</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Kebijakan Privasi" data-i18n="res_privacy">Kebijakan Privasi</a></li>
+            <li><a href="javascript:void(0)" class="open-info-modal" data-title="Syarat & Ketentuan" data-i18n="res_terms">Syarat & Ketentuan</a></li>
           </ul>
         </div>
 
         <div class="footer-col-social">
-          <h4 class="footer-col-title">Ikuti Kami</h4>
+          <h4 class="footer-col-title" data-i18n="footer_title_social">Ikuti Kami</h4>
           <div class="footer-social-icons">
             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon-box" aria-label="LinkedIn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.64 1.64 0 1 0 0-3.28 1.64 1.64 0 0 0 0 3.28m1.4 9.74v-8.37H5.06v8.37z"></path></svg>

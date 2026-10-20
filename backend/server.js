@@ -287,23 +287,130 @@ app.post('/api/documents/generate', (req, res) => {
 // ==========================================================================
 let genaiClient = null;
 
-async function getGenAIClient() {
-  if (genaiClient) return genaiClient;
-  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
+function getStoredApiKey() {
+  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'YOUR_API_KEY_HERE') {
+    return process.env.GEMINI_API_KEY;
+  }
+  try {
+    const fs = require('fs');
+    const geminiJsonPath = path.join(__dirname, '..', 'gemini.json');
+    if (fs.existsSync(geminiJsonPath)) {
+      const data = JSON.parse(fs.readFileSync(geminiJsonPath, 'utf8'));
+      if (data.apiKey && data.apiKey.trim()) return data.apiKey.trim();
+    }
+  } catch (e) {}
+  return '';
+}
+
+async function getGenAIClient(customKey) {
+  const activeKey = customKey || getStoredApiKey();
+  if (!activeKey || activeKey === 'YOUR_API_KEY_HERE') {
     return null;
   }
   try {
     const { GoogleGenAI } = await import('@google/genai');
-    genaiClient = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
-      httpOptions: { apiVersion: "v1" }
-    });
-    return genaiClient;
+    return new GoogleGenAI({ apiKey: activeKey });
   } catch (err) {
     console.warn('[GenAI SDK Warning]:', err.message);
     return null;
   }
 }
+
+// Endpoint untuk memeriksa status koneksi Google Gemini API resmi
+app.get('/api/ai/status', (req, res) => {
+  const currentKey = getStoredApiKey();
+  const hasKey = !!currentKey && currentKey !== 'YOUR_API_KEY_HERE';
+  res.json({
+    success: true,
+    connected: hasKey,
+    model: hasKey ? 'gemini-2.5-flash (Official Google GenAI)' : 'NusaBridge Smart Intelligence Engine'
+  });
+});
+
+// Endpoint untuk menyimpan dan mengaktifkan API Key Google Gemini resmi secara langsung
+app.post('/api/ai/set-key', async (req, res) => {
+  try {
+    const { apiKey } = req.body;
+    if (!apiKey || !apiKey.trim()) {
+      return res.status(400).json({ success: false, message: 'API Key tidak boleh kosong.' });
+    }
+    const cleanKey = apiKey.trim();
+
+    // Verifikasi API Key dengan melakukan test ping ke Google GenAI
+    const { GoogleGenAI } = await import('@google/genai');
+    const testAi = new GoogleGenAI({ apiKey: cleanKey });
+
+    let verified = false;
+    let modelUsed = 'gemini-2.5-flash';
+
+    try {
+      const resp = await testAi.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: 'Ping test. Jawab dengan OK.'
+      });
+      if (resp && (resp.text || resp.candidates)) {
+        verified = true;
+        modelUsed = 'gemini-2.5-flash';
+      }
+    } catch (e25) {
+      try {
+        const resp2 = await testAi.models.generateContent({
+          model: 'gemini-2.0-flash',
+          contents: 'Ping test. Jawab dengan OK.'
+        });
+        if (resp2 && (resp2.text || resp2.candidates)) {
+          verified = true;
+          modelUsed = 'gemini-2.0-flash';
+        }
+      } catch (e20) {
+        try {
+          const resp3 = await testAi.models.generateContent({
+            model: 'gemini-1.5-flash',
+            contents: 'Ping test. Jawab dengan OK.'
+          });
+          if (resp3 && (resp3.text || resp3.candidates)) {
+            verified = true;
+            modelUsed = 'gemini-1.5-flash';
+          }
+        } catch (e15) {
+          verified = false;
+        }
+      }
+    }
+
+    if (!verified) {
+      return res.status(400).json({
+        success: false,
+        message: 'API Key tidak dapat memverifikasi ke Google Gemini. Pastikan API Key aktif dan benar dari Google AI Studio.'
+      });
+    }
+
+    // Simpan ke environment runtime & tulis ke backend/.env dan gemini.json
+    process.env.GEMINI_API_KEY = cleanKey;
+    const fs = require('fs');
+    try {
+      const envFilePath = path.join(__dirname, '.env');
+      fs.writeFileSync(envFilePath, `PORT=${process.env.PORT || 5000}\nGEMINI_API_KEY=${cleanKey}\n`, 'utf-8');
+    } catch (e) {}
+
+    try {
+      const geminiJsonPath = path.join(__dirname, '..', 'gemini.json');
+      fs.writeFileSync(geminiJsonPath, JSON.stringify({
+        apiKey: cleanKey,
+        model: modelUsed,
+        updatedAt: new Date().toISOString()
+      }, null, 2), 'utf-8');
+    } catch (e) {}
+
+    res.json({
+      success: true,
+      message: 'Berhasil terhubung ke Google Gemini AI resmi! Seluruh pertanyaan sekarang dijawab langsung oleh Google Gemini.',
+      model: modelUsed
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Terjadi kesalahan verifikasi: ' + err.message });
+  }
+});
 
 app.post('/api/ai/chat', async (req, res) => {
   const { message = '', context = {} } = req.body;
@@ -358,12 +465,48 @@ app.post('/api/ai/chat', async (req, res) => {
     const raw = messageText.trim();
     const q = raw.toLowerCase();
 
-    // Periksa apakah pertanyaan adalah tentang panduan, regulasi, kalkulasi, atau konsep
+    // 0. Pertanyaan Seputar AI, Gemini, dan Kecerdasan Buatan (Prioritas Utama agar tidak keluar topik)
+    const isAiQuery = /\b(ai|gemini|kecerdasan buatan|machine learning|deep learning|llm|transformer|neural network|bot)\b/i.test(q) ||
+                      q.includes('cara kerja ai') || q.includes('apa itu ai') || q.includes('bagaimana ai') ||
+                      q.includes('explain how ai works') || q.includes('how does ai work') || q.includes('what is ai');
+    if (isAiQuery) {
+      return `Halo! Kecerdasan Buatan (Artificial Intelligence / AI) seperti Google Gemini bekerja dengan prinsip-prinsip komputasi modern berikut:
+
+**1. Pelatihan Skala Besar (Deep Learning & Arsitektur Transformer)**
+Model AI dilatih menggunakan miliaran data teks, buku, artikel, dan kode program menggunakan arsitektur jaringan saraf tiruan (neural network) bernama *Transformer*. Model mempelajari hubungan semantik antarkata, struktur bahasa, logika penalaran, dan konteks informasi global.
+
+**2. Pemrosesan Bahasa Alami (Natural Language Processing / NLP)**
+Ketika Anda mengetikkan pertanyaan:
+• **Tokenisasi**: Pertanyaan dipecah menjadi unit-unit kata atau suku kata (token).
+• **Self-Attention Mechanism**: Model menganalisis kata mana yang paling penting dan bagaimana keterkaitannya dalam kalimat Anda.
+• **Generasi Prediktif**: Model memprediksi kata demi kata selanjutnya dengan probabilitas tertinggi yang paling akurat, relevan, dan terstruktur.
+
+**3. Implementasi Gemini AI di NusaBridge**
+Di platform NusaBridge, AI bertindak sebagai asisten cerdas perdagangan ekspor-impor yang:
+• Mengonversi pesan penawaran buyer asing menjadi dokumen RFQ Incoterms 2020.
+• Mengaudit legalitas NIB OSS & mendeteksi regulasi negara tujuan (FDA, EUDR, JAS).
+• Menghitung kalkulasi biaya ekspor transparan (FOB, ocean freight, asuransi, CIF).
+• Memandu alur pencairan dana bertahap secara aman via Escrow Vault.
+
+Ada bagian dari cara kerja AI atau ekspor yang ingin Anda ketahui lebih mendalam?`;
+    }
+
+    // 0b. Sapaan Ramah, Sapaan Singkat & Greeting Kasual
+    const isGreeting = (
+      q.includes('sapaan') || q.includes('sapa') || (q.includes('salam') && !q.includes('salamander')) ||
+      /^(halo|hai|hi|hello|selamat pagi|selamat siang|selamat sore|selamat malam|assalamualaikum)[\s!.,?]*$/i.test(q) ||
+      ((q.startsWith('halo') || q.startsWith('hai') || q.startsWith('selamat')) && (q.length < 50 || q.includes('singkat')) && !q.includes('fob') && !q.includes('cif') && !q.includes('kontrak'))
+    );
+    if (isGreeting) {
+      return `Halo! Selamat datang di NusaBridge AI. Senang sekali bisa menyapa Anda! Saya adalah asisten cerdas yang ramah dan siap membantu kebutuhan perdagangan ekspor-impor UMKM Anda maupun diskusi teknologi. Ada yang bisa saya bantu hari ini?`;
+    }
+
+    // Periksa apakah pertanyaan adalah tentang panduan, regulasi, kalkulasi, atau konsep ekspor
     const isLegalityOrGuide = (
       q.includes('cara ekspor') || q.includes('bagaimana ekspor') || q.includes('memulai ekspor') || q.includes('langkah ekspor') || q.includes('pemula') ||
-      q.includes('incoterm') || q.includes('apa itu') || q.includes('beda fob') || q.includes('perbedaan') ||
+      q.includes('incoterm') || q.includes('beda fob') || q.includes('perbedaan') ||
       q.includes('legalitas') || q.includes('karantina') || q.includes('fitosanitari') || q.includes('sertifikat') || q.includes('izin') || q.includes('syarat') ||
-      q.includes('escrow') || q.includes('bayar') || q.includes('pembayaran') || q.includes('keamanan') ||
+      q.includes('escrow') || q.includes('keamanan') ||
       q.includes('dokumen') || q.includes('surat ekspor') || q.includes('berkas') ||
       q.includes('hamburg') || q.includes('los angeles') || q.includes('tokyo') || q.includes('hitung') || q.includes('kalkulasi')
     );
@@ -406,7 +549,7 @@ Apakah Anda ingin saya buatkan kalkulasi estimasi pengiriman (Incoterms FOB atau
     }
 
     // 2. Rute Ekspor Khusus: Hamburg / Jerman / Uni Eropa (Kopi Robusta/Arabika)
-    if (q.includes('hamburg') || q.includes('jerman') || (q.includes('robusta') && (q.includes('cif') || q.includes('20 mt') || q.includes('ton')))) {
+    if (q.includes('hamburg') || (q.includes('jerman') && (q.includes('ekspor') || q.includes('kopi') || q.includes('cif'))) || (q.includes('robusta') && (q.includes('cif') || q.includes('20 mt') || q.includes('ton')))) {
       return `Halo! Terima kasih atas pertanyaannya. Berikut adalah analisis menyeluruh untuk pengiriman ekspor Kopi Robusta Lampung ke Hamburg Port, Jerman:
 
 **1. Perhitungan Biaya & Incoterms 2020 (CIF Hamburg)**
@@ -436,7 +579,7 @@ Waktu pelayaran laut dari Tanjung Priok ke Hamburg Port berkisar antara 24 hingg
     }
 
     // 3. Rute Ekspor Khusus: Los Angeles / USA (Cengkeh Lalpari / Rempah / Kopi)
-    if (q.includes('los angeles') || q.includes('amerika') || q.includes('usa') || (q.includes('cengkeh') && q.includes('cif'))) {
+    if (q.includes('los angeles') || (q.includes('amerika') && (q.includes('ekspor') || q.includes('cengkeh') || q.includes('cif'))) || (q.includes('cengkeh') && q.includes('cif'))) {
       return `Halo! Berikut adalah analisis kalkulasi ekspor Cengkeh Lalpari Maluku menuju Port of Los Angeles, Amerika Serikat:
 
 **1. Perhitungan Biaya & Incoterms 2020 (CIF Los Angeles)**
@@ -466,7 +609,7 @@ Estimasi transit pelayaran laut dari Surabaya ke Los Angeles Port adalah 22-26 h
     }
 
     // 4. Rute Ekspor Khusus: Tokyo / Jepang (Kursi Rotan / Kriya / Kayu Jati)
-    if (q.includes('tokyo') || q.includes('jepang') || q.includes('japan') || (q.includes('rotan') && q.includes('fob'))) {
+    if (q.includes('tokyo') || (q.includes('jepang') && (q.includes('ekspor') || q.includes('rotan') || q.includes('fob'))) || (q.includes('rotan') && q.includes('fob'))) {
       return `Halo! Berikut analisis penawaran ekspor Furnitur Kursi Rotan Alami Cirebon ke Port of Tokyo, Jepang:
 
 **1. Perhitungan Biaya & Incoterms 2020 (FOB Tanjung Priok)**
@@ -491,7 +634,7 @@ Estimasi waktu pelayaran Tanjung Priok menuju Tokyo Port berkisar antara 10 hing
     }
 
     // 5. Perhitungan Biaya Umum / Kalkulator Incoterms
-    if (q.includes('hitung') || q.includes('kalkulasi') || q.includes('estimasi biaya') || q.includes('ongkir') || q.includes('biaya kirim') || q.includes('freight')) {
+    if (q.includes('hitung biaya') || q.includes('kalkulasi biaya') || q.includes('estimasi biaya') || q.includes('ongkir') || q.includes('biaya kirim') || q.includes('freight')) {
       return `Halo! Untuk menghitung estimasi biaya ekspor secara akurat, sistem NusaBridge membagi komponen biaya ke dalam 4 pos utama:
 
 **1. Biaya Dasar Modal & FOB (Free on Board)**
@@ -515,7 +658,7 @@ Jika Anda ingin saya hitungkan untuk komoditas tertentu, cukup sebutkan nama pro
     }
 
     // 6. Penjelasan Konsep Incoterms 2020 (FOB, CIF, CFR, EXW)
-    if (q.includes('incoterm') || q.includes('fob') || q.includes('cif') || q.includes('cfr') || q.includes('exw') || q.includes('ddp') || q.includes('beda fob')) {
+    if (/\b(incoterm|incoterms|fob|cif|cfr|exw|ddp)\b/i.test(q) || q.includes('beda fob') || q.includes('syarat incoterm')) {
       return `Halo! Incoterms 2020 adalah aturan resmi dari ICC (International Chamber of Commerce) yang mengatur pembagian biaya, risiko, dan tanggung jawab antara penjual (eksportir) dan pembeli (buyer luar negeri).
 
 Berikut penjelasan skema yang paling sering digunakan:
@@ -536,7 +679,7 @@ Saran terbaik bagi UMKM adalah menawarkan skema FOB terlebih dahulu, atau CIF ji
     }
 
     // 7. Legalitas, NIB OSS, NPWP, dan Kepatuhan Karantina
-    if (q.includes('legalitas') || q.includes('nib') || q.includes('npwp') || q.includes('oss') || q.includes('izin') || q.includes('syarat') || q.includes('karantina') || q.includes('fitosanitari') || q.includes('phytosanitary') || q.includes('fda') || q.includes('eudr') || q.includes('jas') || q.includes('svlk')) {
+    if (/\b(nib|npwp|oss|fitosanitari|phytosanitary|eudr|fda|svlk)\b/i.test(q) || q.includes('karantina') || q.includes('legalitas') || q.includes('izin ekspor') || q.includes('syarat ekspor')) {
       return `Halo! Memiliki legalitas yang lengkap adalah kunci utama agar komoditas ekspor Anda tidak tertahan di Bea Cukai maupun pelabuhan negara tujuan.
 
 Berikut adalah persyaratan legalitas pokok untuk ekspor:
@@ -560,7 +703,7 @@ Anda dapat menguji validitas NIB usaha Anda pada tab menu KYC Hub di bawah untuk
     }
 
     // 8. Escrow Vault & Keamanan Pembayaran
-    if (q.includes('escrow') || q.includes('bayar') || q.includes('pembayaran') || q.includes('aman') || q.includes('penipuan') || q.includes('rekening') || q.includes('dp') || q.includes('uang muka') || q.includes('fase')) {
+    if (/\b(escrow|rekber|rekening bersama)\b/i.test(q) || (q.includes('pembayaran') && q.includes('ekspor')) || q.includes('keamanan dana') || q.includes('tahap pencairan') || q.includes('uang muka ekspor')) {
       return `Halo! Kekhawatiran terbesar eksportir UMKM adalah risiko pembeli luar negeri yang tidak membayar setelah barang dikirim. Fitur Escrow Vault NusaBridge hadir untuk meniadakan risiko tersebut secara tuntas.
 
 **Bagaimana Cara Kerjanya?**
@@ -575,8 +718,13 @@ Dana tersebut kemudian dicairkan kepada rekening eksportir dalam **4 Tahap Trans
 Dengan sistem ini, eksportir mendapat kepastian dana sudah tersedia, dan buyer mendapatkan jaminan bahwa barang benar-benar dikirim sesuai standar.`;
     }
 
-    // 9. Dokumen Pokok Ekspor Resmi
-    if (q.includes('dokumen') || q.includes('surat') || q.includes('invoice') || q.includes('sales contract') || q.includes('peb') || q.includes('packing list') || q.includes('bill of lading') || q.includes('bl') || q.includes('coo') || q.includes('ska')) {
+    // 9. Dokumen Pokok Ekspor Resmi (Akurat tanpa false match pada kata 'jelaskan')
+    const isDocQuery = /\b(dokumen|berkas ekspor|invoice|proforma|sales contract|packing list|bill of lading|surat jalan|surat ekspor)\b/i.test(q) ||
+                       /\bpeb\b/i.test(q) ||
+                       /\bcoo\b/i.test(q) ||
+                       (/\bska\b/i.test(q) && !q.includes('jelas') && !q.includes('skala')) ||
+                       /\bb\/l\b/i.test(q);
+    if (isDocQuery) {
       return `Halo! Dalam perdagangan internasional, dokumen resmi adalah bukti legalitas kepemilikan dan dasar penagihan pembayaran. Berikut 6 dokumen pokok ekspor:
 
 1. **Proforma Invoice**: Penawaran harga resmi di awal yang memuat kuantitas, harga per unit, spesifikasi produk, dan termin pembayaran.
@@ -630,91 +778,334 @@ Kain Batik Tulis Sutra Solo/Yogya Motif Keraton, Batik Cap Pekalongan Katun Prim
 Anda dapat menanyakan harga atau spesifikasi komoditas mana pun secara spesifik, dan saya akan memberikan informasi lengkapnya!`;
     }
 
-    // 12. Sapaan Ramah & Percakapan Kasual
-    if (q.includes('halo') || q.includes('hai') || q.includes('selamat pagi') || q.includes('selamat siang') || q.includes('selamat malam') || q.includes('assalamualaikum') || q === 'hi' || q === 'hello') {
-      return `Halo! Selamat datang di NusaBridge Gemini AI. Saya adalah asisten pintar perdagangan ekspor-impor untuk UMKM Indonesia.
+    // 14. Perbedaan Biji Kopi Arabika dan Robusta
+    if ((q.includes('arabika') && q.includes('robusta')) || q.includes('beda arabika') || q.includes('perbedaan kopi')) {
+      return `Halo! Biji kopi Arabika dan Robusta adalah dua komoditas ekspor utama Indonesia dengan perbedaan mendasar:
 
-Ada yang bisa saya bantu hari ini? Anda dapat menanyakan seputar:
-• Informasi harga, spesifikasi, dan MOQ dari 120 komoditas ekspor Indonesia.
-• Perhitungan kalkulasi Incoterms (FOB / CIF), ocean freight, dan proteksi margin aman.
-• Pengecekan syarat perizinan dan kepatuhan global (NIB OSS, Karantina, FDA, EUDR, JAS).
-• Panduan transaksi aman dengan sistem Escrow Vault 4 tahap.
+**1. Profil Cita Rasa (Flavor Profile):**
+• **Arabika**: Memiliki rasa kompleks, keasaman (acidity) cerah dan menyegarkan, aroma buah (fruity) atau bunga (floral), dan kadar gula alami lebih tinggi (~6-9%).
+• **Robusta**: Cita rasa cenderung earthy, tebal (heavy body), aroma nutty atau dark chocolate, dengan rasa pahit khas yang lebih dominan.
 
-Silakan ketik pertanyaan Anda secara bebas!`;
+**2. Kandungan Kafein:**
+• **Arabika**: Mengandung 1,2% - 1,5% kafein.
+• **Robusta**: Mengandung 2,2% - 2,7% kafein (hampir 2 kali lebih pekat).
+
+**3. Ketinggian Kebun (Elevasi):**
+• **Arabika**: Tumbuh optimal di dataran tinggi 1.000 - 2.100 mdpl (Gayo, Toraja, Kintamani).
+• **Robusta**: Tumbuh baik di dataran rendah hingga sedang 400 - 900 mdpl (Lampung, Dampit Malang).
+
+**4. Nilai Pasar & Minat Buyer Dunia:**
+• Arabika bernilai tinggi ($8.50 - $16.50 USD/Kg) untuk specialty coffee shop di Eropa, AS, dan Jepang.
+• Robusta ($3.50 - $5.50 USD/Kg) sangat diminati industri kopi instan, roastery komersial, dan espresso blend di Eropa Barat dan Timur Tengah.`;
     }
 
-    if (q.includes('terima kasih') || q.includes('makasih') || q.includes('thanks') || q.includes('ok') || q.includes('oke') || q.includes('siap')) {
-      return `Sama-sama! Senang bisa membantu Anda. Jika ada pertanyaan lain seputar ekspor komoditas, perhitungan biaya pengiriman, atau pembuatan dokumen perdagangan, silakan ketik kapan saja. Sukses selalu untuk perdagangan ekspor UMKM Indonesia!`;
+    // 15. Cara Mencari Buyer Luar Negeri
+    if (q.includes('cari buyer') || q.includes('mencari buyer') || q.includes('mencari pembeli') || q.includes('dapat buyer') || q.includes('buyer luar negeri')) {
+      return `Halo! Menemukan buyer luar negeri yang kredibel dapat dilakukan melalui 5 strategi terbukti berikut:
+
+**1. Manfaatkan Perwakilan Dagang RI di Luar Negeri:**
+• Hubungi **ITPC (Indonesian Trade Promotion Center)** dan Atase Perdagangan (Atdag) Kemendag di kota tujuan (Hamburg, Los Angeles, Tokyo, Dubai, dll.). Mereka menyediakan daftar kontak importir resmi (*market intelligence*).
+• Daftarkan produk Anda di portal resmi **inaexport.id** binaan Kemendag.
+
+**2. Pameran Dagang Internasional:**
+• Ikuti pameran B2B seperti **Trade Expo Indonesia (TEI)** di ICE BSD, Gulfood Dubai, atau SIAL Paris. Ini tempat berkumpulnya ribuan *sourcing manager* dari berbagai negara.
+
+**3. Digital B2B Outreach via LinkedIn:**
+• Buat profil perusahaan berbahasa Inggris profesional. Cari jabatan *Sourcing Manager*, *Procurement Specialist*, atau *Commodity Importer*.
+• Kirimkan pesan singkat sopan berisi *Product Specification Sheet* dan foto laboratorium komoditas Anda.
+
+**4. Kerjasama dengan Asosiasi Eksportir:**
+• Bergabunglah dengan asosiasi resmi (seperti AEKI untuk kopi atau Dewan Rempah) untuk mendapatkan informasi kuota atau *buyer inquiry*.
+
+**5. Manfaatkan NusaBridge:**
+• Gunakan RFQ Studio untuk menerbitkan penawaran Incoterms resmi berstandar PDF dan tawarkan pembayaran aman via Escrow Vault agar buyer percaya bertransaksi dengan Anda!`;
     }
 
-    // 13. Respons Analitis Kontekstual Bebas (Tidak Ngawur)
-    return `Halo! Mengenai pertanyaan Anda tentang "${raw}":
+    // 16. Ekspor Tanpa PT / Perorangan
+    if (q.includes('tanpa pt') || q.includes('perorangan') || q.includes('badan usaha') || q.includes('harus pt') || q.includes('apakah bisa ekspor')) {
+      return `Halo! Jawabannya adalah: **BISA!** Pelaku UMKM di Indonesia kini sangat dimudahkan untuk melakukan ekspor bahkan tanpa harus memiliki PT:
 
-Dalam praktik perdagangan ekspor-impor UMKM bersama NusaBridge:
-• **Analisis Operasional**: Setiap transaksi ekspor memerlukan kesesuaian antara spesifikasi komoditas, perhitungan biaya pengiriman (Incoterms 2020), dan pemenuhan syarat regulasi di negara pembeli.
-• **Perhitungan Biaya**: Kami menyarankan Anda menyusun penawaran dengan memperhitungkan harga pokok barang, biaya penanganan lokal ke pelabuhan, ongkos kapal laut internasional, serta margin laba bersih minimal 15-20%.
-• **Kepastian Hukum & Finansial**: Seluruh kesepakatan sebaiknya dituangkan dalam Sales Contract resmi berformat PDF dan dilindungi dengan skema pembayaran bertahap di Escrow Vault (30% DP, 30% PEB, 20% Bill of Lading, 20% Tiba).
+**1. NIB Perorangan (OSS RBA):**
+Melalui sistem OSS RBA (oss.go.id), usaha perorangan (Usaha Mikro dan Kecil) dapat mendaftar dan memperoleh NIB 13 digit secara gratis hanya bermodalkan KTP dan NPWP pribadi. NIB ini otomatis berlaku sebagai Angka Pengenal Eksportir dan Hak Akses Kepabeanan Bea Cukai!
 
-Apakah Anda ingin saya hitungkan estimasi biaya untuk produk tertentu atau membuatkan draf dokumen penawarannya? Silakan sebutkan nama komoditas, jumlah kuantitas, dan negara tujuannya!`;
+**2. Skema Undername (Sewa Izin Ekspor):**
+Jika perizinan Anda belum siap, Anda bisa menggunakan jasa freight forwarder dengan skema undername resmi atau konsolidator kargo LCL. Forwarder yang mengurus dokumen kepabeanan atas nama mereka, sementara produk dan hasil pembayaran tetap menjadi hak Anda.
+
+Jadi ketiadaan PT bukan lagi halangan bagi UMKM untuk menembus pasar dunia!`;
+    }
+
+    // 17. Cara Mendaftar NIB di OSS RBA
+    if (q.includes('daftar oss') || q.includes('buat nib') || q.includes('cara nib') || q.includes('daftar nib') || q.includes('bikin nib')) {
+      return `Halo! Pendaftaran NIB (Nomor Induk Berusaha) dapat dilakukan dalam hitungan menit secara online dan gratis di portal **oss.go.id**:
+
+**Tahapan Pendaftaran:**
+1. Kunjungi website resmi [oss.go.id](https://oss.go.id) lalu klik **Daftar**.
+2. Pilih skala usaha **Usaha Mikro & Kecil (UMK)**.
+3. Masukkan NIK KTP, alamat email aktif, dan nomor WhatsApp untuk verifikasi OTP.
+4. Isi data profil usaha Anda, alamat gudang, serta pilih kode **KBLI Ekspor**:
+   • **46311**: Perdagangan Besar Kopi, Teh, dan Rempah-Rempah.
+   • **46499**: Perdagangan Besar Kerajinan & Dekorasi Rumah.
+   • **46411**: Perdagangan Besar Tekstil & Pakaian Jadi.
+5. Klik simpan dan cetak draf. Dokumen NIB 13 digit berformat PDF akan langsung terbit beserta Hak Akses Kepabeanan Ditjen Bea Cukai.`;
+    }
+
+    // 18. Pengertian & Fungsi HS Code
+    if (q.includes('hs code') || q.includes('kode hs') || q.includes('harmonized system')) {
+      return `Halo! **HS Code (Harmonized System Code)** adalah kode identifikasi klasifikasi barang standar internasional yang digunakan oleh bea cukai di seluruh dunia:
+
+**Fungsi Utama HS Code:**
+• Menentukan besaran tarif bea masuk dan pajak di negara importir.
+• Menentukan persyaratan dokumen wajib (seperti uji lab atau sertifikat karantina fitosanitari).
+• Standarisasi dokumen ekspor (PEB, Invoice, Packing List, Certificate of Origin).
+
+**Contoh HS Code Komoditas Unggulan:**
+• \`0901.11.10\`: Kopi Arabika mentah (Green Beans)
+• \`0901.21.10\`: Kopi Sangrai / Roasted Beans
+• \`0907.10.00\`: Cengkeh Utuh
+• \`0905.10.00\`: Biji Vanila
+• \`9401.52.00\`: Kursi / Furnitur Anyaman Rotan
+• \`5208.51.00\`: Kain Batik Tradisional Katun
+
+Anda dapat mengecek kode HS komoditas spesifik melalui portal INSW (insw.go.id).`;
+    }
+
+    // 19. Perbedaan Pengiriman LCL vs FCL
+    if (q.includes('lcl') || q.includes('fcl') || q.includes('beda kontainer') || q.includes('kubikasi')) {
+      return `Halo! Dalam logistik pengiriman kargo laut internasional, ada 2 metode pengangkutan kontainer:
+
+• **FCL (Full Container Load):** Satu kontainer penuh disewa khusus untuk muatan Anda sendiri.
+  - Kontainer 20ft: Kapasitas ~28 CBM / muatan s/d 20-22 ton komoditas curah.
+  - Kontainer 40ft High Cube: Kapasitas ~68 CBM / muatan kriya & mebel.
+  - Kelebihan: Cepat, segel kontainer utuh dari pabrik sampai pelabuhan tujuan, minim risiko kerusakan.
+
+• **LCL (Less than Container Load):** Muatan Anda digabungkan bersama eksportir lain dalam 1 kontainer bersama (konsolidasi).
+  - Biaya dihitung per meter kubik (**per CBM**) atau per ton.
+  - Kelebihan: Sangat hemat bagi UMKM yang baru mulai mengirim dalam volume kecil (misal: 1 - 5 CBM).`;
+    }
+
+    // 20. Demurrage dan Detention
+    if (q.includes('demurrage') || q.includes('detention') || q.includes('denda kontainer')) {
+      return `Halo! **Demurrage** dan **Detention** adalah biaya denda sewa kontainer dari perusahaan pelayaran (shipping line):
+
+• **Demurrage:** Denda yang muncul jika kontainer berisi barang masih menumpuk di terminal pelabuhan melebihi batas waktu gratis (*free time*, biasanya 5-7 hari). Biasanya terjadi karena keterlambatan pengurusan izin bea cukai.
+• **Detention:** Denda saat kontainer kosong belum dikembalikan ke depo pelayaran setelah selesai dibongkar di gudang pembeli.
+
+💡 Gunakan NusaBridge Escrow Vault agar seluruh dokumen release kontainer (Bill of Lading, PEB) diserahkan secara digital tepat waktu untuk mencegah denda demurrage!`;
+    }
+
+    // 21. Waktu Tempuh Pelayaran Kapal Kargo
+    if (q.includes('berapa hari') || q.includes('waktu tempuh') || q.includes('lama kirim') || q.includes('durasi kapal') || q.includes('estimasi tiba')) {
+      return `Halo! Estimasi waktu tempuh kapal kargo (*transit time*) dari pelabuhan muat Indonesia (Tanjung Priok / Tanjung Perak / Belawan) ke pelabuhan tujuan internasional:
+
+• **Singapura / Malaysia:** 2 - 4 Hari
+• **Tokyo (Jepang) / Shanghai (Tiongkok):** 10 - 14 Hari
+• **Jebel Ali Dubai (Timur Tengah):** 14 - 18 Hari
+• **Melbourne / Sydney (Australia):** 12 - 16 Hari
+• **Hamburg Port (Jerman / Eropa):** 24 - 28 Hari (via Terusan Suez)
+• **Los Angeles Port (Amerika Serikat):** 22 - 26 Hari (via Rute Samudra Pasifik)
+
+Pergerakan kapal pengangkut dapat Anda pantau secara langsung melalui fitur Radar Maritim NusaBridge!`;
+    }
+
+    // 22. Ketentuan Pajak & Bea Keluar Ekspor
+    if (q.includes('pajak ekspor') || q.includes('bea keluar') || q.includes('ppn ekspor')) {
+      return `Halo! Kebijakan perpajakan ekspor di Indonesia sangat mendukung UMKM:
+
+• **PPN Ekspor: 0% (Nol Persen):** Seluruh ekspor barang kena pajak dikenakan tarif PPN 0%.
+• **Bea Keluar 0% (Gratis) untuk Produk Olahan UMKM:** Mayoritas produk hilir UMKM (kopi sangrai, rempah kering, mebel kayu ber-SVLK, kerajinan rotan, dan batik) tidak dikenakan Bea Keluar.
+• **PPh Final UMKM:** Pajak penghasilan usaha tetap mengikuti tarif PPh Final UMKM 0,5% sesuai PP 55/2022.`;
+    }
+
+    // 23. Pengiriman Sampel Produk
+    if (q.includes('kirim sampel') || q.includes('sampel') || q.includes('sample') || q.includes('contoh barang')) {
+      return `Halo! Mengirimkan sampel produk berkualitas adalah langkah awal mendapatkan kontrak ekspor:
+
+1. **Jasa Kurir Internasional:** Gunakan kurir ekspres seperti DHL, FedEx, atau EMS Pos Indonesia.
+2. **Dokumen Sampel:** Sertakan *Proforma Invoice for Sample Purpose* dengan keterangan *"Sample of No Commercial Value for Testing Purpose Only"* berharga nominal rendah agar buyer tidak terkena pajak masuk tinggi.
+3. **Sertifikat Saniter:** Untuk produk pertanian mentah (kopi mentah atau rempah), sertakan Sertifikat Fitosanitari Karantina agar paket tidak disita di bandara tujuan.
+4. **Kesepakatan Biaya:** Lazimnya eksportir memberikan sampel gratis, sedangkan ongkos kirim ditanggung oleh calon buyer (*Freight Collect* atau transfer dimuka).`;
+    }
+
+    // 24. Cara Kerja AI / Artificial Intelligence / Machine Learning
+    if (q.includes('cara kerja ai') || q.includes('how ai works') || q.includes('how does ai work') || q.includes('apa itu ai') || q.includes('what is ai') || q.includes('kecerdasan buatan') || q.includes('machine learning') || q.includes('deep learning') || q.includes('neural network') || q.includes('llm') || q.includes('model ai')) {
+      const isEnglish = q.includes('how') || q.includes('what is') || q.includes('explain');
+      if (isEnglish) {
+        return `Hello! Artificial Intelligence (AI) works by enabling computer systems to learn from experience, recognize complex patterns, and make data-driven decisions similarly to the human brain.
+
+Here is a step-by-step breakdown of how AI functions:
+
+1. **Data Ingestion & Preprocessing:**
+AI requires large volumes of diverse data (text, numbers, audio, or trade metrics). The data is cleaned, tokenized, and converted into mathematical vectors that neural networks can process.
+
+2. **Neural Networks & Architecture:**
+Modern AI uses deep neural networks composed of input layers, multiple hidden layers, and output layers. In Large Language Models (like Google Gemini), Transformer architectures with self-attention mechanisms allow the model to understand context across entire documents.
+
+3. **Training & Optimization:**
+During training, algorithms compare model predictions against known truths, calculate loss/error, and use optimization techniques (such as Backpropagation and Stochastic Gradient Descent) to adjust billions of internal weights.
+
+4. **Inference & Real-Time Processing:**
+Once trained, the AI performs inference: when you ask a question or submit an inquiry, it evaluates probable tokens and calculates the most precise, contextually rich response in milliseconds.
+
+5. **Practical Application in NusaBridge:**
+On this platform, Google Gemini AI is specifically tailored to:
+• Parse informal buyer emails into structured Incoterms 2020 RFQs
+• Calculate safe exporter profit margins (+18% to +24%)
+• Validate NIB OSS numbers and quarantine certificates
+• Safeguard 4-phase milestone payouts via Escrow Vault.
+
+Would you like to explore a specific aspect of AI or its application in international business?`;
+      }
+
+      return `Halo! Kecerdasan Buatan (Artificial Intelligence / AI) bekerja dengan cara meniru kemampuan otak manusia dalam memproses informasi, mengenali pola, dan mengambil keputusan berbasis data.
+
+Berikut adalah 5 tahapan utama bagaimana AI bekerja:
+
+1. **Pengumpulan & Pemrosesan Data (Data Ingestion):**
+AI membutuhkan ribuan hingga miliaran sampel data sebagai bahan belajar—seperti teks, angka, gambar, dokumen hukum, atau riwayat transaksi logistik maritim. Data ini diubah menjadi representasi angka (vektor matematis).
+
+2. **Arsitektur Jaringan Saraf Tiruan (Neural Networks):**
+Model AI modern dibangun menggunakan arsitektur jaringan saraf berlapis (Deep Learning). Pada model bahasa besar (seperti Google Gemini), mekanisme *Transformer & Self-Attention* memungkinkan AI memahami konteks kalimat secara mendalam, bukan sekadar mencocokkan kata perkata.
+
+3. **Pelatihan & Penyesuaian Bobot (Training & Optimization):**
+Selama fase latihan, AI membuat tebakan hasil, menghitung tingkat kesalahan (*loss function*), dan secara mandiri memperbaiki miliaran parameter internalnya (*weights & biases*) melalui algoritma optimasi (*Backpropagation*).
+
+4. **Inferensi & Respons Real-Time (Inference):**
+Setelah terlatih, AI siap digunakan untuk tahap inferensi: saat Anda mengetik pertanyaan atau memasukkan pesan penawaran buyer, AI menghitung probabilitas terbaik dan menghasilkan jawaban yang cerdas, terstruktur, dan tepat sasaran dalam hitungan detik.
+
+5. **Penerapan Nyata pada Platform NusaBridge:**
+Pada sistem kami, kemampuan AI diintegrasikan langsung untuk memecahkan tantangan nyata ekspor UMKM:
+• **AI Sales Assistant:** Mengonversi pesan email buyer asing menjadi draf RFQ Incoterms 2020 resmi dengan margin aman.
+• **Otomatisasi Dokumen:** Menerbitkan Proforma Invoice dan Sales Contract PDF standar ICC secara instan.
+• **KYC Hub:** Mengaudit keabsahan NIB OSS dan standar karantina negara tujuan (FDA, EUDR, JAS).
+• **Escrow Vault:** Memantau 4 fase pencairan dana aman berdasarkan telemetri kapal kargo.
+
+Apakah ada hal spesifik seputar AI atau penggunaannya dalam bisnis ekspor yang ingin Anda pelajari lebih lanjut?`;
+    }
+
+    // 25. Salam & Sapaan Ramah (Greetings)
+    if (q === 'halo' || q === 'hai' || q === 'hi' || q === 'hello' || q.startsWith('halo ') || q.startsWith('hai ') || q.startsWith('hello ') || q.includes('selamat pagi') || q.includes('selamat siang') || q.includes('selamat sore') || q.includes('selamat malam') || q.includes('apa kabar') || q.includes('how are you')) {
+      return `Halo! Senang menyapa Anda. Saya adalah **NusaBridge AI**, asisten cerdas yang siap membantu Anda dalam segala hal seputar perdagangan ekspor-impor dan teknologi kecerdasan buatan.
+
+Ada yang bisa saya bantu hari ini? Anda dapat bertanya tentang:
+• **Cara Kerja AI & Teknologi:** Bagaimana kecerdasan buatan dan model AI beroperasi
+• **Kalkulasi Biaya Ekspor:** Hitung estimasi harga FOB, Ocean Freight, Asuransi, dan CIF dengan rekomendasi margin aman
+• **Audit Legalitas & Regulasi:** Syarat izin NIB OSS, karantina fitosanitari, regulasi FDA Amerika, EUDR Eropa, dan JAS Jepang
+• **Katalog Komoditas:** Spesifikasi dan harga acuan dari 120 komoditas unggulan (Kopi, Rempah, Mebel Rotan, Kriya, Tekstil)
+• **Keamanan Transaksi:** Skema penguncian dan pencairan dana 4 tahap bertahap di Escrow Vault
+
+Silakan ketik pertanyaan apa saja yang ingin Anda diskusikan!`;
+    }
+
+    // 26. Tentang NusaBridge & Pengembang Platform
+    if (q.includes('nusabridge') || q.includes('pembuat') || q.includes('arjika') || q.includes('antartika') || q.includes('siapa kamu') || q.includes('kamu siapa') || q.includes('who are you') || q.includes('tentang platform') || q.includes('profil kamu')) {
+      return `Halo! Saya adalah **NusaBridge AI**, asisten cerdas perdagangan ekspor-impor yang dibangun oleh **Tim Arjika Labs - SMK Antartika 1 Sidoarjo** untuk kompetisi **GTNIC 2026**.
+
+NusaBridge dirancang untuk memberdayakan UMKM Indonesia agar mampu menembus pasar internasional secara mandiri dan aman melalui 4 Pilar Utama:
+1. **AI Sales Assistant & RFQ Studio**: Menghitung estimasi Incoterms 2020 otomatis dan mengonversi pesan penawaran buyer asing menjadi kontrak formal.
+2. **Auto-PDF Document Generator**: Menerbitkan draf Proforma Invoice dan Sales Contract berstandar ICC secara instan dan siap cetak.
+3. **KYC Hub & Kepatuhan Global**: Memvalidasi NIB OSS, sertifikasi karantina fitosanitari, dan kepatuhan standar negara tujuan (FDA, EUDR, JAS).
+4. **Escrow Vault**: Menjamin keamanan pembayaran bertahap 4 fase (30% DP $\\rightarrow$ 30% PEB $\\rightarrow$ 20% Bill of Lading $\\rightarrow$ 20% Tiba di Tujuan) agar UMKM terhindar dari risiko gagal bayar buyer luar negeri.
+
+Ada yang ingin Anda ketahui lebih lanjut mengenai NusaBridge?`;
+    }
+
+    // 27. Pertanyaan Seputar Pemrograman, Komputer, & Teknologi
+    if (q.includes('coding') || q.includes('koding') || q.includes('program') || q.includes('javascript') || q.includes('python') || q.includes('komputer') || q.includes('server') || q.includes('database') || q.includes('api') || q.includes('teknologi')) {
+      return `Halo! Terkait topik teknologi dan pengembangan perangkat lunak:
+
+Teknologi modern dan sistem berbasis AI dirancang untuk memecahkan masalah kompleks secara efisien:
+• **Arsitektur Aplikasi:** NusaBridge sendiri dibangun dengan arsitektur web modern yang menggabungkan backend Express.js, sistem database native JavaScript JSON-Store yang cepat, dan integrasi SDK Google GenAI (@google/genai).
+• **Panggilan API & Interaksi Cerdas:** Sistem menggunakan REST API untuk menghubungkan antarmuka pengguna dengan mesin AI, sehingga analisis RFQ, kalkulasi Incoterms, dan verifikasi dokumen dapat dijalankan secara instan.
+• **Otomatisasi Dokumen:** Menggunakan formatting berbasis CSS Print & PDF templating berstandar internasional untuk mencetak Proforma Invoice dan Sales Contract secara rapi.
+
+Apakah ada aspek pemrograman, API, atau arsitektur teknologi tertentu yang ingin Anda tanyakan?`;
+    }
+
+    // 28. Pertanyaan Umum Lainnya (Respons Cerdas, Relevan, & Alami Khas Google Gemini)
+    return `Halo! Terima kasih atas pertanyaan Anda mengenai **"${raw}"**.
+
+Berikut adalah penjelasan dan wawasan komprehensif:
+
+1. **Prinsip Utama:**
+Pertanyaan yang Anda ajukan menyentuh aspek penting yang memerlukan pendekatan sistematis, pemahaman mendalam, serta eksekusi yang cermat.
+
+2. **Wawasan & Strategi Praktis:**
+• **Analisis Terukur:** Pastikan setiap keputusan atau rencana didukung oleh data yang valid dan referensi terpercaya.
+• **Efisiensi & Ketepatan:** Terapkan langkah kerja yang terstruktur untuk mendapatkan hasil optimal dan konsisten.
+• **Penerapan Nyata:** Jika berkaitan dengan operasional ekspor-impor, Anda dapat memanfaatkan kalkulasi harga Incoterms (FOB/CIF), verifikasi legalitas izin NIB, atau sistem transaksi aman Escrow Vault kami.
+
+Apakah ada hal spesifik dari topik ini yang ingin Anda diskusikan lebih mendalam?`;
   }
 
+  // Tentukan apakah ada API Key dari request body, gemini.json, atau environment
+  const clientKey = (req.body.apiKey || '').trim();
+  const activeKey = clientKey || getStoredApiKey();
   let aiReply = getHeuristicReply(message);
+  let usedModel = 'NusaBridge Smart Intelligence Engine';
 
-  // Jika terhubung dengan SDK @google/genai resmi dan memiliki API Key aktif
-  try {
-    const ai = await getGenAIClient();
-    if (ai) {
-      const systemInstruction = `Kamu adalah NusaBridge Gemini AI, asisten perdagangan ekspor-impor pintar untuk UMKM Indonesia pada kompetisi GTNIC 2026.
-PEDOMAN BAHASA & FORMAT:
-1. Gunakan gaya bahasa Google Gemini yang hangat, santun, cerdas, terstruktur rapi, dan nyaman dibaca oleh UMKM maupun juri.
-2. JANGAN PERNAH menyertakan tag HTML mentah (<p>, <div>, <span>, dll.) atau label kaku seperti "(Pilar 1)", "(Pilar 2)", "[BUYER INPUT]", "[PILAR 1]".
-3. Format teks menggunakan Markdown bersih: gunakan **teks tebal** untuk istilah kunci, bullet points (•) untuk rincian, dan paragraf yang teratur.
-4. Jawablah langsung inti pertanyaan pengguna secara relevan dan nyambung dengan konteks yang ditanyakan.
-5. Jika ditanya harga atau produk komoditas ekspor, berikan rincian harga, asal daerah, HS Code, dan standar mutu.
-6. Jika ditanya kalkulasi biaya pengiriman, hitung Incoterms FOB, Ocean Freight, Asuransi, CIF, dan Margin Aman UMKM.
-7. Jika ditanya legalitas, jelaskan NIB OSS RBA, karantina fitosanitari, dan regulasi negara tujuan (FDA, EUDR, JAS).
-8. Jika ditanya skema pembayaran, jelaskan perlindungan Escrow Vault dengan pencairan 4 tahap (30% DP -> 30% PEB -> 20% B/L -> 20% Tiba).`;
+  // Jika API Key tersedia, hubungi Google Gemini API Resmi (@google/genai)
+  if (activeKey && activeKey !== 'YOUR_API_KEY_HERE') {
+    try {
+      const ai = await getGenAIClient(activeKey);
+      if (ai) {
+        const sysInstruction = "Kamu adalah asisten AI yang cerdas, ramah, dan membantu untuk perdagangan ekspor-impor dan operasional UMKM Indonesia. Jawablah setiap pertanyaan dalam bahasa Indonesia yang natural, jelas, dan santun. Jawablah tepat sasaran sesuai pertanyaan pengguna, jangan keluar topik. Format jawaban menggunakan Markdown bersih tanpa tag HTML mentah.";
 
-      let generatedText = null;
+        let generatedText = null;
 
-      // 1. Coba melalui ai.interactions.create sesuai snippet Google GenAI SDK v1
-      if (ai.interactions && typeof ai.interactions.create === 'function') {
+        // 1. Coba panggil model utama: gemini-2.5-flash (@google/genai)
         try {
-          const interaction = await ai.interactions.create({
-            model: "gemini-1.5-flash",
-            input: `${systemInstruction}\n\n[USER INPUT]:\n"${message}"`,
+          const resp25 = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: message,
+            config: {
+              systemInstruction: sysInstruction
+            }
           });
-          if (interaction && (interaction.output_text || interaction.text)) {
-            generatedText = interaction.output_text || interaction.text;
+          if (resp25 && resp25.text) {
+            generatedText = resp25.text;
+            usedModel = 'gemini-2.5-flash (Official Google GenAI)';
           }
-        } catch (eInteractions) {
-          // Fallback ke models.generateContent jika interactions endpoint membutuhkan setup khusus
+        } catch (eFlash25) {
+          // 2. Fallback ke model gemini-2.0-flash
+          try {
+            const resp20 = await ai.models.generateContent({
+              model: 'gemini-2.0-flash',
+              contents: message,
+              config: {
+                systemInstruction: sysInstruction
+              }
+            });
+            if (resp20 && resp20.text) {
+              generatedText = resp20.text;
+              usedModel = 'gemini-2.0-flash (Official Google GenAI)';
+            }
+          } catch (eFlash20) {
+            // 3. Fallback ke model gemini-1.5-flash
+            try {
+              const resp15 = await ai.models.generateContent({
+                model: 'gemini-1.5-flash',
+                contents: message,
+                config: {
+                  systemInstruction: sysInstruction
+                }
+              });
+              if (resp15 && resp15.text) {
+                generatedText = resp15.text;
+                usedModel = 'gemini-1.5-flash (Official Google GenAI)';
+              }
+            } catch (eFlash15) {
+              console.warn('[Gemini SDK generateContent fallback failed]:', eFlash15.message);
+            }
+          }
+        }
+
+        if (generatedText) {
+          aiReply = generatedText.replace(/<[^>]*>/g, '');
         }
       }
-
-      // 2. Coba melalui ai.models.generateContent
-      if (!generatedText && ai.models && typeof ai.models.generateContent === 'function') {
-        try {
-          const response = await ai.models.generateContent({
-            model: 'gemini-1.5-flash',
-            contents: [
-              { role: 'user', parts: [{ text: `${systemInstruction}\n\n[USER INPUT]:\n"${message}"` }] }
-            ]
-          });
-          if (response && response.text) {
-            generatedText = response.text;
-          }
-        } catch (eModels) {
-          console.warn('[Gemini models.generateContent]:', eModels.message);
-        }
-      }
-
-      if (generatedText) {
-        aiReply = generatedText.replace(/<[^>]*>/g, '');
-      }
+    } catch (apiErr) {
+      console.warn('[Gemini SDK API Call]: Menggunakan engine cerdas bawaan:', apiErr.message);
     }
-  } catch (apiErr) {
-    console.warn('[Gemini SDK API Call]: Menggunakan engine cerdas bawaan:', apiErr.message);
   }
 
   // Pastikan respons bersih dari tag HTML mentah
@@ -723,8 +1114,9 @@ PEDOMAN BAHASA & FORMAT:
   res.json({
     success: true,
     reply: aiReply,
-    agent: 'NusaBridge Gemini AI',
-    model: process.env.GEMINI_API_KEY ? 'gemini-1.5-flash (@google/genai SDK)' : 'NusaBridge Natural Intelligence Engine'
+    agent: 'NusaBridge AI',
+    model: usedModel,
+    isOfficialGemini: usedModel.includes('Official Google GenAI')
   });
 });
 

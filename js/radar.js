@@ -542,7 +542,77 @@ document.addEventListener('DOMContentLoaded', () => {
       const btnDl = txModalBody.querySelector('.btn-download-tx-pdf');
       if (btnDl) {
         btnDl.addEventListener('click', () => {
-          showFeedbackToast('📄 Dokumen ekspor resmi (PDF) berhasil diunduh ke perangkat Anda!');
+          const contractHtml = `
+            <div class="header">
+              <div>
+                <div class="title">INTERNATIONAL EXPORT SALES CONTRACT</div>
+                <div style="font-size:12px; color:#64748b; margin-top:4px;">No: ${t.title} &bull; Ref: NB-CONTRACT-2026-GTNIC</div>
+              </div>
+              <div class="seal">✓ NUSABRIDGE ESCROW PROTECTED</div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; font-size:12px; background:#f8fafc; padding:12px; border-radius:6px; border:1px solid #e2e8f0;">
+              <div>
+                <strong style="color:#0f172a; text-transform:uppercase;">Eksportir Terverifikasi:</strong>
+                <p style="margin:4px 0 0; color:#334155;">
+                  <strong>CV Kopi & Rempah Nusantara Mandiri</strong><br>
+                  NIB: 1294801928415 &bull; NPWP: 01.234.567.8-012.000<br>
+                  Indonesia &bull; Verified Global Exporter Shield
+                </p>
+              </div>
+              <div>
+                <strong style="color:#0f172a; text-transform:uppercase;">Global Buyer:</strong>
+                <p style="margin:4px 0 0; color:#334155;">
+                  <strong>${t.buyer}</strong><br>
+                  Status Pembayaran: <strong style="color:#059669;">100% Escrow Deposited</strong><br>
+                  Tahap Pencairan: ${t.escrowPaid}
+                </p>
+              </div>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Deskripsi Komoditas</th>
+                  <th>Volume / Kuantitas</th>
+                  <th>Status Ekspor</th>
+                  <th>Nilai Kontrak</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>${t.product}</strong><br><small style="color:#64748b;">Standar Mutu Ekspor &amp; Uji Mutu Sucofindo Lolos</small></td>
+                  <td>${t.volume}</td>
+                  <td><span style="color:#059669; font-weight:700;">${t.status}</span></td>
+                  <td><strong style="color:#1e3a8a;">${t.value}</strong></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="margin-top:14px;">
+              <h5 style="font-size:13px; color:#0f172a; margin-bottom:8px; font-weight:700;">Dokumen Kepatuhan &amp; Legalitas yang Disertakan:</h5>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px;">
+                ${t.docs.map(d => `<div style="padding:6px 10px; background:#f1f5f9; border-radius:4px;">✓ <strong>${d}</strong> (Tervalidasi)</div>`).join('')}
+              </div>
+            </div>
+
+            <div style="margin-top:18px; font-size:11.5px; color:#475569; background:#ecfdf5; border:1px solid #a7f3d0; padding:10px 14px; border-radius:6px;">
+              <strong>Klausul Escrow Vault 4 Tahap:</strong> Seluruh pembayaran telah dijamin oleh NusaBridge Escrow Vault berstandar smart contract ICC Incoterms 2020. Dana dicairkan bertahap sesuai telemetri kapal kargo (30% DP &bull; 30% PEB Bea Cukai &bull; 20% Bill of Lading &bull; 20% Sandar di Pelabuhan Tujuan).
+            </div>
+
+            <div class="footer">
+              <div>
+                <span>Digital Signatures Verified by NusaBridge AI</span><br>
+                <span>Timestamp: ${new Date().toLocaleString('id-ID')}</span>
+              </div>
+              <div style="text-align:right;">
+                <span>Authorized by International Chamber of Commerce (ICC) Model</span><br>
+                <strong>NusaBridge Global Trade Settlement</strong>
+              </div>
+            </div>
+          `;
+          downloadHtmlFile(`Kontrak-Ekspor-${t.product.replace(/[^a-zA-Z0-9]/g, '-')}.html`, `Kontrak Ekspor - ${t.product}`, contractHtml);
+          showFeedbackToast('📄 Dokumen ekspor resmi berhasil diunduh ke perangkat Anda!');
         });
       }
     }
@@ -551,11 +621,92 @@ document.addEventListener('DOMContentLoaded', () => {
     txDetailModal.classList.add('show');
   }
 
+  function downloadHtmlFile(filename, title, bodyHtml) {
+    const fullDoc = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>${title}</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 30px; color: #0f172a; line-height: 1.5; background: #fff; }
+    .container { max-width: 800px; margin: 0 auto; border: 2px solid #0f172a; padding: 28px; border-radius: 8px; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f172a; padding-bottom: 14px; margin-bottom: 20px; }
+    .title { font-size: 20px; font-weight: 800; color: #1e3a8a; }
+    .seal { font-size: 11px; font-weight: 800; color: #1b68f8; border: 1.5px solid #1b68f8; padding: 4px 10px; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+    th, td { border: 1px solid #cbd5e1; padding: 8px 12px; font-size: 12.5px; text-align: left; }
+    th { background: #f8fafc; font-weight: 700; color: #1e293b; }
+    .footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 11px; color: #64748b; }
+    .btn-print { background: #1b68f8; color: #fff; border: none; padding: 8px 16px; font-weight: 700; border-radius: 6px; cursor: pointer; margin-bottom: 16px; font-size: 13px; }
+    @media print { .btn-print { display: none; } body { margin: 0; } .container { border: none; padding: 0; } }
+  </style>
+</head>
+<body>
+  <div style="text-align: right; max-width: 800px; margin: 0 auto;">
+    <button class="btn-print" onclick="window.print()">🖨️ Cetak / Simpan sebagai PDF</button>
+  </div>
+  <div class="container">
+    ${bodyHtml}
+  </div>
+</body>
+</html>`;
+    const blob = new Blob([fullDoc], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
   // Listener tombol download manifest maritim di modal radar
   const btnDownloadManifest = document.getElementById('btnDownloadManifest');
   if (btnDownloadManifest) {
     btnDownloadManifest.addEventListener('click', () => {
-      showFeedbackToast('🚢 Manifest pelayaran maritim resmi (PDF) berhasil di-generate oleh NusaBridge AI!');
+      const activeVesselKey = currentVesselKey || 'baruna';
+      const vessel = AIS_VESSELS[activeVesselKey] || AIS_VESSELS.baruna;
+
+      const manifestHtml = `
+        <div class="header">
+          <div>
+            <div class="title">OFFICIAL MARITIME CARGO MANIFEST</div>
+            <div style="font-size:12px; color:#64748b;">No: MAN-${Date.now()} &bull; Tanggal: ${new Date().toLocaleDateString('id-ID')}</div>
+          </div>
+          <div class="seal">🛡️ VERIFIED BY NUSABRIDGE AIS</div>
+        </div>
+        <p><strong>Kapal Pengangkut:</strong> ${vessel.name} (${vessel.callsign})<br>
+        <strong>Rute Pelayaran:</strong> ${vessel.route}<br>
+        <strong>Posisi AIS:</strong> Koordinat ${vessel.coords} &bull; Kecepatan: ${vessel.speed}</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Deskripsi Muatan Kontainer</th>
+              <th>Volume / Berat</th>
+              <th>Pelabuhan Muat (POL)</th>
+              <th>Pelabuhan Bongkar (POD)</th>
+              <th>Estimasi Kedatangan (ETA)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>${vessel.cargo}</strong></td>
+              <td>1 x 20ft FCL (Standard Container)</td>
+              <td>Tanjung Priok Port (ID)</td>
+              <td>${vessel.destination}</td>
+              <td><strong style="color:#059669;">${vessel.eta}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="footer">
+          <div>Status Pelayaran: <strong>ON SCHEDULE (68% Selesai)</strong></div>
+          <div>Otoritas Pelayaran: <strong>NusaBridge Maritime Tracking Suite</strong></div>
+        </div>
+      `;
+
+      downloadHtmlFile(`Manifest-Pelayaran-${vessel.name.replace(/\s+/g, '-')}.html`, `Manifest Pelayaran - ${vessel.name}`, manifestHtml);
+      showFeedbackToast('🚢 Manifest pelayaran maritim resmi berhasil diunduh ke perangkat Anda!');
     });
   }
 

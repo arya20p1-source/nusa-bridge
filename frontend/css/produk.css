@@ -414,16 +414,56 @@
 }
 
 /* ---------- 4. MODAL SPESIFIKASI MUTU & LAB ---------- */
+.modal-body-spec {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  margin: 12px 0;
+  max-height: 65vh;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.modal-body-spec::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-body-spec::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+.modal-body-spec::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.modal-body-spec::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.spec-grid-layout,
 .spec-detail-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: 1.25fr 1fr;
   gap: 24px;
-  margin-top: 14px;
+  align-items: start;
+}
+
+.spec-col-left h4,
+.spec-col-right h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy-title);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 @media (max-width: 768px) {
+  .spec-grid-layout,
   .spec-detail-grid {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 }
 
@@ -431,30 +471,32 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .spec-table th, .spec-table td {
-  padding: 9px 12px;
+  padding: 8px 10px;
   border-bottom: 1px solid var(--border-light);
   text-align: left;
 }
 
 .spec-table th {
   color: var(--text-muted);
-  width: 45%;
+  width: 44%;
   font-weight: 500;
+  font-size: 12px;
 }
 
 .spec-table td strong {
   color: var(--navy-title);
+  font-size: 12.5px;
 }
 
 .spec-cert-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin: 10px 0 16px;
+  margin: 8px 0 14px;
 }
 
 .spec-cert-item {
@@ -475,19 +517,31 @@
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
   border-radius: var(--radius-md);
-  padding: 14px;
+  padding: 12px 14px;
   display: flex;
-  gap: 12px;
-  font-size: 12.5px;
+  gap: 10px;
+  font-size: 12px;
   color: #166534;
   line-height: 1.5;
 }
 
 .modal-footer-spec {
+  flex-shrink: 0;
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light, #e2e8f0);
+  background: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-footer-spec .btn {
+  white-space: nowrap;
+  font-size: 13.5px;
+  padding: 10px 18px;
 }
 
 /* ---------- 6. PAGINASI KATALOG PRODUK (105+ KOMODITAS) ---------- */
