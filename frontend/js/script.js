@@ -225,8 +225,10 @@ document.addEventListener('DOMContentLoaded', () => {
       dur_1m: "1 Bulan",
       dur_5m: "5 Bulan",
       dur_1y: "1 Tahun",
-      save_25: "Hemat 25%",
-      save_51: "Hemat 51%",
+      save_20: "Hemat 20%",
+      save_best: "12 Bulan Penuh",
+      save_25: "Hemat 20%",
+      save_51: "12 Bulan Penuh",
       original_price_label: "Harga Asli:",
       per_month: "/ bulan",
       plan_2_vat: "✓ Sudah Termasuk PPN 11% (Faktur Pajak Tersedia)",
@@ -478,8 +480,10 @@ document.addEventListener('DOMContentLoaded', () => {
       dur_1m: "1 Month",
       dur_5m: "5 Months",
       dur_1y: "1 Year",
-      save_25: "Save 25%",
-      save_51: "Save 51%",
+      save_20: "Save 20%",
+      save_best: "Full 12 Months",
+      save_25: "Save 20%",
+      save_51: "Full 12 Months",
       original_price_label: "Original Price:",
       per_month: "/ month",
       plan_2_vat: "✓ Includes 11% VAT (Official Tax Invoice Available)",
@@ -985,13 +989,15 @@ Berikut adalah penjelasan informatif dan terstruktur:
 
   function openModal(modal) {
     if (modal) {
-      modal.classList.add('active');
+      modal.style.display = 'flex';
+      modal.classList.add('active', 'show');
     }
   }
 
   function closeModal(modal) {
     if (modal) {
-      modal.classList.remove('active');
+      modal.classList.remove('active', 'show');
+      modal.style.display = 'none';
     }
   }
 
@@ -1050,20 +1056,37 @@ Berikut adalah penjelasan informatif dan terstruktur:
     });
   });
 
-  // Close modals listeners
+  // Universal close button listener for all modal close buttons (&times; / silang)
+  document.querySelectorAll('.modal-close-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const parentModal = btn.closest('.modal-overlay');
+      if (parentModal) {
+        closeModal(parentModal);
+      }
+    });
+  });
+
+  // Close modals listeners explicit IDs
   if (closeAuthModal) closeAuthModal.addEventListener('click', () => closeModal(authModal));
   if (closeDemoModal) closeDemoModal.addEventListener('click', () => closeModal(demoModal));
   if (closeInfoModal) closeInfoModal.addEventListener('click', () => closeModal(infoModal));
   if (btnOkInfo) btnOkInfo.addEventListener('click', () => closeModal(infoModal));
 
-  // Close modal when clicking outside card
-  [authModal, demoModal, infoModal].forEach(modal => {
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          closeModal(modal);
-        }
-      });
+  // Close modal when clicking outside card (backdrop)
+  document.querySelectorAll('.modal-overlay').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal(modal);
+      }
+    });
+  });
+
+  // Close modal with ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      document.querySelectorAll('.modal-overlay.active, .modal-overlay.show').forEach(m => closeModal(m));
     }
   });
 

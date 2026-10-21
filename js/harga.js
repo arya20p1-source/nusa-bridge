@@ -22,28 +22,28 @@ document.addEventListener('DOMContentLoaded', () => {
     '1': {
       months: 1,
       label: 'Paket UMKM Eksportir (1 Bulan)',
-      baseTotal: 120000,
-      monthlyRate: 120000,
-      savingsText: 'Ditagih bulanan Rp 120.000 &bull; Fleksibel tanpa komitmen jangka panjang',
-      monthlyDisplay: '120.000',
+      baseTotal: 50000,
+      monthlyRate: 50000,
+      savingsText: 'Ditagih bulanan Rp 50.000 &bull; Fleksibel tanpa komitmen jangka panjang',
+      monthlyDisplay: '50.000',
       periodDisplay: '/ bulan'
     },
     '5': {
       months: 5,
       label: 'Paket UMKM Eksportir (5 Bulan)',
-      baseTotal: 450000,
-      monthlyRate: 90000,
-      savingsText: 'Ditagih Rp 450.000 / 5 bulan &bull; Hemat Rp 150.000 dibanding bulanan',
-      monthlyDisplay: '90.000',
+      baseTotal: 200000,
+      monthlyRate: 40000,
+      savingsText: 'Ditagih Rp 200.000 / 5 bulan &bull; Hemat Rp 50.000 dibanding bulanan',
+      monthlyDisplay: '40.000',
       periodDisplay: '/ bulan'
     },
     '12': {
       months: 12,
       label: 'Paket UMKM Eksportir (1 Tahun)',
-      baseTotal: 700000,
-      monthlyRate: 58333,
-      savingsText: 'Ditagih Rp 700.000 / tahun &bull; Hemat Rp 740.000 vs bulanan (Paling Hemat)',
-      monthlyDisplay: '58.300',
+      baseTotal: 820000,
+      monthlyRate: 68333,
+      savingsText: 'Ditagih Rp 820.000 / tahun &bull; Solusi ekspor lengkap 12 bulan penuh',
+      monthlyDisplay: '68.300',
       periodDisplay: '/ bulan'
     }
   };
@@ -146,54 +146,144 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --------------------------------------------------------------------------
-  // 5. EVENT LISTENER KLAIM VOUCHER SUBSIDI (15% PASTI)
+  // 5. EVENT LISTENER KLAIM VOUCHER SUBSIDI (15% PASTI - TOGGLEABLE)
   // --------------------------------------------------------------------------
-  function activateVoucherSubsidy(showSuccessAlert = true) {
-    voucherClaimed = true;
+  function applyVoucherState(isActive, showNotification = true) {
+    voucherClaimed = isActive;
 
     try {
-      localStorage.setItem('nusabridge_voucher_claimed', 'true');
+      localStorage.setItem('nusabridge_voucher_claimed', voucherClaimed ? 'true' : 'false');
     } catch (e) {}
 
     if (btnSpinLucky) {
-      btnSpinLucky.disabled = true;
-      btnSpinLucky.innerHTML = '<span>✅ Voucher Subsidi 15% Aktif</span>';
-      btnSpinLucky.style.background = '#059669';
+      btnSpinLucky.disabled = false; // Selalu dapat diklik
+      if (voucherClaimed) {
+        btnSpinLucky.classList.add('active');
+        btnSpinLucky.innerHTML = '<span>✅ Kupon 15% Terpasang (Klik Batal)</span>';
+        btnSpinLucky.style.background = '#059669';
+      } else {
+        btnSpinLucky.classList.remove('active');
+        btnSpinLucky.innerHTML = '<span>🏷️ Terapkan Voucher 15%</span>';
+        btnSpinLucky.style.background = '';
+      }
     }
 
     if (luckySlotVal) luckySlotVal.innerText = '15%';
-    if (luckySlotSub) luckySlotSub.innerText = `Kode Aktif: ${VOUCHER_CODE}`;
+    if (luckySlotSub) luckySlotSub.innerText = `KODE: ${VOUCHER_CODE}`;
 
-    if (showSuccessAlert && luckyAnnouncementBar) {
-      luckyAnnouncementBar.style.display = 'flex';
-      if (luckyAnnouncementTitle) luckyAnnouncementTitle.innerText = '✅ Voucher Subsidi 15% Berhasil Diaktifkan!';
-      if (luckyAnnouncementMsg) {
-        luckyAnnouncementMsg.innerText = `Kupon ${VOUCHER_CODE} telah memotong harga Paket 5 Bulan menjadi Rp 382.500 dan Paket 1 Tahun menjadi Rp 595.000.`;
+    if (luckyAnnouncementBar) {
+      if (voucherClaimed) {
+        luckyAnnouncementBar.style.display = 'flex';
+        if (luckyAnnouncementTitle) luckyAnnouncementTitle.innerText = '✅ Voucher Subsidi 15% Berhasil Diaktifkan!';
+        if (luckyAnnouncementMsg) {
+          luckyAnnouncementMsg.innerText = `Kupon ${VOUCHER_CODE} telah memotong harga Paket 5 Bulan menjadi Rp 170.000 dan Paket 1 Tahun menjadi Rp 697.000.`;
+        }
+      } else {
+        luckyAnnouncementBar.style.display = 'none';
       }
     }
 
     updateProfessionalCard();
+
+    if (showNotification) {
+      if (typeof showToast === 'function') {
+        showToast(voucherClaimed 
+          ? '🏷️ Voucher Subsidi 15% Berhasil Diterapkan ke Paket!' 
+          : 'ℹ️ Voucher dibatalkan. Paket kembali ke harga normal.');
+      }
+      // Scroll halus ke kartu harga agar pengguna melihat potongan langsung
+      const cardsSection = document.querySelector('.section-pricing-cards');
+      if (cardsSection) {
+        cardsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
   }
 
   if (btnSpinLucky) {
-    btnSpinLucky.addEventListener('click', () => {
-      activateVoucherSubsidy(true);
+    btnSpinLucky.disabled = false;
+    btnSpinLucky.addEventListener('click', (e) => {
+      e.preventDefault();
+      applyVoucherState(!voucherClaimed, true);
     });
   }
 
   // Cek apakah sudah pernah klaim voucher sebelumnya di browser ini
   try {
     if (localStorage.getItem('nusabridge_voucher_claimed') === 'true') {
-      activateVoucherSubsidy(false);
+      applyVoucherState(true, false);
+    } else {
+      applyVoucherState(false, false);
     }
-  } catch (e) {}
+  } catch (e) {
+    applyVoucherState(false, false);
+  }
 
   // Inisialisasi awal kartu
   updateProfessionalCard();
 
   // --------------------------------------------------------------------------
-  // 6. EVENT LISTENER PILIH PAKET (BUKA MODAL AUTH & ISI STATUS DISKON)
+  // 6. EVENT LISTENER PILIH PAKET & KONTROL TUTUP MODAL LENGKAP
   // --------------------------------------------------------------------------
+  const closeAuthModal = document.getElementById('closeAuthModal');
+  const closeInfoModal = document.getElementById('closeInfoModal');
+  const btnOkInfo = document.getElementById('btnOkInfo');
+  const infoModal = document.getElementById('infoModal');
+
+  function openPricingModal(modal) {
+    if (!modal) return;
+    modal.style.display = 'flex';
+    modal.classList.add('active', 'show');
+  }
+
+  function closePricingModal(modal) {
+    if (!modal) return;
+    modal.classList.remove('active', 'show');
+    modal.style.display = 'none';
+  }
+
+  // Listener tombol silang [X] modal auth & info
+  if (closeAuthModal) {
+    closeAuthModal.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closePricingModal(authModal);
+    });
+  }
+
+  if (closeInfoModal) {
+    closeInfoModal.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closePricingModal(infoModal);
+    });
+  }
+
+  if (btnOkInfo) {
+    btnOkInfo.addEventListener('click', (e) => {
+      e.preventDefault();
+      closePricingModal(infoModal);
+    });
+  }
+
+  // Tutup jika klik area overlay di luar kotak modal
+  [authModal, infoModal].forEach(m => {
+    if (m) {
+      m.addEventListener('click', (e) => {
+        if (e.target === m) {
+          closePricingModal(m);
+        }
+      });
+    }
+  });
+
+  // Tutup jika tombol ESC ditekan
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      closePricingModal(authModal);
+      closePricingModal(infoModal);
+    }
+  });
+
   document.querySelectorAll('.btn-select-plan').forEach(btn => {
     btn.addEventListener('click', () => {
       const planName = btn.getAttribute('data-plan') || 'Paket Ekspor';
@@ -211,10 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Tampilkan Modal Pendaftaran
-      if (authModal) {
-        authModal.classList.add('active');
-        authModal.classList.add('show');
-      }
+      openPricingModal(authModal);
     });
   });
 

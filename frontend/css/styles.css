@@ -2129,16 +2129,26 @@ ul {
 
 .modal-close-btn {
   position: absolute;
-  top: 18px;
-  right: 18px;
-  font-size: 24px;
+  top: 14px;
+  right: 14px;
+  font-size: 26px;
   line-height: 1;
-  color: #94a3b8;
-  transition: color 0.2s;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .modal-close-btn:hover {
-  color: var(--navy-title);
+  color: #0f172a;
+  background: #f1f5f9;
 }
 
 @media (max-width: 640px) {

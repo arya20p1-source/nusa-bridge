@@ -147,7 +147,7 @@
             </div>
             <div class="b2b-buttons-wrap">
               <button class="btn btn-primary b2b-btn-apply" id="btnSpinLucky" type="button" data-i18n="voucher_btn_claim">
-                <span>Terapkan Voucher 15%</span>
+                <span>🏷️ Terapkan Voucher 15%</span>
               </button>
             </div>
           </div>
@@ -158,23 +158,9 @@
           <span class="bva-icon">✓</span>
           <div class="bva-content">
             <strong id="luckyAnnouncementTitle">Voucher Subsidi 15% Berhasil Diaktifkan!</strong>
-            <span id="luckyAnnouncementMsg">Kupon SUBSIDI-UMKM-15 berhasil memotong harga Paket 5 Bulan (menjadi Rp 382.500) dan Paket 1 Tahun (menjadi Rp 595.000). Potongan otomatis berlaku di form pendaftaran!</span>
+            <span id="luckyAnnouncementMsg">Kupon SUBSIDI-UMKM-15 berhasil memotong harga Paket 5 Bulan (menjadi Rp 170.000) dan Paket 1 Tahun (menjadi Rp 697.000). Potongan otomatis berlaku di form pendaftaran!</span>
           </div>
         </div>
-      </div>
-
-      <!-- Direct Admin Consultation Bar for Long-Term Plans (> 1 Tahun) -->
-      <div class="admin-wa-consult-banner">
-        <div class="awc-left">
-          <span class="awc-icon">💼</span>
-          <div>
-            <strong data-i18n="wa_banner_title">Ingin Berlangganan Lebih dari 1 Tahun atau Lisensi Koperasi UMKM?</strong>
-            <p data-i18n="wa_banner_desc">Dapatkan potongan harga volume khusus, multi-akun anggota, dan asistensi kepabeanan intensif.</p>
-          </div>
-        </div>
-        <a href="https://wa.me/6285735800491?text=Halo%20Admin%20NusaBridge%2C%20saya%20ingin%20berlangganan%20paket%20jangka%20panjang%20(lebih%20dari%201%20tahun)%20untuk%20usaha%20kami.%20Mohon%20informasi%20penawaran%20dan%20asistensi%20khusus." target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm" style="background:#10b981; border:none; text-decoration:none;">
-          <span data-i18n="wa_banner_btn">💬 Chat Admin via WhatsApp</span>
-        </a>
       </div>
 
     </div>
@@ -237,30 +223,30 @@
             <div class="billing-duration-selector">
               <span class="bds-label" data-i18n="duration_label">Pilih Durasi Paket:</span>
               <div class="bds-options" id="bdsOptionGroup">
-                <button type="button" class="bds-btn" data-dur="1" data-base="120000" data-label="1 Bulan">
+                <button type="button" class="bds-btn" data-dur="1" data-base="50000" data-label="1 Bulan">
                   <div class="bds-btn-left">
                     <span class="bds-radio"></span>
                     <span class="bds-name" data-i18n="dur_1m">1 Bulan</span>
                   </div>
-                  <span class="bds-rate">Rp 120.000 / bln</span>
+                  <span class="bds-rate">Rp 50.000 / bln</span>
                 </button>
 
-                <button type="button" class="bds-btn" data-dur="5" data-base="450000" data-label="5 Bulan">
+                <button type="button" class="bds-btn" data-dur="5" data-base="200000" data-label="5 Bulan">
                   <div class="bds-btn-left">
                     <span class="bds-radio"></span>
                     <span class="bds-name" data-i18n="dur_5m">5 Bulan</span>
-                    <span class="bds-badge save" data-i18n="save_25">Hemat 25%</span>
+                    <span class="bds-badge save" data-i18n="save_20">Hemat 20%</span>
                   </div>
-                  <span class="bds-rate">Rp 90.000 / bln</span>
+                  <span class="bds-rate">Rp 40.000 / bln</span>
                 </button>
 
-                <button type="button" class="bds-btn active" data-dur="12" data-base="700000" data-label="1 Tahun">
+                <button type="button" class="bds-btn active" data-dur="12" data-base="820000" data-label="1 Tahun">
                   <div class="bds-btn-left">
                     <span class="bds-radio"></span>
                     <span class="bds-name" data-i18n="dur_1y">1 Tahun</span>
-                    <span class="bds-badge best" data-i18n="save_51">Hemat 51%</span>
+                    <span class="bds-badge best" data-i18n="save_best">12 Bulan Penuh</span>
                   </div>
-                  <span class="bds-rate">Rp 58.300 / bln</span>
+                  <span class="bds-rate">Rp 68.300 / bln</span>
                 </button>
               </div>
             </div>
@@ -268,18 +254,18 @@
             <!-- Harga Normal & Potongan Diskon -->
             <div class="price-origin-box" id="originWrapProfessional" style="display:none;">
               <span class="pob-label" data-i18n="original_price_label">Harga Asli:</span>
-              <s class="pob-strike" id="pobStrikePrice">Rp 700.000</s>
+              <s class="pob-strike" id="pobStrikePrice">Rp 820.000</s>
               <span class="pob-badge" id="saveBadgeProfessional">Subsidi 15%</span>
             </div>
 
             <div class="plan-price-box">
               <span class="currency">Rp</span>
-              <span class="price-amount" id="priceAmountDisplay">58.300</span>
+              <span class="price-amount" id="priceAmountDisplay">68.300</span>
               <span class="period" id="pricePeriodDisplay" data-i18n="per_month">/ bulan</span>
             </div>
 
             <div class="plan-billing-summary" id="billingSummaryText" style="margin-top: 6px; font-size: 12px; font-weight: 700; color: #1e3a8a; background: #eff6ff; padding: 6px 10px; border-radius: 6px; border: 1px solid #bfdbfe;">
-              Ditagih Rp 700.000 / tahun &bull; Hemat Rp 740.000 vs bulanan
+              Ditagih Rp 820.000 / tahun &bull; Solusi ekspor lengkap 12 bulan penuh
             </div>
             
             <div class="vat-included-tag" data-i18n="plan_2_vat">
@@ -301,7 +287,7 @@
           </ul>
 
           <div class="plan-action">
-            <button class="btn btn-primary btn-block btn-select-plan" data-plan="Paket UMKM Eksportir / Professional (1 Tahun)" data-price="700000" id="btnSelectPlanDynamic" data-i18n="plan_2_btn">Pilih Paket Professional (1 Tahun)</button>
+            <button class="btn btn-primary btn-block btn-select-plan" data-plan="Paket UMKM Eksportir / Professional (1 Tahun)" data-price="820000" id="btnSelectPlanDynamic" data-i18n="plan_2_btn">Pilih Paket Professional (1 Tahun)</button>
           </div>
         </div>
 
@@ -572,7 +558,7 @@
   <!-- Auth Modal -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-card">
-      <button class="modal-close-btn" id="closeAuthModal">&times;</button>
+      <button class="modal-close-btn" id="closeAuthModal" type="button" aria-label="Tutup">&times;</button>
       <div class="modal-header">
         <img src="assets/logo-transparent.webp" alt="NusaBridge" class="modal-logo">
         <h3 class="modal-title" id="authModalTitle">Pilih Paket Layanan</h3>
@@ -603,7 +589,7 @@
   <!-- Info Modal -->
   <div class="modal-overlay" id="infoModal">
     <div class="modal-card">
-      <button class="modal-close-btn" id="closeInfoModal">&times;</button>
+      <button class="modal-close-btn" id="closeInfoModal" type="button" aria-label="Tutup">&times;</button>
       <div class="modal-header">
         <h3 class="modal-title" id="infoModalTitle">Informasi</h3>
         <p class="modal-subtitle" id="infoModalBody">Informasi modul NusaBridge.</p>
