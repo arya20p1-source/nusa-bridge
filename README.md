@@ -39,28 +39,50 @@ Dengan mengintegrasikan teknologi **AI Agent**, NusaBridge secara otomatis memfa
 
 ```text
 nusa-bridge/
-├── assets/                       # Aset gambar, ikon, dan ilustrasi (Format WebP & SVG)
-│   ├── icons/                    # Kumpulan ikon fitur dan alur kerja ekspor
-│   ├── favicon-192.png           # Favicon untuk PWA / mobile browser
-│   ├── favicon-512.png           # High-res app icon
-│   ├── logo.webp                 # Logo utama NusaBridge
-│   ├── logo-transparent.webp     # Logo transparan untuk header
-│   ├── og-preview.png            # Gambar preview Open Graph untuk medsos (1200x630)
-│   ├── og-preview.webp           # Versi WebP OG Preview
-│   ├── visual-1.webp             # Artwork utama hero section
-│   └── wave-top.svg              # Divider gelombang SVG
-├── favicon.ico                   # Root favicon untuk browser
-├── index.html                    # Halaman utama landing page & semantic SEO
-├── script.js                     # Logika interaktivitas, alur demo, & kamus bahasa (ID/EN)
-├── styles.css                    # Design system, styling vanilla CSS, & media queries
-└── README.md                     # Dokumentasi proyek
+├── public/                       # File statis yang disajikan apa adanya
+│   ├── assets/                   # Gambar, ikon, dan ilustrasi (WebP & SVG)
+│   │   ├── icons/                # Ikon fitur dan alur kerja ekspor
+│   │   ├── products/             # Foto produk katalog
+│   │   └── slices/               # Potongan ilustrasi landing page
+│   └── favicon.ico
+├── src/                          # Kode aplikasi (layout ala React)
+│   ├── pages/                    # Entry HTML per halaman
+│   │   ├── index.html            # Landing page & semantic SEO
+│   │   ├── produk.html           # Katalog & RFQ
+│   │   ├── solusi.html           # Studio AI & dokumen ekspor
+│   │   └── harga.html            # Paket, kalkulator, FAQ
+│   ├── scripts/                  # Logika per halaman + modul bersama
+│   │   ├── app.js                # Navigasi, i18n ID/EN, modal, sesi, chat AI
+│   │   ├── produk.js
+│   │   ├── solusi.js
+│   │   ├── harga.js
+│   │   └── radar.js              # Widget radar kapal kargo
+│   ├── styles/                   # Design system + CSS per halaman
+│   │   ├── styles.css
+│   │   ├── produk.css
+│   │   ├── solusi.css
+│   │   ├── harga.css
+│   │   └── radar.css
+│   └── data/
+│       └── products.js           # Dataset 120 produk untuk katalog
+├── server/                       # Express API + static server
+│   ├── server.js
+│   ├── package.json
+│   └── .env.example
+├── database/                     # JSON-store (db.js + data contoh)
+├── gemini.js                     # Skrip uji koneksi Google Gemini
+├── vercel.json                   # Rewrites deploy statis Vercel
+├── .env.example                  # Template environment
+└── package.json
 ```
+
+Pemetaan URL: `src/pages/*.html` disajikan di root (`/`, `/produk.html`, `/solusi.html`, `/harga.html`), `src/styles` di `/styles`, `src/scripts` di `/scripts`, `src/data` di `/data`, dan `public/assets` di `/assets`.
 
 ---
 
 ## 🚀 Cara Menjalankan Secara Lokal
 
-Website ini dibangun menggunakan teknologi **Vanilla Web** murni (HTML5, CSS3, JS), sehingga tidak memerlukan instalasi dependensi rumit seperti Node.js atau bundler.
+Frontend tetap **Vanilla Web** (HTML5, CSS3, JS) tanpa bundler, tetapi kini memakai struktur folder ala React (`src/pages`, `src/scripts`, `src/styles`, `src/data`, `public`). Backend Express menyajikan halaman sekaligus API, jadi jalankan lewat Node.js agar path `/styles`, `/scripts`, `/data`, dan `/assets` ter-resolve.
 
 ### 1. Clone Repositori
 ```bash
@@ -68,23 +90,16 @@ git clone https://github.com/smartonesda/nusa-bridge.git
 cd nusa-bridge
 ```
 
-### 2. Jalankan Local Server
+### 2. Jalankan Server
 
-Anda dapat menjalankan local server dengan salah satu cara berikut:
+```bash
+npm install
+npm start
+```
 
-- **Menggunakan Python (Rekomendasi)**:
-  ```bash
-  python -m http.server 3000
-  ```
-  Lalu buka browser di: [http://localhost:3000](http://localhost:3000)
+Buka [http://localhost:5000](http://localhost:5000). Cek API di [http://localhost:5000/api/health](http://localhost:5000/api/health).
 
-- **Menggunakan VS Code Live Server**:
-  Klik kanan pada file `index.html` lalu pilih **"Open with Live Server"**.
-
-- **Menggunakan Node.js `serve`**:
-  ```bash
-  npx serve .
-  ```
+> Catatan: `python -m http.server` atau Live Server saja tidak cukup karena halaman memakai path absolut (`/styles`, `/scripts`, `/data`, `/assets`) yang dilayani oleh Express.
 
 ---
 

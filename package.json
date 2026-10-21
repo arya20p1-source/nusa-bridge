@@ -5,7 +5,7 @@
   "main": "gemini.js",
   "type": "module",
   "scripts": {
-    "start": "node backend/server.js",
+    "start": "node server/server.js",
     "test-gemini": "node gemini.js"
   },
   "repository": {

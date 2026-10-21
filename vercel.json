@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/", "destination": "/src/pages/index.html" },
+    { "source": "/index.html", "destination": "/src/pages/index.html" },
+    { "source": "/produk.html", "destination": "/src/pages/produk.html" },
+    { "source": "/solusi.html", "destination": "/src/pages/solusi.html" },
+    { "source": "/harga.html", "destination": "/src/pages/harga.html" },
+    { "source": "/styles/:path*", "destination": "/src/styles/:path*" },
+    { "source": "/scripts/:path*", "destination": "/src/scripts/:path*" },
+    { "source": "/data/:path*", "destination": "/src/data/:path*" },
+    { "source": "/assets/:path*", "destination": "/public/assets/:path*" },
+    { "source": "/favicon.ico", "destination": "/public/favicon.ico" }
+  ]
+}

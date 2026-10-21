@@ -25,8 +25,8 @@ Browser
 Contoh hubungan saat pengguna mengirim pertanyaan:
 
 1. Pengguna mengetik di halaman Solusi AI.
-2. `js/solusi.js` membaca input dan mengirim `fetch('/api/ai/chat', ...)`.
-3. `backend/server.js` menerima request pada endpoint `/api/ai/chat`.
+2. `src/scripts/solusi.js` membaca input dan mengirim `fetch('/api/ai/chat', ...)`.
+3. `server/server.js` menerima request pada endpoint `/api/ai/chat`.
 4. Backend memilih jawaban dari Gemini bila tersedia, atau mesin aturan lokal untuk demo.
 5. Backend mengirim respons JSON.
 6. JavaScript browser membaca respons dan menampilkan gelembung chat.
@@ -37,18 +37,27 @@ Hal penting: browser dan server adalah dua program berbeda. JavaScript browser m
 
 | Bagian | File penting | Tugas utama |
 |---|---|---|
-| Beranda | `index.html`, `css/styles.css`, `js/script.js` | Struktur beranda, gaya bersama, navigasi, bahasa, modal dan interaksi umum |
-| Katalog | `produk.html`, `css/produk.css`, `js/produk.js`, `js/products-data.js` | Daftar produk, pencarian, kategori, pengurutan, halaman produk, form RFQ |
-| Solusi AI | `solusi.html`, `css/solusi.css`, `js/solusi.js` | Chat, demo analisis, dokumen dan verifikasi simulasi; sebagian alur memanggil API backend |
-| Harga | `harga.html`, `css/harga.css`, `js/harga.js` | Paket, simulasi kupon diskon, kalkulator, dan FAQ |
-| Radar | `css/radar.css`, `js/radar.js` | Animasi kapal dan tampilan telemetri simulasi pada beranda |
-| Server | `backend/server.js`, `backend/package.json` | Server Express, endpoint API, penyajian halaman, integrasi AI |
+| Beranda | `src/pages/index.html`, `src/styles/styles.css`, `src/scripts/app.js` | Struktur beranda, gaya bersama, navigasi, bahasa, modal dan interaksi umum |
+| Katalog | `src/pages/produk.html`, `src/styles/produk.css`, `src/scripts/produk.js`, `src/data/products.js` | Daftar produk, pencarian, kategori, pengurutan, halaman produk, form RFQ |
+| Solusi AI | `src/pages/solusi.html`, `src/styles/solusi.css`, `src/scripts/solusi.js` | Chat, demo analisis, dokumen dan verifikasi simulasi; sebagian alur memanggil API backend |
+| Harga | `src/pages/harga.html`, `src/styles/harga.css`, `src/scripts/harga.js` | Paket, simulasi kupon diskon, kalkulator, dan FAQ |
+| Radar | `src/styles/radar.css`, `src/scripts/radar.js` | Animasi kapal dan tampilan telemetri simulasi pada beranda |
+| Server | `server/server.js`, `server/package.json` | Server Express, endpoint API, penyajian halaman, integrasi AI |
 | Data | `database/db.js`, `database/*.json` | Fungsi baca/tulis dan data contoh berbasis JSON |
-| Gambar dan ikon | `assets/` | Aset visual yang dipakai halaman |
+| Gambar dan ikon | `public/assets/` | Aset visual yang dipakai halaman |
 
-### Ada folder `frontend/` dan file HTML di root
+### Struktur ala React (tanpa framework)
 
-Ada salinan halaman dan aset JavaScript/CSS di root dan `frontend/`. Server Express menyajikan `frontend/` lebih dahulu, sedangkan beberapa perintah server statis bisa menyajikan file root. Karena itu, jika perubahan tidak terlihat, periksa **halaman dan skrip mana yang benar-benar dimuat** melalui URL dan tag `<script src="...">`/`<link href="...">` di HTML. Hindari mengedit banyak salinan sekaligus tanpa membandingkannya; perubahan pada satu salinan belum tentu mengubah halaman yang sedang dibuka.
+Proyek kini memakai pemisahan folder seperti proyek React, tetapi tetap HTML/CSS/JS murni:
+
+- `src/pages/` — entry point tiap halaman (`src/pages/index.html`, `src/pages/produk.html`, `src/pages/solusi.html`, `src/pages/harga.html`).
+- `src/scripts/` — logika per halaman; `app.js` berisi kode bersama (navigasi, bahasa, modal, sesi, chat AI).
+- `src/styles/` — `styles.css` sebagai design system, sisanya CSS khusus halaman.
+- `src/data/` — dataset produk (`products.js`) yang mengisi `window.NUSA_PRODUCTS_DATA`.
+- `public/` — aset statis (`public/assets/`, `favicon.ico`) yang disajikan apa adanya.
+- `server/` — Express API + static server.
+
+Tidak ada proses build. Server memetakan `src/pages` ke root URL, `src/styles` ke `/styles`, `src/scripts` ke `/scripts`, `src/data` ke `/data`, dan `public/assets` ke `/assets`. Jika perubahan tidak terlihat, pastikan server dijalankan lewat `npm start` (bukan Live Server biasa) dan periksa path `src`/`href` di HTML.
 
 ## 3. Fondasi web yang perlu dipahami
 
@@ -71,7 +80,7 @@ Nama `id` adalah penghubung antara HTML dan JavaScript. Jika diganti di satu tem
 
 ### CSS: tampilan dan tata letak
 
-CSS memilih elemen dengan selector (contoh `.nav-link`, `#navMenu`) lalu menetapkan tampilannya. Berkas `css/styles.css` berisi gaya umum; berkas seperti `css/produk.css` menambahkan gaya khusus halaman. Cari aturan `@media` untuk melihat bagaimana tata letak berubah pada layar kecil.
+CSS memilih elemen dengan selector (contoh `.nav-link`, `#navMenu`) lalu menetapkan tampilannya. Berkas `src/styles/styles.css` berisi gaya umum; berkas seperti `src/styles/produk.css` menambahkan gaya khusus halaman. Cari aturan `@media` untuk melihat bagaimana tata letak berubah pada layar kecil.
 
 Konsep yang perlu dikenali:
 
@@ -108,7 +117,7 @@ Operator `?.` (optional chaining) mencegah pemanggilan properti pada nilai `null
 
 ### A. Katalog produk: filter dan pagination
 
-`js/products-data.js` menyediakan data pada `window.NUSA_PRODUCTS_DATA`. `js/produk.js` mengambilnya, menyimpan kategori/halaman aktif sebagai state, memfilter dan mengurutkan data, kemudian merender kartu produk ke dalam grid.
+`src/data/products.js` menyediakan data pada `window.NUSA_PRODUCTS_DATA`. `src/scripts/produk.js` mengambilnya, menyimpan kategori/halaman aktif sebagai state, memfilter dan mengurutkan data, kemudian merender kartu produk ke dalam grid.
 
 Rumus pagination yang muncul dalam kode:
 
@@ -123,7 +132,7 @@ Saat gambar produk gagal dimuat, event `onerror` mengganti gambar dengan aset fa
 
 ### B. Form RFQ: browser memanggil backend
 
-RFQ (*Request for Quotation*) adalah permintaan penawaran. Dalam `js/produk.js`, submit form mencegah reload halaman, membaca input, lalu mengirim data ke `POST /api/rfq`. Backend menerima body JSON dan menyimpan objek RFQ ke file `database/rfq.json`.
+RFQ (*Request for Quotation*) adalah permintaan penawaran. Dalam `src/scripts/produk.js`, submit form mencegah reload halaman, membaca input, lalu mengirim data ke `POST /api/rfq`. Backend menerima body JSON dan menyimpan objek RFQ ke file `database/rfq.json`.
 
 Contoh sederhana bentuk request:
 
@@ -140,7 +149,7 @@ Pahami tiga bagian penting: **URL dan method**, **headers**, lalu **body**. `awa
 
 ### C. Harga: kalkulasi dan penyimpanan browser
 
-`js/harga.js` menghitung potongan harga dengan pola:
+`src/scripts/harga.js` menghitung potongan harga dengan pola:
 
 ```text
 nilai diskon = harga dasar × persentase / 100
@@ -153,13 +162,13 @@ Hasil kupon demo disimpan dengan `localStorage`, sehingga tetap ada setelah hala
 
 ### D. Radar: animasi bukan data kapal sungguhan
 
-`js/radar.js` memiliki objek kapal contoh, state seperti kapal aktif/kecepatan/jeda, dan timer yang memperbarui posisi. Fungsi SVG seperti `getPointAtLength()` dapat mengambil titik pada jalur gambar. `Math.atan2(dy, dx)` membantu menghitung sudut agar ikon menghadap arah jalur.
+`src/scripts/radar.js` memiliki objek kapal contoh, state seperti kapal aktif/kecepatan/jeda, dan timer yang memperbarui posisi. Fungsi SVG seperti `getPointAtLength()` dapat mengambil titik pada jalur gambar. `Math.atan2(dy, dx)` membantu menghitung sudut agar ikon menghadap arah jalur.
 
 Walaupun tampilan menyebut AIS/telemetri dan rute nyata, kode yang dipelajari di sini menggerakkan **data simulasi lokal**. Tidak ada koneksi AIS langsung dalam alur ini. Ini contoh bagus membedakan animasi visual dari integrasi data eksternal.
 
 ### E. Halaman Solusi AI: UI dan backend
 
-`js/solusi.js` mengelola input percakapan, menambahkan bubble ke DOM, lalu mengirim pesan ke `/api/ai/chat`. Backend mencoba menggunakan paket `@google/genai` apabila `GEMINI_API_KEY` disetel. Tanpa key atau ketika akses AI gagal, ada logika respons lokal berbasis aturan/kata kunci untuk demo.
+`src/scripts/solusi.js` mengelola input percakapan, menambahkan bubble ke DOM, lalu mengirim pesan ke `/api/ai/chat`. Backend mencoba menggunakan paket `@google/genai` apabila `GEMINI_API_KEY` disetel. Tanpa key atau ketika akses AI gagal, ada logika respons lokal berbasis aturan/kata kunci untuk demo.
 
 Jawaban lokal berbasis aturan bukan model AI dan tidak setara dengan sumber hukum/perdagangan resmi. Verifikasi regulasi, tarif, dokumen, NIB, atau sertifikasi dengan sumber berwenang sebelum mengambil keputusan bisnis.
 
@@ -169,7 +178,7 @@ Bagian antarmuka juga mendemonstrasikan dokumen, pemeriksaan format NIB, dan alu
 
 ### Express: menerima request HTTP
 
-`backend/server.js` membuat aplikasi Express. Middleware seperti `express.json()` membaca body JSON, `cors()` mengatur akses lintas origin, dan `express.static()` menyajikan file situs. Endpoint menghubungkan method dan path dengan fungsi:
+`server/server.js` membuat aplikasi Express. Middleware seperti `express.json()` membaca body JSON, `cors()` mengatur akses lintas origin, dan `express.static()` menyajikan file situs. Endpoint menghubungkan method dan path dengan fungsi:
 
 | Method dan path | Kegunaan dalam prototipe |
 |---|---|
@@ -196,7 +205,7 @@ File di `database/` adalah penyimpanan JSON sederhana, bukan MySQL/PostgreSQL. C
 
 Endpoint autentikasi dalam kode ini membuat token sederhana dan login demo; tidak ada alur autentikasi produksi dengan pemeriksaan password yang aman dan sesi/token tervalidasi. Nomor NIB dan status terverifikasi pada data tertentu dibuat untuk simulasi, bukan pemeriksaan langsung ke OSS. Jangan gunakan data pribadi sungguhan pada demo ini.
 
-API key Gemini harus berada di environment backend, misalnya dalam `backend/.env`:
+API key Gemini harus berada di environment backend, misalnya dalam `server/.env`:
 
 ```text
 GEMINI_API_KEY=isi_api_key_di_lingkungan_lokal
@@ -233,7 +242,7 @@ Gunakan urutan ini pada fitur apa pun:
 3. Cari selector dan event handler-nya di JavaScript.
 4. Ikuti fungsi yang dipanggil, serta data/state yang dibaca dan diubah.
 5. Jika ada `fetch`, catat endpoint, method, body, dan bentuk JSON respons.
-6. Temukan endpoint di `backend/server.js`.
+6. Temukan endpoint di `server/server.js`.
 7. Ikuti pemanggilan `db.*` sampai ke file JSON yang dibaca/ditulis.
 8. Coba skenario normal, input kosong, hasil kosong, dan server mati.
 
@@ -267,7 +276,7 @@ Jangan mulai dengan mengubah banyak file sekaligus. Buat satu perubahan kecil, j
 
 ## 10. Pertanyaan cek pemahaman
 
-1. Apa bedanya `js/produk.js` dengan `backend/server.js`?
+1. Apa bedanya `src/scripts/produk.js` dengan `server/server.js`?
 2. Mengapa `DOMContentLoaded` dipakai sebelum mencari elemen HTML?
 3. Apa perbedaan `req.body`, `req.query`, dan `req.params`?
 4. Bagaimana filter kategori memengaruhi jumlah halaman katalog?
