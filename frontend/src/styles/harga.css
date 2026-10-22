@@ -1,0 +1,909 @@
+/* ==========================================================================
+   NUSABRIDGE - PAKET & HARGA LAYANAN STYLES
+   File: css/harga.css
+   Deskripsi: Styling halaman paket harga, kalkulator margin, dan FAQ accordion
+   
+   Konsep Belajar:
+   - CSS Toggle Switch (Animasi tombol geser)
+   - CSS Card Highlight (Kartu Unggulan dengan batas kontras & ribbon)
+   - Accordion transisi max-height halus
+   ========================================================================== */
+
+/* ---------- 1. WIDGET UNDIAN DISKON HOKI PERUSAHAAN (GAMIFIKASI GTNIC) ---------- */
+/* GTNIC 2026 Environment Note Alert Banner */
+.gtnic-environment-note {
+  max-width: 920px;
+  margin: 1.25rem auto 0;
+  background: rgba(59, 130, 246, 0.18);
+  border: 1.5px solid rgba(147, 197, 253, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #ffffff;
+  text-align: left;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.2);
+}
+
+.gen-badge {
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.gtnic-environment-note p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #f1f5f9;
+}
+
+/* ==========================================================================
+   B2B SUBSIDY VOUCHER PROGRAM (CLEAN, PROFESSIONAL & ELEGANT B2B STYLE)
+   ========================================================================== */
+.b2b-voucher-section,
+.lucky-promo-container {
+  max-width: 960px;
+  margin: 1.8rem auto 0;
+  text-align: left;
+}
+
+.b2b-voucher-card,
+.lucky-promo-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-2xl);
+  padding: 1.8rem 2.2rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (max-width: 820px) {
+  .b2b-voucher-card,
+  .lucky-promo-card {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+}
+
+.b2b-voucher-badge-wrap,
+.lucky-card-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 0.85rem;
+}
+
+.b2b-voucher-badge,
+.lucky-sparkle-badge {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.b2b-voucher-status,
+.lucky-live-status {
+  font-size: 11px;
+  font-weight: 700;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.b2b-voucher-title,
+.lucky-promo-title {
+  color: var(--navy-title);
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0 0 8px;
+  line-height: 1.35;
+}
+
+.b2b-voucher-desc,
+.lucky-promo-desc {
+  color: #475569;
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.b2b-voucher-desc strong,
+.lucky-promo-desc strong {
+  color: #0f172a;
+}
+
+.b2b-coupon-box,
+.lucky-promo-action-col {
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: var(--radius-xl);
+  padding: 1.25rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.b2b-coupon-inner,
+.lucky-slot-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.b2b-coupon-label,
+.ls-label {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.b2b-coupon-value,
+.ls-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 2px 0;
+}
+
+.b2b-coupon-code,
+.ls-sub {
+  font-size: 11.5px;
+  color: #059669;
+  font-weight: 700;
+  background: #ecfdf5;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #a7f3d0;
+}
+
+.b2b-buttons-wrap,
+.lucky-buttons-wrap {
+  width: 100%;
+}
+
+.b2b-btn-apply,
+.btn-spin-lucky {
+  width: 100%;
+  padding: 10px 16px;
+  font-weight: 750;
+  font-size: 13.5px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(27, 104, 248, 0.25);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.b2b-btn-apply:hover,
+.btn-spin-lucky:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(27, 104, 248, 0.35);
+}
+
+.b2b-voucher-alert,
+.lucky-announcement-bar {
+  margin-top: 1.25rem;
+  background: #ecfdf5;
+  border: 1.5px solid #a7f3d0;
+  border-radius: var(--radius-lg);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #065f46;
+  animation: fadeIn 0.35s ease;
+}
+
+.bva-icon,
+.lab-icon {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #059669;
+  flex-shrink: 0;
+}
+
+.bva-content strong,
+.lab-content strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #065f46;
+  margin-bottom: 2px;
+}
+
+.bva-content span,
+.lab-content span {
+  font-size: 12.5px;
+  color: #047857;
+  line-height: 1.45;
+}
+
+.lab-content span {
+  font-size: 12px;
+  color: #f1f5f9;
+}
+
+/* Notice Masa Aktif Free Trial 1 Bulan */
+.plan-trial-notice {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  font-size: 11.5px;
+  color: #1e40af;
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  line-height: 1.45;
+}
+
+.ptn-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Tampilan Harga Coret & Diskon Hoki */
+.price-origin-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 2px;
+}
+
+.pob-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.pob-strike {
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 700;
+  text-decoration: line-through;
+}
+
+.pob-badge {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 12px;
+}
+
+.lucky-save-tag {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #059669;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+/* Flash Efek Saat Harga Berubah Terpotong Diskon */
+.price-amount.discount-highlight {
+  animation: pricePulseGreen 1.2s ease-out;
+  color: #059669 !important;
+}
+
+@keyframes pricePulseGreen {
+  0% { transform: scale(1.15); color: #10b981; }
+  100% { transform: scale(1); }
+}
+
+/* ---------- 2. GRID KARTU HARGA (PRICING TIERS) ---------- */
+.section-pricing-cards {
+  margin-top: 2rem;
+  margin-bottom: 4.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1240px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+@media (max-width: 1024px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 580px;
+  }
+}
+
+/* WhatsApp CTA Button & Enterprise Card */
+.btn-whatsapp {
+  background: #25D366;
+  color: #ffffff !important;
+  font-weight: 750;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  transition: all 0.25s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: center;
+}
+
+.btn-whatsapp:hover {
+  background: #1eb954;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(37, 211, 102, 0.45);
+  color: #ffffff !important;
+}
+
+.badge-wa {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+.enterprise-card {
+  border: 1.5px dashed rgba(16, 185, 129, 0.6);
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.enterprise-card:hover {
+  border-color: #10b981;
+}
+
+.price-plan-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-2xl);
+  padding: 2.4rem 2rem;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.price-plan-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.12);
+}
+
+/* Kartu Unggulan (Pro Go-Global) */
+.price-plan-card.featured {
+  border: 2px solid var(--primary);
+  box-shadow: 0 16px 44px rgba(27, 104, 248, 0.18);
+  padding-top: 2.85rem;
+}
+
+.popular-ribbon {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 5px 18px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(27, 104, 248, 0.35);
+  white-space: nowrap;
+  z-index: 5;
+}
+
+.plan-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.plan-badge.primary {
+  color: var(--primary);
+}
+
+.plan-name {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--navy-title);
+  margin: 6px 0 8px;
+}
+
+.plan-desc {
+  font-size: 13px;
+  color: var(--text-body);
+  line-height: 1.55;
+  margin-bottom: 0.75rem;
+  min-height: 58px;
+}
+
+.plan-price-box {
+  margin: 1.25rem 0 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.plan-price-box .currency {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--navy-title);
+}
+
+.plan-price-box .price-amount {
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: var(--navy-title);
+}
+
+.plan-price-box .price-amount.custom {
+  font-size: 1.85rem;
+}
+
+.plan-price-box .period {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.plan-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 1.5rem 0;
+}
+
+.plan-features {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  font-size: 13.5px;
+  flex: 1;
+  margin-bottom: 2rem;
+}
+
+.plan-features li {
+  display: flex;
+  gap: 10px;
+  color: var(--text-body);
+}
+
+.pf-check {
+  color: #10b981;
+  font-weight: 800;
+}
+
+.pf-dimmed {
+  opacity: 0.5;
+}
+
+.pf-cross {
+  color: var(--text-muted);
+}
+
+/* ---------- 3. KALKULATOR ESTIMASI MARGIN EKSPOR UMKM ---------- */
+.section-profit-calc {
+  padding: 4.5rem 0;
+  background: var(--bg-page);
+  border-top: 1px solid var(--border-light);
+}
+
+.profit-calc-card {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: var(--radius-2xl);
+  padding: 2.75rem;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--border-light);
+}
+
+.calc-body-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2.75rem;
+  margin-top: 2rem;
+  align-items: center;
+}
+
+@media (max-width: 780px) {
+  .calc-body-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.calc-group {
+  margin-bottom: 1.1rem;
+}
+
+.calc-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy-title);
+  margin-bottom: 6px;
+}
+
+.input-prefix-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.input-prefix-box:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(27, 104, 248, 0.12);
+}
+
+.ip-curr {
+  background: var(--bg-card-subtle);
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-right: 1px solid var(--border-light);
+}
+
+.input-prefix-box input {
+  flex: 1;
+  padding: 11px 14px;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 14.5px;
+}
+
+.calc-summary-box {
+  background: linear-gradient(135deg, #071933 0%, #172b4d 100%);
+  color: #ffffff;
+  border-radius: var(--radius-xl);
+  padding: 2.2rem;
+  box-shadow: 0 12px 32px rgba(7, 25, 51, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cs-label {
+  font-size: 12px;
+  color: #94a3b8;
+  display: block;
+}
+
+.cs-val-big {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #38bdf8;
+  margin: 4px 0 2px;
+  letter-spacing: -0.5px;
+}
+
+.cs-val-idr {
+  font-size: 14.5px;
+  color: #a7f3d0;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.cs-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 14px;
+  margin-bottom: 1.75rem;
+}
+
+.cs-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.cs-safe-tag {
+  color: #34d399;
+  font-weight: 700;
+}
+
+/* ---------- 4. ACCORDION FAQ ---------- */
+.section-faq {
+  padding: 4.5rem 0 5.5rem;
+}
+
+.faq-accordion-list {
+  max-width: 820px;
+  margin: 2rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.faq-item {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.faq-item:hover {
+  border-color: rgba(27, 104, 248, 0.3);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+}
+
+.faq-question {
+  width: 100%;
+  padding: 1.3rem 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--navy-title);
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.faq-toggle {
+  font-size: 1.5rem;
+  color: var(--primary);
+  font-weight: 600;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), padding 0.35s ease;
+  padding: 0 1.6rem;
+  color: var(--text-body);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 320px;
+  padding: 0 1.6rem 1.4rem;
+}
+
+.faq-item.active .faq-toggle {
+  transform: rotate(45deg);
+}
+
+/* ==========================================================================
+   BILLING DURATION SWITCHER & VAT TRANSPARENCY STYLES
+   ========================================================================== */
+.billing-duration-selector {
+  margin: 14px 0 8px 0;
+}
+
+.bds-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 750;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.bds-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bds-btn {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  color: var(--navy-title);
+}
+
+.bds-btn:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.bds-btn.active {
+  background: #eff6ff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(27, 104, 248, 0.15);
+}
+
+.bds-btn-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bds-radio {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.bds-btn.active .bds-radio {
+  border-color: var(--primary);
+}
+
+.bds-btn.active .bds-radio::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.bds-name {
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.bds-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.bds-badge.save {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.bds-badge.best {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.bds-rate {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.vat-included-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   REFUND GUARANTEE & TAX/EXCHANGE RATE TRANSPARENCY SECTION
+   ========================================================================== */
+.section-guarantee-transparency {
+  padding: 40px 0 60px 0;
+  background-color: var(--bg-white);
+  border-top: 1px solid var(--border-light);
+}
+
+.guarantee-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .guarantee-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guarantee-box {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.guarantee-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border-color: #cbd5e1;
+}
+
+.gb-icon {
+  font-size: 32px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.gb-content h4 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--navy-title);
+  margin: 0 0 8px 0;
+  line-height: 1.35;
+}
+
+.gb-content p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #334155;
+  margin: 0;
+}
+
+.gb-content strong {
+  color: var(--navy-title);
+}
+
