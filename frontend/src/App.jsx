@@ -9,6 +9,7 @@ import InfoModal from './components/InfoModal.jsx';
 import RadarModal from './components/RadarModal.jsx';
 import TxModal from './components/TxModal.jsx';
 import useHashScroll from './hooks/useHashScroll.jsx';
+import AutoTranslate from './components/AutoTranslate.jsx';
 
 import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
@@ -43,6 +44,7 @@ export default function App() {
       <Footer />
 
       {/* Global overlays */}
+      <AutoTranslate />
       <ToastStack />
       <AuthModal />
       <DemoModal />

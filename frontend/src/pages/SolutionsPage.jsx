@@ -110,6 +110,7 @@ function nowTime() {
 // Gemini-style chat workspace
 // =====================================================================
 function GeminiWorkspace() {
+  const { lang } = useApp();
   const [msgs, setMsgs] = useState([
     {
       sender: 'agent',
@@ -215,7 +216,7 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: promptText, apiKey: storedApiKey }),
+        body: JSON.stringify({ message: promptText, apiKey: storedApiKey, lang }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -1065,6 +1066,7 @@ function KycTab() {
 // Tab 4: Escrow Vault 4 Fase
 // =====================================================================
 function EscrowTab() {
+  const { lang } = useApp();
   const [phase, setPhase] = useState(1);
   const [vaultStatus, setVaultStatus] = useState('VAULT AKTIF');
   const [chat, setChat] = useState([
@@ -1119,7 +1121,7 @@ function EscrowTab() {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, apiKey: localStorage.getItem('nb_gemini_api_key') || '' }),
+        body: JSON.stringify({ message: text, apiKey: localStorage.getItem('nb_gemini_api_key') || '', lang }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);

@@ -498,6 +498,48 @@ app.post('/api/ai/set-key', async (req, res) => {
   }
 });
 
+// Endpoint terjemahan UI (ID -> EN) memakai Gemini, dengan hasil berupa array
+app.post('/api/translate', async (req, res) => {
+  const texts = Array.isArray(req.body.texts)
+    ? req.body.texts.filter((t) => typeof t === 'string' && t.trim()).slice(0, 80)
+    : [];
+  if (!texts.length) return res.json({ success: true, translations: [] });
+
+  const key = getStoredApiKey();
+  if (!key) return res.json({ success: false, translations: [], message: 'Gemini belum aktif' });
+
+  try {
+    const ai = await getGenAIClient();
+    if (!ai) return res.json({ success: false, translations: [], message: 'SDK Gemini tidak tersedia' });
+
+    const prompt = `Translate each item of the JSON array below from Indonesian to natural, concise English suitable for a website UI.
+Rules: keep brand/product names, numbers, currency, HS codes, URLs and emails unchanged; do not add explanations; keep the same order and length.
+Return ONLY a valid JSON array of strings.
+
+${JSON.stringify(texts)}`;
+
+    for (const model of ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-2.0-flash']) {
+      try {
+        const resp = await ai.models.generateContent({
+          model,
+          contents: prompt,
+          config: { responseMimeType: 'application/json' },
+        });
+        const raw = String(resp?.text || '').replace(/^```json\s*|\s*```$/g, '').trim();
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr) && arr.length) {
+          return res.json({ success: true, translations: arr });
+        }
+      } catch (modelErr) {
+        console.warn('[translate] model failed:', model, modelErr.message);
+      }
+    }
+    return res.json({ success: false, translations: [], message: 'Gagal menerjemahkan teks' });
+  } catch (err) {
+    return res.json({ success: false, translations: [], message: err.message });
+  }
+});
+
 app.post('/api/ai/chat', async (req, res) => {
   const { message = '', context = {} } = req.body;
   const rawText = String(message || '').trim();
@@ -1173,10 +1215,15 @@ Sementara itu, Anda bisa mencoba:
           `${i + 1}. ${p.name} | ${p.origin} | $${Number(p.price).toFixed(2)}/${p.unit} | MOQ ${p.moq} ${p.unit} | HS ${p.hsCode || '-'}`
         ).join('\n');
 
+        const reqLang = String(req.body.lang || '').toLowerCase() === 'en' ? 'en' : 'id';
+        const languageRule = reqLang === 'en'
+          ? '2. Selalu jawab dalam BAHASA INGGRIS (English), walaupun pengguna menulis dalam bahasa Indonesia. Seluruh jawaban harus berbahasa Inggris.'
+          : '2. Gunakan bahasa yang dipakai pengguna (Indonesia atau Inggris), santun, ringkas, dan jelas.';
+
         const sysInstruction = `Kamu adalah NusaBridge AI, asisten cerdas untuk platform ekspor-impor UMKM Indonesia (GTNIC 2026).
 ATURAN:
 1. Jawab SEMUA pertanyaan pengguna dengan akurat dan membantu, termasuk topik umum (sains, sejarah, teknologi, coding, matematika, pengetahuan umum). Jangan menolak dengan alasan "di luar topik".
-2. Gunakan bahasa yang dipakai pengguna (Indonesia atau Inggris), santun, ringkas, dan jelas.
+${languageRule}
 3. Untuk pertanyaan produk, harga, MOQ, asal, atau HS code, WAJIB memakai data katalog di bawah ini. Jangan mengarang produk atau angka di luar daftar.
 4. Jika data yang diminta tidak ada di katalog, katakan terus terang lalu tawarkan produk yang mirip.
 5. Format jawaban dengan Markdown bersih (bold, bullet, tabel bila perlu), tanpa tag HTML mentah.
