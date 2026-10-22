@@ -314,6 +314,31 @@ function isPlausibleApiKey(key) {
   return /^AIza[0-9A-Za-z_-]{30,60}$/.test(key);
 }
 
+function getRawStoredKey() {
+  const envKey = process.env.GEMINI_API_KEY;
+  if (envKey && String(envKey).trim()) return String(envKey).trim();
+  try {
+    const fs = require('fs');
+    const geminiJsonPath = path.join(__dirname, 'gemini.json');
+    if (fs.existsSync(geminiJsonPath)) {
+      const data = JSON.parse(fs.readFileSync(geminiJsonPath, 'utf8'));
+      if (data.apiKey && String(data.apiKey).trim()) return String(data.apiKey).trim();
+    }
+  } catch (e) {}
+  return '';
+}
+
+function describeKeyProblem(rawKey) {
+  if (!rawKey) return 'API key belum diisi. Tempel API key Gemini (AIza...) lewat tombol "Atur API Key".';
+  if (/^AQ\./.test(rawKey) || rawKey.includes('AQ.')) {
+    return 'Yang tersimpan adalah OAuth token (AQ...) dari Gemini CLI — itu bukan API key dan sudah tidak berlaku. Ganti dengan API key asli AIza... dari https://aistudio.google.com/app/apikey';
+  }
+  if (/\s/.test(rawKey) || /[()]/.test(rawKey)) {
+    return 'Nilai API key mengandung spasi/tanda kurung. Tempel HANYA key-nya (AIza...), tanpa teks lain.';
+  }
+  return 'Format API key tidak valid (harus diawali "AIza..."). Ambil dari https://aistudio.google.com/app/apikey';
+}
+
 function getStoredApiKey() {
   const fromEnv = sanitizeApiKey(process.env.GEMINI_API_KEY);
   if (isPlausibleApiKey(fromEnv)) return fromEnv;
@@ -391,7 +416,7 @@ app.get('/api/ai/status', async (req, res) => {
       success: true,
       connected: false,
       model: 'NusaBridge Smart Intelligence Engine',
-      reason: 'API key belum diisi atau formatnya tidak valid (harus diawali "AIza...").',
+      reason: describeKeyProblem(getRawStoredKey()),
     });
   }
   const payload = await checkGeminiConnection(currentKey);
@@ -403,14 +428,18 @@ app.get('/api/ai/status', async (req, res) => {
 app.post('/api/ai/set-key', async (req, res) => {
   try {
     const { apiKey } = req.body;
-    const cleanKey = sanitizeApiKey(apiKey);
+    const rawKey = String(apiKey || '').trim();
+    const cleanKey = sanitizeApiKey(rawKey);
     if (!cleanKey) {
       return res.status(400).json({ success: false, message: 'API Key tidak boleh kosong.' });
     }
     if (!isPlausibleApiKey(cleanKey)) {
+      const isOauthToken = /^AQ\./.test(rawKey) || /^AQ\./.test(cleanKey);
       return res.status(400).json({
         success: false,
-        message: 'Format API Key tidak valid. Key Gemini asli diawali "AIza..." tanpa spasi/tanda kurung. Ambil dari https://aistudio.google.com/app/apikey',
+        message: isOauthToken
+          ? 'Yang Anda tempel adalah OAuth token (dari Gemini CLI / Google login), bukan API key — token ini juga hanya berlaku ±1 jam dan tidak diterima Gemini API. Ambil API key asli berawalan "AIza..." di https://aistudio.google.com/app/apikey (Create API key), lalu tempel di sini.'
+          : 'Format API Key tidak valid. Key Gemini asli diawali "AIza..." tanpa spasi/tanda kurung. Ambil dari https://aistudio.google.com/app/apikey',
       });
     }
 
