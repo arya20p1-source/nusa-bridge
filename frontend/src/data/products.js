@@ -240,7 +240,7 @@ export const PRODUCTS_DATA = [
     "moq": 800,
     "origin": "Kintamani, Bangli, Bali",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-1.webp",
+    "image": "/assets/products/kopi-7.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 85.2, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -278,7 +278,7 @@ export const PRODUCTS_DATA = [
     "moq": 200,
     "origin": "Kintamani, Bali",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-2.webp",
+    "image": "/assets/products/kopi-8.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 85.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -316,7 +316,7 @@ export const PRODUCTS_DATA = [
     "moq": 1000,
     "origin": "Bondowoso, Jawa Timur",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-3.webp",
+    "image": "/assets/products/kopi-9.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 85.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -354,7 +354,7 @@ export const PRODUCTS_DATA = [
     "moq": 200,
     "origin": "Gunung Puntang, Jawa Barat",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-4.webp",
+    "image": "/assets/products/kopi-10.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 87.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -392,7 +392,7 @@ export const PRODUCTS_DATA = [
     "moq": 1000,
     "origin": "Ngada, Flores, NTT",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-5.webp",
+    "image": "/assets/products/kopi-1.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 86.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -430,7 +430,7 @@ export const PRODUCTS_DATA = [
     "moq": 250,
     "origin": "Bajawa, NTT",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-6.webp",
+    "image": "/assets/products/kopi-2.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 86.2, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -468,7 +468,7 @@ export const PRODUCTS_DATA = [
     "moq": 500,
     "origin": "Lembah Baliem, Papua",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-1.webp",
+    "image": "/assets/products/kopi-3.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 88.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -506,7 +506,7 @@ export const PRODUCTS_DATA = [
     "moq": 150,
     "origin": "Wamena, Papua Pegunungan",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-2.webp",
+    "image": "/assets/products/kopi-4.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 88.2, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -544,7 +544,7 @@ export const PRODUCTS_DATA = [
     "moq": 3000,
     "origin": "Dampit, Malang, Jawa Timur",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-3.webp",
+    "image": "/assets/products/kopi-5.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 83.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -582,7 +582,7 @@ export const PRODUCTS_DATA = [
     "moq": 500,
     "origin": "Malang Selatan, Jawa Timur",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-4.webp",
+    "image": "/assets/products/kopi-6.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 83.8, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -620,7 +620,7 @@ export const PRODUCTS_DATA = [
     "moq": 2500,
     "origin": "Gunung Sindoro, Temanggung",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-5.webp",
+    "image": "/assets/products/kopi-7.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 84.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -658,7 +658,7 @@ export const PRODUCTS_DATA = [
     "moq": 300,
     "origin": "Temanggung, Jawa Tengah",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-6.webp",
+    "image": "/assets/products/kopi-8.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 84.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -696,7 +696,7 @@ export const PRODUCTS_DATA = [
     "moq": 1000,
     "origin": "Dairi, Sumatera Utara",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-1.webp",
+    "image": "/assets/products/kopi-9.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 84.8, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -734,7 +734,7 @@ export const PRODUCTS_DATA = [
     "moq": 800,
     "origin": "Kayu Aro, Kerinci, Jambi",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-2.webp",
+    "image": "/assets/products/kopi-10.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 86.8, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -772,7 +772,7 @@ export const PRODUCTS_DATA = [
     "moq": 200,
     "origin": "Gunung Kerinci, Jambi",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-3.webp",
+    "image": "/assets/products/kopi-1.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 87.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -810,7 +810,7 @@ export const PRODUCTS_DATA = [
     "moq": 1000,
     "origin": "Solok, Sumatera Barat",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-4.webp",
+    "image": "/assets/products/kopi-2.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 85.3, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -848,7 +848,7 @@ export const PRODUCTS_DATA = [
     "moq": 500,
     "origin": "Gunung Argopuro, Jember",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-5.webp",
+    "image": "/assets/products/kopi-3.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 86.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -886,7 +886,7 @@ export const PRODUCTS_DATA = [
     "moq": 250,
     "origin": "Manggarai, Flores, NTT",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-6.webp",
+    "image": "/assets/products/kopi-4.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 85.8, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -924,7 +924,7 @@ export const PRODUCTS_DATA = [
     "moq": 5000,
     "origin": "Tanggamus, Lampung",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-1.webp",
+    "image": "/assets/products/kopi-5.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 82.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -962,7 +962,7 @@ export const PRODUCTS_DATA = [
     "moq": 3000,
     "origin": "Pagar Alam, Sumatera Selatan",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-2.webp",
+    "image": "/assets/products/kopi-6.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 83.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -1000,7 +1000,7 @@ export const PRODUCTS_DATA = [
     "moq": 250,
     "origin": "Enrekang, Sulawesi Selatan",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-3.webp",
+    "image": "/assets/products/kopi-7.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 85.6, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -1038,7 +1038,7 @@ export const PRODUCTS_DATA = [
     "moq": 500,
     "origin": "Pangururan, Samosir",
     "hsCode": "0901.11.10",
-    "image": "/assets/products/kopi-4.webp",
+    "image": "/assets/products/kopi-8.webp",
     "desc": "Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 86.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -1076,7 +1076,7 @@ export const PRODUCTS_DATA = [
     "moq": 25,
     "origin": "Gayo Lues, Aceh",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-5.webp",
+    "image": "/assets/products/kopi-9.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 89.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -1114,7 +1114,7 @@ export const PRODUCTS_DATA = [
     "moq": 200,
     "origin": "Ciwidey, Bandung, Jabar",
     "hsCode": "0901.21.10",
-    "image": "/assets/products/kopi-6.webp",
+    "image": "/assets/products/kopi-10.webp",
     "desc": "Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 86.9, kadar air terkontrol <12%, dan sistem sortasi defect ketat.",
     "specs": [
       {
@@ -1380,7 +1380,7 @@ export const PRODUCTS_DATA = [
     "moq": 300,
     "origin": "Banda Neira, Maluku",
     "hsCode": "0908.21.00",
-    "image": "/assets/products/rempah-1.webp",
+    "image": "/assets/products/rempah-7.webp",
     "desc": "Selaput biji pala kering warna merah oranye keemasan, aroma intens dan rasa gurih rempah tinggi.",
     "specs": [
       {
@@ -1418,7 +1418,7 @@ export const PRODUCTS_DATA = [
     "moq": 50,
     "origin": "Aceh Barat Daya",
     "hsCode": "3301.29.90",
-    "image": "/assets/products/rempah-2.webp",
+    "image": "/assets/products/rempah-8.webp",
     "desc": "Minyak atsiri hasil suling daun nilam tua dengan kandungan Patchouli Alcohol murni >32% untuk parfum global.",
     "specs": [
       {
@@ -1456,7 +1456,7 @@ export const PRODUCTS_DATA = [
     "moq": 1500,
     "origin": "Temanggung, Jawa Tengah",
     "hsCode": "0910.11.00",
-    "image": "/assets/products/rempah-3.webp",
+    "image": "/assets/products/rempah-9.webp",
     "desc": "Irisan jahe merah kering oven higienis dengan kadar gingerol pekat dan aroma pedas hangat maksimal.",
     "specs": [
       {
@@ -1494,7 +1494,7 @@ export const PRODUCTS_DATA = [
     "moq": 500,
     "origin": "Banyumas, Jawa Tengah",
     "hsCode": "0908.31.00",
-    "image": "/assets/products/rempah-4.webp",
+    "image": "/assets/products/rempah-10.webp",
     "desc": "Polong kapulaga putih kering bersih tanpa pemutih kimia, aroma sitrus mint rempah khas jamu.",
     "specs": [
       {
@@ -1532,7 +1532,7 @@ export const PRODUCTS_DATA = [
     "moq": 1500,
     "origin": "Sukoharjo, Jawa Tengah",
     "hsCode": "0910.30.00",
-    "image": "/assets/products/rempah-5.webp",
+    "image": "/assets/products/rempah-1.webp",
     "desc": "Rimpang kunyit dan temulawak kering kupas dengan kadar curcuminoid alami tinggi siap ekstraksi farmasi.",
     "specs": [
       {
@@ -1570,7 +1570,7 @@ export const PRODUCTS_DATA = [
     "moq": 800,
     "origin": "Sumatera Utara",
     "hsCode": "0909.61.10",
-    "image": "/assets/products/rempah-6.webp",
+    "image": "/assets/products/rempah-2.webp",
     "desc": "Bunga lawang bintang 8 utuh sempurna dengan aroma anethole manis kuat dan warna cokelat mengkilap.",
     "specs": [
       {
@@ -1608,7 +1608,7 @@ export const PRODUCTS_DATA = [
     "moq": 3000,
     "origin": "Lampung",
     "hsCode": "0909.21.00",
-    "image": "/assets/products/rempah-1.webp",
+    "image": "/assets/products/rempah-3.webp",
     "desc": "Biji ketumbar kering aroma sitrus lembut, sortasi mekanik bebas kotoran dan batu.",
     "specs": [
       {
@@ -1646,7 +1646,7 @@ export const PRODUCTS_DATA = [
     "moq": 100,
     "origin": "Garut, Jawa Barat",
     "hsCode": "3301.29.10",
-    "image": "/assets/products/rempah-2.webp",
+    "image": "/assets/products/rempah-4.webp",
     "desc": "Minyak atsiri serai wangi Java Type dengan kandungan Geraniol >85% dan Citronellal >35%.",
     "specs": [
       {
@@ -1684,7 +1684,7 @@ export const PRODUCTS_DATA = [
     "moq": 100,
     "origin": "Purwokerto, Jawa Tengah",
     "hsCode": "3301.29.90",
-    "image": "/assets/products/rempah-3.webp",
+    "image": "/assets/products/rempah-5.webp",
     "desc": "Minyak sulingan daun cengkeh murni untuk bahan baku industri aroma kimia dan farmasi dunia.",
     "specs": [
       {
@@ -1722,7 +1722,7 @@ export const PRODUCTS_DATA = [
     "moq": 1000,
     "origin": "Padang, Sumatera Barat",
     "hsCode": "0906.20.00",
-    "image": "/assets/products/rempah-4.webp",
+    "image": "/assets/products/rempah-6.webp",
     "desc": "Bubuk kayu manis halus 80-100 mesh beraroma tajam manis untuk kebutuhan bakery dan bumbu internasional.",
     "specs": [
       {
@@ -1760,7 +1760,7 @@ export const PRODUCTS_DATA = [
     "moq": 30,
     "origin": "Alor, NTT",
     "hsCode": "0905.10.00",
-    "image": "/assets/products/rempah-5.webp",
+    "image": "/assets/products/rempah-7.webp",
     "desc": "Batang vanila jenis Tahitensis beraroma fruity floral unik khas kepulauan Alor NTT.",
     "specs": [
       {
@@ -1798,7 +1798,7 @@ export const PRODUCTS_DATA = [
     "moq": 100,
     "origin": "Samosir, Sumatera Utara",
     "hsCode": "0910.99.90",
-    "image": "/assets/products/rempah-6.webp",
+    "image": "/assets/products/rempah-8.webp",
     "desc": "Merica liar khas Danau Toba dengan sensasi getar lidah sitrus aromatik yang diburu chef Michelin dunia.",
     "specs": [
       {
@@ -1836,7 +1836,7 @@ export const PRODUCTS_DATA = [
     "moq": 2000,
     "origin": "Flores, NTT",
     "hsCode": "1207.99.90",
-    "image": "/assets/products/rempah-1.webp",
+    "image": "/assets/products/rempah-9.webp",
     "desc": "Biji kemiri kupas bulat utuh warna putih krem dengan kadar minyak nabati tinggi.",
     "specs": [
       {
@@ -1874,7 +1874,7 @@ export const PRODUCTS_DATA = [
     "moq": 1500,
     "origin": "Sumba, NTT",
     "hsCode": "1404.90.90",
-    "image": "/assets/products/rempah-2.webp",
+    "image": "/assets/products/rempah-10.webp",
     "desc": "Serutan kayu secang alami penghasil warna merah alami dan antioksidan brazilin tinggi.",
     "specs": [
       {
@@ -1912,7 +1912,7 @@ export const PRODUCTS_DATA = [
     "moq": 100,
     "origin": "Namlea, Pulau Buru, Maluku",
     "hsCode": "3301.29.90",
-    "image": "/assets/products/rempah-3.webp",
+    "image": "/assets/products/rempah-1.webp",
     "desc": "Minyak kayu putih distilasi tradisional daun gelam liar pulau Buru dengan cineol alami >60%.",
     "specs": [
       {
@@ -1950,7 +1950,7 @@ export const PRODUCTS_DATA = [
     "moq": 1000,
     "origin": "Madura, Jawa Timur",
     "hsCode": "0904.11.90",
-    "image": "/assets/products/rempah-4.webp",
+    "image": "/assets/products/rempah-2.webp",
     "desc": "Lada panjang kering Madura kaya piperin berkhasiat herbal tinggi untuk pasar jamu Jerman & Tiongkok.",
     "specs": [
       {
@@ -1988,7 +1988,7 @@ export const PRODUCTS_DATA = [
     "moq": 2000,
     "origin": "Pariaman, Sumatera Barat",
     "hsCode": "0813.40.00",
-    "image": "/assets/products/rempah-5.webp",
+    "image": "/assets/products/rempah-3.webp",
     "desc": "Irisan buah asam kandis kering matahari beraroma asam pekat untuk bumbu kuliner Asia Tenggara.",
     "specs": [
       {
@@ -2026,7 +2026,7 @@ export const PRODUCTS_DATA = [
     "moq": 1500,
     "origin": "Purbalingga, Jawa Tengah",
     "hsCode": "0910.99.10",
-    "image": "/assets/products/rempah-6.webp",
+    "image": "/assets/products/rempah-4.webp",
     "desc": "Rimpang lengkuas merah kering iris higienis bebas jamur untuk industri bumbu dan jamu ekspor.",
     "specs": [
       {
@@ -2064,7 +2064,7 @@ export const PRODUCTS_DATA = [
     "moq": 1000,
     "origin": "Tuban, Jawa Timur",
     "hsCode": "0910.99.90",
-    "image": "/assets/products/rempah-1.webp",
+    "image": "/assets/products/rempah-5.webp",
     "desc": "Kencur putih kering iris dengan aroma khas etil p-metoksisinamat pekat.",
     "specs": [
       {
@@ -2102,7 +2102,7 @@ export const PRODUCTS_DATA = [
     "moq": 50,
     "origin": "Minahasa, Sulawesi Utara",
     "hsCode": "3301.29.90",
-    "image": "/assets/products/rempah-2.webp",
+    "image": "/assets/products/rempah-6.webp",
     "desc": "Minyak atsiri hasil suling biji pala pilihan dengan komponen myristicin dan safrole berstandar ekspor.",
     "specs": [
       {
@@ -2140,7 +2140,7 @@ export const PRODUCTS_DATA = [
     "moq": 10,
     "origin": "Malinau, Kalimantan Utara",
     "hsCode": "1211.90.99",
-    "image": "/assets/products/rempah-3.webp",
+    "image": "/assets/products/rempah-7.webp",
     "desc": "Serpihan kayu gaharu super aroma manis balsam pekat untuk dupa dan aromaterapi Timur Tengah.",
     "specs": [
       {
@@ -2178,7 +2178,7 @@ export const PRODUCTS_DATA = [
     "moq": 5000,
     "origin": "Manado, Sulawesi Utara",
     "hsCode": "0907.20.00",
-    "image": "/assets/products/rempah-4.webp",
+    "image": "/assets/products/rempah-8.webp",
     "desc": "Tangkai bunga cengkeh kering pilihan untuk bahan baku ekstraksi minyak eugenol industri.",
     "specs": [
       {
@@ -2216,7 +2216,7 @@ export const PRODUCTS_DATA = [
     "moq": 500,
     "origin": "Sumenep, Madura",
     "hsCode": "2005.99.90",
-    "image": "/assets/products/rempah-5.webp",
+    "image": "/assets/products/rempah-9.webp",
     "desc": "Bawang merah goreng renyah tanpa campuran tepung berlebihan, aroma harum manis tahan lama.",
     "specs": [
       {
@@ -2254,7 +2254,7 @@ export const PRODUCTS_DATA = [
     "moq": 15,
     "origin": "Kupang, NTT",
     "hsCode": "1211.90.98",
-    "image": "/assets/products/rempah-6.webp",
+    "image": "/assets/products/rempah-10.webp",
     "desc": "Serpihan kayu cendana merah Kupang kaya santalol alami beraroma wangi kayu abadi.",
     "specs": [
       {
@@ -2520,7 +2520,7 @@ export const PRODUCTS_DATA = [
     "moq": 80,
     "origin": "Tasikmalaya, Jawa Barat",
     "hsCode": "9405.19.00",
-    "image": "/assets/products/kriya-1.webp",
+    "image": "/assets/products/kriya-7.webp",
     "desc": "Kap lampu gantung interior anyaman serat bambu halus dengan fitting listrik standar CE / UL.",
     "specs": [
       {
@@ -2558,7 +2558,7 @@ export const PRODUCTS_DATA = [
     "moq": 50,
     "origin": "Biak, Papua",
     "hsCode": "7009.92.00",
-    "image": "/assets/products/kriya-2.webp",
+    "image": "/assets/products/kriya-8.webp",
     "desc": "Cermin dekorasi dinding kombinasi kerang simping alami laut tropis dengan backing kayu kokoh.",
     "specs": [
       {
@@ -2596,7 +2596,7 @@ export const PRODUCTS_DATA = [
     "moq": 60,
     "origin": "Kebumen, Jawa Tengah",
     "hsCode": "5702.20.00",
-    "image": "/assets/products/kriya-3.webp",
+    "image": "/assets/products/kriya-9.webp",
     "desc": "Karpet lantai anyaman tangan serat daun pandan laut tahan lama, sejuk, dan biodegradable.",
     "specs": [
       {
@@ -2634,7 +2634,7 @@ export const PRODUCTS_DATA = [
     "moq": 250,
     "origin": "Klaten, Jawa Tengah",
     "hsCode": "4602.19.00",
-    "image": "/assets/products/kriya-4.webp",
+    "image": "/assets/products/kriya-10.webp",
     "desc": "Kotak tisu estetik ramah lingkungan dari serat pelepah pisang abaka kering dengan pelapis anti-rayap.",
     "specs": [
       {
@@ -2672,7 +2672,7 @@ export const PRODUCTS_DATA = [
     "moq": 400,
     "origin": "Wonosari, Gunungkidul",
     "hsCode": "4419.90.00",
-    "image": "/assets/products/kriya-5.webp",
+    "image": "/assets/products/kriya-1.webp",
     "desc": "Set sendok garpu kayu sawo warna merah bata natural tanpa pewarna kimia berstandar food contact FDA.",
     "specs": [
       {
@@ -2710,7 +2710,7 @@ export const PRODUCTS_DATA = [
     "moq": 60,
     "origin": "Singkawang, Kalimantan Barat",
     "hsCode": "6911.10.00",
-    "image": "/assets/products/kriya-6.webp",
+    "image": "/assets/products/kriya-2.webp",
     "desc": "Vas keramik glasir tungku naga legendaris Singkawang dengan motif naga timbul artistik.",
     "specs": [
       {
@@ -2748,7 +2748,7 @@ export const PRODUCTS_DATA = [
     "moq": 100,
     "origin": "Cirebon, Jawa Barat",
     "hsCode": "4602.12.00",
-    "image": "/assets/products/kriya-1.webp",
+    "image": "/assets/products/kriya-3.webp",
     "desc": "Dekorasi dinding bohemian motif mandala lingkaran dari rotan manau dan kubu grey natural.",
     "specs": [
       {
@@ -2786,7 +2786,7 @@ export const PRODUCTS_DATA = [
     "moq": 600,
     "origin": "Tasikmalaya, Jawa Barat",
     "hsCode": "4602.19.00",
-    "image": "/assets/products/kriya-2.webp",
+    "image": "/assets/products/kriya-4.webp",
     "desc": "Tatakan piring meja makan bundar diameter 38 cm anyaman serat mendong tahan panas.",
     "specs": [
       {
@@ -2824,7 +2824,7 @@ export const PRODUCTS_DATA = [
     "moq": 30,
     "origin": "Cirebon, Jawa Barat",
     "hsCode": "9401.79.00",
-    "image": "/assets/products/kriya-3.webp",
+    "image": "/assets/products/kriya-5.webp",
     "desc": "Kursi santai taman rotan sintetis PE anyaman tangan tahan sinar UV matahari dan air hujan.",
     "specs": [
       {
@@ -2862,7 +2862,7 @@ export const PRODUCTS_DATA = [
     "moq": 80,
     "origin": "Bantul, Yogyakarta",
     "hsCode": "4420.19.00",
-    "image": "/assets/products/kriya-4.webp",
+    "image": "/assets/products/kriya-6.webp",
     "desc": "Topeng kayu sengon ukir tangan motif batik klasik Panji Asmorobangun bernilai koleksi tinggi.",
     "specs": [
       {
@@ -2900,7 +2900,7 @@ export const PRODUCTS_DATA = [
     "moq": 200,
     "origin": "Rote Ndao, NTT",
     "hsCode": "4602.19.00",
-    "image": "/assets/products/kriya-5.webp",
+    "image": "/assets/products/kriya-7.webp",
     "desc": "Keranjang multifungsi anyaman daun lontar kering tahan air tradisi turun-temurun pulau Rote.",
     "specs": [
       {
@@ -2938,7 +2938,7 @@ export const PRODUCTS_DATA = [
     "moq": 120,
     "origin": "Sukoharjo, Jawa Tengah",
     "hsCode": "4419.19.00",
-    "image": "/assets/products/kriya-6.webp",
+    "image": "/assets/products/kriya-8.webp",
     "desc": "Mangkuk salad kayu trembesi solid tanpa sambungan dengan alur corak kayu kontras alami.",
     "specs": [
       {
@@ -2976,7 +2976,7 @@ export const PRODUCTS_DATA = [
     "moq": 300,
     "origin": "Ubud, Bali",
     "hsCode": "4420.90.00",
-    "image": "/assets/products/kriya-1.webp",
+    "image": "/assets/products/kriya-9.webp",
     "desc": "Lampu aromaterapi batok kelapa ukir motif bunga teratai yang memancarkan pendar cahaya indah.",
     "specs": [
       {
@@ -3014,7 +3014,7 @@ export const PRODUCTS_DATA = [
     "moq": 20,
     "origin": "Blora, Jawa Tengah",
     "hsCode": "4420.19.00",
-    "image": "/assets/products/kriya-2.webp",
+    "image": "/assets/products/kriya-10.webp",
     "desc": "Karya seni pahat kayu jati bekas rel kereta kuno berseni tinggi tahan ratusan tahun.",
     "specs": [
       {
@@ -3052,7 +3052,7 @@ export const PRODUCTS_DATA = [
     "moq": 60,
     "origin": "Magelang, Jawa Tengah",
     "hsCode": "9405.29.00",
-    "image": "/assets/products/kriya-3.webp",
+    "image": "/assets/products/kriya-1.webp",
     "desc": "Lampu meja tidur eksotis dari bonggol akar bambu hutan kering dengan kap kain linen alami.",
     "specs": [
       {
@@ -3090,7 +3090,7 @@ export const PRODUCTS_DATA = [
     "moq": 250,
     "origin": "Yogyakarta",
     "hsCode": "4419.90.00",
-    "image": "/assets/products/kriya-4.webp",
+    "image": "/assets/products/kriya-2.webp",
     "desc": "Set tatakan gelas kayu mahoni ukir laser motif geometris batik nusantara lengkap dengan holder.",
     "specs": [
       {
@@ -3128,7 +3128,7 @@ export const PRODUCTS_DATA = [
     "moq": 150,
     "origin": "Boyolali, Jawa Tengah",
     "hsCode": "4602.19.00",
-    "image": "/assets/products/kriya-5.webp",
+    "image": "/assets/products/kriya-3.webp",
     "desc": "Tudung saji penutup makanan anyaman bambu rapat bebas lalat dan serangga, mudah dibersihkan.",
     "specs": [
       {
@@ -3166,7 +3166,7 @@ export const PRODUCTS_DATA = [
     "moq": 70,
     "origin": "Sekarbela, Mataram, NTB",
     "hsCode": "4420.90.00",
-    "image": "/assets/products/kriya-6.webp",
+    "image": "/assets/products/kriya-4.webp",
     "desc": "Kotak perhiasan kayu bertatahkan kerang mutiara teknik cukli khas suku Sasak Lombok.",
     "specs": [
       {
@@ -3204,7 +3204,7 @@ export const PRODUCTS_DATA = [
     "moq": 100,
     "origin": "Denpasar, Bali",
     "hsCode": "6304.99.00",
-    "image": "/assets/products/kriya-1.webp",
+    "image": "/assets/products/kriya-5.webp",
     "desc": "Dekorasi makrame dinding tali katun unbleached 4mm gaya bohemian dengan gantungan kayu apung.",
     "specs": [
       {
@@ -3242,7 +3242,7 @@ export const PRODUCTS_DATA = [
     "moq": 400,
     "origin": "Majalengka, Jawa Barat",
     "hsCode": "6405.90.00",
-    "image": "/assets/products/kriya-2.webp",
+    "image": "/assets/products/kriya-6.webp",
     "desc": "Sandal kamar hotel & spa berbahan anyaman serat rami goni dengan sol karet anti slip.",
     "specs": [
       {
@@ -3280,7 +3280,7 @@ export const PRODUCTS_DATA = [
     "moq": 10,
     "origin": "Agats, Asmat, Papua Selatan",
     "hsCode": "4420.19.00",
-    "image": "/assets/products/kriya-3.webp",
+    "image": "/assets/products/kriya-7.webp",
     "desc": "Karya seni ukir magis suku Asmat kayu besi asli bersertifikat kurasi budaya Dinas Kebudayaan.",
     "specs": [
       {
@@ -3318,7 +3318,7 @@ export const PRODUCTS_DATA = [
     "moq": 200,
     "origin": "Tasikmalaya, Jawa Barat",
     "hsCode": "4602.19.00",
-    "image": "/assets/products/kriya-4.webp",
+    "image": "/assets/products/kriya-8.webp",
     "desc": "Keranjang hampers anyaman mendong kombinasi kulit sintetis premium untuk kemasan gift global.",
     "specs": [
       {
@@ -3356,7 +3356,7 @@ export const PRODUCTS_DATA = [
     "moq": 80,
     "origin": "Jepara, Jawa Tengah",
     "hsCode": "4419.90.00",
-    "image": "/assets/products/kriya-5.webp",
+    "image": "/assets/products/kriya-9.webp",
     "desc": "Nampan kayu sonokeling langka warna cokelat gelap keunguan dengan corak serat legendaris.",
     "specs": [
       {
@@ -3394,7 +3394,7 @@ export const PRODUCTS_DATA = [
     "moq": 30,
     "origin": "Bulukumba, Sulawesi Selatan",
     "hsCode": "9503.00.00",
-    "image": "/assets/products/kriya-6.webp",
+    "image": "/assets/products/kriya-10.webp",
     "desc": "Miniatur kapal layar Pinisi warisan maritim dunia UNESCO berbahan kayu jati detail presisi.",
     "specs": [
       {
@@ -3660,7 +3660,7 @@ export const PRODUCTS_DATA = [
     "moq": 8,
     "origin": "Sumba Timur, NTT",
     "hsCode": "5208.41.00",
-    "image": "/assets/products/tekstil-1.webp",
+    "image": "/assets/products/tekstil-7.webp",
     "desc": "Kain tenun sakral motif kuda kepahlawanan tenun tangan 8 bulan dengan akar mengkudu dan lumpur hitam.",
     "specs": [
       {
@@ -3698,7 +3698,7 @@ export const PRODUCTS_DATA = [
     "moq": 15,
     "origin": "Ende, Flores, NTT",
     "hsCode": "5208.49.00",
-    "image": "/assets/products/tekstil-2.webp",
+    "image": "/assets/products/tekstil-8.webp",
     "desc": "Kain tenun ikat motif geometris khas suku Lio Ende berbahan benang katun pintal tangan lembut.",
     "specs": [
       {
@@ -3736,7 +3736,7 @@ export const PRODUCTS_DATA = [
     "moq": 5,
     "origin": "Palembang, Sumatera Selatan",
     "hsCode": "5007.20.00",
-    "image": "/assets/products/tekstil-3.webp",
+    "image": "/assets/products/tekstil-9.webp",
     "desc": "Ratu kain wastra nusantara kombinasi sutra tenun ATBM dan pakan benang emas murni berkilau anggun.",
     "specs": [
       {
@@ -3774,7 +3774,7 @@ export const PRODUCTS_DATA = [
     "moq": 10,
     "origin": "Pandai Sikek, Tanah Datar, Sumbar",
     "hsCode": "5007.90.00",
-    "image": "/assets/products/tekstil-4.webp",
+    "image": "/assets/products/tekstil-10.webp",
     "desc": "Kain songket tenun tangan motif pucuak rabuang dan saik galamai warisan leluhur Minangkabau.",
     "specs": [
       {
@@ -3812,7 +3812,7 @@ export const PRODUCTS_DATA = [
     "moq": 10,
     "origin": "Tarutung, Tapanuli Utara",
     "hsCode": "5208.49.00",
-    "image": "/assets/products/tekstil-5.webp",
+    "image": "/assets/products/tekstil-1.webp",
     "desc": "Kain ulos derajat tertinggi adat Batak dengan 3 panel tenun rumit pembawa doa keberkahan hidup.",
     "specs": [
       {
@@ -3850,7 +3850,7 @@ export const PRODUCTS_DATA = [
     "moq": 20,
     "origin": "Kabanjahe, Karo, Sumut",
     "hsCode": "5208.42.00",
-    "image": "/assets/products/tekstil-6.webp",
+    "image": "/assets/products/tekstil-2.webp",
     "desc": "Kain ulos ceria penuh warna dengan hiasan benang emas dan ronce manik untuk pesta budaya.",
     "specs": [
       {
@@ -3888,7 +3888,7 @@ export const PRODUCTS_DATA = [
     "moq": 40,
     "origin": "Banjarmasin, Kalimantan Selatan",
     "hsCode": "5208.52.00",
-    "image": "/assets/products/tekstil-1.webp",
+    "image": "/assets/products/tekstil-3.webp",
     "desc": "Kain jelujur ikat celup khas suku Banjar motif bayam raja warna kuning kunyit dan ungu alami.",
     "specs": [
       {
@@ -3926,7 +3926,7 @@ export const PRODUCTS_DATA = [
     "moq": 8,
     "origin": "Bandar Lampung, Lampung",
     "hsCode": "5208.41.00",
-    "image": "/assets/products/tekstil-2.webp",
+    "image": "/assets/products/tekstil-4.webp",
     "desc": "Kain tenun katun berhiaskan sulaman benang emas teknik cucuk rapat lambang kehormatan Lampung.",
     "specs": [
       {
@@ -3964,7 +3964,7 @@ export const PRODUCTS_DATA = [
     "moq": 25,
     "origin": "Klungkung, Bali",
     "hsCode": "5007.20.00",
-    "image": "/assets/products/tekstil-3.webp",
+    "image": "/assets/products/tekstil-5.webp",
     "desc": "Kain endek sutra ikat pakan Bali motif geometris cerah untuk busana formal dan jas internasional.",
     "specs": [
       {
@@ -4002,7 +4002,7 @@ export const PRODUCTS_DATA = [
     "moq": 12,
     "origin": "Kete Kesu, Tana Toraja",
     "hsCode": "5208.49.00",
-    "image": "/assets/products/tekstil-4.webp",
+    "image": "/assets/products/tekstil-6.webp",
     "desc": "Kain tenun tebal motif kepala kerbau Pa'tedong lambang kemakmuran dan status terhormat Toraja.",
     "specs": [
       {
@@ -4040,7 +4040,7 @@ export const PRODUCTS_DATA = [
     "moq": 30,
     "origin": "Kanekes, Baduy, Banten",
     "hsCode": "5208.41.00",
-    "image": "/assets/products/tekstil-5.webp",
+    "image": "/assets/products/tekstil-7.webp",
     "desc": "Kain tenun alat gendong tradisional Baduy Luar berbahan kapas hutan bebas pestisida dan kimia.",
     "specs": [
       {
@@ -4078,7 +4078,7 @@ export const PRODUCTS_DATA = [
     "moq": 10,
     "origin": "Sambas, Kalimantan Barat",
     "hsCode": "5007.90.00",
-    "image": "/assets/products/tekstil-6.webp",
+    "image": "/assets/products/tekstil-8.webp",
     "desc": "Kain tenun songket melayu Sambas benang lunggi emas motif pucuk rebung kebanggaan Kalbar.",
     "specs": [
       {
@@ -4116,7 +4116,7 @@ export const PRODUCTS_DATA = [
     "moq": 15,
     "origin": "Trusmi, Cirebon, Jawa Barat",
     "hsCode": "5208.51.00",
-    "image": "/assets/products/tekstil-1.webp",
+    "image": "/assets/products/tekstil-9.webp",
     "desc": "Batik motif awan Mega Mendung legendaris dengan 7 gradasi gradien biru laut yang menenangkan.",
     "specs": [
       {
@@ -4154,7 +4154,7 @@ export const PRODUCTS_DATA = [
     "moq": 80,
     "origin": "Pedan, Klaten, Jawa Tengah",
     "hsCode": "5208.42.00",
-    "image": "/assets/products/tekstil-2.webp",
+    "image": "/assets/products/tekstil-10.webp",
     "desc": "Kain tenun lurik garis tradisional Jawa benang katun 100% adem untuk kemeja dan kimono casual.",
     "specs": [
       {
@@ -4192,7 +4192,7 @@ export const PRODUCTS_DATA = [
     "moq": 12,
     "origin": "Giriloyo, Imogiri, Yogyakarta",
     "hsCode": "5208.51.00",
-    "image": "/assets/products/tekstil-3.webp",
+    "image": "/assets/products/tekstil-1.webp",
     "desc": "Batik tulis klasik keraton motif kawung warna sogan kulit pohon tingi dan jambal sakral.",
     "specs": [
       {
@@ -4230,7 +4230,7 @@ export const PRODUCTS_DATA = [
     "moq": 35,
     "origin": "Palembang, Sumatera Selatan",
     "hsCode": "5007.20.00",
-    "image": "/assets/products/tekstil-4.webp",
+    "image": "/assets/products/tekstil-2.webp",
     "desc": "Kain sutra teknik ikat celup jumputan titik tujuh aneka warna cerah anggun khas Palembang.",
     "specs": [
       {
@@ -4268,7 +4268,7 @@ export const PRODUCTS_DATA = [
     "moq": 50,
     "origin": "Pemalang, Jawa Tengah",
     "hsCode": "5208.43.00",
-    "image": "/assets/products/tekstil-5.webp",
+    "image": "/assets/products/tekstil-3.webp",
     "desc": "Sarung tenun ATBM benang rayon dingin goyor yang sangat diminati di Yaman, Oman, dan Arab Saudi.",
     "specs": [
       {
@@ -4306,7 +4306,7 @@ export const PRODUCTS_DATA = [
     "moq": 15,
     "origin": "Alor, NTT",
     "hsCode": "5208.49.00",
-    "image": "/assets/products/tekstil-6.webp",
+    "image": "/assets/products/tekstil-4.webp",
     "desc": "Kain tenun ikat motif kepulauan Alor warna terakota cokelat alami dari rebusan akar mengkudu.",
     "specs": [
       {
@@ -4344,7 +4344,7 @@ export const PRODUCTS_DATA = [
     "moq": 10,
     "origin": "Atambua, Belu, NTT",
     "hsCode": "5208.41.00",
-    "image": "/assets/products/tekstil-1.webp",
+    "image": "/assets/products/tekstil-5.webp",
     "desc": "Kain tenun teknik buna mirip sulaman timbul di permukaan kain yang unik dan tahan lama.",
     "specs": [
       {
@@ -4382,7 +4382,7 @@ export const PRODUCTS_DATA = [
     "moq": 15,
     "origin": "Jayapura, Papua",
     "hsCode": "5208.52.00",
-    "image": "/assets/products/tekstil-2.webp",
+    "image": "/assets/products/tekstil-6.webp",
     "desc": "Kain batik katun motif eksotis burung cendrawasih surga Papua dan tameng perang suku Asmat.",
     "specs": [
       {
@@ -4420,7 +4420,7 @@ export const PRODUCTS_DATA = [
     "moq": 25,
     "origin": "Silungkang, Sumatera Barat",
     "hsCode": "5208.41.00",
-    "image": "/assets/products/tekstil-3.webp",
+    "image": "/assets/products/tekstil-7.webp",
     "desc": "Selendang songket tenun tangan benang tembaga berkilau hangat khas kota tambang warisan UNESCO.",
     "specs": [
       {
@@ -4458,7 +4458,7 @@ export const PRODUCTS_DATA = [
     "moq": 8,
     "origin": "Muntok, Bangka Barat",
     "hsCode": "5007.90.00",
-    "image": "/assets/products/tekstil-4.webp",
+    "image": "/assets/products/tekstil-8.webp",
     "desc": "Kain cual perpaduan tenun ikat dan songket melayu kuno Bangka berumur ratusan tahun.",
     "specs": [
       {
@@ -4496,7 +4496,7 @@ export const PRODUCTS_DATA = [
     "moq": 20,
     "origin": "Bakaran, Juwana, Pati, Jateng",
     "hsCode": "5208.52.00",
-    "image": "/assets/products/tekstil-5.webp",
+    "image": "/assets/products/tekstil-9.webp",
     "desc": "Batik tulis pesisir Pati motif gandrung laut dengan latar remekan khas yang unik.",
     "specs": [
       {
@@ -4534,7 +4534,7 @@ export const PRODUCTS_DATA = [
     "moq": 10,
     "origin": "Kutai Barat, Kalimantan Timur",
     "hsCode": "5308.90.00",
-    "image": "/assets/products/tekstil-6.webp",
+    "image": "/assets/products/tekstil-10.webp",
     "desc": "Kain tenun langka dari serat daun tanaman ulap doyo khas suku Dayak Benuaq warna alam.",
     "specs": [
       {
@@ -4561,6 +4561,382 @@ export const PRODUCTS_DATA = [
       "Verifikasi NIB OSS"
     ],
     "shipping": "FOB Tanjung Priok / Perak",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_131",
+    "name": "Kopi Luwak Sulawesi Toraja (Roasted)",
+    "category": "kopi",
+    "price": 260,
+    "unit": "Kg",
+    "moq": 5,
+    "origin": "Tana Toraja, Sulawesi Selatan",
+    "hsCode": "0901.21.20",
+    "image": "/assets/products/kopi-11.webp",
+    "desc": "Kopi luwak autentik hasil seleksi biji dari civet liar Toraja, difermentasi alami dalam saluran pencernaan, dibilas bersih lalu disangrai medium. Aroma cokelat gelap, hint tanaman liar, dan body creamy tanpa rasa pahit kasar.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Natural Civet Fermentation (Wild Collection)"
+      },
+      {
+        "k": "SCA Score",
+        "v": "88.0"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.0% - 11.5%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Medium Roast (Full City)"
+      }
+    ],
+    "certs": [
+      "USDA Organic",
+      "Wild Collection Certificate",
+      "Halal BPJPH",
+      "Lab Test Certificate"
+    ],
+    "shipping": "FOB Pelabuhan Makassar",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_132",
+    "name": "Kopi Arabika Malabar Pangalengan (Green Beans)",
+    "category": "kopi",
+    "price": 8.4,
+    "unit": "Kg",
+    "moq": 500,
+    "origin": "Pangalengan, Bandung Selatan",
+    "hsCode": "0901.11.10",
+    "image": "/assets/products/kopi-12.webp",
+    "desc": "Green beans dari kebun Malabar ketinggian 1.400-1.600 mdpl, dikebun rakyat di antara tegakan pinus. Profil jeruk mandarin, gula aren, dan aftertaste floral yang khas dataran tinggi Bandung selatan.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Green Beans"
+      },
+      {
+        "k": "SCA Score",
+        "v": "84.0"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.5% - 12.0%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Unroasted Green"
+      }
+    ],
+    "certs": [
+      "USDA Organic",
+      "EU Organic",
+      "Halal BPJPH",
+      "Lab Test Certificate"
+    ],
+    "shipping": "FOB Pelabuhan Tanjung Priok",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_133",
+    "name": "Kopi Robusta Merapi Bantul Natural (Roasted)",
+    "category": "kopi",
+    "price": 6.2,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Kaliurang Sleman & Imogiri Bantul, D.I. Yogyakarta",
+    "hsCode": "0901.21.10",
+    "image": "/assets/products/kopi-13.webp",
+    "desc": "Robusta vulkanik lereng Merapi dengan proses natural full sun-dried. Body tebal, aroma cokelat susu dan kacang panggang, kafein pekat — favorit industri espresso blend dan kopi susu kekinian.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Natural Process Roasted"
+      },
+      {
+        "k": "SCA Score",
+        "v": "81.5"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.0% - 11.5%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Dark Roast (Vienna)"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "Lab Test Certificate",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Pelabuhan Tanjung Priok",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_134",
+    "name": "Kopi Arabika Sanani Konawe (Green Beans)",
+    "category": "kopi",
+    "price": 10.6,
+    "unit": "Kg",
+    "moq": 300,
+    "origin": "Konawe, Sulawesi Tenggara",
+    "hsCode": "0901.11.10",
+    "image": "/assets/products/kopi-14.webp",
+    "desc": "Sanani adalah varietas lokal paling tua di Sulawesi Tenggara, ditanam sejak era kolonial di ketinggian 900-1.200 mdpl. Cita rasa herbal ringan, cokelat susu, dan keasaman rendah yang ramah di lidah pasar Asia.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Green Beans"
+      },
+      {
+        "k": "SCA Score",
+        "v": "83.0"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.5% - 12.0%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Unroasted Green"
+      }
+    ],
+    "certs": [
+      "EU Organic",
+      "Halal BPJPH",
+      "Lab Test Certificate",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Pelabuhan Kendari",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_135",
+    "name": "Kopi Robusta Pinang Belanda Jambi (Green Beans)",
+    "category": "kopi",
+    "price": 5.8,
+    "unit": "Kg",
+    "moq": 1000,
+    "origin": "Muaro Jambi & Kerinci, Jambi",
+    "hsCode": "0901.11.10",
+    "image": "/assets/products/kopi-15.webp",
+    "desc": "Varietas Pinang Belanda peninggalan sejarah perkebunan Jambi, tumbuh liar di sekitar reruntuhan kota tua Jambi. Rasa nutty manis dengan hint rempah, kafein lebih rendah dibanding robusta umumnya.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Green Beans"
+      },
+      {
+        "k": "SCA Score",
+        "v": "82.0"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.5% - 12.0%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Unroasted Green"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "Lab Test Certificate",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Pelabuhan Palembang",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_136",
+    "name": "Kopi Arabika Surya Bajo Lombok (Roasted)",
+    "category": "kopi",
+    "price": 9.1,
+    "unit": "Kg",
+    "moq": 200,
+    "origin": "Pujut, Lombok Tengah, Nusa Tenggara Barat",
+    "hsCode": "0901.21.10",
+    "image": "/assets/products/kopi-16.webp",
+    "desc": "Arabika Surya Bajo tumbuh di ketinggian 900-1.300 mdpl menghadap Selat Alas. Profil rasa yang eksotis: kelapa bakar, jeruk keprok, dan cokelat susu dengan keasaman cerah khas iklim kering NTB.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Washed Roasted"
+      },
+      {
+        "k": "SCA Score",
+        "v": "84.5"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.0% - 11.5%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Medium-Light Roast"
+      }
+    ],
+    "certs": [
+      "USDA Organic",
+      "Halal BPJPH",
+      "Lab Test Certificate",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Pelabuhan Lembar",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_137",
+    "name": "Kopi Arabika Lintong Nihuta Toba (Green Beans)",
+    "category": "kopi",
+    "price": 9.5,
+    "unit": "Kg",
+    "moq": 400,
+    "origin": "Lintong Nihuta, Samosir, Sumatera Utara",
+    "hsCode": "0901.11.10",
+    "image": "/assets/products/kopi-17.webp",
+    "desc": "Arabika Sigararutang dari tanah vulkanik berkapur di tepi Danau Toba, ketinggian 1.400 mdpl. Cita rasa herbal, jeruk mandarin, dan cokelat hitam — komoditas ekspor premium favorit roastery Jepang.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Green Beans"
+      },
+      {
+        "k": "SCA Score",
+        "v": "85.0"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.0% - 11.5%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Unroasted Green"
+      }
+    ],
+    "certs": [
+      "EU Organic",
+      "Halal BPJPH",
+      "Lab Test Certificate",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Pelabuhan Belawan",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_138",
+    "name": "Kopi Robusta Petungkriyono Pekalongan (Roasted)",
+    "category": "kopi",
+    "price": 6.9,
+    "unit": "Kg",
+    "moq": 800,
+    "origin": "Petungkriyono, Pekalongan, Jawa Tengah",
+    "hsCode": "0901.21.10",
+    "image": "/assets/products/kopi-18.webp",
+    "desc": "Robusta premium hutan rakyat Petungkriyono ketinggian 1.200 mdpl dengan naungan pohon pinus. Fermentation 36 jam memberi rasa cokelat gelap, karamel, dan sedikit rasa kayu manis alami.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Semi-Washed (Giling Basah 36 Jam) Roasted"
+      },
+      {
+        "k": "SCA Score",
+        "v": "82.5"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.0% - 11.5%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Full City Roast"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "Lab Test Certificate",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Pelabuhan Tanjung Priok",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_139",
+    "name": "Kopi Arabika Kalibaru Banyuwangi (Roasted)",
+    "category": "kopi",
+    "price": 8.8,
+    "unit": "Kg",
+    "moq": 300,
+    "origin": "Kalibaru & Glenmore, Banyuwangi, Jawa Timur",
+    "hsCode": "0901.21.10",
+    "image": "/assets/products/kopi-19.webp",
+    "desc": "Arabika dari kebun tua pesisir timur Jawa yang menghadap Gunung Ijen. Rasa cokelat susu, jeruk keprok, dan madu ringan dengan body lembut — cocok untuk single origin manual brew maupun retail kemasan.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Washed Roasted"
+      },
+      {
+        "k": "SCA Score",
+        "v": "83.5"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "11.0% - 11.5%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Medium Roast"
+      }
+    ],
+    "certs": [
+      "Halal BPJPH",
+      "Lab Test Certificate",
+      "Phytosanitary"
+    ],
+    "shipping": "FOB Pelabuhan Tanjung Perak",
+    "verifiedExporter": true
+  },
+  {
+    "id": "prod_kopi_140",
+    "name": "Kopi Arabika Gayo Wine Process (Roasted)",
+    "category": "kopi",
+    "price": 18.5,
+    "unit": "Kg",
+    "moq": 50,
+    "origin": "Bintang & Bener Meriah, Aceh Tengah",
+    "hsCode": "0901.21.10",
+    "image": "/assets/products/kopi-20.webp",
+    "desc": "Kopi Gayo kelas premium dengan proses anaerobic wine 96 jam tertutup — fermentasi menghasilkan aroma anggur merah, buah tropis, dan rasa manis seperti wine yang sangat dicari specialty roaster Eropa dan Jepang.",
+    "specs": [
+      {
+        "k": "Tipe Proses",
+        "v": "Anaerobic Wine Fermentation 96 Jam (Roasted)"
+      },
+      {
+        "k": "SCA Score",
+        "v": "89.0"
+      },
+      {
+        "k": "Kadar Air",
+        "v": "10.5% - 11.0%"
+      },
+      {
+        "k": "Roast Profile",
+        "v": "Medium-Light Roast"
+      }
+    ],
+    "certs": [
+      "USDA Organic",
+      "EU Organic",
+      "Halal BPJPH",
+      "Lab Test Certificate"
+    ],
+    "shipping": "FOB Pelabuhan Belawan",
     "verifiedExporter": true
   }
 ];

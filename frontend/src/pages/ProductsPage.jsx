@@ -286,13 +286,13 @@ export default function ProductsPage() {
           <p className="page-hero-subtitle"><T k="produk_hero_sub" /></p>
 
           <div className="product-banner-stats">
-            <div className="pb-stat"><span className="pb-num">500+</span> <T k="produk_stat_1" /></div>
+            <div className="pb-stat"><T k="produk_stat_1" /></div>
             <div className="pb-divider" />
-            <div className="pb-stat"><span className="pb-num">100%</span> <T k="produk_stat_2" /></div>
+            <div className="pb-stat"><T k="produk_stat_2" /></div>
             <div className="pb-divider" />
-            <div className="pb-stat"><span className="pb-num">20+</span> <T k="produk_stat_3" /></div>
+            <div className="pb-stat"><T k="produk_stat_3" /></div>
             <div className="pb-divider" />
-            <div className="pb-stat"><span className="pb-num">FOB / CIF</span> <T k="produk_stat_4" /></div>
+            <div className="pb-stat"><T k="produk_stat_4" /></div>
           </div>
         </div>
       </section>
