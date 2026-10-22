@@ -300,24 +300,77 @@ app.post('/api/documents/generate', (req, res) => {
 // ==========================================================================
 let genaiClient = null;
 
+/** Ambil token API key dari teks apa pun (buang spasi, kurung, tanda kutip, dll). */
+function sanitizeApiKey(raw) {
+  if (!raw) return '';
+  const s = String(raw);
+  const m = s.match(/AIza[0-9A-Za-z_-]{20,60}/);
+  if (m) return m[0];
+  return s.trim().replace(/^["']|["']$/g, '');
+}
+
+/** API key Gemini yang sah hanya berisi huruf/angka/underscore/dash, diawali AIza. */
+function isPlausibleApiKey(key) {
+  return /^AIza[0-9A-Za-z_-]{30,60}$/.test(key);
+}
+
 function getStoredApiKey() {
-  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'YOUR_API_KEY_HERE') {
-    return process.env.GEMINI_API_KEY;
-  }
+  const fromEnv = sanitizeApiKey(process.env.GEMINI_API_KEY);
+  if (isPlausibleApiKey(fromEnv)) return fromEnv;
   try {
     const fs = require('fs');
     const geminiJsonPath = path.join(__dirname, 'gemini.json');
     if (fs.existsSync(geminiJsonPath)) {
       const data = JSON.parse(fs.readFileSync(geminiJsonPath, 'utf8'));
-      if (data.apiKey && data.apiKey.trim()) return data.apiKey.trim();
+      const fromJson = sanitizeApiKey(data.apiKey);
+      if (isPlausibleApiKey(fromJson)) return fromJson;
     }
   } catch (e) {}
   return '';
 }
 
+/** Cek koneksi sungguhan ke Google (bukan sekadar "ada key"). Di-cache 60 detik. */
+let aiStatusCache = { at: 0, key: '', payload: null };
+async function checkGeminiConnection(key) {
+  if (aiStatusCache.payload && aiStatusCache.key === key && Date.now() - aiStatusCache.at < 60000) {
+    return aiStatusCache.payload;
+  }
+  let payload;
+  try {
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    const data = await resp.json().catch(() => ({}));
+    if (resp.ok && Array.isArray(data.models)) {
+      const ids = data.models.map((m) => (m.name || '').replace(/^models\//, ''));
+      const model = ids.includes('gemini-2.5-flash')
+        ? 'gemini-2.5-flash'
+        : ids.find((id) => id.startsWith('gemini-')) || 'gemini-2.5-flash';
+      payload = { success: true, connected: true, model: `${model} (Official Google GenAI)`, reason: '' };
+    } else {
+      payload = {
+        success: true,
+        connected: false,
+        model: 'NusaBridge Smart Intelligence Engine',
+        reason: (data.error && data.error.message) || `HTTP ${resp.status}`,
+      };
+    }
+  } catch (e) {
+    payload = {
+      success: true,
+      connected: false,
+      model: 'NusaBridge Smart Intelligence Engine',
+      reason: 'Tidak dapat menghubungi Google: ' + e.message,
+    };
+  }
+  aiStatusCache = { at: Date.now(), key, payload };
+  return payload;
+}
+
 async function getGenAIClient(customKey) {
-  const activeKey = customKey || getStoredApiKey();
-  if (!activeKey || activeKey === 'YOUR_API_KEY_HERE') {
+  const activeKey = sanitizeApiKey(customKey) || getStoredApiKey();
+  if (!isPlausibleApiKey(activeKey)) {
     return null;
   }
   try {
@@ -330,24 +383,36 @@ async function getGenAIClient(customKey) {
 }
 
 // Endpoint untuk memeriksa status koneksi Google Gemini API resmi
-app.get('/api/ai/status', (req, res) => {
+// (melakukan ping sungguhan — bukan hanya mengecek ada/tidaknya key)
+app.get('/api/ai/status', async (req, res) => {
   const currentKey = getStoredApiKey();
-  const hasKey = !!currentKey && currentKey !== 'YOUR_API_KEY_HERE';
-  res.json({
-    success: true,
-    connected: hasKey,
-    model: hasKey ? 'gemini-2.5-flash (Official Google GenAI)' : 'NusaBridge Smart Intelligence Engine'
-  });
+  if (!currentKey) {
+    return res.json({
+      success: true,
+      connected: false,
+      model: 'NusaBridge Smart Intelligence Engine',
+      reason: 'API key belum diisi atau formatnya tidak valid (harus diawali "AIza...").',
+    });
+  }
+  const payload = await checkGeminiConnection(currentKey);
+  res.json(payload);
 });
+
 
 // Endpoint untuk menyimpan dan mengaktifkan API Key Google Gemini resmi secara langsung
 app.post('/api/ai/set-key', async (req, res) => {
   try {
     const { apiKey } = req.body;
-    if (!apiKey || !apiKey.trim()) {
+    const cleanKey = sanitizeApiKey(apiKey);
+    if (!cleanKey) {
       return res.status(400).json({ success: false, message: 'API Key tidak boleh kosong.' });
     }
-    const cleanKey = apiKey.trim();
+    if (!isPlausibleApiKey(cleanKey)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Format API Key tidak valid. Key Gemini asli diawali "AIza..." tanpa spasi/tanda kurung. Ambil dari https://aistudio.google.com/app/apikey',
+      });
+    }
 
     // Verifikasi API Key dengan melakukan test ping ke Google GenAI
     const { GoogleGenAI } = await import('@google/genai');
@@ -1051,13 +1116,14 @@ Apakah ada hal spesifik dari topik ini yang ingin Anda diskusikan lebih mendalam
   }
 
   // Tentukan apakah ada API Key dari request body, gemini.json, atau environment
-  const clientKey = (req.body.apiKey || '').trim();
-  const activeKey = clientKey || getStoredApiKey();
+  const clientKey = sanitizeApiKey(req.body.apiKey);
+  const activeKey = isPlausibleApiKey(clientKey) ? clientKey : getStoredApiKey();
   let aiReply = getHeuristicReply(message);
   let usedModel = 'NusaBridge Smart Intelligence Engine';
+  let aiError = activeKey ? '' : 'Gemini belum aktif: API key tidak ada atau formatnya tidak valid.';
 
   // Jika API Key tersedia, hubungi Google Gemini API Resmi (@google/genai)
-  if (activeKey && activeKey !== 'YOUR_API_KEY_HERE') {
+  if (activeKey) {
     try {
       const ai = await getGenAIClient(activeKey);
       if (ai) {
@@ -1107,6 +1173,7 @@ Apakah ada hal spesifik dari topik ini yang ingin Anda diskusikan lebih mendalam
                 usedModel = 'gemini-1.5-flash (Official Google GenAI)';
               }
             } catch (eFlash15) {
+              aiError = 'Gemini menolak permintaan: ' + (eFlash15.message || 'unknown error');
               console.warn('[Gemini SDK generateContent fallback failed]:', eFlash15.message);
             }
           }
@@ -1114,9 +1181,13 @@ Apakah ada hal spesifik dari topik ini yang ingin Anda diskusikan lebih mendalam
 
         if (generatedText) {
           aiReply = generatedText.replace(/<[^>]*>/g, '');
+          aiError = '';
+        } else if (!aiError) {
+          aiError = 'Gemini tidak mengembalikan jawaban.';
         }
       }
     } catch (apiErr) {
+      aiError = 'Gagal memanggil Gemini: ' + (apiErr.message || 'unknown error');
       console.warn('[Gemini SDK API Call]: Menggunakan engine cerdas bawaan:', apiErr.message);
     }
   }
@@ -1129,7 +1200,8 @@ Apakah ada hal spesifik dari topik ini yang ingin Anda diskusikan lebih mendalam
     reply: aiReply,
     agent: 'NusaBridge AI',
     model: usedModel,
-    isOfficialGemini: usedModel.includes('Official Google GenAI')
+    isOfficialGemini: usedModel.includes('Official Google GenAI'),
+    aiError: aiError || null
   });
 });
 
@@ -1151,6 +1223,6 @@ app.listen(PORT, () => {
   console.log(`🚀 NusaBridge Backend API Server Berjalan di Port: ${PORT}`);
   console.log(`📡 URL API: http://localhost:${PORT}/api/health`);
   console.log(`📦 Database: JavaScript JSON-Store (database/)`);
-  console.log(`☕ Siap melayani 120+ komoditas ekspor UMKM Indonesia!`);
+  console.log(`☕ Siap melayani 50+ komoditas ekspor UMKM Indonesia!`);
   console.log(`=======================================================`);
 });

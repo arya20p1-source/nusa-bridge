@@ -132,6 +132,61 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
   const historyRef = useRef(null);
   const inputRef = useRef(null);
 
+  // Status koneksi Gemini yang sebenarnya (dicek ke Google, bukan asal "ada key")
+  const [aiConn, setAiConn] = useState(null);
+  const [showKeyPanel, setShowKeyPanel] = useState(false);
+  const [apiKeyInput, setApiKeyInput] = useState('');
+  const [keyStatus, setKeyStatus] = useState('');
+
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/ai/status')
+      .then((r) => r.json())
+      .then((d) => { if (alive) setAiConn(d); })
+      .catch(() => { if (alive) setAiConn({ connected: false, reason: 'Backend tidak dapat dihubungi. Jalankan node server.js di folder backend.' }); });
+    return () => { alive = false; };
+  }, []);
+
+  async function refreshAiStatus() {
+    try {
+      const st = await fetch('/api/ai/status').then((r) => r.json());
+      setAiConn(st);
+      return st;
+    } catch (e) {
+      setAiConn({ connected: false, reason: 'Backend tidak dapat dihubungi.' });
+      return null;
+    }
+  }
+
+  async function saveApiKey(e) {
+    if (e) e.preventDefault();
+    const key = apiKeyInput.trim();
+    if (!key) return;
+    setKeyStatus('saving');
+    try {
+      const res = await fetch('/api/ai/set-key', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: key }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        localStorage.setItem('nb_gemini_api_key', key);
+        setKeyStatus('ok');
+        setApiKeyInput('');
+        setShowKeyPanel(false);
+        const st = await refreshAiStatus();
+        if (st && st.connected) {
+          push('agent', `✅ **Gemini berhasil terhubung!** Model aktif: **${data.model}**. Mulai sekarang setiap pertanyaan dijawab langsung oleh Google Gemini, bukan engine lokal.`, 'NusaBridge AI');
+        }
+      } else {
+        setKeyStatus('err:' + (data.message || 'API key ditolak Google.'));
+      }
+    } catch (err) {
+      setKeyStatus('err:Gagal menghubungi backend: ' + err.message);
+    }
+  }
+
   function scrollBottom() {
     requestAnimationFrame(() => {
       if (historyRef.current) historyRef.current.scrollTop = historyRef.current.scrollHeight;
@@ -217,10 +272,22 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
                 </div>
               </div>
               <div className="gcm-actions">
-                <div className="gcm-direct-badge">
-                  <span className="direct-dot" />
-                  <span>Gemini API Direct</span>
+                <div className="gcm-direct-badge" title={aiConn?.connected ? aiConn.model : (aiConn?.reason || 'Mengecek koneksi...')}>
+                  <span className="direct-dot" style={aiConn && !aiConn.connected ? { background: '#f59e0b' } : undefined} />
+                  <span>{aiConn === null ? 'Mengecek...' : aiConn.connected ? 'Gemini Connected' : 'Gemini Off'}</span>
                 </div>
+                <button
+                  className="btn-clear-chat"
+                  type="button"
+                  title="Atur API Key Gemini"
+                  onClick={() => { setShowKeyPanel((v) => !v); setKeyStatus(''); }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                  </svg>
+                  <span>Atur API Key</span>
+                </button>
                 <button
                   className="btn-clear-chat"
                   type="button"
@@ -241,6 +308,44 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
                 </button>
               </div>
             </div>
+
+            {showKeyPanel && (
+              <form onSubmit={saveApiKey} style={{ padding: '12px 16px', borderBottom: '1px solid #e5e7eb', background: '#f8fafc' }}>
+                <div style={{ fontSize: '13px', marginBottom: '8px', color: '#334155' }}>
+                  Tempel API key Gemini asli (diawali <code>AIza...</code>, tanpa spasi) dari{' '}
+                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer">Google AI Studio</a>.
+                </div>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  <input
+                    type="text"
+                    value={apiKeyInput}
+                    onChange={(e) => setApiKeyInput(e.target.value)}
+                    placeholder="AIza..."
+                    autoComplete="off"
+                    spellCheck={false}
+                    style={{ flex: '1 1 260px', padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', fontFamily: 'monospace' }}
+                  />
+                  <button type="submit" className="btn-clear-chat" disabled={keyStatus === 'saving'} style={{ background: '#0f766e', color: '#fff', border: 'none' }}>
+                    <span>{keyStatus === 'saving' ? 'Memverifikasi...' : 'Simpan & Verifikasi'}</span>
+                  </button>
+                </div>
+                {keyStatus.startsWith('err:') && (
+                  <div style={{ marginTop: '8px', fontSize: '12.5px', color: '#b91c1c' }}>⚠️ {keyStatus.slice(4)}</div>
+                )}
+                {keyStatus === 'ok' && (
+                  <div style={{ marginTop: '8px', fontSize: '12.5px', color: '#047857' }}>✅ API key tersimpan dan terverifikasi.</div>
+                )}
+              </form>
+            )}
+
+            {aiConn && !aiConn.connected && (
+              <div style={{ padding: '10px 16px', background: '#fffbeb', borderBottom: '1px solid #fde68a', fontSize: '12.5px', color: '#92400e' }}>
+                ⚠️ Gemini belum aktif — jawaban masih dari engine lokal. Alasan: {aiConn.reason || 'API key belum diisi.'}{' '}
+                <button type="button" onClick={() => setShowKeyPanel(true)} style={{ background: 'none', border: 'none', color: '#0369a1', textDecoration: 'underline', cursor: 'pointer', fontSize: '12.5px', padding: 0 }}>
+                  Atur API Key
+                </button>
+              </div>
+            )}
 
             <div className="gcm-history" ref={historyRef}>
               {msgs.map((m, i) => (
@@ -1008,13 +1113,13 @@ function EscrowTab() {
 
     const lower = text.toLowerCase();
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2500);
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
 
     try {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, apiKey: localStorage.getItem('nb_gemini_api_key') || '' }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);

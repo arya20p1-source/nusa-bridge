@@ -827,7 +827,7 @@ function ChatWidget() {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: q.trim() }),
+        body: JSON.stringify({ message: q.trim(), apiKey: localStorage.getItem('nb_gemini_api_key') || '' }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
