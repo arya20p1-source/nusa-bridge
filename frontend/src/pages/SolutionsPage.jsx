@@ -312,7 +312,7 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
             {showKeyPanel && (
               <form onSubmit={saveApiKey} style={{ padding: '12px 16px', borderBottom: '1px solid #e5e7eb', background: '#f8fafc' }}>
                 <div style={{ fontSize: '13px', marginBottom: '8px', color: '#334155' }}>
-                  Tempel API key Gemini asli (diawali <code>AIza...</code>, tanpa spasi) dari{' '}
+                  Tempel API key Gemini (<code>AIza...</code> atau auth key baru <code>AQ....</code>, tanpa spasi) dari{' '}
                   <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer">Google AI Studio</a>.
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>

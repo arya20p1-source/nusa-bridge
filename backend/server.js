@@ -300,18 +300,19 @@ app.post('/api/documents/generate', (req, res) => {
 // ==========================================================================
 let genaiClient = null;
 
-/** Ambil token API key dari teks apa pun (buang spasi, kurung, tanda kutip, dll). */
+/** Ambil token API key dari teks apa pun (buang spasi, kurung, tanda kutip, dll).
+ *  Mendukung dua format: key lama "AIza..." dan auth key baru "AQ....". */
 function sanitizeApiKey(raw) {
   if (!raw) return '';
   const s = String(raw);
-  const m = s.match(/AIza[0-9A-Za-z_-]{20,60}/);
+  const m = s.match(/(AIza[0-9A-Za-z_-]{20,60}|AQ\.[0-9A-Za-z_.\-]{20,200})/);
   if (m) return m[0];
   return s.trim().replace(/^["']|["']$/g, '');
 }
 
-/** API key Gemini yang sah hanya berisi huruf/angka/underscore/dash, diawali AIza. */
+/** API key Gemini yang sah: format lama (AIza...) atau auth key baru (AQ....). */
 function isPlausibleApiKey(key) {
-  return /^AIza[0-9A-Za-z_-]{30,60}$/.test(key);
+  return /^AIza[0-9A-Za-z_-]{30,60}$/.test(key) || /^AQ\.[0-9A-Za-z_.\-]{20,200}$/.test(key);
 }
 
 function getRawStoredKey() {
@@ -329,14 +330,11 @@ function getRawStoredKey() {
 }
 
 function describeKeyProblem(rawKey) {
-  if (!rawKey) return 'API key belum diisi. Tempel API key Gemini (AIza...) lewat tombol "Atur API Key".';
-  if (/^AQ\./.test(rawKey) || rawKey.includes('AQ.')) {
-    return 'Yang tersimpan adalah OAuth token (AQ...) dari Gemini CLI — itu bukan API key dan sudah tidak berlaku. Ganti dengan API key asli AIza... dari https://aistudio.google.com/app/apikey';
-  }
+  if (!rawKey) return 'API key belum diisi. Tempel API key Gemini (AIza... atau auth key AQ....) lewat tombol "Atur API Key".';
   if (/\s/.test(rawKey) || /[()]/.test(rawKey)) {
-    return 'Nilai API key mengandung spasi/tanda kurung. Tempel HANYA key-nya (AIza...), tanpa teks lain.';
+    return 'Nilai API key mengandung spasi/tanda kurung. Copy HANYA key-nya (klik ikon copy di AI Studio), tanpa teks lain.';
   }
-  return 'Format API key tidak valid (harus diawali "AIza..."). Ambil dari https://aistudio.google.com/app/apikey';
+  return 'Format API key tidak valid. Key Gemini diawali "AIza..." atau auth key baru "AQ.". Buat key baru di https://aistudio.google.com/app/apikey';
 }
 
 function getStoredApiKey() {
@@ -434,12 +432,9 @@ app.post('/api/ai/set-key', async (req, res) => {
       return res.status(400).json({ success: false, message: 'API Key tidak boleh kosong.' });
     }
     if (!isPlausibleApiKey(cleanKey)) {
-      const isOauthToken = /^AQ\./.test(rawKey) || /^AQ\./.test(cleanKey);
       return res.status(400).json({
         success: false,
-        message: isOauthToken
-          ? 'Yang Anda tempel adalah OAuth token (dari Gemini CLI / Google login), bukan API key — token ini juga hanya berlaku ±1 jam dan tidak diterima Gemini API. Ambil API key asli berawalan "AIza..." di https://aistudio.google.com/app/apikey (Create API key), lalu tempel di sini.'
-          : 'Format API Key tidak valid. Key Gemini asli diawali "AIza..." tanpa spasi/tanda kurung. Ambil dari https://aistudio.google.com/app/apikey',
+        message: 'Format API Key tidak valid. Key Gemini diawali "AIza..." atau auth key baru "AQ." tanpa spasi/tanda kurung. Copy ulang lewat ikon copy di https://aistudio.google.com/app/apikey',
       });
     }
 
@@ -449,46 +444,30 @@ app.post('/api/ai/set-key', async (req, res) => {
 
     let verified = false;
     let modelUsed = 'gemini-2.5-flash';
+    let lastError = '';
 
-    try {
-      const resp = await testAi.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: 'Ping test. Jawab dengan OK.'
-      });
-      if (resp && (resp.text || resp.candidates)) {
-        verified = true;
-        modelUsed = 'gemini-2.5-flash';
-      }
-    } catch (e25) {
+    const CANDIDATE_MODELS = ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    for (const model of CANDIDATE_MODELS) {
       try {
-        const resp2 = await testAi.models.generateContent({
-          model: 'gemini-2.0-flash',
-          contents: 'Ping test. Jawab dengan OK.'
+        const resp = await testAi.models.generateContent({
+          model,
+          contents: 'Ping test. Jawab dengan OK.',
         });
-        if (resp2 && (resp2.text || resp2.candidates)) {
+        if (resp && (resp.text || resp.candidates)) {
           verified = true;
-          modelUsed = 'gemini-2.0-flash';
+          modelUsed = model;
+          break;
         }
-      } catch (e20) {
-        try {
-          const resp3 = await testAi.models.generateContent({
-            model: 'gemini-1.5-flash',
-            contents: 'Ping test. Jawab dengan OK.'
-          });
-          if (resp3 && (resp3.text || resp3.candidates)) {
-            verified = true;
-            modelUsed = 'gemini-1.5-flash';
-          }
-        } catch (e15) {
-          verified = false;
-        }
+        lastError = `${model}: tidak ada jawaban dari model`;
+      } catch (err) {
+        lastError = `${model}: ${err.message || err}`;
       }
     }
 
     if (!verified) {
       return res.status(400).json({
         success: false,
-        message: 'API Key tidak dapat memverifikasi ke Google Gemini. Pastikan API Key aktif dan benar dari Google AI Studio.'
+        message: 'API Key tidak dapat memverifikasi ke Google Gemini. Detail dari Google: ' + lastError,
       });
     }
 
@@ -1189,63 +1168,48 @@ Sementara itu, Anda bisa mencoba:
     try {
       const ai = await getGenAIClient(activeKey);
       if (ai) {
-        const sysInstruction = "Kamu adalah asisten AI yang cerdas, ramah, dan membantu untuk perdagangan ekspor-impor dan operasional UMKM Indonesia. Jawablah setiap pertanyaan dalam bahasa Indonesia yang natural, jelas, dan santun. Jawablah tepat sasaran sesuai pertanyaan pengguna, jangan keluar topik. Format jawaban menggunakan Markdown bersih tanpa tag HTML mentah.";
+        // Ringkas katalog agar Gemini menjawab harga/MOQ dengan data asli (bukan mengarang)
+        const catalogLines = (allProducts || []).map((p, i) =>
+          `${i + 1}. ${p.name} | ${p.origin} | $${Number(p.price).toFixed(2)}/${p.unit} | MOQ ${p.moq} ${p.unit} | HS ${p.hsCode || '-'}`
+        ).join('\n');
+
+        const sysInstruction = `Kamu adalah NusaBridge AI, asisten cerdas untuk platform ekspor-impor UMKM Indonesia (GTNIC 2026).
+ATURAN:
+1. Jawab SEMUA pertanyaan pengguna dengan akurat dan membantu, termasuk topik umum (sains, sejarah, teknologi, coding, matematika, pengetahuan umum). Jangan menolak dengan alasan "di luar topik".
+2. Gunakan bahasa yang dipakai pengguna (Indonesia atau Inggris), santun, ringkas, dan jelas.
+3. Untuk pertanyaan produk, harga, MOQ, asal, atau HS code, WAJIB memakai data katalog di bawah ini. Jangan mengarang produk atau angka di luar daftar.
+4. Jika data yang diminta tidak ada di katalog, katakan terus terang lalu tawarkan produk yang mirip.
+5. Format jawaban dengan Markdown bersih (bold, bullet, tabel bila perlu), tanpa tag HTML mentah.
+
+KATALOG NUSABRIDGE (${(allProducts || []).length} produk):
+${catalogLines || '(katalog kosong)'}`;
 
         let generatedText = null;
 
-        // 1. Coba panggil model utama: gemini-2.5-flash (@google/genai)
-        try {
-          const resp25 = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: message,
-            config: {
-              systemInstruction: sysInstruction
-            }
-          });
-          if (resp25 && resp25.text) {
-            generatedText = resp25.text;
-            usedModel = 'gemini-2.5-flash (Official Google GenAI)';
-          }
-        } catch (eFlash25) {
-          // 2. Fallback ke model gemini-2.0-flash
+        // Coba beberapa model flash yang tersedia (urutan prioritas)
+        const MODELS = ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+        for (const model of MODELS) {
           try {
-            const resp20 = await ai.models.generateContent({
-              model: 'gemini-2.0-flash',
+            const resp = await ai.models.generateContent({
+              model,
               contents: message,
-              config: {
-                systemInstruction: sysInstruction
-              }
+              config: { systemInstruction: sysInstruction },
             });
-            if (resp20 && resp20.text) {
-              generatedText = resp20.text;
-              usedModel = 'gemini-2.0-flash (Official Google GenAI)';
+            if (resp && resp.text) {
+              generatedText = resp.text;
+              usedModel = `${model} (Official Google GenAI)`;
+              break;
             }
-          } catch (eFlash20) {
-            // 3. Fallback ke model gemini-1.5-flash
-            try {
-              const resp15 = await ai.models.generateContent({
-                model: 'gemini-1.5-flash',
-                contents: message,
-                config: {
-                  systemInstruction: sysInstruction
-                }
-              });
-              if (resp15 && resp15.text) {
-                generatedText = resp15.text;
-                usedModel = 'gemini-1.5-flash (Official Google GenAI)';
-              }
-            } catch (eFlash15) {
-              aiError = 'Gemini menolak permintaan: ' + (eFlash15.message || 'unknown error');
-              console.warn('[Gemini SDK generateContent fallback failed]:', eFlash15.message);
-            }
+            aiError = 'Gemini tidak mengembalikan teks untuk model ' + model;
+          } catch (modelErr) {
+            aiError = `Gemini error (${model}): ${modelErr.message || modelErr}`;
+            console.warn('[Gemini SDK model failed]:', model, modelErr.message);
           }
         }
 
         if (generatedText) {
           aiReply = generatedText.replace(/<[^>]*>/g, '');
           aiError = '';
-        } else if (!aiError) {
-          aiError = 'Gemini tidak mengembalikan jawaban.';
         }
       }
     } catch (apiErr) {
