@@ -4,7 +4,7 @@
  */
 import { PRODUCTS_DATA } from '../data/products.js';
 
-/** Helper pencari produk cerdas dari katalog 130 komoditas ekspor */
+/** Helper pencari produk cerdas dari katalog 50 komoditas ekspor */
 function findMatchingProducts(query) {
   const list = PRODUCTS_DATA || [];
   if (!list.length) return [];
@@ -339,21 +339,21 @@ Hindari mengirim barang tanpa uang muka. Selalu gunakan sistem Escrow Vault agar
 Jika barang Anda belum mencapai kuantitas 1 kontainer penuh (FCL), Anda bisa memulai dengan skema kargo LCL (konsolidasi muatan) bersama eksportir lain.`;
   }
 
-  // 11. Katalog 130 komoditas
+  // 11. Katalog 50 komoditas
   if (q.includes('katalog') || q.includes('daftar komoditas') || q.includes('daftar produk') || q.includes('apa saja yang dijual') || q.includes('pilihan komoditas')) {
-    return `Halo! NusaBridge menyediakan etalase kurasi 130 komoditas ekspor unggulan Indonesia yang telah lolos verifikasi standar mutu dan legalitas:
+    return `Halo! NusaBridge menyediakan etalase kurasi 50 komoditas ekspor unggulan Indonesia yang telah lolos verifikasi standar mutu dan legalitas — tiap produk dipilih dengan foto unik tanpa duplikat:
 
-☕ **Kopi Ekspor Unggulan (40 Produk)**:
-Kopi Arabika & Robusta Specialty pilihan (Gayo Aceh, Toraja Sapan, Mandheling, Robusta Lampung ELB, Dampit Malang, Kintamani Bali, Bajawa Flores, Wamena Papua, Sidikalang, Solok Radjo, Lintong Toba, Malabar Pangalengan, Merapi Bantul, Sanani Konawe, Pinang Belanda Jambi, Surya Bajo Lombok, Petungkriyono, Kalibaru Banyuwangi, hingga Kopi Luwak Toraja & Gayo Wine Process) dengan opsi Green Beans mentah maupun Roasted Beans.
+☕ **Kopi Ekspor Unggulan (20 Produk)**:
+Kopi Arabika & Robusta Specialty pilihan (Gayo Aceh, Gayo Peaberry, Mandheling, Toraja Kalosi & Sapan, Kintamani Bali, Java Ijen Honey, Java Preanger, Kopi Luwak Toraja, Malabar Pangalengan, Merapi Bantul, Sanani Konawe, Pinang Belanda Jambi, Surya Bajo Lombok, Lintong Toba, Petungkriyono, Kalibaru Banyuwangi, hingga Gayo Wine Process) dengan opsi Green Beans mentah maupun Roasted Beans.
 
-🌿 **Rempah-Rempah & Hasil Alam (30 Produk)**:
-Cengkeh Lalpari Maluku Grade AA, Kayu Manis Korintji Cassia Vera, Lada Putih Muntok Double Washed, Vanila Gourmet Papua, Pala Banda ABCD, Kapulaga Putih Super, dan Minyak Atsiri Nilam Aceh.
+🌿 **Rempah-Rempah & Hasil Alam (10 Produk)**:
+Cengkeh Lalpari Maluku Grade Super, Kayu Manis Korintji Cassia Grade A, Lada Putih Muntok & Lada Hitam Lampung ASTA, Vanila Planifolia Papua, Pala Banda ABCD & Fuli, Jahe Merah Gajah, Kapulaga Putih Jawa, dan Minyak Atsiri Nilam Aceh.
 
-🪑 **Kriya & Kerajinan Ramah Lingkungan (30 Produk)**:
-Kursi & Furnitur Anyaman Rotan Cirebon, Mebel Kayu Jati SVLK Jepara, Kerajinan Anyaman Enceng Gondok, Mangkuk Batok Kelapa Eco-Polished, dan Keranjang Seagrass.
+🪑 **Kriya & Kerajinan Ramah Lingkungan (10 Produk)**:
+Kursi Rotan Cirebon, Keranjang Eceng Gondok Kulon Progo, Mangkuk Batok Kelapa Bali, Perajin Kayu Jati Jepara, Gerabah Kasongan, Lampu Gantung Bambu Tasikmalaya, hingga Kotak Tisu Pelepah Pisang Klaten.
 
-🧵 **Tekstil & Wastra Nusantara (30 Produk)**:
-Kain Batik Tulis Sutra Solo/Yogya Motif Keraton, Batik Cap Pekalongan Katun Primisima, Tenun Ikat Troso Jepara, Tenun Sumba Pewarna Alami, Songket Palembang Benang Emas, dan Ulos Batak Tradisional.
+🧵 **Tekstil & Wastra Nusantara (10 Produk)**:
+Batik Tulis Solo, Pekalongan, Lasem & Madura, Batik Cap Garutan, Tenun Ikat Troso, Sumba & Flores, serta Songket Palembang dan Songket Pandai Sikek Minangkabau.
 
 Anda dapat menanyakan harga atau spesifikasi komoditas mana pun secara spesifik, dan saya akan memberikan informasi lengkapnya!`;
   }
@@ -518,7 +518,7 @@ Ada yang bisa saya bantu hari ini? Anda dapat bertanya tentang:
 • **Cara Kerja AI & Teknologi:** Bagaimana kecerdasan buatan dan Google Gemini beroperasi
 • **Kalkulasi Biaya Ekspor:** Hitung estimasi harga FOB, Ocean Freight, Asuransi, dan CIF dengan rekomendasi margin aman
 • **Audit Legalitas & Regulasi:** Syarat izin NIB OSS, karantina fitosanitari, regulasi FDA Amerika, EUDR Eropa, dan JAS Jepang
-• **Katalog Komoditas:** Spesifikasi dan harga acuan dari 130 komoditas unggulan (Kopi, Rempah, Mebel Rotan, Kriya, Tekstil)
+• **Katalog Komoditas:** Spesifikasi dan harga acuan dari 50 komoditas unggulan (Kopi, Rempah, Mebel Rotan, Kriya, Tekstil)
 • **Keamanan Transaksi:** Skema penguncian dan pencairan dana 4 tahap bertahap di Escrow Vault
 
 Silakan ketik pertanyaan apa saja yang ingin Anda diskusikan!`;

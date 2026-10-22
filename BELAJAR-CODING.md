@@ -35,7 +35,7 @@ nusa-bridge/
         ├── components/      ← potongan UI kecil (Navbar, Footer, Modal...)
         ├── context/         ← data bersama antar komponen (login, bahasa)
         ├── i18n/            ← kamus terjemahan ID/EN
-        ├── data/            ← products.js = katalog 130 produk
+        ├── data/            ← products.js = katalog 50 produk
         ├── hooks/           ← useHashScroll (logika scroll)
         ├── utils/           ← fungsi bantu (aiText, solusiReply, dll)
         └── styles/          ← semua CSS
@@ -148,7 +148,7 @@ Tiga hal yang wajib kamu pahami di file ini:
 import { PRODUCTS_DATA } from '../data/products.js';
 ```
 `products.js` hanyalah `export const PRODUCTS_DATA = [ {...}, {...}, ... ]` —
-130 objek, tiap objek satu produk.
+50 objek, tiap objek satu produk (semua dengan gambar unik).
 
 **2) Filter + sort** (inti logika):
 ```jsx
@@ -321,6 +321,7 @@ kamu tanyai konsepnya, bukan orang yang mengerjakan tugasmu.
 Folder `scripts/` berisi tool sekali-pakai yang bisa kamu pelajari:
 
 - `add-coffee-products.cjs` — cara program menambah banyak produk sekaligus (contoh manipulasi array & file)
+- `dedupe-products.cjs` — membuang produk yang memakai gambar kembar (hasil: 50 produk unik)
 - `generate-product-images.cjs` — variasi gambar dengan `sharp`
 - `fetch-coffee-images.cjs` — mengambil data dari API (Wikipedia) lalu mengolahnya
 

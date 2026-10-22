@@ -44,7 +44,7 @@ Ada yang bisa saya bantu hari ini? Anda dapat menanyakan:
 • Cara kerja kecerdasan buatan NusaBridge AI
 • Kalkulasi harga Incoterms 2020 (FOB, Ocean Freight, Asuransi, CIF)
 • Pengecekan izin usaha NIB OSS & sertifikasi karantina
-• Rekomendasi 130 komoditas ekspor unggulan (Kopi, Rempah, Kriya, Tekstil)
+• Rekomendasi 50 komoditas ekspor unggulan (Kopi, Rempah, Kriya, Tekstil)
 • Skema transaksi aman 4 tahap di Escrow Vault
 
 Silakan ketik pertanyaan Anda!`;

@@ -609,7 +609,7 @@ function ProductsView({ goRfq, showToast }) {
       <div className="sandbox-header">
         <div className="sandbox-title-wrap">
           <h4 className="sandbox-title">Katalog &amp; Manajemen Komoditas Ekspor</h4>
-          <span className="sandbox-badge">120+ Komoditas UMKM Siap Ekspor</span>
+          <span className="sandbox-badge">50+ Komoditas UMKM Siap Ekspor</span>
         </div>
         <Link to="/produk" className="btn btn-primary btn-sm">Lihat Semua 120 Produk &rarr;</Link>
       </div>

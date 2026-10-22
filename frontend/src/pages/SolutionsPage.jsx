@@ -116,7 +116,7 @@ function GeminiWorkspace() {
       raw: `Halo! Saya **NusaBridge AI**, asisten perdagangan ekspor-impor pintar untuk UMKM Indonesia.
 
 Saya siap membantu Anda dalam:
-• Mengecek harga, spesifikasi, dan MOQ dari 130 komoditas ekspor unggulan (Kopi, Rempah, Kriya, Tekstil).
+• Mengecek harga, spesifikasi, dan MOQ dari 50 komoditas ekspor unggulan (Kopi, Rempah, Kriya, Tekstil).
 • Menghitung estimasi biaya pengiriman, ocean freight kapal, asuransi, dan penawaran CIF/FOB dengan margin aman.
 • Memberikan panduan kepatuhan dan audit perizinan negara tujuan (NIB OSS, Sertifikat Karantina, US FDA, EUDR Eropa, JAS Jepang).
 • Menjelaskan skema pembayaran bertahap 4 fase via Escrow Vault agar transaksi Anda aman dari risiko penipuan.
