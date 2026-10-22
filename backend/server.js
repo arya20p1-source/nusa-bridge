@@ -602,6 +602,35 @@ Ada bagian dari cara kerja AI atau ekspor yang ingin Anda ketahui lebih mendalam
       q.includes('spesifikasi') || q.includes('moq') || q.includes('minimal order') || q.includes('jual')
     );
 
+    // 1a. Permintaan menampilkan daftar produk / komoditas ("sebutkan 5 produk", "produk apa saja", dll.)
+    const wantsProductList =
+      /(produk|komoditas)/i.test(q) &&
+      /(sebutkan|tampilkan|berikan|tunjukkan|list|daftar|contoh|apa\s*saja|apa\s*aja|produk\s*apa|komoditas\s*apa|macam|jenis|pilihan|tersedia)/i.test(q);
+
+    if (wantsProductList && Array.isArray(allProducts) && allProducts.length > 0) {
+      const countMatch = q.match(/(\d+)\s*(produk|komoditas|item|buah|jenis|macam)/);
+      const wantCount = Math.min(countMatch ? Math.max(1, parseInt(countMatch[1], 10)) : 5, 20);
+
+      let pool = allProducts;
+      let catLabel = '';
+      if (q.includes('kopi')) { pool = pool.filter((p) => p.category === 'kopi'); catLabel = 'Kopi'; }
+      else if (q.includes('rempah') || q.includes('bumbu')) { pool = pool.filter((p) => p.category === 'rempah'); catLabel = 'Rempah'; }
+      else if (q.includes('kriya') || q.includes('kerajinan') || q.includes('mebel') || q.includes('rotan')) { pool = pool.filter((p) => p.category === 'kriya'); catLabel = 'Kriya'; }
+      else if (q.includes('tekstil') || q.includes('batik') || q.includes('tenun') || q.includes('songket')) { pool = pool.filter((p) => p.category === 'tekstil'); catLabel = 'Tekstil'; }
+
+      const picked = pool.slice(0, wantCount);
+      const lines = picked.map((p, i) => {
+        const price = Number(p.price).toFixed(2);
+        return `${i + 1}. **${p.name}**\n   • Asal: ${p.origin} • Harga: $${price} USD/${p.unit} • MOQ: ${p.moq} ${p.unit} • HS: ${p.hsCode || '-'}`;
+      }).join('\n');
+
+      return `Berikut ${picked.length} produk${catLabel ? ' **' + catLabel + '**' : ''} unggulan yang tersedia di katalog NusaBridge (total ${pool.length}${catLabel ? ' produk ' + catLabel : ' produk'}):
+
+${lines}
+
+Ingin detail lengkap salah satunya (spesifikasi, sertifikasi, estimasi CIF/FOB)? Sebutkan nama produknya, misalnya: _"Harga dan spesifikasi ${picked[0]?.name?.split('(')[0].trim()}"_.`;
+    }
+
     if (!isLegalityOrGuide && matchedProducts.length > 0 && isAskingProduct) {
       const p = matchedProducts[0];
       const idrEst = Math.round(p.price * 16250).toLocaleString('id-ID');
@@ -837,23 +866,25 @@ Hindari mengirim barang tanpa uang muka. Selalu gunakan sistem Escrow Vault agar
 Jika barang Anda belum mencapai kuantitas 1 kontainer penuh (FCL), Anda bisa memulai dengan skema kargo LCL (konsolidasi muatan) bersama eksportir lain.`;
     }
 
-    // 11. Informasi Katalog 120 Komoditas Ekspor
+    // 11. Informasi Katalog 50 Komoditas Ekspor
     if (q.includes('katalog') || q.includes('daftar komoditas') || q.includes('daftar produk') || q.includes('apa saja yang dijual') || q.includes('pilihan komoditas')) {
-      return `Halo! NusaBridge menyediakan etalase kurasi 120 komoditas ekspor unggulan Indonesia yang telah lolos verifikasi standar mutu dan legalitas:
+      const catCount = allProducts.reduce((acc, p) => { acc[p.category] = (acc[p.category] || 0) + 1; return acc; }, {});
+      const kopiNames = allProducts.filter((p) => p.category === 'kopi').slice(0, 10).map((p) => p.name.split('(')[0].trim()).join(', ');
+      return `Halo! NusaBridge menyediakan etalase kurasi **${allProducts.length} komoditas** ekspor unggulan Indonesia (tiap produk dengan foto unik) yang telah lolos verifikasi standar mutu dan legalitas:
 
-• ☕ **Kopi Ekspor Unggulan (30 Produk)**:
-Kopi Arabika & Robusta Specialty pilihan (Gayo Aceh, Toraja Sapan, Mandheling, Robusta Lampung ELB, Dampit Malang, Kintamani Bali, Bajawa Flores, Wamena Papua, dll.) dengan opsi Green Beans mentah maupun Roasted Beans.
+☕ **Kopi Ekspor Unggulan (${catCount.kopi || 0} Produk)**
+${kopiNames}, dll.
 
-• 🌿 **Rempah-Rempah & Hasil Alam (30 Produk)**:
-Cengkeh Lalpari Maluku Grade AA, Kayu Manis Korintji Cassia Vera, Lada Putih Muntok Double Washed, Vanila Gourmet Papua, Pala Banda ABCD, Kapulaga Putih Super, dan Minyak Atsiri Nilam Aceh.
+🌿 **Rempah-Rempah & Hasil Alam (${catCount.rempah || 0} Produk)**
+Cengkeh Lalpari Maluku, Kayu Manis Korintji, Lada Putih Muntok, Lada Hitam Lampung, Vanila Papua, Pala Banda, Fuli Pala, Minyak Nilam Aceh, Jahe Merah, dan Kapulaga Putih Jawa.
 
-• 🪵 **Kriya & Kerajinan Ramah Lingkungan (30 Produk)**:
-Kursi & Furnitur Anyaman Rotan Cirebon, Mebel Kayu Jati SVLK Jepara, Kerajinan Anyaman Enceng Gondok, Mangkuk Batok Kelapa Eco-Polished, dan Keranjang Seagrass.
+🪑 **Kriya & Kerajinan Ramah Lingkungan (${catCount.kriya || 0} Produk)**
+Kursi Rotan Cirebon, Keranjang Eceng Gondok, Mangkuk Batok Kelapa, Kayu Jati Jepara, Gerabah Kasongan, Lampu Bambu Tasikmalaya, Cermin Kerang Papua, Karpet Pandan Kebumen, dan Kotak Tisu Pelepah Pisang.
 
-• 🧵 **Tekstil & Wastra Nusantara (30 Produk)**:
-Kain Batik Tulis Sutra Solo/Yogya Motif Keraton, Batik Cap Pekalongan Katun Primisima, Tenun Ikat Troso Jepara, Tenun Sumba Pewarna Alami, Songket Palembang Benang Emas, dan Ulos Batak Tradisional.
+🧵 **Tekstil & Wastra Nusantara (${catCount.tekstil || 0} Produk)**
+Batik Tulis Solo, Pekalongan, Lasem & Madura, Batik Cap Garutan, Tenun Ikat Troso, Sumba & Flores, Songket Palembang & Pandai Sikek.
 
-Anda dapat menanyakan harga atau spesifikasi komoditas mana pun secara spesifik, dan saya akan memberikan informasi lengkapnya!`;
+Ketik _"sebutkan 5 produk kopi"_ untuk melihat daftar lengkap dengan harga dan MOQ, atau sebutkan nama produk untuk detail spesifikasinya!`;
     }
 
     // 14. Perbedaan Biji Kopi Arabika dan Robusta
@@ -1099,20 +1130,22 @@ Teknologi modern dan sistem berbasis AI dirancang untuk memecahkan masalah kompl
 Apakah ada aspek pemrograman, API, atau arsitektur teknologi tertentu yang ingin Anda tanyakan?`;
     }
 
-    // 28. Pertanyaan Umum Lainnya (Respons Cerdas, Relevan, & Alami Khas Google Gemini)
-    return `Halo! Terima kasih atas pertanyaan Anda mengenai **"${raw}"**.
+    // 28. Fallback jujur: engine lokal tidak punya jawaban spesifik
+    return `Saya belum punya jawaban spesifik untuk **"${raw}"** di basis data lokal NusaBridge.
 
-Berikut adalah penjelasan dan wawasan komprehensif:
+Saat ini saya berjalan dalam **mode engine lokal** karena API key Gemini belum aktif. Di mode ini saya menguasai topik: katalog produk, harga & MOQ, Incoterms/kalkulasi CIF-FOB, dokumen ekspor, legalitas (NIB/OSS), karantina, dan Escrow.
 
-1. **Prinsip Utama:**
-Pertanyaan yang Anda ajukan menyentuh aspek penting yang memerlukan pendekatan sistematis, pemahaman mendalam, serta eksekusi yang cermat.
+**Agar saya bisa menjawab pertanyaan umum seperti Gemini (sains, sejarah, pengetahuan umum, coding, dll.):**
+1. Buka https://aistudio.google.com/app/apikey
+2. Klik **Create API key**, lalu copy key-nya (diawali "AIza...")
+3. Di halaman chat ini, klik tombol **"Atur API Key"** di kanan atas, tempel key, lalu **Simpan & Verifikasi**
+4. Badge berubah menjadi **Gemini Connected** — setelah itu semua pertanyaan dijawab Google Gemini
 
-2. **Wawasan & Strategi Praktis:**
-• **Analisis Terukur:** Pastikan setiap keputusan atau rencana didukung oleh data yang valid dan referensi terpercaya.
-• **Efisiensi & Ketepatan:** Terapkan langkah kerja yang terstruktur untuk mendapatkan hasil optimal dan konsisten.
-• **Penerapan Nyata:** Jika berkaitan dengan operasional ekspor-impor, Anda dapat memanfaatkan kalkulasi harga Incoterms (FOB/CIF), verifikasi legalitas izin NIB, atau sistem transaksi aman Escrow Vault kami.
-
-Apakah ada hal spesifik dari topik ini yang ingin Anda diskusikan lebih mendalam?`;
+Sementara itu, Anda bisa mencoba:
+• _"Sebutkan 5 produk kopi"_
+• _"Harga dan MOQ Kopi Gayo"_
+• _"Hitung CIF Hamburg 20 ton kopi"_
+• _"Apa saja dokumen ekspor yang diperlukan?"_`;
   }
 
   // Tentukan apakah ada API Key dari request body, gemini.json, atau environment
