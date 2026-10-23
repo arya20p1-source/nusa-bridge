@@ -316,7 +316,7 @@ function isPlausibleApiKey(key) {
 }
 
 function getRawStoredKey() {
-  const envKey = process.env.GEMINI_API_KEY;
+  const envKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
   if (envKey && String(envKey).trim()) return String(envKey).trim();
   try {
     const fs = require('fs');
@@ -338,7 +338,7 @@ function describeKeyProblem(rawKey) {
 }
 
 function getStoredApiKey() {
-  const fromEnv = sanitizeApiKey(process.env.GEMINI_API_KEY);
+  const fromEnv = sanitizeApiKey(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY);
   if (isPlausibleApiKey(fromEnv)) return fromEnv;
   try {
     const fs = require('fs');
@@ -454,11 +454,11 @@ app.post('/api/ai/set-key', async (req, res) => {
     }
 
     // Simpan ke environment runtime & tulis ke server/.env dan gemini.json
-    process.env.GEMINI_API_KEY = cleanKey;
+    process.env.GROQ_API_KEY = cleanKey;
     const fs = require('fs');
     try {
       const envFilePath = path.join(__dirname, '.env');
-      fs.writeFileSync(envFilePath, `PORT=${process.env.PORT || 5000}\nGEMINI_API_KEY=${cleanKey}\n`, 'utf-8');
+      fs.writeFileSync(envFilePath, `PORT=${process.env.PORT || 5000}\nGROQ_API_KEY=${cleanKey}\n`, 'utf-8');
     } catch (e) {}
 
     try {
