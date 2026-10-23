@@ -369,7 +369,7 @@ async function checkGroqConnection(key) {
       const ids = data.data.map((m) => m.id);
       const model = ids.includes('llama-3.3-70b-versatile')
         ? 'llama-3.3-70b-versatile'
-        : ids.find((id) => id.startsWith('llama')) || ids[0] || 'llama-3.3-70b-versatile';
+        : ids.find((id) => id.includes('llama-3')) || 'llama-3.3-70b-versatile';
       payload = { success: true, connected: true, model: model + ' (Groq)', reason: '' };
     } else {
       payload = {

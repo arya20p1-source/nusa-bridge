@@ -182,8 +182,8 @@ export default function PricingPage() {
     setVoucherClaimed(next);
     showToast(
       next
-        ? '🎉 Voucher Subsidi 15% Berhasil Diterapkan ke Paket!'
-        : '↩️ Voucher dibatalkan. Paket kembali ke harga normal.'
+        ? '✅ Voucher Subsidi 15% Berhasil Diterapkan ke Paket!'
+        : '❌ Voucher dibatalkan. Paket kembali ke harga normal.'
     );
     document.querySelector('.section-pricing-cards')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
