@@ -391,19 +391,7 @@ async function checkGroqConnection(key) {
   return payload;
 }
 
-async function getGenAIClient(customKey) {
-  const activeKey = sanitizeApiKey(customKey) || getStoredApiKey();
-  if (!isPlausibleApiKey(activeKey)) {
-    return null;
-  }
-  try {
-    const { GoogleGenAI } = await import('@google/genai');
-    return new GoogleGenAI({ apiKey: activeKey });
-  } catch (err) {
-    console.warn('[GenAI SDK Warning]:', err.message);
-    return null;
-  }
-}
+// (Groq dipanggil via fetch, tanpa SDK)
 
 // Endpoint untuk memeriksa status koneksi Google Gemini API resmi
 // (melakukan ping sungguhan — bukan hanya mengecek ada/tidaknya key)
@@ -1203,10 +1191,8 @@ Sementara itu, Anda bisa mencoba:
   // Jika API Key tersedia, hubungi Google Gemini API Resmi (@google/genai)
   if (activeKey) {
     try {
-      const ai = await getGenAIClient(activeKey);
-      if (ai) {
-        // Ringkas katalog agar Gemini menjawab harga/MOQ dengan data asli (bukan mengarang)
-        const catalogLines = (allProducts || []).map((p, i) =>
+      // Ringkas katalog agar AI menjawab harga/MOQ dengan data asli (bukan mengarang)
+      const catalogLines = (allProducts || []).map((p, i) =>
           `${i + 1}. ${p.name} | ${p.origin} | $${Number(p.price).toFixed(2)}/${p.unit} | MOQ ${p.moq} ${p.unit} | HS ${p.hsCode || '-'}`
         ).join('\n');
 
@@ -1273,10 +1259,9 @@ In the meantime, try:
 • _"Calculate CIF Hamburg 20 tons of coffee"_
 • _"What export documents are required?"_`;
         }
-      }
     } catch (apiErr) {
-      aiError = 'Gagal memanggil Gemini: ' + (apiErr.message || 'unknown error');
-      console.warn('[Gemini SDK API Call]: Menggunakan engine cerdas bawaan:', apiErr.message);
+      aiError = 'Gagal memanggil Groq: ' + (apiErr.message || 'unknown error');
+      console.warn('[Groq API Call]:', apiErr.message);
     }
   }
 
