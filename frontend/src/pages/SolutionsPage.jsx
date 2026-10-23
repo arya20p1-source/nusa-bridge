@@ -178,7 +178,7 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
         setShowKeyPanel(false);
         const st = await refreshAiStatus();
         if (st && st.connected) {
-          push('agent', `✅ **Gemini berhasil terhubung!** Model aktif: **${data.model}**. Mulai sekarang setiap pertanyaan dijawab langsung oleh Google Gemini, bukan engine lokal.`, 'NusaBridge AI');
+          push('agent', `✅ **NusaBridge AI berhasil terhubung!** Model aktif: **${data.model}**. Mulai sekarang setiap pertanyaan dijawab langsung oleh NusaBridge AI, bukan engine lokal.`, 'NusaBridge AI');
         }
       } else {
         setKeyStatus('err:' + (data.message || 'API key ditolak Google.'));
@@ -275,7 +275,7 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
               <div className="gcm-actions">
                 <div className="gcm-direct-badge" title={aiConn?.connected ? aiConn.model : (aiConn?.reason || 'Mengecek koneksi...')}>
                   <span className="direct-dot" style={aiConn && !aiConn.connected ? { background: '#f59e0b' } : undefined} />
-                  <span>{aiConn === null ? 'Mengecek...' : aiConn.connected ? 'Groq Connected' : 'Groq Off'}</span>
+                  <span>{aiConn === null ? 'Mengecek...' : aiConn.connected ? 'NusaBridge AI' : 'AI Off'}</span>
                 </div>
                 <button
                   className="btn-clear-chat"
