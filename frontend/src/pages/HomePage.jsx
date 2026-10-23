@@ -7,6 +7,7 @@ import RadarWidget from '../components/RadarWidget.jsx';
 import { downloadHtmlFile } from '../utils/downloadHtmlFile.js';
 import { formatAiText } from '../utils/aiText.js';
 import { getSmartIndexReply } from '../utils/smartReply.js';
+import { PRODUCTS_DATA } from '../data/products.js';
 
 /**
  * ==========================================================================
@@ -26,17 +27,19 @@ const HOME_CATS = [
   { key: 'rempah', labelKey: 'cat_spices' },
   { key: 'kriya', labelKey: 'cat_craft' },
   { key: 'tekstil', labelKey: 'cat_textile' },
-  { key: 'makanan', labelKey: 'cat_food' },
-  { key: 'lainnya', labelKey: 'cat_others' },
 ];
 
-const HOME_PRODUCTS = [
-  { id: 1, name: 'Kopi Arabika Gayo', price: 'USD 8.5 / Kg', loc: 'Aceh, Indonesia', cat: 'kopi', img: '/assets/product-1.webp' },
-  { id: 2, name: 'Rempah Nusantara', price: 'USD 6.2 / Kg', loc: 'Indonesia', cat: 'rempah', img: '/assets/product-2.webp' },
-  { id: 3, name: 'Kerajinan Rotan', price: 'USD 12.0 / pcs', loc: 'Indonesia', cat: 'kriya', img: '/assets/product-3.webp' },
-  { id: 4, name: 'Tenun Ikat', price: 'USD 25.0 / pcs', loc: 'Indonesia', cat: 'tekstil', img: '/assets/product-4.webp' },
-  { id: 5, name: 'Oleh-oleh Organik', price: 'USD 4.5 / Kg', loc: 'Indonesia', cat: 'makanan', img: '/assets/product-5.webp' },
-];
+const HOME_PRODUCTS = ['kopi', 'rempah', 'kriya', 'tekstil']
+  .map((category) => PRODUCTS_DATA.find((product) => product.category === category))
+  .filter(Boolean)
+  .map((product) => ({
+    id: product.id,
+    name: product.name,
+    price: `USD ${Number(product.price).toFixed(2)} / ${product.unit}`,
+    loc: product.origin,
+    cat: product.category,
+    img: product.image,
+  }));
 
 const WORKFLOW_STEPS = [
   { n: 1, icon: '/assets/icons/icon-5.webp', k: 'step_1' },
@@ -827,7 +830,7 @@ function ChatWidget() {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: q.trim(), apiKey: localStorage.getItem('nb_gemini_api_key') || '', lang }),
+        body: JSON.stringify({ message: q.trim(), lang }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);

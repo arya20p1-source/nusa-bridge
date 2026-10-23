@@ -315,28 +315,6 @@ function isPlausibleApiKey(key) {
   return /^gsk_[0-9A-Za-z]{20,80}$/.test(key);
 }
 
-function getRawStoredKey() {
-  const envKey = process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY;
-  if (envKey && String(envKey).trim()) return String(envKey).trim();
-  try {
-    const fs = require('fs');
-    const geminiJsonPath = path.join(__dirname, 'gemini.json');
-    if (fs.existsSync(geminiJsonPath)) {
-      const data = JSON.parse(fs.readFileSync(geminiJsonPath, 'utf8'));
-      if (data.apiKey && String(data.apiKey).trim()) return String(data.apiKey).trim();
-    }
-  } catch (e) {}
-  return '';
-}
-
-function describeKeyProblem(rawKey) {
-  if (!rawKey) return 'API key belum diisi. Tempel API key Groq (gsk_...) lewat tombol "Atur API Key".';
-  if (/\s/.test(rawKey) || /[()]/.test(rawKey)) {
-    return 'Nilai API key mengandung spasi/tanda kurung. Copy HANYA key-nya (klik ikon copy di Groq Console), tanpa teks lain.';
-  }
-  return 'Format API key tidak valid. Key Groq diawali "gsk_". Buat key baru di https://console.groq.com/keys';
-}
-
 function getStoredApiKey() {
   const fromEnv = sanitizeApiKey(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY);
   if (isPlausibleApiKey(fromEnv)) return fromEnv;
@@ -348,137 +326,11 @@ function getStoredApiKey() {
       const fromJson = sanitizeApiKey(data.apiKey);
       if (isPlausibleApiKey(fromJson)) return fromJson;
     }
-  } catch (e) {}
+  } catch (e) {  }
   return '';
 }
 
-/** Cek koneksi sungguhan ke Google (bukan sekadar "ada key"). Di-cache 60 detik. */
-let aiStatusCache = { at: 0, key: '', payload: null };
-async function checkGroqConnection(key) {
-  if (aiStatusCache.payload && aiStatusCache.key === key && Date.now() - aiStatusCache.at < 60000) {
-    return aiStatusCache.payload;
-  }
-  let payload;
-  try {
-    const resp = await fetch('https://api.groq.com/openai/v1/models', {
-      headers: { Authorization: 'Bearer ' + key },
-      signal: AbortSignal.timeout(8000),
-    });
-    const data = await resp.json().catch(() => ({}));
-    if (resp.ok && Array.isArray(data.data)) {
-      const ids = data.data.map((m) => m.id);
-      const model = ids.includes('llama-3.3-70b-versatile')
-        ? 'llama-3.3-70b-versatile'
-        : ids.find((id) => id.includes('llama-3')) || 'llama-3.3-70b-versatile';
-      payload = { success: true, connected: true, model: model + ' (Groq)', reason: '' };
-    } else {
-      payload = {
-        success: true,
-        connected: false,
-        model: 'NusaBridge Smart Intelligence Engine',
-        reason: (data.error && data.error.message) || `HTTP ${resp.status}`,
-      };
-    }
-  } catch (e) {
-    payload = {
-      success: true,
-      connected: false,
-      model: 'NusaBridge Smart Intelligence Engine',
-      reason: 'Tidak dapat menghubungi Groq: ' + e.message,
-    };
-  }
-  aiStatusCache = { at: Date.now(), key, payload };
-  return payload;
-}
-
 // (Groq dipanggil via fetch, tanpa SDK)
-
-// Endpoint untuk memeriksa status koneksi Google Gemini API resmi
-// (melakukan ping sungguhan — bukan hanya mengecek ada/tidaknya key)
-app.get('/api/ai/status', async (req, res) => {
-  const currentKey = getStoredApiKey();
-  if (!currentKey) {
-    return res.json({
-      success: true,
-      connected: false,
-      model: 'NusaBridge Smart Intelligence Engine',
-      reason: describeKeyProblem(getRawStoredKey()),
-    });
-  }
-  const payload = await checkGroqConnection(currentKey);
-  res.json(payload);
-});
-
-
-// Endpoint untuk menyimpan dan mengaktifkan API Key Google Gemini resmi secara langsung
-app.post('/api/ai/set-key', async (req, res) => {
-  try {
-    const { apiKey } = req.body;
-    const rawKey = String(apiKey || '').trim();
-    const cleanKey = sanitizeApiKey(rawKey);
-    if (!cleanKey) {
-      return res.status(400).json({ success: false, message: 'API Key tidak boleh kosong.' });
-    }
-    if (!isPlausibleApiKey(cleanKey)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Format API Key tidak valid. Key Groq diawali "gsk_" tanpa spasi/tanda kurung. Copy ulang lewat ikon copy di https://console.groq.com/keys',
-      });
-    }
-
-    // Verifikasi API Key dengan ping ke Groq
-    let verified = false;
-    let modelUsed = 'llama-3.3-70b-versatile';
-    let lastError = '';
-    try {
-      const resp = await fetch('https://api.groq.com/openai/v1/models', {
-        headers: { Authorization: 'Bearer ' + cleanKey },
-        signal: AbortSignal.timeout(8000),
-      });
-      const data = await resp.json().catch(() => ({}));
-      if (resp.ok && Array.isArray(data.data) && data.data.length) {
-        verified = true;
-        modelUsed = data.data.find((m) => m.id === 'llama-3.3-70b-versatile') ? 'llama-3.3-70b-versatile' : data.data[0].id;
-      } else {
-        lastError = (data.error && data.error.message) || `HTTP ${resp.status}`;
-      }
-    } catch (err) {
-      lastError = err.message || err;
-    }
-
-    if (!verified) {
-      return res.status(400).json({
-        success: false,
-        message: 'API Key tidak dapat memverifikasi ke Groq. Detail: ' + lastError,
-      });
-    }
-
-    // Simpan ke environment runtime & tulis ke server/.env dan gemini.json
-    process.env.GROQ_API_KEY = cleanKey;
-    const fs = require('fs');
-    try {
-      const envFilePath = path.join(__dirname, '.env');
-      fs.writeFileSync(envFilePath, `PORT=${process.env.PORT || 5000}\nGROQ_API_KEY=${cleanKey}\n`, 'utf-8');
-    } catch (e) {}
-
-    try {
-      const geminiJsonPath = path.join(__dirname, 'gemini.json');
-      fs.writeFileSync(geminiJsonPath, JSON.stringify({
-        apiKey: cleanKey,
-        model: modelUsed,
-        updatedAt: new Date().toISOString()
-      }, null, 2), 'utf-8');
-    } catch (e) {}
-
-    res.json({
-      success: true,
-      message: 'Berhasil terhubung ke Groq AI! Seluruh pertanyaan sekarang dijawab langsung oleh Groq.',
-      model: modelUsed
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: 'Terjadi kesalahan verifikasi: ' + err.message });
-  }
-});
 
 // Endpoint terjemahan UI (ID -> EN) memakai Gemini, dengan hasil berupa array
 app.post('/api/translate', async (req, res) => {
@@ -1162,33 +1014,16 @@ Teknologi modern dan sistem berbasis AI dirancang untuk memecahkan masalah kompl
 Apakah ada aspek pemrograman, API, atau arsitektur teknologi tertentu yang ingin Anda tanyakan?`;
     }
 
-    // 28. Fallback jujur: engine lokal tidak punya jawaban spesifik
-    return `Saya belum punya jawaban spesifik untuk **"${raw}"** di basis data lokal NusaBridge.
-
-Saat ini saya berjalan dalam **mode engine lokal** karena API key Gemini belum aktif. Di mode ini saya menguasai topik: katalog produk, harga & MOQ, Incoterms/kalkulasi CIF-FOB, dokumen ekspor, legalitas (NIB/OSS), karantina, dan Escrow.
-
-**Agar saya bisa menjawab pertanyaan umum seperti Gemini (sains, sejarah, pengetahuan umum, coding, dll.):**
-1. Buka https://aistudio.google.com/app/apikey
-2. Klik **Create API key**, lalu copy key-nya (diawali "AIza...")
-3. Di halaman chat ini, klik tombol **"Atur API Key"** di kanan atas, tempel key, lalu **Simpan & Verifikasi**
-4. Badge berubah menjadi **Gemini Connected** — setelah itu semua pertanyaan dijawab Google Gemini
-
-Sementara itu, Anda bisa mencoba:
-• _"Sebutkan 5 produk kopi"_
-• _"Harga dan MOQ Kopi Gayo"_
-• _"Hitung CIF Hamburg 20 ton kopi"_
-• _"Apa saja dokumen ekspor yang diperlukan?"_`;
+    return `Saya belum menemukan jawaban yang cukup spesifik untuk **"${raw}"**. Saya bisa membantu menjelaskan katalog produk NusaBridge, RFQ, Incoterms, dokumen, dan persyaratan umum ekspor. Untuk kepastian harga atau aturan terbaru, konfirmasikan kepada pemasok dan instansi terkait.`;
   }
 
-  // Tentukan apakah ada API Key dari request body, gemini.json, atau environment
-  const clientKey = sanitizeApiKey(req.body.apiKey);
-  const activeKey = isPlausibleApiKey(clientKey) ? clientKey : getStoredApiKey();
+  // Rahasia AI hanya dibaca dari konfigurasi backend, tidak dari request browser.
+  const activeKey = getStoredApiKey();
   const reqLang = String(req.body.lang || '').toLowerCase() === 'en' ? 'en' : 'id';
   let aiReply = getHeuristicReply(message);
   let usedModel = 'NusaBridge Smart Intelligence Engine';
-  let aiError = activeKey ? '' : 'Groq belum aktif: API key tidak ada atau formatnya tidak valid.';
 
-  // Jika API Key tersedia, hubungi Google Gemini API Resmi (@google/genai)
+  // Jika server memiliki konfigurasi model, panggil provider dari backend.
   if (activeKey) {
     try {
       // Ringkas katalog agar AI menjawab harga/MOQ dengan data asli (bukan mengarang)
@@ -1232,54 +1067,21 @@ ${catalogLines || '(katalog kosong)'}`;
           if (resp.ok && data && data.choices && data.choices[0] && data.choices[0].message) {
             generatedText = data.choices[0].message.content;
             usedModel = 'llama-3.3-70b-versatile (Groq)';
-            aiError = '';
-          } else {
-            aiError = (data.error && data.error.message) || ('HTTP ' + resp.status);
           }
         } catch (apiErr) {
-          aiError = 'Gagal memanggil Groq: ' + (apiErr.message || 'unknown error');
           console.warn('[Groq API Call]:', apiErr.message);
         }
 
         if (generatedText) {
           aiReply = generatedText.replace(/<[^>]*>/g, '');
-          aiError = '';
-        } else if (reqLang === 'en') {
-          aiReply = `I'm currently running in **local mode** (Groq is temporarily unavailable). In this mode I can help with: the product catalog, prices & MOQ, Incoterms/CIF-FOB calculations, export documents, compliance (NIB/OSS), quarantine, and Escrow.
-
-**To unlock full AI answers (science, history, coding, general knowledge, etc.):**
-1. Open https://console.groq.com/keys
-2. Click **Create API Key**, then copy the key (starts with "gsk_...")
-3. In this chat, click **"Set API Key"** (top right), paste the key, then **Save & Verify**
-4. The badge changes to **Groq Connected** — after that all questions are answered by Groq
-
-In the meantime, try:
-• _"List 5 coffee products"_
-• _"Price and MOQ of Gayo Coffee"_
-• _"Calculate CIF Hamburg 20 tons of coffee"_
-• _"What export documents are required?"_`;
         }
     } catch (apiErr) {
-      aiError = 'Gagal memanggil Groq: ' + (apiErr.message || 'unknown error');
       console.warn('[Groq API Call]:', apiErr.message);
     }
   }
 
-  // Saat UI Inggris dan Gemini tidak dipakai, paksa jawaban Inggris (jangan Indonesian heuristic)
   if (reqLang === 'en' && !usedModel.includes('Groq')) {
-    aiReply = `I'm currently running in **local mode** (Groq is temporarily unavailable). In this mode I can help with: the product catalog, prices & MOQ, Incoterms/CIF-FOB calculations, export documents, compliance (NIB/OSS), quarantine, and Escrow.
-
-**To unlock full AI answers (science, history, coding, general knowledge, etc.):**
-1. Open https://console.groq.com/keys
-2. Click **Create API Key**, then copy the key (starts with "gsk_...")
-3. In this chat, click **"Set API Key"** (top right), paste the key, then **Save & Verify**
-4. The badge changes to **Groq Connected** - after that all questions are answered by Groq
-
-In the meantime, try:
-• _"List 5 coffee products"_
-• _"Price and MOQ of Gayo Coffee"_
-• _"Calculate CIF Hamburg 20 tons of coffee"_
-• _"What export documents are required?"_`;
+    aiReply = `I don't have a sufficiently specific answer for **"${message}"** yet. I can help with the NusaBridge catalog, RFQs, Incoterms, documents, and general export requirements. Confirm current prices and regulations with suppliers and the relevant authorities.`;
   }
 
   // Pastikan respons bersih dari tag HTML mentah
@@ -1291,7 +1093,6 @@ In the meantime, try:
     agent: 'NusaBridge AI',
     model: usedModel,
     isOfficialGemini: usedModel.includes('Groq'),
-    aiError: aiError || null
   });
 });
 

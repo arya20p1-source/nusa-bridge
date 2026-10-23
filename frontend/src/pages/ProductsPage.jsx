@@ -379,7 +379,7 @@ export default function ProductsPage() {
               </div>
             ) : (
               paginated.map((prod, idx) => {
-                const fallbackImg = `/assets/product-${((startIndex + idx) % 5) + 1}.webp`;
+                const fallbackImg = `/assets/products/${prod.category}-1.webp`;
                 return (
                   <div key={prod.id} className="catalog-card" data-category={prod.category} data-id={prod.id}>
                     <div className="catalog-card-image">

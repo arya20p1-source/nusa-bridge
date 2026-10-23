@@ -102,6 +102,45 @@ const AI_TABS = [
   { id: 'tab-escrow', icon: '🔒', label: '4. Escrow Vault & AI Chat (4 Fase)' },
 ];
 
+const CHAT_TEMPLATES = [
+  {
+    question: 'Bagaimana cara mulai ekspor lewat NusaBridge?',
+    answer: 'Mulailah dengan menyiapkan profil usaha dan informasi produk, lalu tentukan negara tujuan serta Incoterms yang disepakati. Siapkan dokumen dasar seperti NIB dan invoice; persyaratan tambahan bergantung pada jenis barang dan negara tujuan. Gunakan RFQ untuk merapikan permintaan buyer sebelum menyepakati transaksi.',
+    questionEn: 'How do I start exporting with NusaBridge?',
+    answerEn: 'Start by preparing your business profile and product details, then confirm the destination country and agreed Incoterm. Prepare basic documents such as your NIB and invoice; additional requirements depend on the goods and destination. Use an RFQ to organize the buyer’s request before agreeing to a transaction.',
+  },
+  {
+    question: 'Dokumen apa yang biasanya dibutuhkan untuk ekspor?',
+    answer: 'Dokumen yang umum disiapkan meliputi NIB, commercial invoice, packing list, dokumen PEB, dan Certificate of Origin bila diperlukan. Produk pertanian atau pangan dapat memerlukan dokumen karantina atau sertifikat khusus. Pastikan daftar akhir diverifikasi dengan Bea Cukai, instansi terkait, dan buyer.',
+    questionEn: 'Which documents are commonly needed for export?',
+    answerEn: 'Common documents include a NIB, commercial invoice, packing list, export declaration (PEB), and a Certificate of Origin when required. Agricultural or food products may need quarantine documents or specific certificates. Confirm the final checklist with Customs, the relevant authorities, and the buyer.',
+  },
+  {
+    question: 'Apa perbedaan FOB dan CIF?',
+    answer: 'FOB digunakan untuk pengiriman laut: penjual menyerahkan barang di atas kapal pada pelabuhan muat yang disebutkan, lalu risiko beralih kepada pembeli. Pada CIF, penjual juga membayar ongkos angkut dan asuransi minimum sampai pelabuhan tujuan, tetapi risiko tetap beralih saat barang sudah dimuat di kapal. Cocokkan detailnya dengan kontrak dan Incoterms 2020.',
+    questionEn: 'What is the difference between FOB and CIF?',
+    answerEn: 'FOB is for sea transport: the seller delivers the goods on board at the named port of shipment, where risk transfers to the buyer. Under CIF, the seller also pays freight and minimum insurance to the destination port, but risk still transfers once the goods are on board. Confirm the details in the contract and under Incoterms 2020.',
+  },
+  {
+    question: 'Bagaimana cara mengajukan RFQ ke buyer?',
+    answer: 'Cantumkan nama dan spesifikasi produk, jumlah, kemasan, pelabuhan tujuan, jadwal pengiriman, serta Incoterm yang diminta. Data tersebut membantu menyusun permintaan penawaran yang jelas. Harga akhir dan ketersediaan tetap perlu dikonfirmasi langsung dengan pemasok atau buyer.',
+    questionEn: 'How do I prepare an RFQ for a buyer?',
+    answerEn: 'Include the product name and specifications, quantity, packaging, destination port, delivery schedule, and requested Incoterm. These details help make the quotation request clear. Final pricing and availability still need to be confirmed with the supplier or buyer.',
+  },
+  {
+    question: 'Apakah simulasi Escrow Vault memproses pembayaran sungguhan?',
+    answer: 'Tidak. Escrow Vault yang ditampilkan di website ini adalah simulasi antarmuka untuk menjelaskan tahapan transaksi, bukan layanan penitipan atau pemrosesan dana sungguhan. Jangan mengirim uang berdasarkan simulasi ini; gunakan penyedia pembayaran resmi dan periksa kontrak secara mandiri.',
+    questionEn: 'Does the Escrow Vault demo process real payments?',
+    answerEn: 'No. The Escrow Vault shown on this website is an interface demo that explains transaction milestones; it does not hold or process real funds. Do not send money based on this demo. Use an authorized payment provider and independently review the contract.',
+  },
+  {
+    question: 'Bagaimana mengetahui persyaratan ekspor negara tujuan?',
+    answer: 'Persyaratan berbeda menurut negara tujuan dan jenis produk. Periksa aturan impor terbaru, tarif dan kode HS, serta kebutuhan izin atau sertifikat melalui Bea Cukai, INSW, karantina, dan otoritas negara tujuan. Konfirmasikan juga dokumen yang diminta buyer sebelum barang dikirim.',
+    questionEn: 'How can I check export requirements for a destination?',
+    answerEn: 'Requirements vary by destination and product. Check current import rules, tariffs and HS codes, and any permit or certificate requirements with Customs, INSW, quarantine authorities, and the destination country’s authorities. Also confirm the buyer’s document requirements before shipping.',
+  },
+];
+
 function nowTime() {
   return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 }
@@ -114,15 +153,9 @@ function GeminiWorkspace() {
   const [msgs, setMsgs] = useState([
     {
       sender: 'agent',
-      raw: `Halo! Saya **NusaBridge AI**, asisten perdagangan ekspor-impor pintar untuk UMKM Indonesia.
+      raw: `Halo! Saya **NusaBridge AI**, asisten informasi perdagangan ekspor-impor untuk UMKM Indonesia.
 
-Saya siap membantu Anda dalam:
-• Mengecek harga, spesifikasi, dan MOQ dari 50 komoditas ekspor unggulan (Kopi, Rempah, Kriya, Tekstil).
-• Menghitung estimasi biaya pengiriman, ocean freight kapal, asuransi, dan penawaran CIF/FOB dengan margin aman.
-• Memberikan panduan kepatuhan dan audit perizinan negara tujuan (NIB OSS, Sertifikat Karantina, US FDA, EUDR Eropa, JAS Jepang).
-• Menjelaskan skema pembayaran bertahap 4 fase via Escrow Vault agar transaksi Anda aman dari risiko penipuan.
-
-Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
+Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertanyaan tentang katalog dan alur ekspor NusaBridge di bawah.`,
       label: 'NusaBridge AI',
       time: nowTime(),
     },
@@ -132,61 +165,6 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
   const sendingRef = useRef(false);
   const historyRef = useRef(null);
   const inputRef = useRef(null);
-
-  // Status koneksi Gemini yang sebenarnya (dicek ke Google, bukan asal "ada key")
-  const [aiConn, setAiConn] = useState(null);
-  const [showKeyPanel, setShowKeyPanel] = useState(false);
-  const [apiKeyInput, setApiKeyInput] = useState('');
-  const [keyStatus, setKeyStatus] = useState('');
-
-  useEffect(() => {
-    let alive = true;
-    fetch('/api/ai/status')
-      .then((r) => r.json())
-      .then((d) => { if (alive) setAiConn(d); })
-      .catch(() => { if (alive) setAiConn({ connected: false, reason: 'Backend tidak dapat dihubungi. Jalankan node server.js di folder backend.' }); });
-    return () => { alive = false; };
-  }, []);
-
-  async function refreshAiStatus() {
-    try {
-      const st = await fetch('/api/ai/status').then((r) => r.json());
-      setAiConn(st);
-      return st;
-    } catch (e) {
-      setAiConn({ connected: false, reason: 'Backend tidak dapat dihubungi.' });
-      return null;
-    }
-  }
-
-  async function saveApiKey(e) {
-    if (e) e.preventDefault();
-    const key = apiKeyInput.trim();
-    if (!key) return;
-    setKeyStatus('saving');
-    try {
-      const res = await fetch('/api/ai/set-key', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: key }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        localStorage.setItem('nb_gemini_api_key', key);
-        setKeyStatus('ok');
-        setApiKeyInput('');
-        setShowKeyPanel(false);
-        const st = await refreshAiStatus();
-        if (st && st.connected) {
-          push('agent', `✅ **NusaBridge AI berhasil terhubung!** Model aktif: **${data.model}**. Mulai sekarang setiap pertanyaan dijawab langsung oleh NusaBridge AI, bukan engine lokal.`, 'NusaBridge AI');
-        }
-      } else {
-        setKeyStatus('err:' + (data.message || 'API key ditolak Google.'));
-      }
-    } catch (err) {
-      setKeyStatus('err:Gagal menghubungi backend: ' + err.message);
-    }
-  }
 
   function scrollBottom() {
     requestAnimationFrame(() => {
@@ -199,6 +177,13 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
     scrollBottom();
   }
 
+  function answerTemplate(template) {
+    const question = lang === 'en' ? template.questionEn : template.question;
+    const answer = lang === 'en' ? template.answerEn : template.answer;
+    push('user', question);
+    push('agent', answer, 'NusaBridge AI');
+  }
+
   async function processQuery(text) {
     if (!text || !text.trim()) return;
     const promptText = text.trim();
@@ -208,7 +193,6 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
     setTyping(true);
     scrollBottom();
 
-    const storedApiKey = localStorage.getItem('nb_gemini_api_key') || '';
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
@@ -216,7 +200,7 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: promptText, apiKey: storedApiKey, lang }),
+        body: JSON.stringify({ message: promptText, lang }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -273,22 +257,6 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
                 </div>
               </div>
               <div className="gcm-actions">
-                <div className="gcm-direct-badge" title={aiConn?.connected ? aiConn.model : (aiConn?.reason || 'Mengecek koneksi...')}>
-                  <span className="direct-dot" style={aiConn && !aiConn.connected ? { background: '#f59e0b' } : undefined} />
-                  <span>{aiConn === null ? 'Mengecek...' : aiConn.connected ? 'NusaBridge AI' : 'AI Off'}</span>
-                </div>
-                <button
-                  className="btn-clear-chat"
-                  type="button"
-                  title="Atur API Key Groq"
-                  onClick={() => { setShowKeyPanel((v) => !v); setKeyStatus(''); }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                  </svg>
-                  <span>Atur API Key</span>
-                </button>
                 <button
                   className="btn-clear-chat"
                   type="button"
@@ -296,7 +264,7 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
                   onClick={() => {
                     setMsgs([{
                       sender: 'agent',
-                      raw: 'Halo! Saya **NusaBridge AI**, asisten perdagangan ekspor-impor pintar untuk UMKM Indonesia. Silakan ketik pertanyaan atau konsultasi ekspor Anda!',
+                      raw: 'Halo! Saya **NusaBridge AI**, asisten informasi perdagangan ekspor-impor untuk UMKM Indonesia. Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertanyaan tentang katalog dan alur ekspor NusaBridge.',
                       label: 'NusaBridge AI',
                       time: nowTime(),
                     }]);
@@ -305,48 +273,10 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                   </svg>
-                  <span><T k="solusi_btn_clear" /></span>
+                  <span>Bersihkan Chat</span>
                 </button>
               </div>
             </div>
-
-            {showKeyPanel && (
-              <form onSubmit={saveApiKey} style={{ padding: '12px 16px', borderBottom: '1px solid #e5e7eb', background: '#f8fafc' }}>
-                <div style={{ fontSize: '13px', marginBottom: '8px', color: '#334155' }}>
-                  Tempel API key Groq (<code>gsk_...</code>, tanpa spasi) dari{' '}
-                  <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer">Groq Console</a>.
-                </div>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  <input
-                    type="text"
-                    value={apiKeyInput}
-                    onChange={(e) => setApiKeyInput(e.target.value)}
-                    placeholder="gsk_..."
-                    autoComplete="off"
-                    spellCheck={false}
-                    style={{ flex: '1 1 260px', padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', fontFamily: 'monospace' }}
-                  />
-                  <button type="submit" className="btn-clear-chat" disabled={keyStatus === 'saving'} style={{ background: '#0f766e', color: '#fff', border: 'none' }}>
-                    <span>{keyStatus === 'saving' ? 'Memverifikasi...' : 'Simpan & Verifikasi'}</span>
-                  </button>
-                </div>
-                {keyStatus.startsWith('err:') && (
-                  <div style={{ marginTop: '8px', fontSize: '12.5px', color: '#b91c1c' }}>⚠️ {keyStatus.slice(4)}</div>
-                )}
-                {keyStatus === 'ok' && (
-                  <div style={{ marginTop: '8px', fontSize: '12.5px', color: '#047857' }}>✅ API key tersimpan dan terverifikasi.</div>
-                )}
-              </form>
-            )}
-
-            {aiConn && !aiConn.connected && (
-              <div style={{ padding: '10px 16px', background: '#fffbeb', borderBottom: '1px solid #fde68a', fontSize: '12.5px', color: '#92400e' }}>
-                ⚠️ Groq belum aktif — jawaban masih dari engine lokal. Alasan: {aiConn.reason || 'API key belum diisi.'}{' '}
-                <button type="button" onClick={() => setShowKeyPanel(true)} style={{ background: 'none', border: 'none', color: '#0369a1', textDecoration: 'underline', cursor: 'pointer', fontSize: '12.5px', padding: 0 }}>
-                  Atur API Key
-                </button>
-              </div>
-            )}
 
             <div className="gcm-history" ref={historyRef}>
               {msgs.map((m, i) => (
@@ -377,6 +307,19 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
             </div>
 
             <div className="gcm-footer">
+              <div className="chat-templates" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '8px 0' }}>
+                {CHAT_TEMPLATES.map((template) => (
+                  <button
+                    key={template.question}
+                    type="button"
+                    className="btn-template-q"
+                    onClick={() => answerTemplate(template)}
+                    style={{ fontSize: '12px', padding: '6px 10px', border: '1px solid #cbd5e1', borderRadius: '16px', background: '#f1f5f9', cursor: 'pointer' }}
+                  >
+                    {lang === 'en' ? template.questionEn : template.question}
+                  </button>
+                ))}
+              </div>
               <form className="chat-input-form" onSubmit={handleSend}>
                 <textarea
                   ref={inputRef}
@@ -1121,7 +1064,7 @@ function EscrowTab() {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, apiKey: localStorage.getItem('nb_gemini_api_key') || '', lang }),
+        body: JSON.stringify({ message: text, lang }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
