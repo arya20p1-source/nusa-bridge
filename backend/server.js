@@ -360,25 +360,35 @@ async function checkGeminiConnection(key) {
   }
   let payload;
   try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`,
-      { signal: AbortSignal.timeout(8000) }
-    );
-    const data = await resp.json().catch(() => ({}));
-    if (resp.ok && Array.isArray(data.models)) {
-      const ids = data.models.map((m) => (m.name || '').replace(/^models\//, ''));
-      const model = ids.includes('gemini-3.8-flash')
-        ? 'gemini-3.8-flash'
-        : ids.includes('gemini-3.5-flash')
-        ? 'gemini-3.5-flash'
-        : ids.find((id) => id.startsWith('gemini-')) || 'gemini-3.8-flash';
-      payload = { success: true, connected: true, model: `${model} (Official Google GenAI)`, reason: '' };
+    const { GoogleGenAI } = await import('@google/genai');
+    const ai = new GoogleGenAI({ apiKey: key });
+    let verified = false;
+    let modelUsed = '';
+    let lastError = '';
+    for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash']) {
+      try {
+        const resp = await ai.models.generateContent({ model, contents: 'Ping. Reply OK.' });
+        if (resp && (resp.text || resp.candidates)) {
+          verified = true;
+          modelUsed = model;
+          break;
+        }
+        lastError = model + ': no response';
+      } catch (err) {
+        lastError = model + ': ' + (err.message || err);
+      }
+    }
+    if (verified) {
+      payload = { success: true, connected: true, model: modelUsed + ' (Official Google GenAI)', reason: '' };
     } else {
+      const quota = /quota|RESOURCE_EXHAUSTED|rate.limit/i.test(lastError);
       payload = {
         success: true,
         connected: false,
         model: 'NusaBridge Smart Intelligence Engine',
-        reason: (data.error && data.error.message) || `HTTP ${resp.status}`,
+        reason: quota
+          ? 'Kuota Gemini harian habis (free tier ~20 req/hari). Tunggu reset (~4 jam) atau aktifkan billing di Google AI Studio.'
+          : 'API Key tidak dapat memverifikasi ke Google Gemini. Detail: ' + lastError,
       };
     }
   } catch (e) {
