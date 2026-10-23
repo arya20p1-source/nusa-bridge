@@ -1203,6 +1203,7 @@ Sementara itu, Anda bisa mencoba:
   // Tentukan apakah ada API Key dari request body, gemini.json, atau environment
   const clientKey = sanitizeApiKey(req.body.apiKey);
   const activeKey = isPlausibleApiKey(clientKey) ? clientKey : getStoredApiKey();
+  const reqLang = String(req.body.lang || '').toLowerCase() === 'en' ? 'en' : 'id';
   let aiReply = getHeuristicReply(message);
   let usedModel = 'NusaBridge Smart Intelligence Engine';
   let aiError = activeKey ? '' : 'Gemini belum aktif: API key tidak ada atau formatnya tidak valid.';
@@ -1217,7 +1218,6 @@ Sementara itu, Anda bisa mencoba:
           `${i + 1}. ${p.name} | ${p.origin} | $${Number(p.price).toFixed(2)}/${p.unit} | MOQ ${p.moq} ${p.unit} | HS ${p.hsCode || '-'}`
         ).join('\n');
 
-        const reqLang = String(req.body.lang || '').toLowerCase() === 'en' ? 'en' : 'id';
         const languageRule = reqLang === 'en'
           ? '2. Selalu jawab dalam BAHASA INGGRIS (English), walaupun pengguna menulis dalam bahasa Indonesia. Seluruh jawaban harus berbahasa Inggris.'
           : '2. Gunakan bahasa yang dipakai pengguna (Indonesia atau Inggris), santun, ringkas, dan jelas.';
@@ -1259,12 +1259,43 @@ ${catalogLines || '(katalog kosong)'}`;
         if (generatedText) {
           aiReply = generatedText.replace(/<[^>]*>/g, '');
           aiError = '';
+        } else if (reqLang === 'en') {
+          aiReply = `I'm currently running in **local mode** (Gemini is temporarily unavailable). In this mode I can help with: the product catalog, prices & MOQ, Incoterms/CIF-FOB calculations, export documents, compliance (NIB/OSS), quarantine, and Escrow.
+
+**To unlock full AI answers (science, history, coding, general knowledge, etc.):**
+1. Open https://aistudio.google.com/app/apikey
+2. Click **Create API key**, then copy the key (starts with "AIza...")
+3. In this chat, click **"Set API Key"** (top right), paste the key, then **Save & Verify**
+4. The badge changes to **Gemini Connected** — after that all questions are answered by Google Gemini
+
+In the meantime, try:
+• _"List 5 coffee products"_
+• _"Price and MOQ of Gayo Coffee"_
+• _"Calculate CIF Hamburg 20 tons of coffee"_
+• _"What export documents are required?"_`;
         }
       }
     } catch (apiErr) {
       aiError = 'Gagal memanggil Gemini: ' + (apiErr.message || 'unknown error');
       console.warn('[Gemini SDK API Call]: Menggunakan engine cerdas bawaan:', apiErr.message);
     }
+  }
+
+  // Saat UI Inggris dan Gemini tidak dipakai, paksa jawaban Inggris (jangan Indonesian heuristic)
+  if (reqLang === 'en' && !usedModel.includes('Official Google GenAI')) {
+    aiReply = `I'm currently running in **local mode** (Gemini is temporarily unavailable). In this mode I can help with: the product catalog, prices & MOQ, Incoterms/CIF-FOB calculations, export documents, compliance (NIB/OSS), quarantine, and Escrow.
+
+**To unlock full AI answers (science, history, coding, general knowledge, etc.):**
+1. Open https://aistudio.google.com/app/apikey
+2. Click **Create API key**, then copy the key (starts with "AIza...")
+3. In this chat, click **"Set API Key"** (top right), paste the key, then **Save & Verify**
+4. The badge changes to **Gemini Connected** — after that all questions are answered by Google Gemini
+
+In the meantime, try:
+• _"List 5 coffee products"_
+• _"Price and MOQ of Gayo Coffee"_
+• _"Calculate CIF Hamburg 20 tons of coffee"_
+• _"What export documents are required?"_`;
   }
 
   // Pastikan respons bersih dari tag HTML mentah
