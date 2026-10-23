@@ -305,14 +305,14 @@ let genaiClient = null;
 function sanitizeApiKey(raw) {
   if (!raw) return '';
   const s = String(raw);
-  const m = s.match(/(AIza[0-9A-Za-z_-]{20,60}|AQ\.[0-9A-Za-z_.\-]{20,200})/);
+  const m = s.match(/(gsk_[0-9A-Za-z]{20,80})/);
   if (m) return m[0];
   return s.trim().replace(/^["']|["']$/g, '');
 }
 
-/** API key Gemini yang sah: format lama (AIza...) atau auth key baru (AQ....). */
+/** API key Groq yang sah: diawali gsk_ */
 function isPlausibleApiKey(key) {
-  return /^AIza[0-9A-Za-z_-]{30,60}$/.test(key) || /^AQ\.[0-9A-Za-z_.\-]{20,200}$/.test(key);
+  return /^gsk_[0-9A-Za-z]{20,80}$/.test(key);
 }
 
 function getRawStoredKey() {
@@ -330,11 +330,11 @@ function getRawStoredKey() {
 }
 
 function describeKeyProblem(rawKey) {
-  if (!rawKey) return 'API key belum diisi. Tempel API key Gemini (AIza... atau auth key AQ....) lewat tombol "Atur API Key".';
+  if (!rawKey) return 'API key belum diisi. Tempel API key Groq (gsk_...) lewat tombol "Atur API Key".';
   if (/\s/.test(rawKey) || /[()]/.test(rawKey)) {
-    return 'Nilai API key mengandung spasi/tanda kurung. Copy HANYA key-nya (klik ikon copy di AI Studio), tanpa teks lain.';
+    return 'Nilai API key mengandung spasi/tanda kurung. Copy HANYA key-nya (klik ikon copy di Groq Console), tanpa teks lain.';
   }
-  return 'Format API key tidak valid. Key Gemini diawali "AIza..." atau auth key baru "AQ.". Buat key baru di https://aistudio.google.com/app/apikey';
+  return 'Format API key tidak valid. Key Groq diawali "gsk_". Buat key baru di https://console.groq.com/keys';
 }
 
 function getStoredApiKey() {
@@ -354,41 +354,29 @@ function getStoredApiKey() {
 
 /** Cek koneksi sungguhan ke Google (bukan sekadar "ada key"). Di-cache 60 detik. */
 let aiStatusCache = { at: 0, key: '', payload: null };
-async function checkGeminiConnection(key) {
+async function checkGroqConnection(key) {
   if (aiStatusCache.payload && aiStatusCache.key === key && Date.now() - aiStatusCache.at < 60000) {
     return aiStatusCache.payload;
   }
   let payload;
   try {
-    const { GoogleGenAI } = await import('@google/genai');
-    const ai = new GoogleGenAI({ apiKey: key });
-    let verified = false;
-    let modelUsed = '';
-    let lastError = '';
-    for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash']) {
-      try {
-        const resp = await ai.models.generateContent({ model, contents: 'Ping. Reply OK.' });
-        if (resp && (resp.text || resp.candidates)) {
-          verified = true;
-          modelUsed = model;
-          break;
-        }
-        lastError = model + ': no response';
-      } catch (err) {
-        lastError = model + ': ' + (err.message || err);
-      }
-    }
-    if (verified) {
-      payload = { success: true, connected: true, model: modelUsed + ' (Official Google GenAI)', reason: '' };
+    const resp = await fetch('https://api.groq.com/openai/v1/models', {
+      headers: { Authorization: 'Bearer ' + key },
+      signal: AbortSignal.timeout(8000),
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (resp.ok && Array.isArray(data.data)) {
+      const ids = data.data.map((m) => m.id);
+      const model = ids.includes('llama-3.3-70b-versatile')
+        ? 'llama-3.3-70b-versatile'
+        : ids.find((id) => id.startsWith('llama')) || ids[0] || 'llama-3.3-70b-versatile';
+      payload = { success: true, connected: true, model: model + ' (Groq)', reason: '' };
     } else {
-      const quota = /quota|RESOURCE_EXHAUSTED|rate.limit/i.test(lastError);
       payload = {
         success: true,
         connected: false,
         model: 'NusaBridge Smart Intelligence Engine',
-        reason: quota
-          ? 'Kuota Gemini harian habis (free tier ~20 req/hari). Tunggu reset (~4 jam) atau aktifkan billing di Google AI Studio.'
-          : 'API Key tidak dapat memverifikasi ke Google Gemini. Detail: ' + lastError,
+        reason: (data.error && data.error.message) || `HTTP ${resp.status}`,
       };
     }
   } catch (e) {
@@ -396,7 +384,7 @@ async function checkGeminiConnection(key) {
       success: true,
       connected: false,
       model: 'NusaBridge Smart Intelligence Engine',
-      reason: 'Tidak dapat menghubungi Google: ' + e.message,
+      reason: 'Tidak dapat menghubungi Groq: ' + e.message,
     };
   }
   aiStatusCache = { at: Date.now(), key, payload };
@@ -429,7 +417,7 @@ app.get('/api/ai/status', async (req, res) => {
       reason: describeKeyProblem(getRawStoredKey()),
     });
   }
-  const payload = await checkGeminiConnection(currentKey);
+  const payload = await checkGroqConnection(currentKey);
   res.json(payload);
 });
 
@@ -446,40 +434,34 @@ app.post('/api/ai/set-key', async (req, res) => {
     if (!isPlausibleApiKey(cleanKey)) {
       return res.status(400).json({
         success: false,
-        message: 'Format API Key tidak valid. Key Gemini diawali "AIza..." atau auth key baru "AQ." tanpa spasi/tanda kurung. Copy ulang lewat ikon copy di https://aistudio.google.com/app/apikey',
+        message: 'Format API Key tidak valid. Key Groq diawali "gsk_" tanpa spasi/tanda kurung. Copy ulang lewat ikon copy di https://console.groq.com/keys',
       });
     }
 
-    // Verifikasi API Key dengan melakukan test ping ke Google GenAI
-    const { GoogleGenAI } = await import('@google/genai');
-    const testAi = new GoogleGenAI({ apiKey: cleanKey });
-
+    // Verifikasi API Key dengan ping ke Groq
     let verified = false;
-    let modelUsed = 'gemini-2.5-flash';
+    let modelUsed = 'llama-3.3-70b-versatile';
     let lastError = '';
-
-    const CANDIDATE_MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-2.5-flash'];
-    for (const model of CANDIDATE_MODELS) {
-      try {
-        const resp = await testAi.models.generateContent({
-          model,
-          contents: 'Ping test. Jawab dengan OK.',
-        });
-        if (resp && (resp.text || resp.candidates)) {
-          verified = true;
-          modelUsed = model;
-          break;
-        }
-        lastError = `${model}: tidak ada jawaban dari model`;
-      } catch (err) {
-        lastError = `${model}: ${err.message || err}`;
+    try {
+      const resp = await fetch('https://api.groq.com/openai/v1/models', {
+        headers: { Authorization: 'Bearer ' + cleanKey },
+        signal: AbortSignal.timeout(8000),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && Array.isArray(data.data) && data.data.length) {
+        verified = true;
+        modelUsed = data.data.find((m) => m.id === 'llama-3.3-70b-versatile') ? 'llama-3.3-70b-versatile' : data.data[0].id;
+      } else {
+        lastError = (data.error && data.error.message) || `HTTP ${resp.status}`;
       }
+    } catch (err) {
+      lastError = err.message || err;
     }
 
     if (!verified) {
       return res.status(400).json({
         success: false,
-        message: 'API Key tidak dapat memverifikasi ke Google Gemini. Detail dari Google: ' + lastError,
+        message: 'API Key tidak dapat memverifikasi ke Groq. Detail: ' + lastError,
       });
     }
 
@@ -502,7 +484,7 @@ app.post('/api/ai/set-key', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Berhasil terhubung ke Google Gemini AI resmi! Seluruh pertanyaan sekarang dijawab langsung oleh Google Gemini.',
+      message: 'Berhasil terhubung ke Groq AI! Seluruh pertanyaan sekarang dijawab langsung oleh Groq.',
       model: modelUsed
     });
   } catch (err) {
@@ -518,33 +500,33 @@ app.post('/api/translate', async (req, res) => {
   if (!texts.length) return res.json({ success: true, translations: [] });
 
   const key = getStoredApiKey();
-  if (!key) return res.json({ success: false, translations: [], message: 'Gemini belum aktif' });
+  if (!key) return res.json({ success: false, translations: [], message: 'Groq belum aktif' });
 
   try {
-    const ai = await getGenAIClient();
-    if (!ai) return res.json({ success: false, translations: [], message: 'SDK Gemini tidak tersedia' });
-
     const prompt = `Translate each item of the JSON array below from Indonesian to natural, concise English suitable for a website UI.
 Rules: keep brand/product names, numbers, currency, HS codes, URLs and emails unchanged; do not add explanations; keep the same order and length.
 Return ONLY a valid JSON array of strings.
 
 ${JSON.stringify(texts)}`;
 
-    for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash']) {
-      try {
-        const resp = await ai.models.generateContent({
-          model,
-          contents: prompt,
-          config: { responseMimeType: 'application/json' },
-        });
-        const raw = String(resp?.text || '').replace(/^```json\s*|\s*```$/g, '').trim();
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr) && arr.length) {
-          return res.json({ success: true, translations: arr });
-        }
-      } catch (modelErr) {
-        console.warn('[translate] model failed:', model, modelErr.message);
-      }
+    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.2,
+      }),
+      signal: AbortSignal.timeout(60000),
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) {
+      return res.json({ success: false, translations: [], message: (data.error && data.error.message) || ('HTTP ' + resp.status) });
+    }
+    const raw = String(data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content || '').trim();
+    const arr = JSON.parse(raw);
+    if (Array.isArray(arr) && arr.length) {
+      return res.json({ success: true, translations: arr });
     }
     return res.json({ success: false, translations: [], message: 'Gagal menerjemahkan teks' });
   } catch (err) {
@@ -1216,7 +1198,7 @@ Sementara itu, Anda bisa mencoba:
   const reqLang = String(req.body.lang || '').toLowerCase() === 'en' ? 'en' : 'id';
   let aiReply = getHeuristicReply(message);
   let usedModel = 'NusaBridge Smart Intelligence Engine';
-  let aiError = activeKey ? '' : 'Gemini belum aktif: API key tidak ada atau formatnya tidak valid.';
+  let aiError = activeKey ? '' : 'Groq belum aktif: API key tidak ada atau formatnya tidak valid.';
 
   // Jika API Key tersedia, hubungi Google Gemini API Resmi (@google/genai)
   if (activeKey) {
@@ -1245,38 +1227,45 @@ ${catalogLines || '(katalog kosong)'}`;
 
         let generatedText = null;
 
-        // Coba beberapa model flash yang tersedia (urutan prioritas)
-        const MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash'];
-        for (const model of MODELS) {
-          try {
-            const resp = await ai.models.generateContent({
-              model,
-              contents: message,
-              config: { systemInstruction: sysInstruction },
-            });
-            if (resp && resp.text) {
-              generatedText = resp.text;
-              usedModel = `${model} (Official Google GenAI)`;
-              break;
-            }
-            aiError = 'Gemini tidak mengembalikan teks untuk model ' + model;
-          } catch (modelErr) {
-            aiError = `Gemini error (${model}): ${modelErr.message || modelErr}`;
-            console.warn('[Gemini SDK model failed]:', model, modelErr.message);
+        // Panggil Groq (OpenAI-compatible)
+        try {
+          const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + activeKey },
+            body: JSON.stringify({
+              model: 'llama-3.3-70b-versatile',
+              messages: [
+                { role: 'system', content: sysInstruction },
+                { role: 'user', content: message },
+              ],
+              temperature: 0.4,
+            }),
+            signal: AbortSignal.timeout(60000),
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (resp.ok && data && data.choices && data.choices[0] && data.choices[0].message) {
+            generatedText = data.choices[0].message.content;
+            usedModel = 'llama-3.3-70b-versatile (Groq)';
+            aiError = '';
+          } else {
+            aiError = (data.error && data.error.message) || ('HTTP ' + resp.status);
           }
+        } catch (apiErr) {
+          aiError = 'Gagal memanggil Groq: ' + (apiErr.message || 'unknown error');
+          console.warn('[Groq API Call]:', apiErr.message);
         }
 
         if (generatedText) {
           aiReply = generatedText.replace(/<[^>]*>/g, '');
           aiError = '';
         } else if (reqLang === 'en') {
-          aiReply = `I'm currently running in **local mode** (Gemini is temporarily unavailable). In this mode I can help with: the product catalog, prices & MOQ, Incoterms/CIF-FOB calculations, export documents, compliance (NIB/OSS), quarantine, and Escrow.
+          aiReply = `I'm currently running in **local mode** (Groq is temporarily unavailable). In this mode I can help with: the product catalog, prices & MOQ, Incoterms/CIF-FOB calculations, export documents, compliance (NIB/OSS), quarantine, and Escrow.
 
 **To unlock full AI answers (science, history, coding, general knowledge, etc.):**
-1. Open https://aistudio.google.com/app/apikey
-2. Click **Create API key**, then copy the key (starts with "AIza...")
+1. Open https://console.groq.com/keys
+2. Click **Create API Key**, then copy the key (starts with "gsk_...")
 3. In this chat, click **"Set API Key"** (top right), paste the key, then **Save & Verify**
-4. The badge changes to **Gemini Connected** — after that all questions are answered by Google Gemini
+4. The badge changes to **Groq Connected** — after that all questions are answered by Groq
 
 In the meantime, try:
 • _"List 5 coffee products"_
@@ -1292,14 +1281,14 @@ In the meantime, try:
   }
 
   // Saat UI Inggris dan Gemini tidak dipakai, paksa jawaban Inggris (jangan Indonesian heuristic)
-  if (reqLang === 'en' && !usedModel.includes('Official Google GenAI')) {
-    aiReply = `I'm currently running in **local mode** (Gemini is temporarily unavailable). In this mode I can help with: the product catalog, prices & MOQ, Incoterms/CIF-FOB calculations, export documents, compliance (NIB/OSS), quarantine, and Escrow.
+  if (reqLang === 'en' && !usedModel.includes('Groq')) {
+    aiReply = `I'm currently running in **local mode** (Groq is temporarily unavailable). In this mode I can help with: the product catalog, prices & MOQ, Incoterms/CIF-FOB calculations, export documents, compliance (NIB/OSS), quarantine, and Escrow.
 
 **To unlock full AI answers (science, history, coding, general knowledge, etc.):**
-1. Open https://aistudio.google.com/app/apikey
-2. Click **Create API key**, then copy the key (starts with "AIza...")
+1. Open https://console.groq.com/keys
+2. Click **Create API Key**, then copy the key (starts with "gsk_...")
 3. In this chat, click **"Set API Key"** (top right), paste the key, then **Save & Verify**
-4. The badge changes to **Gemini Connected** — after that all questions are answered by Google Gemini
+4. The badge changes to **Groq Connected** - after that all questions are answered by Groq
 
 In the meantime, try:
 • _"List 5 coffee products"_
@@ -1316,7 +1305,7 @@ In the meantime, try:
     reply: aiReply,
     agent: 'NusaBridge AI',
     model: usedModel,
-    isOfficialGemini: usedModel.includes('Official Google GenAI'),
+    isOfficialGemini: usedModel.includes('Groq'),
     aiError: aiError || null
   });
 });

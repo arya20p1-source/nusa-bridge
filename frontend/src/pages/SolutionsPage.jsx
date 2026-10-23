@@ -275,12 +275,12 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
               <div className="gcm-actions">
                 <div className="gcm-direct-badge" title={aiConn?.connected ? aiConn.model : (aiConn?.reason || 'Mengecek koneksi...')}>
                   <span className="direct-dot" style={aiConn && !aiConn.connected ? { background: '#f59e0b' } : undefined} />
-                  <span>{aiConn === null ? 'Mengecek...' : aiConn.connected ? 'Gemini Connected' : 'Gemini Off'}</span>
+                  <span>{aiConn === null ? 'Mengecek...' : aiConn.connected ? 'Groq Connected' : 'Groq Off'}</span>
                 </div>
                 <button
                   className="btn-clear-chat"
                   type="button"
-                  title="Atur API Key Gemini"
+                  title="Atur API Key Groq"
                   onClick={() => { setShowKeyPanel((v) => !v); setKeyStatus(''); }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -313,15 +313,15 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
             {showKeyPanel && (
               <form onSubmit={saveApiKey} style={{ padding: '12px 16px', borderBottom: '1px solid #e5e7eb', background: '#f8fafc' }}>
                 <div style={{ fontSize: '13px', marginBottom: '8px', color: '#334155' }}>
-                  Tempel API key Gemini (<code>AIza...</code> atau auth key baru <code>AQ....</code>, tanpa spasi) dari{' '}
-                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer">Google AI Studio</a>.
+                  Tempel API key Groq (<code>gsk_...</code>, tanpa spasi) dari{' '}
+                  <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer">Groq Console</a>.
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <input
                     type="text"
                     value={apiKeyInput}
                     onChange={(e) => setApiKeyInput(e.target.value)}
-                    placeholder="AIza..."
+                    placeholder="gsk_..."
                     autoComplete="off"
                     spellCheck={false}
                     style={{ flex: '1 1 260px', padding: '9px 12px', border: '1px solid #cbd5e1', borderRadius: '8px', fontSize: '13px', fontFamily: 'monospace' }}
@@ -341,7 +341,7 @@ Silakan ketik pertanyaan atau konsultasi ekspor Anda di bawah!`,
 
             {aiConn && !aiConn.connected && (
               <div style={{ padding: '10px 16px', background: '#fffbeb', borderBottom: '1px solid #fde68a', fontSize: '12.5px', color: '#92400e' }}>
-                ⚠️ Gemini belum aktif — jawaban masih dari engine lokal. Alasan: {aiConn.reason || 'API key belum diisi.'}{' '}
+                ⚠️ Groq belum aktif — jawaban masih dari engine lokal. Alasan: {aiConn.reason || 'API key belum diisi.'}{' '}
                 <button type="button" onClick={() => setShowKeyPanel(true)} style={{ background: 'none', border: 'none', color: '#0369a1', textDecoration: 'underline', cursor: 'pointer', fontSize: '12.5px', padding: 0 }}>
                   Atur API Key
                 </button>
