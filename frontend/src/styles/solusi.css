@@ -716,6 +716,13 @@
   border-top: 1.5px solid var(--border-light);
 }
 
+.chat-template-hint {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
 .chat-input-disclaimer {
   text-align: center;
   margin-top: 10px;

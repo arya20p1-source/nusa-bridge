@@ -378,7 +378,7 @@ export default function ProductsPage() {
                 <button className="btn btn-outline btn-sm" type="button" onClick={resetSearch}>Reset Pencarian</button>
               </div>
             ) : (
-              paginated.map((prod, idx) => {
+              paginated.map((prod) => {
                 const fallbackImg = `/assets/products/${prod.category}-1.webp`;
                 return (
                   <div key={prod.id} className="catalog-card" data-category={prod.category} data-id={prod.id}>

@@ -146,7 +146,7 @@ function nowTime() {
 }
 
 // =====================================================================
-// Gemini-style chat workspace
+// NusaBridge chat workspace
 // =====================================================================
 function GeminiWorkspace() {
   const { lang } = useApp();
@@ -208,7 +208,7 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
         const data = await res.json();
         if (data && data.reply) {
           setTyping(false);
-          push('agent', data.reply, data.isOfficialGemini ? 'NusaBridge AI (Official Engine)' : 'NusaBridge AI');
+          push('agent', data.reply, 'NusaBridge AI');
           return;
         }
       }
@@ -307,6 +307,9 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
             </div>
 
             <div className="gcm-footer">
+              <span className="chat-template-hint">
+                {lang === 'en' ? 'Quick questions — select one to see its answer:' : 'Pertanyaan cepat — klik untuk melihat jawabannya:'}
+              </span>
               <div className="chat-templates" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '8px 0' }}>
                 {CHAT_TEMPLATES.map((template) => (
                   <button
