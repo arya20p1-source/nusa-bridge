@@ -367,9 +367,11 @@ async function checkGeminiConnection(key) {
     const data = await resp.json().catch(() => ({}));
     if (resp.ok && Array.isArray(data.models)) {
       const ids = data.models.map((m) => (m.name || '').replace(/^models\//, ''));
-      const model = ids.includes('gemini-2.5-flash')
-        ? 'gemini-2.5-flash'
-        : ids.find((id) => id.startsWith('gemini-')) || 'gemini-2.5-flash';
+      const model = ids.includes('gemini-3.8-flash')
+        ? 'gemini-3.8-flash'
+        : ids.includes('gemini-3.5-flash')
+        ? 'gemini-3.5-flash'
+        : ids.find((id) => id.startsWith('gemini-')) || 'gemini-3.8-flash';
       payload = { success: true, connected: true, model: `${model} (Official Google GenAI)`, reason: '' };
     } else {
       payload = {
@@ -446,7 +448,7 @@ app.post('/api/ai/set-key', async (req, res) => {
     let modelUsed = 'gemini-2.5-flash';
     let lastError = '';
 
-    const CANDIDATE_MODELS = ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    const CANDIDATE_MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-2.5-flash'];
     for (const model of CANDIDATE_MODELS) {
       try {
         const resp = await testAi.models.generateContent({
@@ -518,7 +520,7 @@ Return ONLY a valid JSON array of strings.
 
 ${JSON.stringify(texts)}`;
 
-    for (const model of ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-2.0-flash']) {
+    for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash']) {
       try {
         const resp = await ai.models.generateContent({
           model,
@@ -1234,7 +1236,7 @@ ${catalogLines || '(katalog kosong)'}`;
         let generatedText = null;
 
         // Coba beberapa model flash yang tersedia (urutan prioritas)
-        const MODELS = ['gemini-2.5-flash', 'gemini-3.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+        const MODELS = ['gemini-3.8-flash', 'gemini-3.5-flash'];
         for (const model of MODELS) {
           try {
             const resp = await ai.models.generateContent({
