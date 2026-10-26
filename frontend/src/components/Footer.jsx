@@ -72,15 +72,7 @@ export default function Footer() {
               {navLinks.map((l) => (
                 <li key={l.key}>
                   {l.to.includes('#') ? (
-                    <Link
-                      to={l.to}
-                      onClick={() => {
-                        if (l.to === '/#alur-ekspor' && location.pathname === '/') {
-                          window.history.replaceState(null, '', l.to);
-                        }
-                      }}
-                      data-i18n={l.key}
-                    >
+                    <Link to={l.to} data-i18n={l.key}>
                       <T k={l.key} />
                     </Link>
                   ) : (

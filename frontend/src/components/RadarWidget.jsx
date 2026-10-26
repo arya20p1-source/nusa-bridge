@@ -10,7 +10,7 @@ import {
 } from './radar/radarEngine.js';
 
 /**
- * Widget "Radar Pelayaran Kapal Kargo" pada dashboard mockup beranda.
+ * Widget peta rute logistik global pada dashboard mockup beranda.
  * Termasuk HUD telemetri + quick switcher kapal + tombol layar penuh
  * (membuka RadarModal). Perilaku & markup mengikuti index.html + radar.js lama.
  */
@@ -53,14 +53,14 @@ export default function RadarWidget() {
   function handleSelect(key) {
     selectVessel(key);
     setActiveKey(key);
-    showToast(`🚢 Radar AIS Terhubung: ${AIS_VESSELS[key].name}`);
+    showToast(`🚢 Kapal simulasi dipilih: ${AIS_VESSELS[key].name}`);
   }
 
   return (
     <div className="mwidget-card marine-radar-card">
       <div className="radar-card-header">
         <div className="radar-title-wrap">
-          <h4 className="widget-title">Radar Pelayaran Kapal Kargo</h4>
+          <h4 className="widget-title">Peta Rute Logistik Global</h4>
           <span className="live-ais-badge">
             <span className="live-dot-pulse" /> SIMULASI
           </span>

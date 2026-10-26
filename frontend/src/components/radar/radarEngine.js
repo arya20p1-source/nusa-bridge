@@ -1,6 +1,6 @@
 /**
  * ==========================================================================
- * NUSABRIDGE - CARGO SHIP RADAR & MARITIME TELEMETRY ENGINE (FLIGHT RADAR STYLE)
+ * NUSABRIDGE - SIMULASI RUTE KAPAL & TELEMETRI MARITIM
  * Versi React dari src/scripts/radar.js (state dipindah ke module singleton).
  *
  * Konsep yang dipertahankan:
@@ -13,7 +13,7 @@
 
 export const VESSEL_KEYS = ['baruna', 'samudera', 'celebes'];
 
-/** Database kapal kargo aktif (AIS Maritime Live Telemetry) — mutable runtime */
+/** Data demonstrasi kapal kargo dan telemetri AIS — mutable runtime */
 export const AIS_VESSELS = {
   baruna: {
     id: 'baruna',

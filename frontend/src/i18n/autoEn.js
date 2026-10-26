@@ -6,7 +6,13 @@
  */
 export const AUTO_EN = {
   // ===== NAVBAR / CHROME =====
-  'Radar Pelayaran Kapal Kargo': 'Shipping Radar',
+  'Peta Rute Logistik Global': 'Global Logistics Route Map',
+  'Peta Rute Logistik Global (Simulasi)': 'Global Logistics Route Map (Simulation)',
+  'SIMULASI': 'SIMULATION',
+  'Simulasi AIS': 'AIS Simulation',
+  'Simulasi AIS berjalan': 'AIS Simulation running',
+  'Rute laut': 'Sea route',
+  'Rute udara': 'Air route',
   'Layar Penuh': 'Full Screen',
   '🟢 Berlayar (On Schedule)': '🟢 Sailing (On Schedule)',
   'Kecepatan: 19.4 knots': 'Speed: 19.4 knots',

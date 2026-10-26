@@ -12,7 +12,7 @@ import { PRODUCTS_DATA } from '../data/products.js';
  * ==========================================================================
  * NUSABRIDGE HOMEPAGE (Beranda)
  * Ported index.html + app.js: hero, stats, solusi, produk carousel,
- * alur ekspor, dashboard mockup sandbox (AI chat, docs, KYC, RFQ, dll),
+ * alur ekspor, dashboard mockup sandbox (docs, KYC, RFQ, dll),
  * mengapa nusabridge, dan CTA banner.
  * ==========================================================================
  */
@@ -189,7 +189,7 @@ function OverviewView({ openTxModal }) {
       </div>
 
       <div className="mockup-widgets-row">
-        {/* Radar pelayaran kapal kargo (widget lengkap) */}
+        {/* Peta rute logistik global */}
         <RadarWidget />
 
         {/* Transaksi terbaru */}

@@ -12,10 +12,10 @@ import {
 } from './radar/radarEngine.js';
 
 /**
- * Modal Radar Maritim layar penuh (Flight-Radar style).
+ * Modal peta rute logistik global layar penuh.
  * Versi React dari #radarModal di index.html + handler radar.js:
- * - Toolbar play/pause live streaming AIS + kecepatan simulasi (1x/2x/5x)
- * - Koordinat lat/long live di pojok kanan atas
+ * - Toolbar play/pause simulasi AIS + kecepatan simulasi (1x/2x/5x)
+ * - Koordinat lat/long simulasi di pojok kanan atas
  * - Panel telemetri kapal aktif + unduh Manifest Pelayaran (PDF)
  */
 export default function RadarModal() {
@@ -84,7 +84,7 @@ export default function RadarModal() {
   }
 
   function handleSelectVessel(key) {
-    showToast(`🚢 Radar AIS Terhubung: ${AIS_VESSELS[key].name}`);
+    showToast(`🚢 Kapal simulasi dipilih: ${AIS_VESSELS[key].name}`);
   }
 
   function handleDownloadManifest() {
@@ -151,13 +151,13 @@ export default function RadarModal() {
         <div className="modal-header">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <div>
-              <div className="pill-badge pill-blue">MARITIME AIS FLIGHT-RADAR SYSTEM</div>
+              <div className="pill-badge pill-blue">GLOBAL LOGISTICS ROUTE MAP</div>
               <h3 className="modal-title" style={{ color: '#ffffff', marginTop: 4 }}>
-                Peta Pelayaran Kapal Kargo Real-Time
+                Peta Rute Logistik Global
               </h3>
             </div>
             <span className="live-ais-badge" style={{ fontSize: 12, padding: '4px 12px' }}>
-              <span className="live-dot-pulse" /> SATELLITE LIVE TRACKING
+              <span className="live-dot-pulse" /> SIMULASI
             </span>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function RadarModal() {
                   onClick={handleTogglePlay}
                 >
                   <span>{running ? '⏸️' : '▶️'}</span>
-                  <span>{running ? 'Live Streaming AIS' : 'Dijeda'}</span>
+                  <span>{running ? 'Simulasi AIS berjalan' : 'Dijeda'}</span>
                 </button>
                 <div className="rt-speed-group">
                   {[1, 2, 5].map((multi) => (
