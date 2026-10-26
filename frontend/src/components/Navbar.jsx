@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
+import { getInitials, readLogoFile } from '../utils/logo.js';
 import T from './T.jsx';
 
 const ArrowRightIcon = () => (
@@ -28,7 +29,7 @@ const GlobeIcon = () => (
  * - profil user saat sudah login
  */
 export default function Navbar() {
-  const { lang, setLang, t, session, logout, openAuth } = useApp();
+  const { lang, setLang, t, session, logout, openAuth, updateSessionLogo, showToast } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -37,6 +38,7 @@ export default function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const wrapperRef = useRef(null);
+  const logoInputRef = useRef(null);
 
   // Efek navbar saat scroll
   useEffect(() => {
@@ -90,6 +92,20 @@ export default function Navbar() {
       if (el) window.scrollTo({ top: el.offsetTop - 90, behavior: 'smooth' });
     } else {
       navigate(section ? `${to}#${section}` : to);
+    }
+  }
+
+  async function handleLogoChange(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    try {
+      const dataUrl = await readLogoFile(file);
+      updateSessionLogo(dataUrl);
+      showToast('✅ Logo profil berhasil diperbarui.');
+    } catch (err) {
+      showToast(`❌ ${err.message || 'Gagal memuat logo.'}`);
     }
   }
 
@@ -183,7 +199,27 @@ export default function Navbar() {
 
           {session?.loggedIn ? (
             <div className="user-logged-profile" id="userLoggedNav">
-              <img src="/assets/avatar.webp" alt="Avatar" className="ulp-avatar" />
+              <button
+                type="button"
+                className="ulp-avatar-btn"
+                title={lang === 'en' ? 'Click to change logo' : 'Klik untuk ganti logo'}
+                onClick={() => logoInputRef.current?.click()}
+              >
+                {session.logo ? (
+                  <img src={session.logo} alt={`Logo ${session.company || session.name}`} className="ulp-avatar" />
+                ) : (
+                  <span className="ulp-avatar ulp-avatar-initials" aria-hidden="true">
+                    {getInitials(session.company || session.name)}
+                  </span>
+                )}
+              </button>
+              <input
+                ref={logoInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                className="logo-file-input"
+                onChange={handleLogoChange}
+              />
               <div className="ulp-info">
                 <span className="ulp-name">{session.company || session.name}</span>
                 <span className="ulp-badge">● Terverifikasi OSS</span>

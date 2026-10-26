@@ -9,42 +9,6 @@
    - Accordion transisi max-height halus
    ========================================================================== */
 
-/* ---------- 1. WIDGET UNDIAN DISKON HOKI PERUSAHAAN (GAMIFIKASI GTNIC) ---------- */
-/* GTNIC 2026 Environment Note Alert Banner */
-.gtnic-environment-note {
-  max-width: 920px;
-  margin: 1.25rem auto 0;
-  background: rgba(59, 130, 246, 0.18);
-  border: 1.5px solid rgba(147, 197, 253, 0.5);
-  backdrop-filter: blur(10px);
-  border-radius: var(--radius-xl);
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  color: #ffffff;
-  text-align: left;
-  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.2);
-}
-
-.gen-badge {
-  background: #2563eb;
-  color: #ffffff;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 4px 10px;
-  border-radius: 8px;
-  white-space: nowrap;
-}
-
-.gtnic-environment-note p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.5;
-  color: #f1f5f9;
-}
-
 /* ==========================================================================
    B2B SUBSIDY VOUCHER PROGRAM (CLEAN, PROFESSIONAL & ELEGANT B2B STYLE)
    ========================================================================== */

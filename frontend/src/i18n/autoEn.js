@@ -18,9 +18,6 @@ export const AUTO_EN = {
   'Negosiasi': 'Negotiation',
   'Proses Dokumen': 'Document Processing',
   'Dalam Pengiriman': 'In Transit',
-  'Platform ini adalah prototype untuk keperluan kompetisi GTNIC 2026.':
-    'This platform is a prototype for GTNIC 2026 competition purposes.',
-
   // ===== HOME HERO =====
   'Halo! Saya NusaBridge AI, asisten ekspor-impor pintar Anda. Saya dapat membantu analisis RFQ, rekomendasi harga Incoterms, hingga pembuatan dokumen ekspor resmi.':
     'Hello! I am NusaBridge AI, your smart export-import assistant. I can help with RFQ analysis, Incoterms price recommendations, and official export document creation.',

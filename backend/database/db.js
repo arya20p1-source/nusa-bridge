@@ -4,7 +4,7 @@
  * File: database/db.js
  * Deskripsi: Mesin database berbasis JavaScript native (Node.js fs/promises)
  * 
- * Keunggulan untuk Kompetisi GTNIC 2026:
+ * Keunggulan engine database ini:
  * 1. 100% JavaScript (Tanpa dependensi server database eksternal seperti MySQL/MongoDB)
  * 2. Cepat, ringan, dan portabel (Cukup clone dan jalankan)
  * 3. File data persisten dalam format JSON (users, products, rfq, transactions)

@@ -62,7 +62,7 @@ export default function RadarWidget() {
         <div className="radar-title-wrap">
           <h4 className="widget-title">Radar Pelayaran Kapal Kargo</h4>
           <span className="live-ais-badge">
-            <span className="live-dot-pulse" /> LIVE AIS
+            <span className="live-dot-pulse" /> SIMULASI
           </span>
         </div>
         <div className="radar-quick-actions">

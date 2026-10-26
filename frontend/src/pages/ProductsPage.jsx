@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 
 import { useApp } from '../context/AppContext.jsx';
 import T from '../components/T.jsx';
+import { apiUrl } from '../utils/api.js';
 import { PRODUCTS_DATA } from '../data/products.js';
 
 /**
@@ -125,7 +126,7 @@ function RfqModal({ productName, onClose }) {
     const portVal = port || 'Port of Hamburg';
     const termsVal = terms || 'CIF Hamburg';
     // Kirim ke backend (best-effort, tetap sukses saat server offline)
-    fetch('/api/rfq', {
+    fetch(apiUrl('/api/rfq'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

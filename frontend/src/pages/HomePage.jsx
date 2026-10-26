@@ -5,8 +5,7 @@ import { useApp } from '../context/AppContext.jsx';
 import T from '../components/T.jsx';
 import RadarWidget from '../components/RadarWidget.jsx';
 import { downloadHtmlFile } from '../utils/downloadHtmlFile.js';
-import { formatAiText } from '../utils/aiText.js';
-import { getSmartIndexReply } from '../utils/smartReply.js';
+import { getInitials } from '../utils/logo.js';
 import { PRODUCTS_DATA } from '../data/products.js';
 
 /**
@@ -798,122 +797,6 @@ function SettingsView({ showToast }) {
   );
 }
 
-// ---------------- Sub: AI Chat widget ----------------
-function ChatWidget() {
-  const { lang } = useApp();
-  const [msgs, setMsgs] = useState([
-    {
-      role: 'agent',
-      html: 'Halo! Saya NusaBridge AI, asisten ekspor-impor pintar Anda. Saya dapat membantu analisis RFQ, rekomendasi harga Incoterms, hingga pembuatan dokumen ekspor resmi.',
-    },
-  ]);
-  const [input, setInput] = useState('');
-  const [typing, setTyping] = useState(false);
-  const areaRef = useRef(null);
-  const inputRef = useRef(null);
-
-  function scrollBottom() {
-    requestAnimationFrame(() => {
-      if (areaRef.current) areaRef.current.scrollTop = areaRef.current.scrollHeight;
-    });
-  }
-
-  async function handleQuery(q) {
-    if (!q || !q.trim()) return;
-    setMsgs((prev) => [...prev, { role: 'user', html: q.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }]);
-    setTyping(true);
-    scrollBottom();
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
-    try {
-      const res = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: q.trim(), lang }),
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.reply) {
-          setTyping(false);
-          setMsgs((prev) => [...prev, { role: 'agent', html: formatAiText(data.reply) }]);
-          scrollBottom();
-          return;
-        }
-      }
-    } catch (err) {
-      clearTimeout(timeoutId);
-      // Backend offline/timeout -> fallback ke smart engine lokal
-    }
-
-    setTimeout(() => {
-      setTyping(false);
-      setMsgs((prev) => [...prev, { role: 'agent', html: formatAiText(getSmartIndexReply(q.trim(), lang)) }]);
-      scrollBottom();
-    }, 350);
-  }
-
-  function onSubmit(e) {
-    e.preventDefault();
-    if (!input.trim()) return;
-    handleQuery(input.trim());
-    setInput('');
-  }
-
-  return (
-    <div className="mockup-chat-window">
-      <div className="chat-header">
-        <span className="pill-badge pill-blue chat-agent-pill">NusaBridge AI</span>
-        <h3 className="chat-header-title"><T k="chat_header_title" /></h3>
-      </div>
-
-      <div className="chat-conversation-area" ref={areaRef}>
-        {msgs.map((m, i) => (
-          <div className="chat-bubble-row" key={i}>
-            {m.role === 'agent' && (
-              <div className="agent-avatar-icon">
-                <img src="/assets/icons/icon-1.webp" alt="AI Agent Icon" />
-              </div>
-            )}
-            <div
-              className={`chat-bubble ${m.role === 'agent' ? 'agent-bubble' : 'user-bubble'}`}
-              dangerouslySetInnerHTML={{ __html: m.html }}
-            />
-          </div>
-        ))}
-        {typing && (
-          <div className="chat-bubble-row">
-            <div className="agent-avatar-icon">
-              <img src="/assets/icons/icon-1.webp" alt="AI Agent Icon" />
-            </div>
-            <div className="chat-bubble agent-bubble" style={{ fontStyle: 'italic', color: '#64748b' }}>
-              {lang === 'en' ? 'NusaBridge AI is processing your inquiry...' : 'NusaBridge AI sedang menganalisis data...'}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <form className="chat-input-bar" onSubmit={onSubmit}>
-        <input
-          ref={inputRef}
-          type="text"
-          value={input}
-          placeholder="Tanyakan apa saja ke NusaBridge AI... (Tekan Enter untuk kirim)"
-          autoComplete="off"
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button type="submit" className="btn-send-chat" aria-label="Kirim Pesan">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
-          </svg>
-        </button>
-      </form>
-    </div>
-  );
-}
-
 // ---------------- Sub: Dashboard mockup (wrap semua sandbox views) ----------------
 function DashboardShowcase() {
   const { showToast, openModal, lang, session } = useApp();
@@ -1026,7 +909,13 @@ function DashboardShowcase() {
                     className="mockup-user-profile"
                     onClick={() => showToast(`👤 Akun ${userCompany} • Status: Verified Seller (NIB: 1294801928415)`)}
                   >
-                    <img src="/assets/avatar.webp" alt="Avatar UMKM Indonesia" className="user-avatar-img" />
+                    {session?.logo ? (
+                      <img src={session.logo} alt={`Logo ${userCompany}`} className="user-avatar-img" />
+                    ) : (
+                      <span className="user-avatar-img user-avatar-initials" aria-hidden="true">
+                        {getInitials(userCompany)}
+                      </span>
+                    )}
                     <div className="user-meta">
                       <span className="user-name">{userName}</span>
                       <span className="user-role">{userCompany} <span className="arrow-sub">→</span></span>
@@ -1045,8 +934,6 @@ function DashboardShowcase() {
             </div>
           </div>
 
-          {/* Right Panel: AI Agent Interactive Chat Widget */}
-          <ChatWidget />
         </div>
       </div>
     </section>

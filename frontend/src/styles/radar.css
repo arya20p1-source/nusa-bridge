@@ -162,6 +162,69 @@
   z-index: 2;
 }
 
+.map-continent {
+  fill: #193653;
+  stroke: #46708b;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  opacity: 0.94;
+}
+
+.map-region-labels {
+  fill: #9bb2c6;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.air-route {
+  fill: none;
+  stroke: #fbbf24;
+  stroke-width: 1.6;
+  stroke-dasharray: 3 5;
+  opacity: 0.85;
+}
+
+.aircraft-marker {
+  fill: #fde68a;
+  font-size: 15px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: #071324;
+  stroke-width: 2px;
+  pointer-events: none;
+}
+
+.map-transport-legend {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  z-index: 5;
+  display: flex;
+  gap: 12px;
+  padding: 5px 9px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 6px;
+  background: rgba(4, 13, 26, 0.82);
+  color: #e2e8f0;
+  font-size: 9px;
+  pointer-events: none;
+}
+
+.map-transport-legend b {
+  margin-right: 4px;
+}
+
+.legend-sea {
+  color: #38bdf8;
+}
+
+.legend-air {
+  color: #fbbf24;
+}
+
 /* Garis Jalur Pelayaran Berdenyut Bergerak */
 .animated-lane {
   animation: laneDashFlow 18s linear infinite;
@@ -542,4 +605,3 @@
   0% { r: 6; opacity: 1; }
   100% { r: 26; opacity: 0; }
 }
-

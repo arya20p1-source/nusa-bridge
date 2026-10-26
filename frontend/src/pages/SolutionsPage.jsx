@@ -6,6 +6,7 @@ import T from '../components/T.jsx';
 import { downloadHtmlFile } from '../utils/downloadHtmlFile.js';
 import { formatAiText } from '../utils/aiText.js';
 import { generateSmartAgentReply } from '../utils/solusiReply.js';
+import { apiUrl } from '../utils/api.js';
 
 /**
  * ==========================================================================
@@ -197,7 +198,7 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
-      const res = await fetch('/api/ai/chat', {
+      const res = await fetch(apiUrl('/api/ai/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: promptText, lang }),
@@ -1064,7 +1065,7 @@ function EscrowTab() {
     const timeoutId = setTimeout(() => controller.abort(), 20000);
 
     try {
-      const res = await fetch('/api/ai/chat', {
+      const res = await fetch(apiUrl('/api/ai/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, lang }),
@@ -1231,7 +1232,7 @@ export default function SolutionsPage() {
       <section className="section-ai-simulator" id="ai-interactive-suite">
         <div className="site-container">
           <div className="section-header text-center">
-            <div className="pill-badge pill-blue">NUSABRIDGE AI SUITE (GTNIC 2026)</div>
+            <div className="pill-badge pill-blue">NUSABRIDGE AI SUITE</div>
             <h2 className="section-title">Studio Operasional Ekspor Berbasis NusaBridge AI</h2>
             <p className="section-subtitle">Uji coba interaktif 4 kemampuan inti AI: Konversi RFQ Incoterms 2020, penerbitan draf berkas PDF resmi, audit legalitas KYC Hub, dan notifikasi 4 fase Escrow Vault.</p>
           </div>

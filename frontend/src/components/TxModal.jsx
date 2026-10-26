@@ -50,7 +50,7 @@ export default function TxModal() {
       <div class="header">
         <div>
           <div class="title">INTERNATIONAL EXPORT SALES CONTRACT</div>
-          <div style="font-size:12px; color:#64748b; margin-top:4px;">No: ${t.title} &bull; Ref: NB-CONTRACT-2026-GTNIC</div>
+          <div style="font-size:12px; color:#64748b; margin-top:4px;">No: ${t.title} &bull; Ref: NB-CONTRACT-2026</div>
         </div>
         <div class="seal">✓ NUSABRIDGE ESCROW PROTECTED</div>
       </div>

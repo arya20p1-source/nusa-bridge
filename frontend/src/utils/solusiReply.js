@@ -526,7 +526,7 @@ Silakan ketik pertanyaan apa saja yang ingin Anda diskusikan!`;
 
   // 26. Tentang NusaBridge
   if (q.includes('nusabridge') || q.includes('pembuat') || q.includes('arjika') || q.includes('antartika') || q.includes('siapa kamu') || q.includes('kamu siapa') || q.includes('who are you') || q.includes('tentang platform') || q.includes('profil kamu')) {
-    return `Halo! Saya adalah **NusaBridge AI**, asisten cerdas perdagangan ekspor-impor yang dibangun oleh **Tim Arjika Labs - SMK Antartika 1 Sidoarjo** untuk kompetisi **GTNIC 2026**.
+    return `Halo! Saya adalah **NusaBridge AI**, asisten cerdas perdagangan ekspor-impor yang dibangun oleh **Tim Arjika Labs - SMK Antartika 1 Sidoarjo**.
 
 NusaBridge dirancang untuk memberdayakan UMKM Indonesia melalui 4 Pilar Solusi:
 1. **AI Sales Assistant & RFQ Studio**: Menghitung kalkulasi Incoterms 2020 otomatis dan mengonversi pesan penawaran buyer asing menjadi kontrak formal.

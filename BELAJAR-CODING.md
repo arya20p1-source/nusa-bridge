@@ -45,11 +45,11 @@ nusa-bridge/
 
 ```powershell
 # Terminal 1 — backend
-cd "E:\nusa-bridge - Copy (2)\backend"
+cd "E:\nusa-bridge\backend"
 node server.js
 
 # Terminal 2 — frontend (development, ada hot-reload)
-cd "E:\nusa-bridge - Copy (2)\frontend"
+cd "E:\nusa-bridge\frontend"
 npm.cmd run dev
 ```
 Buka **http://localhost:3000**.

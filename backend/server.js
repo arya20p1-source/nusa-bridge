@@ -3,7 +3,7 @@
  * NUSABRIDGE - BACKEND REST API & GEMINI AI AGENT ENGINE
  * File: server.js
  * Deskripsi: Server Express dengan Database JavaScript native & AI Agent
- * Built for GTNIC 2026 Prototype
+ * NusaBridge Prototype
  * ==========================================================================
  */
 
@@ -991,7 +991,7 @@ Silakan ketik pertanyaan apa saja yang ingin Anda diskusikan!`;
 
     // 26. Tentang NusaBridge & Pengembang Platform
     if (q.includes('nusabridge') || q.includes('pembuat') || q.includes('arjika') || q.includes('antartika') || q.includes('siapa kamu') || q.includes('kamu siapa') || q.includes('who are you') || q.includes('tentang platform') || q.includes('profil kamu')) {
-      return `Halo! Saya adalah **NusaBridge AI**, asisten cerdas perdagangan ekspor-impor yang dibangun oleh **Tim Arjika Labs - SMK Antartika 1 Sidoarjo** untuk kompetisi **GTNIC 2026**.
+      return `Halo! Saya adalah **NusaBridge AI**, asisten cerdas perdagangan ekspor-impor yang dibangun oleh **Tim Arjika Labs - SMK Antartika 1 Sidoarjo**.
 
 NusaBridge dirancang untuk memberdayakan UMKM Indonesia agar mampu menembus pasar internasional secara mandiri dan aman melalui 4 Pilar Utama:
 1. **AI Sales Assistant & RFQ Studio**: Menghitung estimasi Incoterms 2020 otomatis dan mengonversi pesan penawaran buyer asing menjadi kontrak formal.
@@ -1035,7 +1035,7 @@ Apakah ada aspek pemrograman, API, atau arsitektur teknologi tertentu yang ingin
           ? '2. Selalu jawab dalam BAHASA INGGRIS (English), walaupun pengguna menulis dalam bahasa Indonesia. Seluruh jawaban harus berbahasa Inggris.'
           : '2. Gunakan bahasa yang dipakai pengguna (Indonesia atau Inggris), santun, ringkas, dan jelas.';
 
-        const sysInstruction = `Kamu adalah NusaBridge AI, asisten cerdas untuk platform ekspor-impor UMKM Indonesia (GTNIC 2026).
+        const sysInstruction = `Kamu adalah NusaBridge AI, asisten cerdas untuk platform ekspor-impor UMKM Indonesia.
 ATURAN:
 1. Jawab SEMUA pertanyaan pengguna dengan akurat dan membantu, termasuk topik umum (sains, sejarah, teknologi, coding, matematika, pengetahuan umum). Jangan menolak dengan alasan "di luar topik".
 ${languageRule}

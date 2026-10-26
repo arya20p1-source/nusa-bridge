@@ -1,8 +1,11 @@
 {
   "name": "nusa-bridge",
   "version": "1.0.0",
-  "description": "NusaBridge Frontend (React + Vite) - Built for GTNIC 2026",
+  "description": "NusaBridge Frontend (React + Vite)",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

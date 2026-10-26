@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useApp } from '../context/AppContext.jsx';
+import { apiUrl } from '../utils/api.js';
+import { getInitials, readLogoFile } from '../utils/logo.js';
 
 function buildRegisterArgs(sessionUser) {
   return JSON.stringify({
+    name: sessionUser.company,
     company: sessionUser.company,
     email: sessionUser.email,
     role: sessionUser.role,
@@ -21,14 +24,41 @@ export default function AuthModal() {
   const [tab, setTab] = useState('seller'); // seller | buyer
   const [company, setCompany] = useState('');
   const [email, setEmail] = useState('');
+  const [logo, setLogo] = useState('');
+  const [logoBusy, setLogoBusy] = useState(false);
+  const logoInputRef = useRef(null);
 
   const open = modal?.type === 'auth';
+
+  // Saat modal ditutup, kosongkan logo agar tidak terbawa ke akun berikutnya.
+  useEffect(() => {
+    if (!open) {
+      setLogo('');
+      setLogoBusy(false);
+    }
+  }, [open]);
 
   if (!open) return null;
 
   const title = isEn
     ? (modal.mode === 'register' ? 'Register NusaBridge Account' : 'Log In to NusaBridge')
     : (modal.mode === 'register' ? 'Daftar Akun NusaBridge' : 'Masuk ke NusaBridge');
+
+  async function handleLogoPick(e) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setLogoBusy(true);
+    try {
+      const dataUrl = await readLogoFile(file);
+      setLogo(dataUrl);
+    } catch (err) {
+      showToast(`❌ ${err.message || 'Gagal memuat logo.'}`);
+    } finally {
+      setLogoBusy(false);
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -37,13 +67,14 @@ export default function AuthModal() {
       email: email.trim() || 'owner@bisnis.id',
       role: tab === 'buyer' ? 'buyer' : 'seller',
       plan: modal.plan || 'Free Trial (1 Bulan)',
+      logo,
     };
 
     login(sessionUser);
 
     // Kirim ke backend registration API (best-effort, backend mungkin tidak berjalan)
     try {
-      await fetch('/api/auth/register', {
+      await fetch(apiUrl('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: buildRegisterArgs(sessionUser),
@@ -111,6 +142,58 @@ export default function AuthModal() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label>{isEn ? 'Business Logo (optional)' : 'Logo Usaha (opsional)'}</label>
+            <div className="logo-picker">
+              <div className={`logo-preview ${logo ? 'has-logo' : ''}`}>
+                {logo ? (
+                  <img src={logo} alt="Pratinjau logo usaha" />
+                ) : (
+                  <span>{getInitials(company || (tab === 'buyer' ? 'Global Buyer' : 'UMKM'))}</span>
+                )}
+              </div>
+
+              <div className="logo-picker-body">
+                <div className="logo-picker-actions">
+                  <button
+                    type="button"
+                    className="logo-upload-btn"
+                    onClick={() => logoInputRef.current?.click()}
+                    disabled={logoBusy}
+                  >
+                    {logoBusy
+                      ? (isEn ? 'Processing…' : 'Memproses…')
+                      : logo
+                        ? (isEn ? 'Change Logo' : 'Ganti Logo')
+                        : (isEn ? 'Choose Logo' : 'Pilih Logo')}
+                  </button>
+                  {logo && (
+                    <button
+                      type="button"
+                      className="logo-remove-btn"
+                      onClick={() => setLogo('')}
+                    >
+                      {isEn ? 'Remove' : 'Hapus'}
+                    </button>
+                  )}
+                </div>
+                <p className="logo-picker-hint">
+                  {isEn
+                    ? 'PNG, JPG, WebP or SVG (max 5 MB). Your logo appears in the profile circle after login.'
+                    : 'PNG, JPG, WebP, atau SVG (maks 5 MB). Logo tampil di lingkaran profil setelah masuk.'}
+                </p>
+              </div>
+
+              <input
+                ref={logoInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                className="logo-file-input"
+                onChange={handleLogoPick}
+              />
+            </div>
           </div>
 
           {modal.discount && (

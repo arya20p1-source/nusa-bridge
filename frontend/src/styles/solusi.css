@@ -439,7 +439,7 @@
 }
 
 /* ==========================================================================
-   GEMINI AI AGENT FULL CONVERSATION WORKSPACE (GTNIC 2026)
+   GEMINI AI AGENT FULL CONVERSATION WORKSPACE
    ========================================================================== */
 .section-gemini-chat-workspace {
   padding: 1rem 0 3.5rem;
@@ -782,7 +782,7 @@
 }
 
 /* ==========================================================================
-   AI AGENT INTERACTIVE STUDIO SUITE (GTNIC 2026)
+   AI AGENT INTERACTIVE STUDIO SUITE
    ========================================================================== */
 .ai-tabs-nav {
   display: flex;

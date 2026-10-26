@@ -224,11 +224,6 @@ export default function PricingPage() {
           <h1 className="page-hero-title"><T k="harga_hero_title" tag="span" /></h1>
           <p className="page-hero-subtitle"><T k="harga_hero_sub" /></p>
 
-          <div className="gtnic-environment-note">
-            <span className="gen-badge"><T k="eval_note_badge" /></span>
-            <p><T k="eval_note_text" /></p>
-          </div>
-
           {/* Widget Voucher Subsidi */}
           <div className="b2b-voucher-section">
             <div className="b2b-voucher-card">

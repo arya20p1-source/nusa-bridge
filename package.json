@@ -1,0 +1,16 @@
+{
+  "name": "nusabridge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NusaBridge - Platform Ekspor-Impor UMKM Indonesia Berbasis AI Agent",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "install:frontend": "npm --prefix frontend install",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "dev": "npm --prefix frontend run dev",
+    "preview": "npm --prefix frontend run preview",
+    "start:backend": "node backend/server.js"
+  }
+}

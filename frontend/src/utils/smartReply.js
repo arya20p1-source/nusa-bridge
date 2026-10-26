@@ -88,7 +88,7 @@ Dokumen Proforma Invoice dan Sales Contract telah secara otomatis diterbitkan be
 
   // 8. Tentang NusaBridge & Pengembang
   if (q.includes('nusabridge') || q.includes('siapa kamu') || q.includes('kamu siapa') || q.includes('pembuat') || q.includes('arjika')) {
-    return `🤖 Saya adalah **NusaBridge AI**, asisten ekspor-impor pintar yang dikembangkan oleh **Tim Arjika Labs - SMK Antartika 1 Sidoarjo** untuk kompetisi **GTNIC 2026**. Platform ini menggabungkan AI Sales Assistant, otomasi dokumen PDF resmi, validasi kepatuhan KYC Hub, dan perlindungan Escrow Vault!`;
+    return `🤖 Saya adalah **NusaBridge AI**, asisten ekspor-impor pintar yang dikembangkan oleh **Tim Arjika Labs - SMK Antartika 1 Sidoarjo**. Platform ini menggabungkan AI Sales Assistant, otomasi dokumen PDF resmi, validasi kepatuhan KYC Hub, dan perlindungan Escrow Vault!`;
   }
 
   // 9. Respons Terbuka Khas NusaBridge AI

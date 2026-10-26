@@ -75,6 +75,7 @@ export function AppContextProvider({ children }) {
       role: user.role || 'seller',
       nib: user.nib || '1294801928415',
       plan: user.plan || 'Free Trial (1 Bulan)',
+      logo: user.logo || '',
       token: `nb_session_${Date.now()}`,
       ...opts,
     };
@@ -91,6 +92,18 @@ export function AppContextProvider({ children }) {
       localStorage.removeItem(SESSION_KEY);
     } catch (_) {}
     showToast('👋 Anda telah keluar dari sesi akun.');
+  }, []);
+
+  // Ganti logo profil tanpa perlu logout (dipakai Navbar).
+  const updateSessionLogo = useCallback((logo) => {
+    setSession((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, logo: logo || '' };
+      try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(next));
+      } catch (_) {}
+      return next;
+    });
   }, []);
 
   // ---------------------------------------------------------------
@@ -148,6 +161,7 @@ export function AppContextProvider({ children }) {
       session,
       login,
       logout,
+      updateSessionLogo,
       toasts,
       showToast,
       modal,
@@ -158,7 +172,7 @@ export function AppContextProvider({ children }) {
       voucherClaimed,
       setVoucherClaimed: setVoucherClaimedState,
     }),
-    [lang, setLang, t, session, login, logout, toasts, showToast, modal, openModal, closeModal, openAuth, openInfo, voucherClaimed, setVoucherClaimedState]
+    [lang, setLang, t, session, login, logout, updateSessionLogo, toasts, showToast, modal, openModal, closeModal, openAuth, openInfo, voucherClaimed, setVoucherClaimedState]
   );
 
   return <AppContext.Provider value={ctx}>{children}</AppContext.Provider>;

@@ -8,15 +8,15 @@ import {
 } from './radarEngine.js';
 
 const ROUTE_D = {
-  baruna: 'M395,240 Q330,190 260,170 T150,110 T90,75',
-  samudera: 'M420,245 Q500,210 560,160 T595,120',
-  celebes: 'M375,215 Q410,160 460,120 T510,95',
+  baruna: 'M477,181 C450,221 416,229 392,210 S343,167 329,124 Q321,98 317,70',
+  samudera: 'M477,181 C432,274 331,303 238,258 S141,175 103,106',
+  celebes: 'M477,181 Q514,142 532,104',
 };
 
 const VESSEL_START = {
-  baruna: { x: 235, y: 155, rot: -150 },
-  samudera: { x: 490, y: 205, rot: -40 },
-  celebes: { x: 425, y: 150, rot: -65 },
+  baruna: { x: 410, y: 208, rot: -150 },
+  samudera: { x: 306, y: 282, rot: -40 },
+  celebes: { x: 510, y: 145, rot: -65 },
 };
 
 const VESSEL_TAG_TEXT = {
@@ -270,88 +270,88 @@ export default function RadarMap({ variant = 'home', onSelectVessel }) {
           </div>
           <div className="vpt-row"><span>Rute:</span> <strong>{tooltip.route}</strong></div>
           <div className="vpt-row"><span>Muatan:</span> <strong>{tooltip.cargo}</strong></div>
-          <div className="vpt-row"><span>Status:</span> <strong style={{ color: '#10b981' }}>AIS Real-Time</strong></div>
+          <div className="vpt-row"><span>Status:</span> <strong style={{ color: '#10b981' }}>Simulasi AIS</strong></div>
           <div className="vpt-row"><span>ETA:</span> <strong style={{ color: '#f59e0b' }}>{tooltip.eta}</strong></div>
         </div>
       )}
 
-      <svg className="marine-svg-map" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet">
-        {isModal ? (
-          <>
-            <rect width="600" height="340" fill="#071224" />
-            {/* Continents */}
-            <path d="M120,40 Q160,35 220,50 Q280,60 360,70 Q420,60 480,90 Q470,130 430,140 Q400,120 370,150 Q340,180 320,180 Q300,160 260,180 Q220,200 200,240 Q170,220 160,170 Q140,150 120,110 Z" fill="#142c4c" opacity="0.8" />
-            <path d="M30,60 Q60,80 70,130 Q80,180 60,220 Q40,260 50,300 Q20,280 15,200 Q20,120 30,60 Z" fill="#142c4c" opacity="0.8" />
-            <g transform="translate(350, 190) scale(0.8)">
-              <path d="M10,25 Q30,10 60,40 Q45,55 15,35 Z" fill="#2563eb" stroke="#60a5fa" strokeWidth="1" />
-              <path d="M55,55 Q90,52 130,60 Q110,68 60,65 Z" fill="#2563eb" stroke="#60a5fa" strokeWidth="1" />
-              <path d="M75,15 Q105,10 115,35 Q95,50 75,30 Z" fill="#2563eb" stroke="#60a5fa" strokeWidth="1" />
-              <path d="M130,20 Q145,15 140,40 Q155,50 135,55 Z" fill="#2563eb" stroke="#60a5fa" strokeWidth="1" />
-              <path d="M165,30 Q210,25 240,45 Q210,65 170,55 Z" fill="#2563eb" stroke="#60a5fa" strokeWidth="1" />
-            </g>
-            <path d="M440,250 Q490,240 520,270 Q510,310 460,315 Q430,290 440,250 Z" fill="#142c4c" opacity="0.8" />
-            {/* Ports */}
-            <circle cx="395" cy="240" r="5" fill="#10b981" />
-            <text x="404" y="244" fill="#ffffff" fontSize="9" fontWeight="700">Tanjung Priok, ID</text>
-            <circle cx="90" cy="75" r="5" fill="#f59e0b" />
-            <text x="12" y="78" fill="#cbd5e1" fontSize="9">Hamburg, DE</text>
-            <circle cx="510" cy="95" r="5" fill="#38bdf8" />
-            <text x="518" y="99" fill="#cbd5e1" fontSize="9">Tokyo, JP</text>
-          </>
-        ) : (
-          <>
-            {/* Ocean Background & Grid */}
-            <defs>
-              <linearGradient id="oceanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#0a192f" />
-                <stop offset="100%" stopColor="#050e1d" />
-              </linearGradient>
-              <linearGradient id="routeGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.8" />
-              </linearGradient>
-            </defs>
+      <svg className="marine-svg-map" viewBox="0 0 600 340" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Peta dunia dengan rute pengiriman laut dan udara">
+        <defs>
+          <linearGradient id={isModal ? 'modalOceanGrad' : 'oceanGrad'} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={isModal ? '#071224' : '#0a192f'} />
+            <stop offset="100%" stopColor="#050e1d" />
+          </linearGradient>
+          {!isModal && (
+            <linearGradient id="routeGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="#3b82f6" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.8" />
+            </linearGradient>
+          )}
+        </defs>
 
-            <rect width="600" height="340" fill="url(#oceanGrad)" />
+        <rect width="600" height="340" fill={`url(#${isModal ? 'modalOceanGrad' : 'oceanGrad'})`} />
 
-            {/* Continent Outlines (Abstract Stylized Vector) */}
-            <path className="continent-land" d="M120,40 Q160,35 220,50 Q280,60 360,70 Q420,60 480,90 Q470,130 430,140 Q400,120 370,150 Q340,180 320,180 Q300,160 260,180 Q220,200 200,240 Q170,220 160,170 Q140,150 120,110 Z" fill="#132743" opacity="0.6" />
-            <path className="continent-land" d="M30,60 Q60,80 70,130 Q80,180 60,220 Q40,260 50,300 Q20,280 15,200 Q20,120 30,60 Z" fill="#132743" opacity="0.6" />
-            {/* Indonesian Archipelago & SE Asia (Center-Right Highlighted) */}
-            <g className="indo-archipelago" transform="translate(350, 190) scale(0.8)">
-              <path d="M10,25 Q30,10 60,40 Q45,55 15,35 Z" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1" />
-              <path d="M55,55 Q90,52 130,60 Q110,68 60,65 Z" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1" />
-              <path d="M75,15 Q105,10 115,35 Q95,50 75,30 Z" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1" />
-              <path d="M130,20 Q145,15 140,40 Q155,50 135,55 Z" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1" />
-              <path d="M165,30 Q210,25 240,45 Q210,65 170,55 Z" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1" />
-            </g>
-            {/* Australia (Bottom Right) */}
-            <path className="continent-land" d="M440,250 Q490,240 520,270 Q510,310 460,315 Q430,290 440,250 Z" fill="#132743" opacity="0.6" />
+        <g className="map-world-land">
+          <path className="map-continent" d="M34 61 L52 43 77 34 94 37 109 30 128 42 145 38 158 48 174 51 189 70 183 83 168 88 161 103 148 110 140 126 126 135 120 153 107 165 96 149 87 139 75 134 68 117 55 108 49 91 40 83 Z" />
+          <path className="map-continent" d="M183 28 L205 18 229 25 238 41 225 61 207 66 196 56 Z" />
+          <path className="map-continent" d="M145 160 L161 166 174 181 181 202 194 220 188 243 181 267 169 291 159 279 154 256 146 237 143 213 136 192 Z" />
+          <path className="map-continent" d="M278 67 L288 56 307 53 321 59 329 52 346 57 360 51 378 55 390 50 408 56 426 53 443 59 461 57 478 65 496 64 513 73 532 69 552 81 562 96 552 108 534 110 521 121 505 123 490 133 471 131 458 140 442 135 431 145 415 137 401 142 384 135 369 141 356 131 340 137 328 126 315 132 303 120 291 113 283 98 Z" />
+          <path className="map-continent" d="M286 132 L303 126 320 131 333 144 342 159 337 177 329 191 323 210 311 226 302 215 298 197 289 182 285 164 Z" />
+          <path className="map-continent" d="M368 143 L377 147 384 153 379 159 371 155 Z" />
+          <path className="map-continent" d="M398 143 L406 145 412 151 405 156 399 152 Z" />
+          <path className="map-continent" d="M425 150 L435 153 441 160 434 166 427 161 Z" />
+          <path className="map-continent" d="M445 164 L453 167 458 172 451 176 445 172 Z" />
+          <path className="map-continent" d="M460 179 L469 181 476 184 470 188 461 186 Z" />
+          <path className="map-continent" d="M520 188 L532 190 540 196 534 201 522 198 Z" />
+          <path className="map-continent" d="M461 234 L478 226 498 228 518 237 531 251 526 269 512 281 493 284 477 276 463 262 455 247 Z" />
+          <path className="map-continent" d="M276 40 L282 38 285 44 280 48 Z" />
+          <path className="map-continent" d="M543 130 L548 132 546 137 542 135 Z" />
+        </g>
 
-            {/* Major Ports (Pusat Pelabuhan Hub) */}
-            <g className="port-marker" transform="translate(395, 240)">
-              <circle r="7" fill="none" stroke="#10b981" strokeWidth="1.5" className="port-ping" />
-              <circle r="3.5" fill="#10b981" />
-              <text x="8" y="4" fill="#ffffff" fontSize="8.5" fontWeight="700" fontFamily="'Plus Jakarta Sans', sans-serif">Tanjung Priok (ID)</text>
-            </g>
-            <g className="port-marker" transform="translate(90, 75)">
-              <circle r="6" fill="none" stroke="#f59e0b" strokeWidth="1.5" className="port-ping" />
-              <circle r="3" fill="#f59e0b" />
-              <text x="-80" y="4" fill="#cbd5e1" fontSize="8" fontFamily="'Plus Jakarta Sans', sans-serif">Hamburg (DE)</text>
-            </g>
-            <g className="port-marker" transform="translate(510, 95)">
-              <circle r="5" fill="none" stroke="#38bdf8" strokeWidth="1.5" className="port-ping" />
-              <circle r="2.5" fill="#38bdf8" />
-              <text x="8" y="4" fill="#cbd5e1" fontSize="8" fontFamily="'Plus Jakarta Sans', sans-serif">Tokyo (JP)</text>
-            </g>
-            <g className="port-marker" transform="translate(585, 120)">
-              <circle r="5" fill="none" stroke="#a855f7" strokeWidth="1.5" className="port-ping" />
-              <circle r="2.5" fill="#a855f7" />
-              <text x="-65" y="-6" fill="#cbd5e1" fontSize="8" fontFamily="'Plus Jakarta Sans', sans-serif">Los Angeles (US)</text>
-            </g>
-          </>
-        )}
+        <g className="map-region-labels" aria-hidden="true">
+          <text x="87" y="91">AMERIKA UTARA</text>
+          <text x="151" y="221">AMERIKA SELATAN</text>
+          <text x="311" y="91">EROPA</text>
+          <text x="297" y="178">AFRIKA</text>
+          <text x="437" y="91">ASIA</text>
+          <text x="482" y="258">AUSTRALIA</text>
+        </g>
+
+        <path className="air-route" d="M477 181 Q398 76 317 70" />
+        <path className="air-route" d="M477 181 Q526 112 532 104" />
+        <path className="air-route" d="M477 181 Q560 135 600 141 M0 141 Q56 116 103 106" />
+
+        <g className="aircraft-marker" transform="translate(397 112) rotate(-38)" role="img" aria-label="Pesawat pada rute udara Jakarta-Hamburg">
+          <text x="0" y="0">✈</text>
+        </g>
+        <g className="aircraft-marker" transform="translate(564 145) rotate(-18)" role="img" aria-label="Pesawat pada rute udara Jakarta-Los Angeles">
+          <text x="0" y="0">✈</text>
+        </g>
+        <g className="aircraft-marker" transform="translate(509 139) rotate(-45)" role="img" aria-label="Pesawat pada rute udara Jakarta-Tokyo">
+          <text x="0" y="0">✈</text>
+        </g>
+
+        <g className="port-marker" transform="translate(477 181)">
+          <circle r="7" fill="none" stroke="#10b981" strokeWidth="1.5" className="port-ping" />
+          <circle r="3.5" fill="#10b981" />
+          <text x="8" y="13" fill="#ffffff" fontSize="8" fontWeight="700">Jakarta (ID)</text>
+        </g>
+        <g className="port-marker" transform="translate(317 70)">
+          <circle r="6" fill="none" stroke="#f59e0b" strokeWidth="1.5" className="port-ping" />
+          <circle r="3" fill="#f59e0b" />
+          <text x="-4" y="-9" fill="#cbd5e1" fontSize="8">Hamburg (DE)</text>
+        </g>
+        <g className="port-marker" transform="translate(532 104)">
+          <circle r="5" fill="none" stroke="#38bdf8" strokeWidth="1.5" className="port-ping" />
+          <circle r="2.5" fill="#38bdf8" />
+          <text x="7" y="4" fill="#cbd5e1" fontSize="8">Tokyo (JP)</text>
+        </g>
+        <g className="port-marker" transform="translate(103 106)">
+          <circle r="5" fill="none" stroke="#a855f7" strokeWidth="1.5" className="port-ping" />
+          <circle r="2.5" fill="#a855f7" />
+          <text x="-5" y="-8" fill="#cbd5e1" fontSize="8">Los Angeles (US)</text>
+        </g>
 
         {/* Global Shipping Lanes (Curved Geodesic Flight-Radar Style Lines) */}
         {VESSEL_KEYS.map((key) => renderLane(key))}
@@ -359,6 +359,10 @@ export default function RadarMap({ variant = 'home', onSelectVessel }) {
         {/* Active Cargo Ships (Vessels) on Routes */}
         {VESSEL_KEYS.map((key) => renderVessel(key))}
       </svg>
+      <div className="map-transport-legend" aria-label="Legenda jenis pengiriman">
+        <span><b className="legend-sea">●</b> Rute laut</span>
+        <span><b className="legend-air">✈</b> Rute udara</span>
+      </div>
     </>
   );
 }

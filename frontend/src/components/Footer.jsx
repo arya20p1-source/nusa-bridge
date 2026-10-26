@@ -1,5 +1,5 @@
 import { useApp } from '../context/AppContext.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import T from './T.jsx';
 
 /*
@@ -7,14 +7,35 @@ import T from './T.jsx';
  * Konten mengikuti markup footer lama agar desain tetap konsisten.
  */
 export default function Footer() {
-  const { openInfo } = useApp();
+  const { openInfo, lang, t } = useApp();
+  const location = useLocation();
 
   const infoLinks = [
-    { key: 'res_help', title: 'Pusat Bantuan' },
-    { key: 'res_docs', title: 'Dokumentasi' },
-    { key: 'res_blog', title: 'Blog' },
-    { key: 'res_privacy', title: 'Kebijakan Privasi' },
-    { key: 'res_terms', title: 'Syarat & Ketentuan' },
+    {
+      key: 'res_help',
+      id: 'Gunakan Solusi AI untuk bertanya tentang katalog, RFQ, dokumen, dan alur ekspor NusaBridge.',
+      en: 'Use AI Solutions to ask about the NusaBridge catalog, RFQs, documents, and export workflow.',
+    },
+    {
+      key: 'res_docs',
+      id: 'Panduan alur ekspor dapat dilihat pada bagian Alur Ekspor di beranda.',
+      en: 'The export workflow guide is available in the Export Flow section on the home page.',
+    },
+    {
+      key: 'res_blog',
+      id: 'Artikel blog NusaBridge belum tersedia.',
+      en: 'NusaBridge blog articles are not available yet.',
+    },
+    {
+      key: 'res_privacy',
+      id: 'Dokumen kebijakan privasi lengkap belum tersedia di platform ini.',
+      en: 'The full privacy policy document is not available on this platform yet.',
+    },
+    {
+      key: 'res_terms',
+      id: 'Dokumen syarat dan ketentuan lengkap belum tersedia di platform ini.',
+      en: 'The full terms and conditions document is not available on this platform yet.',
+    },
   ];
 
   const navLinks = [
@@ -26,11 +47,8 @@ export default function Footer() {
     { key: 'nav_about', to: '/#tentang' },
   ];
 
-  function openInfoFor(title) {
-    openInfo(
-      title,
-      `Bagian "${title}" merupakan modul dokumentasi dan referensi resmi prototype NusaBridge untuk perlombaan GTNIC 2026.`
-    );
+  function openInfoFor(link) {
+    openInfo(t(link.key), lang === 'en' ? link.en : link.id);
   }
 
   return (
@@ -54,20 +72,27 @@ export default function Footer() {
               {navLinks.map((l) => (
                 <li key={l.key}>
                   {l.to.includes('#') ? (
-                    <a
-                      href={l.to}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        const [path, hash] = l.to.split('#');
-                        const el = document.getElementById(hash);
-                        if (el) window.scrollTo({ top: el.offsetTop - 90, behavior: 'smooth' });
+                    <Link
+                      to={l.to}
+                      onClick={() => {
+                        if (l.to === '/#alur-ekspor' && location.pathname === '/') {
+                          window.history.replaceState(null, '', l.to);
+                        }
                       }}
                       data-i18n={l.key}
                     >
                       <T k={l.key} />
-                    </a>
+                    </Link>
                   ) : (
-                    <Link to={l.to} data-i18n={l.key}>
+                    <Link
+                      to={l.to}
+                      onClick={() => {
+                        if (l.to === '/' && location.pathname === '/') {
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      data-i18n={l.key}
+                    >
                       <T k={l.key} />
                     </Link>
                   )}
@@ -86,7 +111,7 @@ export default function Footer() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      openInfoFor(l.title);
+                      openInfoFor(l);
                     }}
                     data-i18n={l.key}
                   >
@@ -122,7 +147,6 @@ export default function Footer() {
 
         <div className="footer-bottom-bar">
           <p className="copyright-text">© 2026 NusaBridge. Tim Arjika Labs - SMK Antartika 1 Sidoarjo.</p>
-          <p className="prototype-note">Platform ini adalah prototype untuk keperluan kompetisi GTNIC 2026.</p>
         </div>
       </div>
     </footer>
