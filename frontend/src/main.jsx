@@ -10,6 +10,7 @@ import './styles/produk.css';
 import './styles/solusi.css';
 import './styles/harga.css';
 import './styles/radar.css';
+import './styles/responsive.css';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

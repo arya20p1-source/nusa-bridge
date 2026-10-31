@@ -115,44 +115,121 @@ function SpecModal({ prod, onClose, onLanjutRfq }) {
 }
 
 // Modal RFQ AI
-function RfqModal({ productName, onClose }) {
+function RfqModal({ product, onClose }) {
   const [qty, setQty] = useState('');
   const [terms, setTerms] = useState('FOB');
   const [port, setPort] = useState('');
   const [contact, setContact] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [receipt, setReceipt] = useState(null);
+  const productName = product?.name || 'Komoditas Ekspor';
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const portVal = port || 'Port of Hamburg';
-    const termsVal = terms || 'CIF Hamburg';
-    // Kirim ke backend (best-effort, tetap sukses saat server offline)
-    fetch(apiUrl('/api/rfq'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        productName: productName || 'Komoditas Ekspor',
-        quantity: qty || '1000',
-        targetIncoterms: termsVal,
-        buyerCountry: portVal,
-      }),
-    }).catch(() => {});
+    setSaving(true);
+    setError('');
 
-    onClose();
-    // eslint-disable-next-line no-alert
-    window.alert(`🎉 Permintaan RFQ untuk "${productName || 'Komoditas Ekspor'}" (${qty || '1000'} Unit - ${termsVal}) berhasil diajukan!\n\nAI Agent NusaBridge sedang menganalisis penawaran dan menghubungkan ke mitra logistik.`);
+    try {
+      const res = await fetch(apiUrl('/api/rfq'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: product?.id,
+          productName,
+          quantity: Number(qty),
+          unit: product?.unit || 'unit',
+          targetPriceUSD: Number(product?.price),
+          targetIncoterms: terms,
+          buyerCountry: port.trim(),
+          buyerEmail: contact.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success || !data.rfq?.id) {
+        throw new Error(data.message || 'RFQ gagal disimpan. Coba lagi.');
+      }
+      setReceipt(data.rfq);
+    } catch (submitError) {
+      setError(submitError.message || 'Tidak dapat menghubungi server. RFQ belum tercatat.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function refreshReceipt() {
+    if (!receipt?.id) return;
+    setError('');
+    try {
+      const res = await fetch(apiUrl(`/api/rfq/${encodeURIComponent(receipt.id)}`));
+      const data = await res.json();
+      if (!res.ok || !data.success || !data.rfq) {
+        throw new Error(data.message || 'Status RFQ tidak dapat dimuat.');
+      }
+      setReceipt(data.rfq);
+    } catch (statusError) {
+      setError(statusError.message || 'Status RFQ tidak dapat dimuat.');
+    }
   }
 
   return (
     <div
       className="modal-overlay show active"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => { if (e.target === e.currentTarget && !saving) onClose(); }}
     >
       <div className="modal-card">
-        <button className="modal-close-btn" type="button" onClick={onClose}>&times;</button>
+        <button className="modal-close-btn" type="button" onClick={onClose} disabled={saving}>&times;</button>
+        {receipt ? (
+          <>
+            <div className="modal-header">
+              <div className="pill-badge pill-blue">BUKTI PENGAJUAN RFQ</div>
+              <h3 className="modal-title">Permintaan berhasil dicatat</h3>
+              <p className="modal-subtitle">Ini bukti pengajuan permintaan penawaran, bukan bukti pembayaran.</p>
+            </div>
+            <div className="rfq-receipt">
+              <div className="rfq-receipt-number">
+                <span>Nomor RFQ</span>
+                <strong>{receipt.id}</strong>
+              </div>
+              <dl className="rfq-receipt-details">
+                <div><dt>Produk</dt><dd>{receipt.productName}</dd></div>
+                <div><dt>Jumlah</dt><dd>{Number(receipt.quantity).toLocaleString('id-ID')} {receipt.unit}</dd></div>
+                <div><dt>Incoterms</dt><dd>{receipt.targetIncoterms}</dd></div>
+                <div><dt>Pelabuhan tujuan</dt><dd>{receipt.buyerCountry}</dd></div>
+                {Number.isFinite(Number(receipt.targetPriceUSD)) && (
+                  <div><dt>Harga acuan / unit</dt><dd>USD {Number(receipt.targetPriceUSD).toLocaleString('en-US')}</dd></div>
+                )}
+                {Number.isFinite(Number(receipt.totalValueUSD)) && (
+                  <div><dt>Estimasi nilai acuan</dt><dd>USD {Number(receipt.totalValueUSD).toLocaleString('en-US')}</dd></div>
+                )}
+                <div><dt>Status</dt><dd>{receipt.status === 'submitted' ? 'Diajukan — menunggu peninjauan' : receipt.status}</dd></div>
+              </dl>
+              <ol className="rfq-process">
+                {(receipt.process || []).map((step) => (
+                  <li className={`rfq-process-step is-${step.status}`} key={step.key}>
+                    <span className="rfq-process-dot">{step.status === 'done' ? '✓' : ''}</span>
+                    <span>{step.label}</span>
+                  </li>
+                ))}
+              </ol>
+              <p className="rfq-process-note">
+                {receipt.process?.length
+                  ? 'Status berikutnya akan berubah setelah tim meninjau permintaan. Simpan nomor RFQ ini untuk pengecekan.'
+                  : 'Proses RFQ tersimpan. Perbarui status dengan tombol di bawah.'}
+              </p>
+            </div>
+            {error && <p className="rfq-form-error" role="alert">{error}</p>}
+            <div className="modal-footer-spec">
+              <button className="btn btn-outline" type="button" onClick={refreshReceipt}>Perbarui Status</button>
+              <button className="btn btn-primary" type="button" onClick={onClose}>Selesai</button>
+            </div>
+          </>
+        ) : (
+          <>
         <div className="modal-header">
           <div className="pill-badge pill-blue">AI RFQ STUDIO</div>
           <h3 className="modal-title">Pengajuan Kuotasi Pembelian</h3>
-          <p className="modal-subtitle">AI Agent akan menganalisis Incoterms dan mengkalkulasi estimasi freight secara otomatis.</p>
+          <p className="modal-subtitle">Kirim detail permintaan. Setelah tersimpan, Anda mendapat nomor RFQ dan status proses.</p>
         </div>
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -165,7 +242,8 @@ function RfqModal({ productName, onClose }) {
               <input
                 type="number"
                 placeholder="contoh: 2000"
-                min={10}
+                min={1}
+                step="any"
                 required
                 value={qty}
                 onChange={(e) => setQty(e.target.value)}
@@ -192,17 +270,22 @@ function RfqModal({ productName, onClose }) {
             />
           </div>
           <div className="form-group">
-            <label>Email Perusahaan / Kontak Buyer</label>
+            <label>Email Buyer / Kontak Pemohon</label>
             <input
               type="email"
-              placeholder="buyer@company.com / +62..."
+              placeholder="nama@perusahaan.com"
               required
               value={contact}
               onChange={(e) => setContact(e.target.value)}
             />
           </div>
-          <button type="submit" className="btn btn-primary btn-block">Kirim RFQ ke AI Agent</button>
+          {error && <p className="rfq-form-error" role="alert">{error}</p>}
+          <button type="submit" className="btn btn-primary btn-block" disabled={saving}>
+            {saving ? 'Menyimpan RFQ...' : 'Kirim RFQ'}
+          </button>
         </form>
+          </>
+        )}
       </div>
     </div>
   );
@@ -424,7 +507,7 @@ export default function ProductsPage() {
                         <button className="btn btn-outline btn-sm btn-open-spec" type="button" onClick={() => setSpecProd(prod)}>
                           Lihat Spesifikasi Lab
                         </button>
-                        <button className="btn btn-primary btn-sm btn-rfq-prod" type="button" onClick={() => setRfqProd(prod.name)}>
+                        <button className="btn btn-primary btn-sm btn-rfq-prod" type="button" onClick={() => setRfqProd(prod)}>
                           Ajukan RFQ
                         </button>
                       </div>
@@ -512,12 +595,12 @@ export default function ProductsPage() {
         onClose={() => setSpecProd(null)}
         onLanjutRfq={() => {
           if (specProd) {
-            setRfqProd(specProd.name);
+            setRfqProd(specProd);
             setSpecProd(null);
           }
         }}
       />
-      {rfqProd && <RfqModal productName={rfqProd} onClose={() => setRfqProd(null)} />}
+      {rfqProd && <RfqModal product={rfqProd} onClose={() => setRfqProd(null)} />}
     </>
   );
 }

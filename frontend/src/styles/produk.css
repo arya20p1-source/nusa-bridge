@@ -183,6 +183,108 @@
   box-shadow: 0 4px 12px rgba(27, 104, 248, 0.25);
 }
 
+.rfq-receipt {
+  margin: 0 1.5rem 1rem;
+  padding: 1.1rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: #f8fafc;
+}
+
+.rfq-receipt-number {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #cbd5e1;
+}
+
+.rfq-receipt-number span,
+.rfq-receipt-details dt {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.rfq-receipt-number strong {
+  color: var(--navy-title);
+  overflow-wrap: anywhere;
+}
+
+.rfq-receipt-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.rfq-receipt-details div {
+  min-width: 0;
+}
+
+.rfq-receipt-details dd {
+  margin: 3px 0 0;
+  color: var(--navy-title);
+  font-size: 13px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.rfq-process {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.rfq-process-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.rfq-process-step.is-done {
+  color: #047857;
+  font-weight: 700;
+}
+
+.rfq-process-dot {
+  display: inline-flex;
+  flex: 0 0 20px;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.rfq-process-step.is-done .rfq-process-dot {
+  border-color: #059669;
+  background: #059669;
+}
+
+.rfq-process-note,
+.rfq-form-error {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.rfq-process-note {
+  color: var(--text-muted);
+}
+
+.rfq-form-error {
+  margin: 0 1.5rem 1rem;
+  color: #b91c1c;
+}
+
 /* ---------- 3. GRID KATALOG PRODUK ---------- */
 .catalog-result-header {
   display: flex;
@@ -460,6 +562,10 @@
 }
 
 @media (max-width: 768px) {
+  .rfq-receipt-details {
+    grid-template-columns: 1fr;
+  }
+
   .spec-grid-layout,
   .spec-detail-grid {
     grid-template-columns: 1fr;

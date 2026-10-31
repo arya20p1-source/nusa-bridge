@@ -7,14 +7,16 @@
  * ==========================================================================
  */
 
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
-const db = require('./database/db');
+const db = require('./database/db-supabase');
+const { findReferenceAnswer } = require('./reference-answers');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.set('trust proxy', 1);
 
 // Middleware
 app.use(cors());
@@ -42,14 +44,38 @@ if (fs.existsSync(path.join(DIST_DIR, 'index.html'))) {
 // ==========================================================================
 // 1. HEALTH CHECK
 // ==========================================================================
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'online',
-    platform: 'NusaBridge AI Trade Facilitation Engine',
-    version: '1.0.0',
-    timestamp: new Date().toISOString(),
-    database: 'JavaScript Native JSON-Store Active'
-  });
+app.get('/api/health', async (req, res) => {
+  try {
+    const database = await db.healthCheck();
+    res.json({
+      status: 'online',
+      platform: 'NusaBridge AI Trade Facilitation Engine',
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      database: db.provider,
+      databaseConfigured: database.configured,
+      databaseConnected: database.connected,
+      databaseReady: database.ready,
+      databaseCatalogReady: database.tables.find((table) => table.name === 'products').rowCount > 0,
+      databaseTables: database.tables.map(({ name, table, available }) => ({
+        name,
+        table,
+        available,
+      })),
+    });
+  } catch (err) {
+    console.error('[Health Check]:', err.message);
+    res.status(503).json({
+      status: 'degraded',
+      platform: 'NusaBridge AI Trade Facilitation Engine',
+      timestamp: new Date().toISOString(),
+      database: db.provider,
+      databaseConfigured: db.configured,
+      databaseConnected: false,
+      databaseReady: false,
+      databaseCatalogReady: false,
+    });
+  }
 });
 
 // ==========================================================================
@@ -176,27 +202,96 @@ app.get('/api/products/:id', async (req, res) => {
 app.post('/api/rfq', async (req, res) => {
   try {
     const { buyerName, buyerCompany, buyerCountry, productId, productName, quantity, unit, targetIncoterms, targetPriceUSD } = req.body;
+    const buyerEmail = String(req.body.buyerEmail || '').trim().toLowerCase();
+    const cleanProductName = String(productName || '').trim();
+    const cleanPort = String(buyerCountry || '').trim();
+    const cleanIncoterms = String(targetIncoterms || '').trim().toUpperCase();
+    const requestedQuantity = Number(quantity);
+    const referencePrice = Number(targetPriceUSD);
+
+    if (!cleanProductName || cleanProductName.length > 200) {
+      return res.status(400).json({ success: false, message: 'Nama produk wajib diisi (maksimal 200 karakter).' });
+    }
+    if (!Number.isFinite(requestedQuantity) || requestedQuantity <= 0) {
+      return res.status(400).json({ success: false, message: 'Jumlah pesanan harus berupa angka lebih dari 0.' });
+    }
+    if (!buyerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail)) {
+      return res.status(400).json({ success: false, message: 'Email kontak buyer wajib diisi dengan format yang valid.' });
+    }
+    if (!cleanPort || cleanPort.length > 120) {
+      return res.status(400).json({ success: false, message: 'Pelabuhan tujuan wajib diisi (maksimal 120 karakter).' });
+    }
+    if (!['FOB', 'CIF', 'CNF', 'EXW'].includes(cleanIncoterms)) {
+      return res.status(400).json({ success: false, message: 'Pilihan Incoterms tidak valid.' });
+    }
+    if (!Number.isFinite(referencePrice) || referencePrice < 0) {
+      return res.status(400).json({ success: false, message: 'Harga acuan produk tidak valid.' });
+    }
+
+    const createdAt = new Date().toISOString();
+    const buyer = buyerEmail.split('@')[0];
 
     const newRfq = await db.create('rfq', {
-      buyerName: buyerName || 'Global Buyer Partner',
-      buyerCompany: buyerCompany || 'International Trading Co.',
-      buyerCountry: buyerCountry || 'Global Port Destination',
-      productId: productId || 'prod_001',
-      productName: productName || 'Komoditas Unggulan Indonesia',
-      quantity: Number(quantity) || 1000,
-      unit: unit || 'Kg',
-      targetIncoterms: targetIncoterms || 'CIF Hamburg',
-      targetPriceUSD: Number(targetPriceUSD) || 10.0,
+      buyerName: String(buyerName || buyer).trim(),
+      buyerCompany: String(buyerCompany || '').trim(),
+      buyerEmail,
+      buyerCountry: cleanPort,
+      productId: String(productId || '').trim() || null,
+      productName: cleanProductName,
+      quantity: requestedQuantity,
+      unit: String(unit || 'unit').trim(),
+      targetIncoterms: cleanIncoterms,
+      targetPriceUSD: referencePrice,
+      totalValueUSD: referencePrice * requestedQuantity,
       status: 'submitted',
-      createdAt: new Date().toISOString()
+      process: [
+        {
+          key: 'submitted',
+          label: 'RFQ diterima',
+          status: 'done',
+          at: createdAt,
+        },
+        {
+          key: 'review',
+          label: 'Menunggu peninjauan dan penawaran',
+          status: 'waiting',
+          at: null,
+        },
+        {
+          key: 'confirmed',
+          label: 'Menunggu konfirmasi buyer',
+          status: 'waiting',
+          at: null,
+        },
+      ],
+      createdAt,
     });
 
     res.status(201).json({
       success: true,
-      message: 'RFQ berhasil diajukan! AI Agent NusaBridge sedang menganalisis penawaran.',
+      message: 'Permintaan RFQ berhasil dicatat.',
       rfq: newRfq
     });
   } catch (err) {
+    console.error('[RFQ submit]:', err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+app.get('/api/rfq/:id', async (req, res) => {
+  try {
+    const rfq = await db.findById('rfq', req.params.id);
+    if (!rfq) {
+      return res.status(404).json({ success: false, message: 'RFQ tidak ditemukan.' });
+    }
+
+    const { id, productName, quantity, unit, targetIncoterms, buyerCountry, status, process, createdAt, updatedAt } = rfq;
+    res.json({
+      success: true,
+      rfq: { id, productName, quantity, unit, targetIncoterms, buyerCountry, status, process, createdAt, updatedAt },
+    });
+  } catch (err) {
+    console.error('[RFQ status]:', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -204,7 +299,10 @@ app.post('/api/rfq', async (req, res) => {
 app.get('/api/rfq', async (req, res) => {
   try {
     const items = await db.read('rfq');
-    res.json({ success: true, count: items.length, rfqs: items });
+    const rfqs = items.map((rfq) =>
+      Object.fromEntries(Object.entries(rfq).filter(([key]) => key !== 'buyerEmail'))
+    );
+    res.json({ success: true, count: rfqs.length, rfqs });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -384,6 +482,7 @@ app.post('/api/ai/chat', async (req, res) => {
   try {
     allProducts = await db.read('products');
   } catch (err) {
+    console.warn('[AI Chat catalog]:', err.message);
     allProducts = [];
   }
 
@@ -1007,7 +1106,7 @@ Ada yang ingin Anda ketahui lebih lanjut mengenai NusaBridge?`;
       return `Halo! Terkait topik teknologi dan pengembangan perangkat lunak:
 
 Teknologi modern dan sistem berbasis AI dirancang untuk memecahkan masalah kompleks secara efisien:
-• **Arsitektur Aplikasi:** NusaBridge sendiri dibangun dengan arsitektur web modern yang menggabungkan backend Express.js, sistem database native JavaScript JSON-Store yang cepat, dan integrasi SDK Google GenAI (@google/genai).
+• **Arsitektur Aplikasi:** NusaBridge sendiri dibangun dengan arsitektur web modern yang menggabungkan backend Express.js, sistem database cloud Supabase PostgreSQL, dan integrasi SDK Google GenAI (@google/genai).
 • **Panggilan API & Interaksi Cerdas:** Sistem menggunakan REST API untuk menghubungkan antarmuka pengguna dengan mesin AI, sehingga analisis RFQ, kalkulasi Incoterms, dan verifikasi dokumen dapat dijalankan secara instan.
 • **Otomatisasi Dokumen:** Menggunakan formatting berbasis CSS Print & PDF templating berstandar internasional untuk mencetak Proforma Invoice dan Sales Contract secara rapi.
 
@@ -1020,80 +1119,148 @@ Apakah ada aspek pemrograman, API, atau arsitektur teknologi tertentu yang ingin
   // Rahasia AI hanya dibaca dari konfigurasi backend, tidak dari request browser.
   const activeKey = getStoredApiKey();
   const reqLang = String(req.body.lang || '').toLowerCase() === 'en' ? 'en' : 'id';
-  let aiReply = getHeuristicReply(message);
-  let usedModel = 'NusaBridge Smart Intelligence Engine';
 
-  // Jika server memiliki konfigurasi model, panggil provider dari backend.
-  if (activeKey) {
-    try {
-      // Ringkas katalog agar AI menjawab harga/MOQ dengan data asli (bukan mengarang)
-      const catalogLines = (allProducts || []).map((p, i) =>
-          `${i + 1}. ${p.name} | ${p.origin} | $${Number(p.price).toFixed(2)}/${p.unit} | MOQ ${p.moq} ${p.unit} | HS ${p.hsCode || '-'}`
-        ).join('\n');
+  // Use matching reference material to ground the AI, not replace the conversation.
+  const reference = findReferenceAnswer(message, reqLang);
+  if (!activeKey) {
+    if (reference) {
+      return res.json({
+        success: true,
+        reply: reference.answer,
+        agent: 'NusaBridge AI',
+        model: 'NusaBridge Knowledge Base',
+      });
+    }
+
+    return res.status(503).json({
+      success: false,
+      message: reqLang === 'en'
+        ? 'The AI service is not configured right now. Please try again later.'
+        : 'Layanan AI belum dikonfigurasi. Silakan coba lagi nanti.',
+    });
+  }
+
+  try {
+        const history = Array.isArray(context?.history)
+          ? context.history
+            .filter((item) => item && ['user', 'assistant'].includes(item.role) && typeof item.content === 'string')
+            .map((item) => ({ role: item.role, content: item.content.trim().slice(0, 2000) }))
+            .filter((item) => item.content)
+            .slice(-8)
+          : [];
+        const catalogQuery = [...history.filter((item) => item.role === 'user').map((item) => item.content), rawText].join(' ');
+        const matchedProducts = findMatchingProducts(catalogQuery, allProducts);
+        const asksForCatalog = /\b(?:products?|produk|catalog|katalog|commodities|komoditas|items?)\b/i.test(catalogQuery);
+        const productsForPrompt = matchedProducts.length
+          ? matchedProducts
+          : asksForCatalog
+            ? allProducts
+            : [];
+        const catalogLines = productsForPrompt.map((product) => JSON.stringify({
+          name: product.name,
+          origin: product.origin,
+          price: product.price,
+          unit: product.unit,
+          moq: product.moq,
+          hsCode: product.hsCode,
+          description: product.desc,
+          specifications: product.specs,
+          certifications: product.certs,
+          shipping: product.shipping,
+        })).join('\n');
 
         const languageRule = reqLang === 'en'
-          ? '2. Selalu jawab dalam BAHASA INGGRIS (English), walaupun pengguna menulis dalam bahasa Indonesia. Seluruh jawaban harus berbahasa Inggris.'
-          : '2. Gunakan bahasa yang dipakai pengguna (Indonesia atau Inggris), santun, ringkas, dan jelas.';
+          ? '2. Answer in the language of the latest user message; if it is unclear or mixed, use English.'
+          : '2. Jawab dalam bahasa pada pesan terbaru pengguna; jika tidak jelas atau campuran, gunakan bahasa Indonesia.';
+        const referenceContext = reference
+          ? `\nINFORMASI RUJUKAN YANG MUNGKIN RELEVAN (gunakan hanya bila sesuai; jawab secara alami dan jangan menyebut sumber):\n${reference.answer}`
+          : '';
 
-        const sysInstruction = `Kamu adalah NusaBridge AI, asisten cerdas untuk platform ekspor-impor UMKM Indonesia.
+        const sysInstruction = `Kamu adalah asisten untuk website NusaBridge, platform informasi dan simulasi alur ekspor UMKM Indonesia.
 ATURAN:
-1. Jawab SEMUA pertanyaan pengguna dengan akurat dan membantu, termasuk topik umum (sains, sejarah, teknologi, coding, matematika, pengetahuan umum). Jangan menolak dengan alasan "di luar topik".
+1. Percakapan bersifat terbuka: jawab pertanyaan pengguna dengan langsung dan relevan, terutama tentang website NusaBridge, fitur, katalog produk, RFQ, dan alur ekspor. Pertanyaan lanjutan boleh memakai konteks chat sebelumnya.
+2. Jawab langsung sesuai pertanyaan. Jangan melebar, mengulang pertanyaan, menambahkan topik yang tidak diminta, atau menampilkan sumber/link eksternal.
+3. Jika pertanyaan tidak berkaitan dengan NusaBridge atau ekspor, jelaskan dengan singkat bahwa asisten ini fokus pada website NusaBridge, lalu tawarkan topik website yang bisa dibantu.
+4. Jangan mengarang fitur, status transaksi, harga, stok, regulasi, atau data produk. Katalog di bawah adalah satu-satunya sumber fakta produk. Hanya sebutkan informasi yang tercantum persis di data katalog; jangan menyimpulkan kualitas, manfaat, target pasar, atau spesifikasi tambahan.
+5. Escrow Vault, KYC, dan alur dokumen di website merupakan simulasi/panduan; jangan menyebutnya sebagai layanan pembayaran atau verifikasi resmi sungguhan.
+6. Jika pertanyaan ambigu, minta satu klarifikasi singkat.
 ${languageRule}
-3. Untuk pertanyaan produk, harga, MOQ, asal, atau HS code, WAJIB memakai data katalog di bawah ini. Jangan mengarang produk atau angka di luar daftar.
-4. Jika data yang diminta tidak ada di katalog, katakan terus terang lalu tawarkan produk yang mirip.
-5. Format jawaban dengan Markdown bersih (bold, bullet, tabel bila perlu), tanpa tag HTML mentah.
+7. Format jawaban dengan Markdown bersih, tanpa tag HTML mentah.
+8. Saat membuat draf pesan atau promosi, jangan menambah klaim pemasaran atau fakta yang tidak ada di katalog (misalnya "premium", "handcrafted", atau kecocokan untuk pasar tertentu). Pakai placeholder seperti [spesifikasi produk] atau [harga] untuk informasi yang belum tersedia. Jangan menambahkan Incoterm pada harga kecuali tercantum pada field shipping.
+9. NusaBridge adalah platform; jangan mengklaim NusaBridge sebagai penjual atau produsen. Dalam draf atas nama pengguna, gunakan placeholder [nama perusahaan] kecuali pengguna memberi nama usahanya.
+10. Untuk pertanyaan tentang cara kerja fitur website, gunakan konteks alur website di bawah. Jangan menambahkan menu, fitur, atau langkah marketplace umum yang tidak tercantum.
 
-KATALOG NUSABRIDGE (${(allProducts || []).length} produk):
-${catalogLines || '(katalog kosong)'}`;
+DATA KATALOG YANG RELEVAN (${productsForPrompt.length} produk):
+${catalogLines || '(tidak ada produk katalog yang cocok; jangan mengarang detail produk)'}
+ALUR RFQ WEBSITE (FAKTA AKTUAL):
+- Buka katalog produk, pilih produk, lalu klik "Ajukan RFQ".
+- Pada formulir, produk sudah terpilih. Pengguna mengisi jumlah, memilih Incoterms (FOB, CIF, C&F, atau EXW), pelabuhan tujuan, dan email buyer/kontak, lalu klik "Kirim RFQ".
+- Jika berhasil disimpan, website menampilkan bukti pengajuan dengan nomor RFQ, detail permintaan, status "Diajukan — menunggu peninjauan", dan tahapan proses. "Perbarui Status" mengambil status terbaru untuk nomor RFQ tersebut.
+- Bukti RFQ bukan bukti pembayaran atau pesanan yang sudah disepakati. Website tidak otomatis mengirim permintaan ke pemasok, menerima penawaran, membandingkan penawaran, atau menyediakan dashboard/negosiasi RFQ.
+${referenceContext}`;
 
-        let generatedText = null;
-
-        // Panggil Groq (OpenAI-compatible)
-        try {
-          const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + activeKey },
-            body: JSON.stringify({
-              model: 'llama-3.3-70b-versatile',
-              messages: [
-                { role: 'system', content: sysInstruction },
-                { role: 'user', content: message },
-              ],
-              temperature: 0.4,
-            }),
-            signal: AbortSignal.timeout(60000),
+      const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + activeKey },
+        body: JSON.stringify({
+          model: 'openai/gpt-oss-120b',
+          messages: [
+            { role: 'system', content: sysInstruction },
+            ...history,
+            { role: 'user', content: message },
+          ],
+          temperature: 0.4,
+        }),
+        signal: AbortSignal.timeout(30000),
+      });
+      const data = await resp.json().catch(() => ({}));
+      const generatedText = data?.choices?.[0]?.message?.content;
+      if (!resp.ok || typeof generatedText !== 'string' || !generatedText.trim()) {
+        console.warn('[Groq API]: request failed with status', resp.status, data?.error?.message || '');
+        if (reference) {
+          return res.json({
+            success: true,
+            reply: reference.answer,
+            agent: 'NusaBridge AI',
+            model: 'NusaBridge Knowledge Base',
           });
-          const data = await resp.json().catch(() => ({}));
-          if (resp.ok && data && data.choices && data.choices[0] && data.choices[0].message) {
-            generatedText = data.choices[0].message.content;
-            usedModel = 'llama-3.3-70b-versatile (Groq)';
-          }
-        } catch (apiErr) {
-          console.warn('[Groq API Call]:', apiErr.message);
         }
 
-        if (generatedText) {
-          aiReply = generatedText.replace(/<[^>]*>/g, '');
-        }
-    } catch (apiErr) {
-      console.warn('[Groq API Call]:', apiErr.message);
-    }
-  }
+        return res.status(503).json({
+          success: false,
+          message: reqLang === 'en'
+            ? 'The AI could not answer right now. Please try again in a moment.'
+            : 'AI belum dapat menjawab saat ini. Silakan coba lagi sebentar.',
+        });
+      }
 
-  if (reqLang === 'en' && !usedModel.includes('Groq')) {
-    aiReply = `I don't have a sufficiently specific answer for **"${message}"** yet. I can help with the NusaBridge catalog, RFQs, Incoterms, documents, and general export requirements. Confirm current prices and regulations with suppliers and the relevant authorities.`;
-  }
-
-  // Pastikan respons bersih dari tag HTML mentah
-  aiReply = String(aiReply).replace(/<[^>]*>/g, '');
+      const aiReply = generatedText.replace(/<[^>]*>/g, '').trim();
 
   res.json({
     success: true,
     reply: aiReply,
     agent: 'NusaBridge AI',
-    model: usedModel,
-    isOfficialGemini: usedModel.includes('Groq'),
+    model: 'openai/gpt-oss-120b (Groq)',
+    isOfficialGemini: false,
   });
+  } catch (apiErr) {
+    console.warn('[Groq API Call]:', apiErr.message);
+    if (reference) {
+      return res.json({
+        success: true,
+        reply: reference.answer,
+        agent: 'NusaBridge AI',
+        model: 'NusaBridge Knowledge Base',
+      });
+    }
+
+    return res.status(503).json({
+      success: false,
+      message: reqLang === 'en'
+        ? 'The AI could not answer right now. Please try again in a moment.'
+        : 'AI belum dapat menjawab saat ini. Silakan coba lagi sebentar.',
+    });
+  }
 });
 
 // ==========================================================================
@@ -1113,7 +1280,7 @@ app.listen(PORT, () => {
   console.log(`=======================================================`);
   console.log(`🚀 NusaBridge Backend API Server Berjalan di Port: ${PORT}`);
   console.log(`📡 URL API: http://localhost:${PORT}/api/health`);
-  console.log(`📦 Database: JavaScript JSON-Store (database/)`);
-  console.log(`☕ Siap melayani 50+ komoditas ekspor UMKM Indonesia!`);
+  console.log(`📦 Database: ${db.provider}`);
+  console.log(`🩺 Periksa databaseReady pada endpoint /api/health untuk status katalog dan tabel.`);
   console.log(`=======================================================`);
 });

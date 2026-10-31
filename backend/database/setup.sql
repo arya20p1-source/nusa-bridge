@@ -1,0 +1,295 @@
+-- ==========================================================================
+-- NUSABRIDGE - SETUP DATABASE (CUKUP JALANKAN SEKALI)
+-- File: database/setup.sql
+--
+-- CARA PAKAI:
+--   1. Buka https://supabase.com/dashboard -> pilih project NusaBridge
+--   2. Menu SQL Editor -> New query
+--   3. Copy SELURUH isi file ini -> klik Run
+--   4. Jalankan: npm.cmd run db:check (di folder backend)
+--
+-- File ini TIDAK menghapus data. Aman dijalankan ulang.
+-- Isinya = schema.sql (buat/melengkapi tabel) + seed.sql (data contoh).
+-- ==========================================================================
+
+-- ==========================================================================
+-- NUSABRIDGE - SUPABASE DATABASE SCHEMA
+-- File: database/schema.sql
+--
+-- CARA PAKAI:
+-- 1. Buka dashboard Supabase -> SQL Editor -> New query
+-- 2. Tempel SELURUH isi file ini, lalu klik "Run"
+-- 3. Setelah sukses, jalankan database/seed.sql (data contoh)
+--
+-- CATATAN PENTING:
+-- - File ini TIDAK menghapus data. Tabel yang sudah ada hanya ditambah
+--   kolom yang belum ada.
+-- - Jika tabel lama kamu punya struktur yang jauh berbeda (mis. kolom id
+--   bertipe uuid, atau kolom wajib/not null yang tidak dipakai aplikasi),
+--   hapus dulu tabel itu lewat Table Editor (pastikan kosong), lalu Run lagi.
+--
+-- RESET CEPAT (hapus 4 tabel lalu buat ulang) - HANYA jika datanya kosong:
+-- drop table if exists public.login cascade;
+-- drop table if exists public.products cascade;
+-- drop table if exists public.orderan cascade;
+-- drop table if exists public.transactions cascade;
+-- ==========================================================================
+
+-- ==========================================================================
+-- 1. LOGIN (akun pengguna)
+-- ==========================================================================
+create table if not exists public.login (
+  id          text primary key,
+  name        text,
+  email       text unique,
+  company     text,
+  role        text,
+  nib         text,
+  npwp        text,
+  status      text,
+  plan        text,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz
+);
+
+alter table public.login add column if not exists name       text;
+alter table public.login add column if not exists email      text;
+alter table public.login add column if not exists company    text;
+alter table public.login add column if not exists role       text;
+alter table public.login add column if not exists nib        text;
+alter table public.login add column if not exists npwp       text;
+alter table public.login add column if not exists status     text;
+alter table public.login add column if not exists plan       text;
+alter table public.login add column if not exists created_at timestamptz not null default now();
+alter table public.login add column if not exists updated_at timestamptz;
+
+-- ==========================================================================
+-- 2. PRODUCTS (katalog produk ekspor)
+-- ==========================================================================
+create table if not exists public.products (
+  id                 text primary key,
+  name               text,
+  category           text,
+  price              numeric,
+  unit               text,
+  moq                numeric,
+  origin             text,
+  hs_code            text,
+  image              text,
+  description        text,
+  specs              jsonb default '[]'::jsonb,
+  certs              jsonb default '[]'::jsonb,
+  shipping           text,
+  verified_exporter  boolean default true,
+  created_at         timestamptz not null default now(),
+  updated_at         timestamptz
+);
+
+alter table public.products add column if not exists name              text;
+alter table public.products add column if not exists category          text;
+alter table public.products add column if not exists price             numeric;
+alter table public.products add column if not exists unit              text;
+alter table public.products add column if not exists moq               numeric;
+alter table public.products add column if not exists origin            text;
+alter table public.products add column if not exists hs_code           text;
+alter table public.products add column if not exists image             text;
+alter table public.products add column if not exists description       text;
+alter table public.products add column if not exists specs             jsonb default '[]'::jsonb;
+alter table public.products add column if not exists certs             jsonb default '[]'::jsonb;
+alter table public.products add column if not exists shipping          text;
+alter table public.products add column if not exists verified_exporter boolean default true;
+alter table public.products add column if not exists created_at        timestamptz not null default now();
+alter table public.products add column if not exists updated_at        timestamptz;
+
+-- ==========================================================================
+-- 3. ORDERAN (RFQ / pesanan masuk)
+-- ==========================================================================
+create table if not exists public.orderan (
+  id                text primary key,
+  buyer_name        text,
+  buyer_company     text,
+  buyer_email       text,
+  buyer_country     text,
+  product_id        text,
+  product_name      text,
+  quantity          numeric,
+  unit              text,
+  target_incoterms  text,
+  target_price_usd  numeric,
+  total_value_usd   numeric,
+  status            text,
+  ai_analysis       jsonb,
+  process           jsonb not null default '[]'::jsonb,
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz
+);
+
+alter table public.orderan add column if not exists buyer_name       text;
+alter table public.orderan add column if not exists buyer_company    text;
+alter table public.orderan add column if not exists buyer_email      text;
+alter table public.orderan add column if not exists buyer_country    text;
+alter table public.orderan add column if not exists product_id       text;
+alter table public.orderan add column if not exists product_name     text;
+alter table public.orderan add column if not exists quantity         numeric;
+alter table public.orderan add column if not exists unit             text;
+alter table public.orderan add column if not exists target_incoterms text;
+alter table public.orderan add column if not exists target_price_usd numeric;
+alter table public.orderan add column if not exists total_value_usd  numeric;
+alter table public.orderan add column if not exists status           text;
+alter table public.orderan add column if not exists ai_analysis      jsonb;
+alter table public.orderan add column if not exists process          jsonb not null default '[]'::jsonb;
+alter table public.orderan add column if not exists created_at       timestamptz not null default now();
+alter table public.orderan add column if not exists updated_at       timestamptz;
+
+-- ==========================================================================
+-- 4. TRANSACTIONS (kontrak & escrow)
+-- ==========================================================================
+create table if not exists public.transactions (
+  id                  text primary key,
+  contract_no         text,
+  exporter            text,
+  buyer               text,
+  product             text,
+  volume              text,
+  incoterms           text,
+  contract_value_usd  numeric,
+  escrow_stages       jsonb default '[]'::jsonb,
+  vessel_name         text,
+  eta                 text,
+  status              text,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz
+);
+
+alter table public.transactions add column if not exists contract_no        text;
+alter table public.transactions add column if not exists exporter           text;
+alter table public.transactions add column if not exists buyer              text;
+alter table public.transactions add column if not exists product            text;
+alter table public.transactions add column if not exists volume             text;
+alter table public.transactions add column if not exists incoterms          text;
+alter table public.transactions add column if not exists contract_value_usd numeric;
+alter table public.transactions add column if not exists escrow_stages      jsonb default '[]'::jsonb;
+alter table public.transactions add column if not exists vessel_name        text;
+alter table public.transactions add column if not exists eta                text;
+alter table public.transactions add column if not exists status             text;
+alter table public.transactions add column if not exists created_at         timestamptz not null default now();
+alter table public.transactions add column if not exists updated_at         timestamptz;
+
+-- ==========================================================================
+-- 5. INDEX (mempercepat pencarian)
+-- ==========================================================================
+create index if not exists products_category_idx on public.products (category);
+create index if not exists products_name_idx     on public.products (name);
+create index if not exists login_email_idx       on public.login (lower(email));
+create index if not exists orderan_status_idx    on public.orderan (status);
+create index if not exists orderan_created_idx   on public.orderan (created_at desc);
+create index if not exists transactions_created_idx on public.transactions (created_at desc);
+
+-- ==========================================================================
+-- 6. KEAMANAN (RLS)
+-- Backend memakai SERVICE ROLE KEY yang otomatis melewati RLS.
+-- Dengan RLS aktif dan tanpa policy, anon key TIDAK bisa membaca data.
+-- ==========================================================================
+alter table public.login        enable row level security;
+alter table public.products     enable row level security;
+alter table public.orderan      enable row level security;
+alter table public.transactions enable row level security;
+
+-- ==========================================================================
+-- 7. RELOAD SCHEMA CACHE (agar REST API langsung mengenali tabel baru)
+-- ==========================================================================
+notify pgrst, 'reload schema';
+
+
+-- ==========================================================================
+-- DATA CONTOH (SEED)
+-- ==========================================================================
+
+-- ==========================================================================
+-- NUSABRIDGE - SEED DATA (hasil konversi dari database JSON lama)
+-- File: database/seed.sql
+--
+-- Jalankan SETELAH database/schema.sql berhasil.
+-- SQL Editor Supabase -> tempel file ini -> Run.
+-- Aman dijalankan ulang: baris dengan id yang sama dilewati.
+-- ==========================================================================
+
+-- 1. LOGIN
+insert into public.login (id, name, email, company, role, nib, npwp, status, plan, created_at) values
+  ('use_1792387445560_531', 'arya20p1@gmail.com', 'owner@bisnis.id', 'arya20p1@gmail.com', 'seller', '1294801928415', '01.861.639.0-012.000', 'verified', 'Free Trial (1 Bulan)', '2026-10-19T05:24:05.556Z'),
+  ('usr_001', 'Budi Santoso', 'budi@kopinusantara.id', 'CV Kopi Nusantara Mandiri', 'seller', '1294801928415', '01.234.567.8-012.000', 'verified', 'Paket 5 Bulan', '2026-10-15T08:00:00.000Z'),
+  ('usr_002', 'Heinrich Schmidt', 'h.schmidt@nordictrade.de', 'Nordic Coffee Importers GmbH', 'buyer', null, null, 'verified', null, '2026-10-16T10:30:00.000Z')
+on conflict (id) do nothing;
+
+-- 2. PRODUCTS
+insert into public.products (id, name, category, price, unit, moq, origin, hs_code, image, description, specs, certs, shipping, verified_exporter, created_at) values
+  ('prod_kopi_001', 'Kopi Arabika Gayo Specialty Grade 1 (Green Beans)', 'kopi', 9.8, 'Kg', 1000, 'Takengon, Aceh Tengah', '0901.11.10', '/assets/products/kopi-1.webp', 'Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 85.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"85.5"},{"k":"Kadar Air","v":"11.5% - 12.0%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Pelabuhan Belawan', true, '2026-01-01T00:00:00.000Z'),
+  ('prod_kopi_002', 'Kopi Arabika Gayo Peaberry Specialty (Roasted)', 'kopi', 16.5, 'Kg', 300, 'Bener Meriah, Aceh', '0901.21.10', '/assets/products/kopi-2.webp', 'Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 86.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Roaster"},{"k":"SCA Score","v":"86.0"},{"k":"Kadar Air","v":"<2.5%"},{"k":"Roast Profile","v":"Medium Roast"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Pelabuhan Belawan', true, '2026-01-01T00:00:01.000Z'),
+  ('prod_kopi_003', 'Kopi Arabika Mandheling Triple Picked (Green Beans)', 'kopi', 10.2, 'Kg', 1000, 'Mandailing Natal, Sumatera Utara', '0901.11.10', '/assets/products/kopi-3.webp', 'Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 85.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"85.0"},{"k":"Kadar Air","v":"11.5% - 12.0%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Pelabuhan Belawan', true, '2026-01-01T00:00:02.000Z'),
+  ('prod_kopi_004', 'Kopi Arabika Mandheling Dark Roast Signature', 'kopi', 15.8, 'Kg', 250, 'Lintong Nihuta, Sumatera Utara', '0901.21.10', '/assets/products/kopi-4.webp', 'Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 84.8, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Roaster"},{"k":"SCA Score","v":"84.8"},{"k":"Kadar Air","v":"<2.5%"},{"k":"Roast Profile","v":"Dark Roast"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Pelabuhan Belawan', true, '2026-01-01T00:00:03.000Z'),
+  ('prod_kopi_005', 'Kopi Arabika Toraja Kalosi Grade 1 (Green Beans)', 'kopi', 10.5, 'Kg', 1000, 'Tana Toraja, Sulawesi Selatan', '0901.11.10', '/assets/products/kopi-5.webp', 'Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 86.2, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"86.2"},{"k":"Kadar Air","v":"11.5% - 12.0%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Pelabuhan Makassar', true, '2026-01-01T00:00:04.000Z'),
+  ('prod_kopi_006', 'Kopi Arabika Toraja Sapan Specialty (Roasted)', 'kopi', 17, 'Kg', 300, 'Sapan, Toraja Utara', '0901.21.10', '/assets/products/kopi-6.webp', 'Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 87.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Roaster"},{"k":"SCA Score","v":"87.0"},{"k":"Kadar Air","v":"<2.5%"},{"k":"Roast Profile","v":"Medium Light Roast"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:05.000Z'),
+  ('prod_kopi_007', 'Kopi Arabika Kintamani Bali Washed (Green Beans)', 'kopi', 9.9, 'Kg', 800, 'Kintamani, Bangli, Bali', '0901.11.10', '/assets/products/kopi-7.webp', 'Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 85.2, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"85.2"},{"k":"Kadar Air","v":"11.5% - 12.0%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:06.000Z'),
+  ('prod_kopi_008', 'Kopi Arabika Kintamani Bali Citrus Notes (Roasted)', 'kopi', 16, 'Kg', 200, 'Kintamani, Bali', '0901.21.10', '/assets/products/kopi-8.webp', 'Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 85.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Roaster"},{"k":"SCA Score","v":"85.5"},{"k":"Kadar Air","v":"<2.5%"},{"k":"Roast Profile","v":"Medium Roast"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:07.000Z'),
+  ('prod_kopi_009', 'Kopi Arabika Java Ijen Honey Process (Green Beans)', 'kopi', 9.7, 'Kg', 1000, 'Bondowoso, Jawa Timur', '0901.11.10', '/assets/products/kopi-9.webp', 'Komoditas ekspor varian Green Beans berstandar internasional dengan SCA cupping score 85.0, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"85.0"},{"k":"Kadar Air","v":"11.5% - 12.0%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:08.000Z'),
+  ('prod_kopi_010', 'Kopi Arabika Java Preanger Heritage (Roasted)', 'kopi', 18.2, 'Kg', 200, 'Gunung Puntang, Jawa Barat', '0901.21.10', '/assets/products/kopi-10.webp', 'Komoditas ekspor varian Roaster berstandar internasional dengan SCA cupping score 87.5, kadar air terkontrol <12%, dan sistem sortasi defect ketat.', '[{"k":"Tipe Proses","v":"Roaster"},{"k":"SCA Score","v":"87.5"},{"k":"Kadar Air","v":"<2.5%"},{"k":"Roast Profile","v":"Medium Roast"}]'::jsonb, '["USDA Organic","EU Organic","Rainforest Alliance","Halal BPJPH"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:09.000Z'),
+  ('prod_rempah_001', 'Cengkeh Lalpari Kering Maluku Grade Super', 'rempah', 12.5, 'Kg', 1000, 'Ambon, Maluku', '0907.10.00', '/assets/products/rempah-1.webp', 'Bunga cengkeh kering warna cokelat kemerahan cerah dengan kadar minyak atsiri >19% dan kadar air <11%.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Pelabuhan Makassar', true, '2026-01-01T00:00:10.000Z'),
+  ('prod_rempah_002', 'Kayu Manis Korintji Cassia Stick Grade A', 'rempah', 8.2, 'Kg', 1500, 'Kerinci, Jambi', '0906.11.00', '/assets/products/rempah-2.webp', 'Kulit kayu manis kering gulung rapi panjang 8-10 cm, aroma pedas manis kuat dan bebas jamur.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:11.000Z'),
+  ('prod_rempah_003', 'Lada Putih Muntok Bangka Double Washed', 'rempah', 11.5, 'Kg', 1000, 'Muntok, Bangka Belitung', '0904.11.20', '/assets/products/rempah-3.webp', 'Biji lada putih Muntok terkenal di bursa dunia dengan kepedasan piperin tinggi dan aroma tajam bersih.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:12.000Z'),
+  ('prod_rempah_004', 'Lada Hitam Lampung ASTA Quality', 'rempah', 7.8, 'Kg', 2000, 'Lampung Timur', '0904.11.10', '/assets/products/rempah-4.webp', 'Lada hitam kualitas standar American Spice Trade Association (ASTA), kadar air <12% densitas 550g/l.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:13.000Z'),
+  ('prod_rempah_005', 'Vanila Planifolia Papua Gourmet Beans 18-20cm', 'rempah', 195, 'Kg', 25, 'Jayapura, Papua', '0905.10.00', '/assets/products/rempah-5.webp', 'Batang vanila gourmet berminyak lentur dengan kadar vanilin alami >2.2% dan aroma floral manis mewah.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:14.000Z'),
+  ('prod_rempah_006', 'Pala Banda Super ABCD Tanpa Cangkang', 'rempah', 14.5, 'Kg', 800, 'Kepulauan Banda, Maluku', '0908.11.00', '/assets/products/rempah-6.webp', 'Biji pala utuh bulat kualitas ekspor, aroma rempah khas kepulauan rempah legendaris Banda.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Pelabuhan Makassar', true, '2026-01-01T00:00:15.000Z'),
+  ('prod_rempah_007', 'Fuli Pala (Mace) Banda Kering Grade 1', 'rempah', 28, 'Kg', 300, 'Banda Neira, Maluku', '0908.21.00', '/assets/products/rempah-7.webp', 'Selaput biji pala kering warna merah oranye keemasan, aroma intens dan rasa gurih rempah tinggi.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Pelabuhan Makassar', true, '2026-01-01T00:00:16.000Z'),
+  ('prod_rempah_008', 'Minyak Nilam Aceh (Patchouli Oil PA >32%)', 'rempah', 68, 'Liter', 50, 'Aceh Barat Daya', '3301.29.90', '/assets/products/rempah-8.webp', 'Minyak atsiri hasil suling daun nilam tua dengan kandungan Patchouli Alcohol murni >32% untuk parfum global.', '[{"k":"Kadar Air","v":"Anhydrous"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Aluminium Drum 25/200L"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:17.000Z'),
+  ('prod_rempah_009', 'Jahe Merah Gajah Rajang Kering (Dried Ginger)', 'rempah', 5.5, 'Kg', 1500, 'Temanggung, Jawa Tengah', '0910.11.00', '/assets/products/rempah-9.webp', 'Irisan jahe merah kering oven higienis dengan kadar gingerol pekat dan aroma pedas hangat maksimal.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:18.000Z'),
+  ('prod_rempah_010', 'Kapulaga Putih Jawa Kering (White Cardamom)', 'rempah', 18.5, 'Kg', 500, 'Banyumas, Jawa Tengah', '0908.31.00', '/assets/products/rempah-10.webp', 'Polong kapulaga putih kering bersih tanpa pemutih kimia, aroma sitrus mint rempah khas jamu.', '[{"k":"Kadar Air","v":"<11.5%"},{"k":"Kadar Kemurnian","v":"99.2% Pure Natural"},{"k":"Standar Ekspor","v":"ASTA / ISO 9001 Compliant"},{"k":"Kemasan","v":"Gunny Bag 50Kg / Karton"}]'::jsonb, '["Phytosanitary Karantina","FDA Facility Registered","Halal BPJPH","Sucofindo CoA"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:19.000Z'),
+  ('prod_kriya_001', 'Kursi Rotan Alami Cirebon Lounge Chair', 'kriya', 78, 'Pcs', 40, 'Cirebon, Jawa Barat', '9401.52.00', '/assets/products/kriya-1.webp', 'Kursi santai anyaman rotan alam kelas ekspor dengan rangka kayu solid, finishing non-toxic ramah lingkungan.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:20.000Z'),
+  ('prod_kriya_002', 'Keranjang Laundry Eceng Gondok Kulon Progo', 'kriya', 18.5, 'Pcs', 150, 'Kulon Progo, Yogyakarta', '4602.19.00', '/assets/products/kriya-2.webp', 'Keranjang pakaian serat eceng gondok kering anti jamur dengan rangka besi kokoh dan pegangan ergonomis.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:21.000Z'),
+  ('prod_kriya_003', 'Mangkuk Batok Kelapa Bali Food-Grade Polished', 'kriya', 2.8, 'Pcs', 500, 'Gianyar, Bali', '4419.90.00', '/assets/products/kriya-3.webp', 'Mangkuk ramah lingkungan batok kelapa poles minyak kelapa murni tanpa pernis sintetis, aman untuk makanan.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Pelabuhan Benoa / Surabaya', true, '2026-01-01T00:00:22.000Z'),
+  ('prod_kriya_004', 'Piring & Mangkok Kayu Jati Jepara Hand-Carved', 'kriya', 8.5, 'Pcs', 200, 'Jepara, Jawa Tengah', '4419.19.00', '/assets/products/kriya-4.webp', 'Set peralatan makan kayu jati TPK perhutani legal bersertifikat SVLK dengan pola serat alami mewah.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:23.000Z'),
+  ('prod_kriya_005', 'Nampan Saji Kayu Mahoni Solid Eco-Finish', 'kriya', 11.2, 'Pcs', 150, 'Klaten, Jawa Tengah', '4419.90.00', '/assets/products/kriya-5.webp', 'Nampan saji kayu mahoni kering oven MC <12% dengan lapisan beeswax food-grade tahan air.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:24.000Z'),
+  ('prod_kriya_006', 'Gerabah Terakota Kasongan Vas Dekorasi', 'kriya', 14, 'Pcs', 100, 'Kasongan, Bantul, Yogyakarta', '6913.90.00', '/assets/products/kriya-6.webp', 'Vas bunga kerajinan tanah liat terakota Kasongan teknik pembakaran tradisional tahan cuaca.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:25.000Z'),
+  ('prod_kriya_007', 'Lampu Gantung Anyaman Bambu Tasikmalaya Modern', 'kriya', 22.5, 'Pcs', 80, 'Tasikmalaya, Jawa Barat', '9405.19.00', '/assets/products/kriya-7.webp', 'Kap lampu gantung interior anyaman serat bambu halus dengan fitting listrik standar CE / UL.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:26.000Z'),
+  ('prod_kriya_008', 'Cermin Dinding Lingkar Kerang Pantai Papua', 'kriya', 42, 'Pcs', 50, 'Biak, Papua', '7009.92.00', '/assets/products/kriya-8.webp', 'Cermin dekorasi dinding kombinasi kerang simping alami laut tropis dengan backing kayu kokoh.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:27.000Z'),
+  ('prod_kriya_009', 'Karpet Area Serat Daun Pandan Kebumen Eco-Rug', 'kriya', 26, 'Pcs', 60, 'Kebumen, Jawa Tengah', '5702.20.00', '/assets/products/kriya-9.webp', 'Karpet lantai anyaman tangan serat daun pandan laut tahan lama, sejuk, dan biodegradable.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:28.000Z'),
+  ('prod_kriya_010', 'Kotak Tisu Anyaman Pelepah Pisang Klaten', 'kriya', 6.5, 'Pcs', 250, 'Klaten, Jawa Tengah', '4602.19.00', '/assets/products/kriya-10.webp', 'Kotak tisu estetik ramah lingkungan dari serat pelepah pisang abaka kering dengan pelapis anti-rayap.', '[{"k":"Material","v":"Eco-Friendly Natural Fibers / Wood"},{"k":"Sertifikasi Kayu","v":"V-Legal / SVLK Kemenhut"},{"k":"Finishing","v":"Non-Toxic Food Grade / Water-based"},{"k":"Fumigasi","v":"ISPM 15 Methyl Bromide Certified"}]'::jsonb, '["SVLK V-Legal","Fumigasi ISPM 15","ISO 9001","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Tanjung Perak', true, '2026-01-01T00:00:29.000Z'),
+  ('prod_tekstil_001', 'Batik Tulis Sutra Solo Motif Parang Rusak Barong', 'tekstil', 165, 'Meter / Pcs', 10, 'Solo, Jawa Tengah', '5208.51.00', '/assets/products/tekstil-1.webp', 'Kain batik tulis canting tembaga di atas sutra alam ATBM 100% dengan malam lebah tradisional.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:30.000Z'),
+  ('prod_tekstil_002', 'Batik Tulis Pekalongan Pesisir Buketan Pewarna Alami', 'tekstil', 110, 'Meter / Pcs', 15, 'Pekalongan, Jawa Tengah', '5208.52.00', '/assets/products/tekstil-2.webp', 'Batik tulis halus ragam hias buket bunga eropa warna alami ekstrak daun indigofera dan kayu tinggi.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:31.000Z'),
+  ('prod_tekstil_003', 'Batik Cap Garutan Katun Primissima Warna Pastel', 'tekstil', 24.5, 'Meter / Pcs', 50, 'Garut, Jawa Barat', '5208.59.00', '/assets/products/tekstil-3.webp', 'Kain batik cap tembaga presisi warna pastel cerah khas Garutan di atas katun primissima mori.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:32.000Z'),
+  ('prod_tekstil_004', 'Batik Tulis Lasem Tiga Negeri Sutra Katun', 'tekstil', 135, 'Meter / Pcs', 12, 'Lasem, Rembang, Jawa Tengah', '5208.51.00', '/assets/products/tekstil-4.webp', 'Batik legendaris akulturasi Jawa Tionghoa dengan 3 tahap celup warna merah darah ayam, biru, dan sogan.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:33.000Z'),
+  ('prod_tekstil_005', 'Batik Tulis Madura Gentongan Warna Berani Klasik', 'tekstil', 85, 'Meter / Pcs', 20, 'Tanjungbumi, Bangkalan, Madura', '5208.52.00', '/assets/products/tekstil-5.webp', 'Batik celup gentong tanah liat berbulan-bulan dengan warna merah dan biru elektrik tahan puluhan tahun.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:34.000Z'),
+  ('prod_tekstil_006', 'Tenun Ikat Troso Jepara Tradisional Benang Katun', 'tekstil', 19.5, 'Meter / Pcs', 60, 'Troso, Jepara, Jawa Tengah', '5208.42.00', '/assets/products/tekstil-6.webp', 'Kain tenun pakan ikat ATBM motif etnik nusantara untuk pakaian fashion dan dekorasi interior modern.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:35.000Z'),
+  ('prod_tekstil_007', 'Tenun Ikat Sumba NTT Motif Kuda & Rusa Pewarna Alami', 'tekstil', 240, 'Meter / Pcs', 8, 'Sumba Timur, NTT', '5208.41.00', '/assets/products/tekstil-7.webp', 'Kain tenun sakral motif kuda kepahlawanan tenun tangan 8 bulan dengan akar mengkudu dan lumpur hitam.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Benoa / Surabaya', true, '2026-01-01T00:00:36.000Z'),
+  ('prod_tekstil_008', 'Tenun Ikat Flores Ende Tradisional Warna Cokelat', 'tekstil', 95, 'Meter / Pcs', 15, 'Ende, Flores, NTT', '5208.49.00', '/assets/products/tekstil-8.webp', 'Kain tenun ikat motif geometris khas suku Lio Ende berbahan benang katun pintal tangan lembut.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Benoa / Surabaya', true, '2026-01-01T00:00:37.000Z'),
+  ('prod_tekstil_009', 'Songket Palembang Motif Limar Benang Emas 24K', 'tekstil', 290, 'Meter / Pcs', 5, 'Palembang, Sumatera Selatan', '5007.20.00', '/assets/products/tekstil-9.webp', 'Ratu kain wastra nusantara kombinasi sutra tenun ATBM dan pakan benang emas murni berkilau anggun.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Belawan / Teluk Bayur', true, '2026-01-01T00:00:38.000Z'),
+  ('prod_tekstil_010', 'Songket Pandai Sikek Minangkabau Benang Perak', 'tekstil', 185, 'Meter / Pcs', 10, 'Pandai Sikek, Tanah Datar, Sumbar', '5007.90.00', '/assets/products/tekstil-10.webp', 'Kain songket tenun tangan motif pucuak rabuang dan saik galamai warisan leluhur Minangkabau.', '[{"k":"Teknik Pembuatan","v":"100% Handcrafted ATBM / Canting Tulis"},{"k":"Material Benang","v":"Silk / 100% Mercerized Cotton"},{"k":"Zat Pewarna","v":"Natural Plant Extract / Eco-Reactive Safe"},{"k":"Dimensi Standar","v":"220 cm x 115 cm per lembar"}]'::jsonb, '["Batik Mark Indonesia","OEKO-TEX Standard 100","Indonesian Heritage Certified","Verifikasi NIB OSS"]'::jsonb, 'FOB Tanjung Priok / Perak', true, '2026-01-01T00:00:39.000Z'),
+  ('prod_kopi_131', 'Kopi Luwak Sulawesi Toraja (Roasted)', 'kopi', 260, 'Kg', 5, 'Tana Toraja, Sulawesi Selatan', '0901.21.20', '/assets/products/kopi-11.webp', 'Kopi luwak autentik hasil seleksi biji dari civet liar Toraja, difermentasi alami dalam saluran pencernaan, dibilas bersih lalu disangrai medium. Aroma cokelat gelap, hint tanaman liar, dan body creamy tanpa rasa pahit kasar.', '[{"k":"Tipe Proses","v":"Natural Civet Fermentation (Wild Collection)"},{"k":"SCA Score","v":"88.0"},{"k":"Kadar Air","v":"11.0% - 11.5%"},{"k":"Roast Profile","v":"Medium Roast (Full City)"}]'::jsonb, '["USDA Organic","Wild Collection Certificate","Halal BPJPH","Lab Test Certificate"]'::jsonb, 'FOB Pelabuhan Makassar', true, '2026-01-01T00:00:40.000Z'),
+  ('prod_kopi_132', 'Kopi Arabika Malabar Pangalengan (Green Beans)', 'kopi', 8.4, 'Kg', 500, 'Pangalengan, Bandung Selatan', '0901.11.10', '/assets/products/kopi-12.webp', 'Green beans dari kebun Malabar ketinggian 1.400-1.600 mdpl, dikebun rakyat di antara tegakan pinus. Profil jeruk mandarin, gula aren, dan aftertaste floral yang khas dataran tinggi Bandung selatan.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"84.0"},{"k":"Kadar Air","v":"11.5% - 12.0%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["USDA Organic","EU Organic","Halal BPJPH","Lab Test Certificate"]'::jsonb, 'FOB Pelabuhan Tanjung Priok', true, '2026-01-01T00:00:41.000Z'),
+  ('prod_kopi_133', 'Kopi Robusta Merapi Bantul Natural (Roasted)', 'kopi', 6.2, 'Kg', 1000, 'Kaliurang Sleman & Imogiri Bantul, D.I. Yogyakarta', '0901.21.10', '/assets/products/kopi-13.webp', 'Robusta vulkanik lereng Merapi dengan proses natural full sun-dried. Body tebal, aroma cokelat susu dan kacang panggang, kafein pekat — favorit industri espresso blend dan kopi susu kekinian.', '[{"k":"Tipe Proses","v":"Natural Process Roasted"},{"k":"SCA Score","v":"81.5"},{"k":"Kadar Air","v":"11.0% - 11.5%"},{"k":"Roast Profile","v":"Dark Roast (Vienna)"}]'::jsonb, '["Halal BPJPH","Lab Test Certificate","Phytosanitary"]'::jsonb, 'FOB Pelabuhan Tanjung Priok', true, '2026-01-01T00:00:42.000Z'),
+  ('prod_kopi_134', 'Kopi Arabika Sanani Konawe (Green Beans)', 'kopi', 10.6, 'Kg', 300, 'Konawe, Sulawesi Tenggara', '0901.11.10', '/assets/products/kopi-14.webp', 'Sanani adalah varietas lokal paling tua di Sulawesi Tenggara, ditanam sejak era kolonial di ketinggian 900-1.200 mdpl. Cita rasa herbal ringan, cokelat susu, dan keasaman rendah yang ramah di lidah pasar Asia.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"83.0"},{"k":"Kadar Air","v":"11.5% - 12.0%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["EU Organic","Halal BPJPH","Lab Test Certificate","Phytosanitary"]'::jsonb, 'FOB Pelabuhan Kendari', true, '2026-01-01T00:00:43.000Z'),
+  ('prod_kopi_135', 'Kopi Robusta Pinang Belanda Jambi (Green Beans)', 'kopi', 5.8, 'Kg', 1000, 'Muaro Jambi & Kerinci, Jambi', '0901.11.10', '/assets/products/kopi-15.webp', 'Varietas Pinang Belanda peninggalan sejarah perkebunan Jambi, tumbuh liar di sekitar reruntuhan kota tua Jambi. Rasa nutty manis dengan hint rempah, kafein lebih rendah dibanding robusta umumnya.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"82.0"},{"k":"Kadar Air","v":"11.5% - 12.0%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["Halal BPJPH","Lab Test Certificate","Phytosanitary"]'::jsonb, 'FOB Pelabuhan Palembang', true, '2026-01-01T00:00:44.000Z'),
+  ('prod_kopi_136', 'Kopi Arabika Surya Bajo Lombok (Roasted)', 'kopi', 9.1, 'Kg', 200, 'Pujut, Lombok Tengah, Nusa Tenggara Barat', '0901.21.10', '/assets/products/kopi-16.webp', 'Arabika Surya Bajo tumbuh di ketinggian 900-1.300 mdpl menghadap Selat Alas. Profil rasa yang eksotis: kelapa bakar, jeruk keprok, dan cokelat susu dengan keasaman cerah khas iklim kering NTB.', '[{"k":"Tipe Proses","v":"Washed Roasted"},{"k":"SCA Score","v":"84.5"},{"k":"Kadar Air","v":"11.0% - 11.5%"},{"k":"Roast Profile","v":"Medium-Light Roast"}]'::jsonb, '["USDA Organic","Halal BPJPH","Lab Test Certificate","Phytosanitary"]'::jsonb, 'FOB Pelabuhan Lembar', true, '2026-01-01T00:00:45.000Z'),
+  ('prod_kopi_137', 'Kopi Arabika Lintong Nihuta Toba (Green Beans)', 'kopi', 9.5, 'Kg', 400, 'Lintong Nihuta, Samosir, Sumatera Utara', '0901.11.10', '/assets/products/kopi-17.webp', 'Arabika Sigararutang dari tanah vulkanik berkapur di tepi Danau Toba, ketinggian 1.400 mdpl. Cita rasa herbal, jeruk mandarin, dan cokelat hitam — komoditas ekspor premium favorit roastery Jepang.', '[{"k":"Tipe Proses","v":"Green Beans"},{"k":"SCA Score","v":"85.0"},{"k":"Kadar Air","v":"11.0% - 11.5%"},{"k":"Roast Profile","v":"Unroasted Green"}]'::jsonb, '["EU Organic","Halal BPJPH","Lab Test Certificate","Phytosanitary"]'::jsonb, 'FOB Pelabuhan Belawan', true, '2026-01-01T00:00:46.000Z'),
+  ('prod_kopi_138', 'Kopi Robusta Petungkriyono Pekalongan (Roasted)', 'kopi', 6.9, 'Kg', 800, 'Petungkriyono, Pekalongan, Jawa Tengah', '0901.21.10', '/assets/products/kopi-18.webp', 'Robusta premium hutan rakyat Petungkriyono ketinggian 1.200 mdpl dengan naungan pohon pinus. Fermentation 36 jam memberi rasa cokelat gelap, karamel, dan sedikit rasa kayu manis alami.', '[{"k":"Tipe Proses","v":"Semi-Washed (Giling Basah 36 Jam) Roasted"},{"k":"SCA Score","v":"82.5"},{"k":"Kadar Air","v":"11.0% - 11.5%"},{"k":"Roast Profile","v":"Full City Roast"}]'::jsonb, '["Halal BPJPH","Lab Test Certificate","Phytosanitary"]'::jsonb, 'FOB Pelabuhan Tanjung Priok', true, '2026-01-01T00:00:47.000Z'),
+  ('prod_kopi_139', 'Kopi Arabika Kalibaru Banyuwangi (Roasted)', 'kopi', 8.8, 'Kg', 300, 'Kalibaru & Glenmore, Banyuwangi, Jawa Timur', '0901.21.10', '/assets/products/kopi-19.webp', 'Arabika dari kebun tua pesisir timur Jawa yang menghadap Gunung Ijen. Rasa cokelat susu, jeruk keprok, dan madu ringan dengan body lembut — cocok untuk single origin manual brew maupun retail kemasan.', '[{"k":"Tipe Proses","v":"Washed Roasted"},{"k":"SCA Score","v":"83.5"},{"k":"Kadar Air","v":"11.0% - 11.5%"},{"k":"Roast Profile","v":"Medium Roast"}]'::jsonb, '["Halal BPJPH","Lab Test Certificate","Phytosanitary"]'::jsonb, 'FOB Pelabuhan Tanjung Perak', true, '2026-01-01T00:00:48.000Z'),
+  ('prod_kopi_140', 'Kopi Arabika Gayo Wine Process (Roasted)', 'kopi', 18.5, 'Kg', 50, 'Bintang & Bener Meriah, Aceh Tengah', '0901.21.10', '/assets/products/kopi-20.webp', 'Kopi Gayo kelas premium dengan proses anaerobic wine 96 jam tertutup — fermentasi menghasilkan aroma anggur merah, buah tropis, dan rasa manis seperti wine yang sangat dicari specialty roaster Eropa dan Jepang.', '[{"k":"Tipe Proses","v":"Anaerobic Wine Fermentation 96 Jam (Roasted)"},{"k":"SCA Score","v":"89.0"},{"k":"Kadar Air","v":"10.5% - 11.0%"},{"k":"Roast Profile","v":"Medium-Light Roast"}]'::jsonb, '["USDA Organic","EU Organic","Halal BPJPH","Lab Test Certificate"]'::jsonb, 'FOB Pelabuhan Belawan', true, '2026-01-01T00:00:49.000Z')
+on conflict (id) do nothing;
+
+-- 3. ORDERAN (RFQ)
+insert into public.orderan (id, buyer_name, buyer_company, buyer_country, product_id, product_name, quantity, unit, target_incoterms, target_price_usd, total_value_usd, status, ai_analysis, created_at) values
+  ('rfq_001', 'Heinrich Schmidt', 'Nordic Coffee Importers GmbH', 'Hamburg, Germany', 'prod_001', 'Kopi Arabika Gayo Specialty Grade 1', 18000, 'Kg (1 FCL 20ft Container)', 'CIF Hamburg', 9.2, 165600, 'in_negotiation', '{"feasibilityScore":94,"recommendedFOB":8.1,"freightEstimate":1800,"netMarginPct":28.5,"riskLevel":"Rendah (Dokumen & Kuota Lengkap)"}'::jsonb, '2026-10-18T04:20:00.000Z'),
+  ('rfq_002', 'Arthur Pendelton', 'Pacific Green Living Corp', 'Los Angeles, USA', 'prod_019', 'Set Kursi & Meja Rotan Alami Cirebon', 120, 'Set (1 FCL 40ft High Cube)', 'FOB Tanjung Priok', 180, 21600, 'approved', '{"feasibilityScore":96,"recommendedFOB":180,"netMarginPct":34,"riskLevel":"Rendah (V-Legal SVLK Terbit)"}'::jsonb, '2026-10-19T02:15:00.000Z')
+on conflict (id) do nothing;
+
+-- 4. TRANSACTIONS
+insert into public.transactions (id, contract_no, exporter, buyer, product, volume, incoterms, contract_value_usd, escrow_stages, vessel_name, eta, status, created_at) values
+  ('tx_2026_089', 'NB/EXP/2026/X/089', 'CV Kopi Nusantara Mandiri (ID)', 'Nordic Coffee Importers GmbH (DE)', 'Kopi Arabika Gayo Specialty Grade 1', '18.000 Kg (1x20ft Container)', 'CIF Hamburg', 165600, '[{"stage":1,"pct":30,"amountUSD":49680,"status":"released","label":"Uang Muka (DP) Penandatanganan Kontrak"},{"stage":2,"pct":30,"amountUSD":49680,"status":"released","label":"Barang Dimuat & Bill of Lading (B/L) Terbit"},{"stage":3,"pct":20,"amountUSD":33120,"status":"in_vault","label":"Kapal Melewati Terusan Suez & Bea Cukai Kliring"},{"stage":4,"pct":20,"amountUSD":33120,"status":"pending","label":"Barang Diterima & Uji Mutu Lab Hamburg Selesai"}]'::jsonb, 'KM Baruna Nusantara', '24 Oktober 2026', 'in_transit', '2026-10-12T00:00:00.000Z')
+on conflict (id) do nothing;
+
+-- Selesai. Cek Table Editor: login, products, orderan, transactions.
+
+
+-- ==========================================================================
+-- SELESAI. Semua tabel siap dipakai.
+-- ==========================================================================
+notify pgrst, 'reload schema';

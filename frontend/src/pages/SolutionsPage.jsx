@@ -5,7 +5,7 @@ import { useApp } from '../context/AppContext.jsx';
 import T from '../components/T.jsx';
 import { downloadHtmlFile } from '../utils/downloadHtmlFile.js';
 import { formatAiText } from '../utils/aiText.js';
-import { generateSmartAgentReply } from '../utils/solusiReply.js';
+import { findLocalReferenceAnswer } from '../utils/referenceAnswers.js';
 import { apiUrl } from '../utils/api.js';
 
 /**
@@ -103,47 +103,39 @@ const AI_TABS = [
   { id: 'tab-escrow', icon: '🔒', label: '4. Escrow Vault & AI Chat (4 Fase)' },
 ];
 
-const CHAT_TEMPLATES = [
-  {
-    question: 'Bagaimana cara mulai ekspor lewat NusaBridge?',
-    answer: 'Mulailah dengan menyiapkan profil usaha dan informasi produk, lalu tentukan negara tujuan serta Incoterms yang disepakati. Siapkan dokumen dasar seperti NIB dan invoice; persyaratan tambahan bergantung pada jenis barang dan negara tujuan. Gunakan RFQ untuk merapikan permintaan buyer sebelum menyepakati transaksi.',
-    questionEn: 'How do I start exporting with NusaBridge?',
-    answerEn: 'Start by preparing your business profile and product details, then confirm the destination country and agreed Incoterm. Prepare basic documents such as your NIB and invoice; additional requirements depend on the goods and destination. Use an RFQ to organize the buyer’s request before agreeing to a transaction.',
-  },
-  {
-    question: 'Dokumen apa yang biasanya dibutuhkan untuk ekspor?',
-    answer: 'Dokumen yang umum disiapkan meliputi NIB, commercial invoice, packing list, dokumen PEB, dan Certificate of Origin bila diperlukan. Produk pertanian atau pangan dapat memerlukan dokumen karantina atau sertifikat khusus. Pastikan daftar akhir diverifikasi dengan Bea Cukai, instansi terkait, dan buyer.',
-    questionEn: 'Which documents are commonly needed for export?',
-    answerEn: 'Common documents include a NIB, commercial invoice, packing list, export declaration (PEB), and a Certificate of Origin when required. Agricultural or food products may need quarantine documents or specific certificates. Confirm the final checklist with Customs, the relevant authorities, and the buyer.',
-  },
-  {
-    question: 'Apa perbedaan FOB dan CIF?',
-    answer: 'FOB digunakan untuk pengiriman laut: penjual menyerahkan barang di atas kapal pada pelabuhan muat yang disebutkan, lalu risiko beralih kepada pembeli. Pada CIF, penjual juga membayar ongkos angkut dan asuransi minimum sampai pelabuhan tujuan, tetapi risiko tetap beralih saat barang sudah dimuat di kapal. Cocokkan detailnya dengan kontrak dan Incoterms 2020.',
-    questionEn: 'What is the difference between FOB and CIF?',
-    answerEn: 'FOB is for sea transport: the seller delivers the goods on board at the named port of shipment, where risk transfers to the buyer. Under CIF, the seller also pays freight and minimum insurance to the destination port, but risk still transfers once the goods are on board. Confirm the details in the contract and under Incoterms 2020.',
-  },
-  {
-    question: 'Bagaimana cara mengajukan RFQ ke buyer?',
-    answer: 'Cantumkan nama dan spesifikasi produk, jumlah, kemasan, pelabuhan tujuan, jadwal pengiriman, serta Incoterm yang diminta. Data tersebut membantu menyusun permintaan penawaran yang jelas. Harga akhir dan ketersediaan tetap perlu dikonfirmasi langsung dengan pemasok atau buyer.',
-    questionEn: 'How do I prepare an RFQ for a buyer?',
-    answerEn: 'Include the product name and specifications, quantity, packaging, destination port, delivery schedule, and requested Incoterm. These details help make the quotation request clear. Final pricing and availability still need to be confirmed with the supplier or buyer.',
-  },
-  {
-    question: 'Apakah simulasi Escrow Vault memproses pembayaran sungguhan?',
-    answer: 'Tidak. Escrow Vault yang ditampilkan di website ini adalah simulasi antarmuka untuk menjelaskan tahapan transaksi, bukan layanan penitipan atau pemrosesan dana sungguhan. Jangan mengirim uang berdasarkan simulasi ini; gunakan penyedia pembayaran resmi dan periksa kontrak secara mandiri.',
-    questionEn: 'Does the Escrow Vault demo process real payments?',
-    answerEn: 'No. The Escrow Vault shown on this website is an interface demo that explains transaction milestones; it does not hold or process real funds. Do not send money based on this demo. Use an authorized payment provider and independently review the contract.',
-  },
-  {
-    question: 'Bagaimana mengetahui persyaratan ekspor negara tujuan?',
-    answer: 'Persyaratan berbeda menurut negara tujuan dan jenis produk. Periksa aturan impor terbaru, tarif dan kode HS, serta kebutuhan izin atau sertifikat melalui Bea Cukai, INSW, karantina, dan otoritas negara tujuan. Konfirmasikan juga dokumen yang diminta buyer sebelum barang dikirim.',
-    questionEn: 'How can I check export requirements for a destination?',
-    answerEn: 'Requirements vary by destination and product. Check current import rules, tariffs and HS codes, and any permit or certificate requirements with Customs, INSW, quarantine authorities, and the destination country’s authorities. Also confirm the buyer’s document requirements before shipping.',
-  },
-];
-
 function nowTime() {
   return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+}
+
+const CHAT_SUGGESTIONS = {
+  id: [
+    'Bagaimana cara mulai ekspor lewat NusaBridge?',
+    'Dokumen apa yang biasanya dibutuhkan untuk ekspor?',
+    'Apa perbedaan FOB dan CIF?',
+    'Bagaimana cara mengajukan RFQ ke buyer?',
+    'Apakah simulasi Escrow Vault memproses pembayaran sungguhan?',
+    'Bagaimana mengetahui persyaratan ekspor negara tujuan?',
+  ],
+  en: [
+    'How do I start exporting through NusaBridge?',
+    'What documents are usually needed for exporting?',
+    'What is the difference between FOB and CIF?',
+    'How do I submit an RFQ to a buyer?',
+    'Does the Escrow Vault simulation process real payments?',
+    'How do I find the export requirements of a destination country?',
+  ],
+};
+
+function createWelcomeMessage(lang) {
+  return {
+    sender: 'agent',
+    raw: lang === 'en'
+      ? 'Hi! I can help explain NusaBridge website features and export workflows. Choose a question below or type your own.'
+      : 'Halo! Saya bisa menjelaskan fitur website NusaBridge dan alur ekspor. Pilih pertanyaan di bawah atau ketik pertanyaan Anda sendiri.',
+    label: 'NusaBridge AI',
+    time: nowTime(),
+    welcome: true,
+  };
 }
 
 // =====================================================================
@@ -151,21 +143,13 @@ function nowTime() {
 // =====================================================================
 function GeminiWorkspace() {
   const { lang } = useApp();
-  const [msgs, setMsgs] = useState([
-    {
-      sender: 'agent',
-      raw: `Halo! Saya **NusaBridge AI**, asisten informasi perdagangan ekspor-impor untuk UMKM Indonesia.
-
-Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertanyaan tentang katalog dan alur ekspor NusaBridge di bawah.`,
-      label: 'NusaBridge AI',
-      time: nowTime(),
-    },
-  ]);
+  const [msgs, setMsgs] = useState(() => [createWelcomeMessage(lang)]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const sendingRef = useRef(false);
   const historyRef = useRef(null);
   const inputRef = useRef(null);
+  const msgIdRef = useRef(0);
 
   function scrollBottom() {
     requestAnimationFrame(() => {
@@ -174,15 +158,16 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
   }
 
   function push(sender, raw, label) {
-    setMsgs((prev) => [...prev, { sender, raw, label: label || (sender === 'user' ? 'Anda (Buyer / Eksportir)' : 'NusaBridge AI'), time: nowTime() }]);
+    const id = ++msgIdRef.current;
+    setMsgs((prev) => [...prev, {
+      id,
+      sender,
+      raw,
+      label: label || (sender === 'user' ? 'Anda (Buyer / Eksportir)' : 'NusaBridge AI'),
+      time: nowTime(),
+    }]);
     scrollBottom();
-  }
-
-  function answerTemplate(template) {
-    const question = lang === 'en' ? template.questionEn : template.question;
-    const answer = lang === 'en' ? template.answerEn : template.answer;
-    push('user', question);
-    push('agent', answer, 'NusaBridge AI');
+    return id;
   }
 
   async function processQuery(text) {
@@ -195,13 +180,25 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
     scrollBottom();
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
 
     try {
       const res = await fetch(apiUrl('/api/ai/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: promptText, lang }),
+        body: JSON.stringify({
+          message: promptText,
+          lang,
+          context: {
+            history: msgs
+              .filter((item) => !item.welcome && ['user', 'agent'].includes(item.sender))
+              .slice(-8)
+              .map((item) => ({
+                role: item.sender === 'agent' ? 'assistant' : 'user',
+                content: item.raw,
+              })),
+          },
+        }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -212,16 +209,38 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
           push('agent', data.reply, 'NusaBridge AI');
           return;
         }
+      } else {
+        const data = await res.json().catch(() => ({}));
+        if (data.message) throw new Error(data.message);
       }
     } catch (e) {
       clearTimeout(timeoutId);
-      // Backend offline / timeout -> fallback ke knowledge engine lokal
+      const reference = findLocalReferenceAnswer(promptText, lang);
+      setTyping(false);
+      push(
+        'agent',
+        reference
+          ? reference.answer
+          : lang === 'en'
+            ? 'The AI service is temporarily unavailable. Please check that the backend is running and try again.'
+            : 'Layanan AI sedang tidak tersedia. Pastikan backend berjalan, lalu coba lagi.',
+        'NusaBridge AI'
+      );
+      return;
     }
 
-    setTimeout(() => {
-      setTyping(false);
-      push('agent', generateSmartAgentReply(promptText), 'NusaBridge AI');
-    }, 350);
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    setTyping(false);
+    const reference = findLocalReferenceAnswer(promptText, lang);
+    push(
+      'agent',
+      reference
+        ? reference.answer
+        : lang === 'en'
+          ? 'The AI service is temporarily unavailable. Please check that the backend is running and try again.'
+          : 'Layanan AI sedang tidak tersedia. Pastikan backend berjalan, lalu coba lagi.',
+      'NusaBridge AI'
+    );
   }
 
   async function handleSend(e) {
@@ -232,6 +251,16 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
     sendingRef.current = true;
     try {
       await processQuery(val);
+    } finally {
+      sendingRef.current = false;
+    }
+  }
+
+  async function handleSuggestedQuestion(question) {
+    if (sendingRef.current) return;
+    sendingRef.current = true;
+    try {
+      await processQuery(question);
     } finally {
       sendingRef.current = false;
     }
@@ -263,12 +292,7 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
                   type="button"
                   title="Bersihkan riwayat percakapan"
                   onClick={() => {
-                    setMsgs([{
-                      sender: 'agent',
-                      raw: 'Halo! Saya **NusaBridge AI**, asisten informasi perdagangan ekspor-impor untuk UMKM Indonesia. Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertanyaan tentang katalog dan alur ekspor NusaBridge.',
-                      label: 'NusaBridge AI',
-                      time: nowTime(),
-                    }]);
+                    setMsgs([createWelcomeMessage(lang)]);
                   }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -281,14 +305,39 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
 
             <div className="gcm-history" ref={historyRef}>
               {msgs.map((m, i) => (
-                <div className={`chat-bubble-row ${m.sender === 'user' ? 'user-row' : 'agent-row'}`} key={i}>
+                <div className={`chat-bubble-row ${m.sender === 'user' ? 'user-row' : 'agent-row'}`} key={m.id ?? i}>
                   <div className="cbr-avatar">{m.sender === 'user' ? '🧑‍💼' : '🤖'}</div>
                   <div className="cbr-content">
                     <div className="cbr-header">
                       <span>{m.label}</span>
                       <span>{m.time}</span>
                     </div>
+                    {m.sender === 'agent' && !m.welcome && (
+                      <div className="cbr-ai-label">
+                        <span className="cbr-ai-spark">✦</span>
+                        {lang === 'en' ? 'AI Summary' : 'Ringkasan AI'}
+                      </div>
+                    )}
                     <div className="cbr-text" dangerouslySetInnerHTML={{ __html: formatAiText(m.raw) }} />
+                    {m.welcome && msgs.length === 1 && (
+                      <div className="chat-suggestions">
+                        <div className="chat-suggestions-label">
+                          {lang === 'en'
+                            ? 'Quick questions — click to see the answer:'
+                            : 'Pertanyaan cepat — klik untuk melihat jawabannya:'}
+                        </div>
+                        {CHAT_SUGGESTIONS[lang === 'en' ? 'en' : 'id'].map((question) => (
+                          <button
+                            key={question}
+                            type="button"
+                            onClick={() => handleSuggestedQuestion(question)}
+                            disabled={typing}
+                          >
+                            {question}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -308,21 +357,16 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
             </div>
 
             <div className="gcm-footer">
-              <span className="chat-template-hint">
-                {lang === 'en' ? 'Quick questions — select one to see its answer:' : 'Pertanyaan cepat — klik untuk melihat jawabannya:'}
-              </span>
-              <div className="chat-templates" style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', padding: '8px 0' }}>
-                {CHAT_TEMPLATES.map((template) => (
-                  <button
-                    key={template.question}
-                    type="button"
-                    className="btn-template-q"
-                    onClick={() => answerTemplate(template)}
-                    style={{ fontSize: '12px', padding: '6px 10px', border: '1px solid #cbd5e1', borderRadius: '16px', background: '#f1f5f9', cursor: 'pointer' }}
-                  >
-                    {lang === 'en' ? template.questionEn : template.question}
-                  </button>
-                ))}
+              <div className="chat-footer-hint">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+                <span>
+                  {lang === 'en'
+                    ? 'Ask about NusaBridge website features, export products, or workflows.'
+                    : 'Tanyakan fitur website NusaBridge, produk ekspor, atau alurnya.'}
+                </span>
               </div>
               <form className="chat-input-form" onSubmit={handleSend}>
                 <textarea
@@ -330,7 +374,7 @@ Pilih pertanyaan yang tersedia untuk melihat jawaban langsung, atau ketik pertan
                   className="chat-textarea"
                   rows={1}
                   data-i18n-placeholder="solusi_input_ph"
-                  placeholder="Tanyakan apa saja ke NusaBridge AI... (Contoh: Bagaimana cara kerja AI? atau Hitung biaya CIF Hamburg)"
+                  placeholder="Tanyakan apa saja ke NusaBridge AI..."
                   value={input}
                   onChange={(e) => { setInput(e.target.value); onAutoResize(); }}
                   onKeyDown={(e) => {

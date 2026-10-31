@@ -1,0 +1,471 @@
+[
+  {
+    "id": "mulai-ekspor",
+    "title": "Langkah Awal Memulai Ekspor",
+    "keywords": [
+      "mulai ekspor",
+      "memulai ekspor",
+      "cara ekspor",
+      "langkah ekspor",
+      "pertama kali ekspor",
+      "ekspor lewat nusabridge",
+      "cara mulai",
+      "how do i get started exporting with nusabridge",
+      "get started exporting",
+      "start exporting",
+      "steps to start exporting"
+    ],
+    "answer": "Untuk mulai ekspor, siapkan legalitas usaha (NIB melalui OSS), profil produk beserta kode HS, dan dokumen dasar seperti commercial invoice serta packing list. Tentukan negara tujuan dan Incoterms yang disepakati dengan buyer, lalu ajukan RFQ agar spesifikasi, jumlah, harga, dan jadwal pengiriman tercatat. Persyaratan tambahan seperti karantina atau sertifikat bergantung pada jenis barang dan negara tujuan, jadi verifikasi dengan Bea Cukai/INSW dan otoritas negara tujuan sebelum mengirim.",
+    "answerEn": "To start exporting, prepare your business registration (NIB through OSS), product details and HS code, plus basic documents such as a commercial invoice and packing list. Confirm the destination country and Incoterm with the buyer, then submit an RFQ so specifications, quantity, price, and delivery schedule are recorded. Additional requirements such as quarantine or certificates depend on the goods and destination, so verify them with Customs/INSW and the destination authority before shipping.",
+    "sources": [
+      {
+        "title": "OSS — Perizinan Berusaha Terintegrasi (NIB)",
+        "url": "https://oss.go.id/",
+        "domain": "oss.go.id",
+        "snippet": "Portal resmi perizinan berusaha terintegrasi untuk mengurus NIB dan izin usaha."
+      },
+      {
+        "title": "Bea Cukai — Kepabeanan & Dokumen Ekspor",
+        "url": "https://www.beacukai.go.id/",
+        "domain": "beacukai.go.id",
+        "snippet": "Informasi resmi PEB, prosedur kepabeanan, dan ketentuan ekspor-impor."
+      },
+      {
+        "title": "Kementerian Perdagangan RI",
+        "url": "https://kemendag.go.id/",
+        "domain": "kemendag.go.id",
+        "snippet": "Regulasi, informasi pasar, dan panduan ekspor-impor dari Kemendag."
+      }
+    ]
+  },
+  {
+    "id": "dokumen-ekspor",
+    "title": "Dokumen yang Dibutuhkan untuk Ekspor",
+    "keywords": [
+      "dokumen ekspor",
+      "dokumen yang dibutuhkan",
+      "dokumen apa",
+      "dokumen pengiriman",
+      "dokumen kepabeanan",
+      "kelengkapan dokumen",
+      "what documents are needed for exporting",
+      "export documents",
+      "documents needed to export"
+    ],
+    "answer": "Dokumen yang umum disiapkan untuk ekspor meliputi NIB, commercial invoice, packing list, Pemberitahuan Ekspor Barang (PEB), Bill of Lading atau Air Waybill, dan Certificate of Origin bila diminta. Produk pertanian, pangan, atau hewan dapat memerlukan sertifikat karantina atau phyto-sanitary. Daftar final harus disesuaikan dengan jenis barang, negara tujuan, dan permintaan buyer; konfirmasikan ke Bea Cukai dan instansi terkait.",
+    "answerEn": "Common export documents include the NIB, commercial invoice, packing list, export declaration (PEB), Bill of Lading or Air Waybill, and a Certificate of Origin when required. Agricultural, food, or animal products may need quarantine or phyto-sanitary certificates. The final checklist depends on the goods, destination, and buyer requirements; confirm it with Customs and the relevant authorities.",
+    "sources": [
+      {
+        "title": "Bea Cukai — Kepabeanan & Dokumen Ekspor",
+        "url": "https://www.beacukai.go.id/",
+        "domain": "beacukai.go.id",
+        "snippet": "Informasi resmi PEB, prosedur kepabeanan, dan ketentuan ekspor-impor."
+      },
+      {
+        "title": "INSW — Informasi Tarif & HS Code",
+        "url": "https://insw.go.id/",
+        "domain": "insw.go.id",
+        "snippet": "Portal tarif, kode HS, dan persyaratan perdagangan ekspor-impor."
+      }
+    ]
+  },
+  {
+    "id": "fob-cif",
+    "title": "Perbedaan FOB dan CIF",
+    "keywords": [
+      "fob",
+      "cif",
+      "fob cif",
+      "perbedaan fob",
+      "perbedaan cif"
+    ],
+    "answer": "FOB (Free On Board) berarti penjual menyerahkan barang di atas kapal pada pelabuhan muat yang disepakati; setelah itu risiko berpindah kepada pembeli. CIF (Cost, Insurance, Freight) berarti penjual juga menanggung biaya angkut dan asuransi minimum sampai pelabuhan tujuan, tetapi risiko tetap berpindah saat barang dimuat di kapal. Keduanya diatur dalam Incoterms 2020; pilih sesuai kontrak dan kemampuan menanggung biaya serta risiko.",
+    "answerEn": "FOB (Free On Board) means the seller delivers the goods on board at the agreed port of shipment; after that, risk passes to the buyer. CIF (Cost, Insurance, Freight) means the seller also pays freight and minimum insurance to the destination port, but risk still passes once the goods are on board. Both are defined in Incoterms 2020; choose according to the contract and your ability to bear costs and risks.",
+    "sources": [
+      {
+        "title": "ICC — Incoterms 2020",
+        "url": "https://iccwbo.org/business-solutions/incoterms-rules/",
+        "domain": "iccwbo.org",
+        "snippet": "Penjelasan resmi 11 aturan Incoterms 2020 tentang biaya dan risiko."
+      }
+    ],
+    "patterns": [
+      "fob[\\s\\S]{0,40}cif|cif[\\s\\S]{0,40}fob"
+    ]
+  },
+  {
+    "id": "incoterms",
+    "title": "Apa Itu Incoterms",
+    "keywords": [
+      "incoterms",
+      "incoterm",
+      "aturan incoterms"
+    ],
+    "answer": "Incoterms (International Commercial Terms) adalah aturan standar dari ICC yang menjelaskan pembagian biaya, risiko, dan kewajiban antara penjual dan pembeli dalam perdagangan internasional. Versi terbaru adalah Incoterms 2020 dengan 11 aturan, termasuk EXW, FOB, CIF, dan DDP. Pilih aturan yang sesuai dengan moda transportasi dan kesepakatan kontrak.",
+    "answerEn": "Incoterms (International Commercial Terms) are ICC standard rules that define how costs, risks, and obligations are divided between seller and buyer in international trade. The current version is Incoterms 2020 with 11 rules, including EXW, FOB, CIF, and DDP. Choose the rule that fits the transport mode and the contract.",
+    "sources": [
+      {
+        "title": "ICC — Incoterms 2020",
+        "url": "https://iccwbo.org/business-solutions/incoterms-rules/",
+        "domain": "iccwbo.org",
+        "snippet": "Penjelasan resmi 11 aturan Incoterms 2020 tentang biaya dan risiko."
+      }
+    ]
+  },
+  {
+    "id": "rfq",
+    "title": "Cara Menyusun RFQ",
+    "keywords": [
+      "rfq",
+      "request for quotation",
+      "permintaan penawaran",
+      "mengajukan rfq",
+      "how do i create an rfq from a buyer message",
+      "create an rfq from a buyer message"
+    ],
+    "answer": "RFQ (Request for Quotation) adalah permintaan penawaran resmi kepada pemasok atau buyer. Cantumkan nama dan spesifikasi produk, jumlah, kemasan, pelabuhan tujuan, jadwal pengiriman, Incoterms, dan mata uang. Di NusaBridge, RFQ membantu merapikan permintaan sebelum harga dan ketersediaan dikonfirmasi.",
+    "answerEn": "An RFQ (Request for Quotation) is a formal request for pricing sent to a supplier or buyer. Include the product name and specifications, quantity, packaging, destination port, delivery schedule, Incoterm, and currency. On NusaBridge, an RFQ helps organize the request before price and availability are confirmed.",
+    "sources": [
+      {
+        "title": "Trade.gov — Panduan Ekspor & RFQ",
+        "url": "https://www.trade.gov/",
+        "domain": "trade.gov",
+        "snippet": "Panduan menyusun permintaan penawaran dan praktik ekspor internasional."
+      }
+    ]
+  },
+  {
+    "id": "escrow",
+    "title": "Cara Kerja Escrow Vault",
+    "keywords": [
+      "escrow",
+      "escrow vault",
+      "rekening bersama",
+      "pembayaran bertahap",
+      "4 fase",
+      "how does the nusabridge escrow vault work"
+    ],
+    "answer": "Escrow adalah mekanisme penitipan dana pada pihak ketiga yang dicairkan bertahap setelah syarat tertentu terpenuhi. Escrow Vault di NusaBridge adalah simulasi 4 fase (DP, PEB/Bill of Lading, kliring, dan barang diterima) untuk menjelaskan alur, bukan layanan pembayaran sungguhan. Untuk transaksi nyata, gunakan penyedia escrow atau pembayaran resmi dan periksa kontrak secara mandiri.",
+    "answerEn": "Escrow is a mechanism where funds are held by a third party and released in stages once conditions are met. The NusaBridge Escrow Vault is a four-stage simulation (down payment, PEB/Bill of Lading, customs clearance, and delivery) that explains the flow; it does not process real payments. For real transactions, use an authorized escrow or payment provider and review the contract independently.",
+    "sources": [
+      {
+        "title": "OJK — Layanan Keuangan & Perlindungan Konsumen",
+        "url": "https://www.ojk.go.id/",
+        "domain": "ojk.go.id",
+        "snippet": "Informasi lembaga keuangan berizin dan perlindungan konsumen."
+      }
+    ]
+  },
+  {
+    "id": "persyaratan-negara",
+    "title": "Persyaratan Ekspor Menurut Negara Tujuan",
+    "keywords": [
+      "persyaratan ekspor",
+      "syarat ekspor",
+      "negara tujuan",
+      "aturan impor",
+      "regulasi impor",
+      "persyaratan negara"
+    ],
+    "answer": "Persyaratan ekspor berbeda menurut jenis barang dan negara tujuan. Periksa tarif dan kode HS melalui INSW, aturan kepabeanan di Bea Cukai, serta persyaratan karantina untuk produk pertanian, pangan, atau hewan. Otoritas negara tujuan juga dapat mewajibkan sertifikat, label, atau izin impor tertentu; konfirmasikan dengan buyer sebelum pengiriman.",
+    "answerEn": "Export requirements vary by product and destination. Check tariffs and HS codes through INSW, customs rules at Bea Cukai, and quarantine requirements for agricultural, food, or animal products. The destination authority may also require specific certificates, labels, or import permits; confirm them with the buyer before shipping.",
+    "sources": [
+      {
+        "title": "INSW — Informasi Tarif & HS Code",
+        "url": "https://insw.go.id/",
+        "domain": "insw.go.id",
+        "snippet": "Portal tarif, kode HS, dan persyaratan perdagangan ekspor-impor."
+      },
+      {
+        "title": "Bea Cukai — Kepabeanan & Dokumen Ekspor",
+        "url": "https://www.beacukai.go.id/",
+        "domain": "beacukai.go.id",
+        "snippet": "Informasi resmi PEB, prosedur kepabeanan, dan ketentuan ekspor-impor."
+      },
+      {
+        "title": "Karantina Indonesia",
+        "url": "https://karantinaindonesia.go.id/",
+        "domain": "karantinaindonesia.go.id",
+        "snippet": "Persyaratan karantina untuk komoditas pertanian, hewan, dan pangan."
+      }
+    ]
+  },
+  {
+    "id": "nib-oss",
+    "title": "NIB dan Legalitas Usaha",
+    "keywords": [
+      "nib",
+      "oss",
+      "izin usaha",
+      "legalitas usaha",
+      "nomor induk berusaha"
+    ],
+    "answer": "NIB (Nomor Induk Berusaha) adalah identitas pelaku usaha yang diterbitkan melalui sistem OSS. NIB menjadi dasar legalitas usaha dan pengurusan izin lain, termasuk kegiatan ekspor. Pastikan data usaha dan NPWP benar saat mendaftar di oss.go.id.",
+    "answerEn": "The NIB (Nomor Induk Berusaha) is the business identity number issued through the OSS system. It is the basis for business legality and other permits, including export activities. Make sure your business details and tax ID are correct when registering at oss.go.id.",
+    "sources": [
+      {
+        "title": "OSS — Perizinan Berusaha Terintegrasi (NIB)",
+        "url": "https://oss.go.id/",
+        "domain": "oss.go.id",
+        "snippet": "Portal resmi perizinan berusaha terintegrasi untuk mengurus NIB dan izin usaha."
+      }
+    ]
+  },
+  {
+    "id": "hs-code",
+    "title": "Kode HS dan Tarif",
+    "keywords": [
+      "hs code",
+      "kode hs",
+      "klasifikasi barang",
+      "bea masuk",
+      "tarif bea"
+    ],
+    "answer": "Kode HS (Harmonized System) adalah klasifikasi barang yang digunakan untuk menentukan tarif bea masuk dan persyaratan perdagangan. Cek kode HS produk melalui INSW atau konsultasi dengan Bea Cukai; kesalahan klasifikasi dapat menyebabkan tarif atau dokumen yang salah. Sertakan deskripsi barang yang lengkap saat meminta penetapan.",
+    "answerEn": "The HS code (Harmonized System) classifies goods for customs duties and trade requirements. Check your product's HS code through INSW or consult Customs; a wrong classification can lead to incorrect duties or documents. Provide a complete product description when requesting a ruling.",
+    "sources": [
+      {
+        "title": "INSW — Informasi Tarif & HS Code",
+        "url": "https://insw.go.id/",
+        "domain": "insw.go.id",
+        "snippet": "Portal tarif, kode HS, dan persyaratan perdagangan ekspor-impor."
+      },
+      {
+        "title": "Bea Cukai — Kepabeanan & Dokumen Ekspor",
+        "url": "https://www.beacukai.go.id/",
+        "domain": "beacukai.go.id",
+        "snippet": "Informasi resmi PEB, prosedur kepabeanan, dan ketentuan ekspor-impor."
+      }
+    ]
+  },
+  {
+    "id": "karantina",
+    "title": "Karantina untuk Produk Ekspor",
+    "keywords": [
+      "karantina",
+      "fitosanitari",
+      "phytosanitary",
+      "sertifikat kesehatan",
+      "karantina pertanian"
+    ],
+    "answer": "Produk pertanian, pangan, hewan, dan tumbuhan umumnya memerlukan pemeriksaan serta sertifikat karantina sebelum diekspor. Ajukan permohonan ke instansi karantina di daerah asal dan pastikan persyaratan negara tujuan terpenuhi. Sertifikat phyto-sanitary sering diminta buyer untuk komoditas nabati.",
+    "answerEn": "Agricultural, food, animal, and plant products generally require inspection and quarantine certificates before export. Apply to the quarantine authority in the region of origin and confirm the destination country's requirements. Buyers often require a phyto-sanitary certificate for plant-based commodities.",
+    "sources": [
+      {
+        "title": "Karantina Indonesia",
+        "url": "https://karantinaindonesia.go.id/",
+        "domain": "karantinaindonesia.go.id",
+        "snippet": "Persyaratan karantina untuk komoditas pertanian, hewan, dan pangan."
+      }
+    ]
+  },
+  {
+    "id": "pembayaran",
+    "title": "Metode Pembayaran Ekspor",
+    "keywords": [
+      "cara bayar",
+      "metode pembayaran",
+      "letter of credit",
+      "l/c",
+      "transfer bank",
+      "payment terms",
+      "t/t"
+    ],
+    "answer": "Metode pembayaran ekspor yang umum meliputi T/T (transfer bank), L/C (Letter of Credit), dan documentary collection. Pilih metode berdasarkan nilai transaksi, tingkat kepercayaan, dan risiko negara; L/C memberi jaminan bank tetapi biayanya lebih tinggi. Pastikan rekening dan identitas buyer terverifikasi sebelum mengirim barang.",
+    "answerEn": "Common export payment methods include T/T (bank transfer), L/C (Letter of Credit), and documentary collection. Choose based on transaction value, trust, and country risk; an L/C provides a bank guarantee but costs more. Verify the buyer's identity and bank account before shipping.",
+    "sources": [
+      {
+        "title": "OJK — Layanan Keuangan & Perlindungan Konsumen",
+        "url": "https://www.ojk.go.id/",
+        "domain": "ojk.go.id",
+        "snippet": "Informasi lembaga keuangan berizin dan perlindungan konsumen."
+      },
+      {
+        "title": "Trade.gov — Panduan Ekspor & RFQ",
+        "url": "https://www.trade.gov/",
+        "domain": "trade.gov",
+        "snippet": "Panduan menyusun permintaan penawaran dan praktik ekspor internasional."
+      }
+    ]
+  },
+  {
+    "id": "pengiriman",
+    "title": "Pengiriman dan Ongkos Kirim",
+    "keywords": [
+      "ongkos kirim",
+      "freight",
+      "container",
+      "kargo",
+      "pengiriman laut",
+      "logistik ekspor"
+    ],
+    "answer": "Pengiriman ekspor dapat menggunakan laut (FCL/LCL), udara, atau darat. Biaya dan jadwal dipengaruhi oleh rute, volume, berat, dan Incoterms. Minta penawaran dari freight forwarder resmi, pastikan jadwal kapal, dan cocokkan dokumen pengiriman dengan PEB serta Bill of Lading.",
+    "answerEn": "Export shipments can use sea (FCL/LCL), air, or land transport. Costs and schedules depend on the route, volume, weight, and Incoterm. Request quotes from authorized freight forwarders, confirm vessel schedules, and match shipping documents with the PEB and Bill of Lading.",
+    "sources": [
+      {
+        "title": "Trade.gov — Panduan Ekspor & RFQ",
+        "url": "https://www.trade.gov/",
+        "domain": "trade.gov",
+        "snippet": "Panduan menyusun permintaan penawaran dan praktik ekspor internasional."
+      },
+      {
+        "title": "Bea Cukai — Kepabeanan & Dokumen Ekspor",
+        "url": "https://www.beacukai.go.id/",
+        "domain": "beacukai.go.id",
+        "snippet": "Informasi resmi PEB, prosedur kepabeanan, dan ketentuan ekspor-impor."
+      }
+    ]
+  },
+  {
+    "id": "coo",
+    "title": "Certificate of Origin (COO)",
+    "keywords": [
+      "certificate of origin",
+      "coo",
+      "sertifikat asal",
+      "form d",
+      "form e"
+    ],
+    "answer": "Certificate of Origin (COO) menerangkan asal barang dan sering diperlukan untuk tarif preferensi atau aturan impor negara tujuan. Untuk ASEAN digunakan Form D, sedangkan skema lain memiliki formulir masing-masing. Ajukan melalui instansi penerbit resmi dan pastikan data sesuai invoice serta PEB.",
+    "answerEn": "A Certificate of Origin (COO) states the origin of goods and is often required for preferential tariffs or destination import rules. ASEAN uses Form D, while other schemes have their own forms. Apply through the authorized issuing body and ensure the data matches the invoice and PEB.",
+    "sources": [
+      {
+        "title": "Kementerian Perdagangan RI",
+        "url": "https://kemendag.go.id/",
+        "domain": "kemendag.go.id",
+        "snippet": "Regulasi, informasi pasar, dan panduan ekspor-impor dari Kemendag."
+      },
+      {
+        "title": "INSW — Informasi Tarif & HS Code",
+        "url": "https://insw.go.id/",
+        "domain": "insw.go.id",
+        "snippet": "Portal tarif, kode HS, dan persyaratan perdagangan ekspor-impor."
+      }
+    ]
+  },
+  {
+    "id": "kyc",
+    "title": "KYC dan Verifikasi Usaha",
+    "keywords": [
+      "kyc",
+      "know your customer",
+      "verifikasi usaha",
+      "verifikasi identitas"
+    ],
+    "answer": "KYC (Know Your Customer) adalah proses verifikasi identitas dan legalitas usaha untuk mencegah penipuan dan pencucian uang. NusaBridge menampilkan simulasi KYC untuk memeriksa kelengkapan profil, NIB, dan data perusahaan. Untuk transaksi nyata, verifikasi dokumen dan rekening mitra melalui saluran resmi.",
+    "answerEn": "KYC (Know Your Customer) is the process of verifying identity and business legality to prevent fraud and money laundering. NusaBridge provides a KYC simulation to check the completeness of your profile, NIB, and company data. For real transactions, verify documents and counterparty accounts through official channels.",
+    "sources": [
+      {
+        "title": "OJK — Layanan Keuangan & Perlindungan Konsumen",
+        "url": "https://www.ojk.go.id/",
+        "domain": "ojk.go.id",
+        "snippet": "Informasi lembaga keuangan berizin dan perlindungan konsumen."
+      }
+    ]
+  },
+  {
+    "id": "bea-cukai",
+    "title": "Bea Cukai dan PEB",
+    "keywords": [
+      "bea cukai",
+      "kepabeanan",
+      "peb",
+      "pib",
+      "customs"
+    ],
+    "answer": "Bea Cukai mengelola kepabeanan, termasuk PEB untuk ekspor dan PIB untuk impor. PEB diajukan melalui sistem kepabeanan sebelum barang dimuat, dan datanya harus sesuai invoice, packing list, serta Bill of Lading. Periksa prosedur terbaru di beacukai.go.id atau INSW.",
+    "answerEn": "Customs (Bea Cukai) manages import and export procedures, including the PEB for exports and PIB for imports. The PEB is submitted through the customs system before cargo is loaded, and its data must match the invoice, packing list, and Bill of Lading. Check the latest procedures at beacukai.go.id or INSW.",
+    "sources": [
+      {
+        "title": "Bea Cukai — Kepabeanan & Dokumen Ekspor",
+        "url": "https://www.beacukai.go.id/",
+        "domain": "beacukai.go.id",
+        "snippet": "Informasi resmi PEB, prosedur kepabeanan, dan ketentuan ekspor-impor."
+      },
+      {
+        "title": "INSW — Informasi Tarif & HS Code",
+        "url": "https://insw.go.id/",
+        "domain": "insw.go.id",
+        "snippet": "Portal tarif, kode HS, dan persyaratan perdagangan ekspor-impor."
+      }
+    ]
+  },
+  {
+    "id": "invoice-packing",
+    "title": "Commercial Invoice dan Packing List",
+    "keywords": [
+      "invoice",
+      "packing list",
+      "faktur",
+      "daftar kemasan"
+    ],
+    "answer": "Commercial invoice memuat identitas penjual dan pembeli, deskripsi barang, jumlah, harga, Incoterms, dan negara asal. Packing list merinci kemasan, berat, dan dimensi. Keduanya harus konsisten dengan PEB dan dokumen pengiriman; perbedaan data dapat menunda proses kepabeanan.",
+    "answerEn": "A commercial invoice contains the seller and buyer details, goods description, quantity, price, Incoterm, and country of origin. A packing list details packaging, weight, and dimensions. Both must be consistent with the PEB and shipping documents; discrepancies can delay customs clearance.",
+    "sources": [
+      {
+        "title": "Bea Cukai — Kepabeanan & Dokumen Ekspor",
+        "url": "https://www.beacukai.go.id/",
+        "domain": "beacukai.go.id",
+        "snippet": "Informasi resmi PEB, prosedur kepabeanan, dan ketentuan ekspor-impor."
+      }
+    ]
+  },
+  {
+    "id": "asuransi",
+    "title": "Asuransi Pengiriman",
+    "keywords": [
+      "asuransi",
+      "insurance",
+      "marine insurance",
+      "asuransi pengiriman"
+    ],
+    "answer": "Asuransi pengiriman melindungi barang dari risiko selama transportasi. Pada CIF, penjual wajib menutup asuransi minimum untuk pembeli; pada FOB, umumnya pembeli yang mengasuransikan. Pilih pertanggungan sesuai nilai barang dan rute, lalu simpan polis untuk keperluan klaim.",
+    "answerEn": "Cargo insurance protects goods against risks during transport. Under CIF, the seller must arrange minimum insurance for the buyer; under FOB, the buyer usually insures the goods. Choose coverage based on cargo value and route, and keep the policy for claims.",
+    "sources": [
+      {
+        "title": "ICC — Incoterms 2020",
+        "url": "https://iccwbo.org/business-solutions/incoterms-rules/",
+        "domain": "iccwbo.org",
+        "snippet": "Penjelasan resmi 11 aturan Incoterms 2020 tentang biaya dan risiko."
+      }
+    ]
+  },
+  {
+    "id": "pasar-ekspor",
+    "title": "Memilih Negara Tujuan Ekspor",
+    "keywords": [
+      "target pasar",
+      "pasar ekspor",
+      "potensi ekspor",
+      "memilih negara"
+    ],
+    "answer": "Pemilihan negara tujuan mempertimbangkan permintaan produk, tarif, regulasi, jarak logistik, dan daya saing harga. Gunakan data ekspor dan informasi pasar dari Kemendag atau perwakilan dagang, lalu verifikasi persyaratan impor negara tersebut. Mulai dari pasar yang regulasinya sederhana dan permintaannya stabil.",
+    "answerEn": "Choosing a destination considers product demand, tariffs, regulations, logistics distance, and price competitiveness. Use export data and market information from the Ministry of Trade or trade representatives, then verify the destination's import requirements. Start with markets that have simpler regulations and stable demand.",
+    "sources": [
+      {
+        "title": "Kementerian Perdagangan RI",
+        "url": "https://kemendag.go.id/",
+        "domain": "kemendag.go.id",
+        "snippet": "Regulasi, informasi pasar, dan panduan ekspor-impor dari Kemendag."
+      }
+    ]
+  },
+  {
+    "id": "alur-website",
+    "title": "Alur Menggunakan Fitur NusaBridge",
+    "keywords": [
+      "alur website",
+      "alur nusabridge",
+      "cara menggunakan website",
+      "cara pakai nusabridge",
+      "fitur website nusabridge",
+      "website workflow",
+      "how do i use the website",
+      "how to use nusabridge",
+      "nusabridge workflow"
+    ],
+    "answer": "Alur utama di website NusaBridge dimulai dari memilih produk di katalog, lalu menggunakan AI Sales Assistant/RFQ Studio untuk merapikan permintaan buyer. Setelah detail disepakati, Auto-PDF dapat membantu menyiapkan draf dokumen. KYC Hub dan Escrow Vault menampilkan simulasi/panduan alur, bukan verifikasi resmi atau pemrosesan pembayaran sungguhan. Periksa kembali data dan dokumen sebelum digunakan untuk transaksi nyata.",
+    "answerEn": "The main NusaBridge website flow starts with choosing a product from the catalog, then using AI Sales Assistant/RFQ Studio to organize a buyer request. Once the details are agreed, Auto-PDF can help prepare draft documents. KYC Hub and Escrow Vault show simulated workflows/guidance; they do not perform official verification or process real payments. Review all information and documents before using them in a real transaction.",
+    "sources": []
+  }
+]
