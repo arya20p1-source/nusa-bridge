@@ -1,6 +1,6 @@
 /**
- * NUSABRIDGE - 120 PRODUK KOMODITAS EKSPOR TERVERIFIKASI KYC HUB
- * Kategori: Kopi Ekspor (30), Rempah & Hasil Alam (30), Kriya (30), Tekstil (30)
+ * NUSABRIDGE - 50 PRODUK KOMODITAS EKSPOR TERVERIFIKASI KYC HUB
+ * Kategori: Kopi Ekspor (20), Rempah & Hasil Alam (10), Kriya (10), Tekstil (10)
  */
 export const PRODUCTS_DATA = [
   {

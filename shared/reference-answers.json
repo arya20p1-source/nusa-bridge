@@ -494,10 +494,598 @@
       "website workflow",
       "how do i use the website",
       "how to use nusabridge",
-      "nusabridge workflow"
+      "nusabridge workflow",
+      "alur kerja nusabridge",
+      "alur ekspor impor",
+      "alur kerja ekspor impor",
+      "alur ekspor dan impor"
+    ],
+    "patterns": [
+      "\\b(alur|workflow)\\b.*\\b(nusabridge|website|ekspor|impor|export|import)\\b",
+      "\\b(nusabridge|website)\\b.*\\b(alur|workflow)\\b"
     ],
     "answer": "Alur utama di website NusaBridge dimulai dari memilih produk di katalog, lalu menggunakan AI Sales Assistant/RFQ Studio untuk merapikan permintaan buyer. Setelah detail disepakati, Auto-PDF dapat membantu menyiapkan draf dokumen. KYC Hub dan Escrow Vault menampilkan simulasi/panduan alur, bukan verifikasi resmi atau pemrosesan pembayaran sungguhan. Periksa kembali data dan dokumen sebelum digunakan untuk transaksi nyata.",
     "answerEn": "The main NusaBridge website flow starts with choosing a product from the catalog, then using AI Sales Assistant/RFQ Studio to organize a buyer request. Once the details are agreed, Auto-PDF can help prepare draft documents. KYC Hub and Escrow Vault show simulated workflows/guidance; they do not perform official verification or process real payments. Review all information and documents before using them in a real transaction.",
+    "sources": []
+  },
+  {
+    "id": "tentang-nusabridge",
+    "title": "Tentang Website NusaBridge",
+    "keywords": [
+      "tentang nusabridge",
+      "apa itu nusabridge",
+      "platform nusabridge",
+      "website nusabridge",
+      "nusabridge adalah",
+      "what is nusabridge",
+      "about nusabridge"
+    ],
+    "patterns": [
+      "\\bnusabridge\\b.*\\b(apa|tentang|platform)\\b",
+      "\\b(apa|tentang)\\b.*\\bnusabridge\\b"
+    ],
+    "answer": "NusaBridge adalah website informasi dan simulasi perdagangan ekspor-impor untuk UMKM Indonesia. Website ini menggabungkan katalog 50 produk, chat NusaBridge AI, studio Solusi AI (RFQ Studio, draf Auto-PDF, simulasi KYC Hub, dan simulasi Escrow Vault), serta halaman Harga. NusaBridge adalah platform, bukan penjual, produsen, bank, atau otoritas verifikasi resmi. Halaman utama: Beranda, Produk, Solusi AI, dan Harga, ditambah modal Masuk/Daftar untuk akun eksportir atau importir.",
+    "answerEn": "NusaBridge is an information and simulation website for Indonesian SME export-import trade. It combines a 50-product catalog, NusaBridge AI chat, an AI Solutions studio (RFQ Studio, Auto-PDF drafts, KYC Hub simulation, and Escrow Vault simulation), and a Pricing page. NusaBridge is a platform, not a seller, producer, bank, or official verification authority. Main pages: Home, Products, AI Solutions, and Pricing, plus a Login/Register modal for exporter or importer accounts.",
+    "sources": []
+  },
+  {
+    "id": "fitur-website",
+    "title": "Fitur Website NusaBridge",
+    "keywords": [
+      "fitur nusabridge",
+      "fitur website",
+      "pilar nusabridge",
+      "menu website",
+      "apa saja fiturnya",
+      "nusabridge features",
+      "website features",
+      "four pillars",
+      "fitur website nusabridge",
+      "fitur ekspor impor",
+      "fitur ekspor dan impor",
+      "export import features"
+    ],
+    "answer": "Fitur utama website NusaBridge: (1) katalog 50 produk dengan pencarian, filter kategori, sortir, halaman 12 produk, modal spesifikasi, dan formulir RFQ; (2) chat NusaBridge AI untuk menjelaskan website dan panduan umum ekspor-impor; (3) studio Solusi AI berisi RFQ Studio, draf Auto-PDF, simulasi KYC Hub, dan simulasi Escrow Vault; (4) akun eksportir/importir dengan profil usaha dan logo; serta (5) halaman Harga dengan informasi paket, voucher, dan kalkulator estimasi. Auto-PDF, KYC Hub, dan Escrow Vault adalah draf atau simulasi, bukan layanan resmi.",
+    "answerEn": "Main NusaBridge features: (1) a 50-product catalog with search, category filters, sorting, 12 products per page, a specification modal, and an RFQ form; (2) NusaBridge AI chat for website and general export-import guidance; (3) an AI Solutions studio with RFQ Studio, Auto-PDF drafts, KYC Hub simulation, and Escrow Vault simulation; (4) exporter/importer accounts with a business profile and logo; and (5) a Pricing page with plan information, a voucher, and an estimate calculator. Auto-PDF, KYC Hub, and Escrow Vault are drafts or simulations, not official services.",
+    "sources": [],
+    "patterns": [
+      "\\bfitur\\b.*\\b(nusabridge|website)\\b",
+      "\\bfitur\\b.*\\b(ekspor|export)\\b.*\\b(impor|import)\\b",
+      "\\bfitur\\b.*\\b(impor|import)\\b.*\\b(ekspor|export)\\b"
+    ]
+  },
+  {
+    "id": "peran-akun",
+    "title": "Peran Akun: Eksportir dan Importir",
+    "keywords": [
+      "peran akun",
+      "role seller",
+      "role buyer",
+      "eksportir dan importir",
+      "beda seller buyer",
+      "akun eksportir",
+      "akun importir",
+      "seller vs buyer",
+      "exporter importer role",
+      "peran seller",
+      "peran buyer",
+      "seller dan buyer",
+      "role akun"
+    ],
+    "answer": "NusaBridge memiliki dua peran akun. Eksportir (seller) untuk pelaku usaha Indonesia: fokus pada profil usaha, informasi produk, alur RFQ, draf dokumen, data KYC, dan simulasi Escrow. Importir (buyer) untuk pembeli luar negeri: fokus pada katalog, spesifikasi produk, pengajuan RFQ, Incoterms dan dokumen, serta simulasi Escrow. Peran memengaruhi panduan dan konteks jawaban AI, tetapi tidak membuka dashboard transaksi, unggah produk, atau ruang negosiasi terpisah.",
+    "answerEn": "NusaBridge has two account roles. Exporter (seller) for Indonesian businesses: focuses on the business profile, product information, RFQ flow, document drafts, KYC data, and the Escrow simulation. Importer (buyer) for overseas buyers: focuses on the catalog, product specifications, RFQ submission, Incoterms and documents, and the Escrow simulation. The role changes guidance and AI context, but it does not unlock a transaction dashboard, product upload, or a separate negotiation room.",
+    "sources": []
+  },
+  {
+    "id": "akun-masuk-daftar",
+    "title": "Daftar dan Masuk Akun NusaBridge",
+    "keywords": [
+      "daftar akun",
+      "cara daftar",
+      "register nusabridge",
+      "masuk akun",
+      "login nusabridge",
+      "akun nusabridge",
+      "lupa password",
+      "logout nusabridge"
+    ],
+    "answer": "Untuk membuat akun, klik Daftar di navigation bar. Pilih peran Eksportir (seller) atau Importir (buyer), isi nama usaha dan email, unggah logo bila perlu, lalu klik Lanjutkan. Sesi disimpan di browser dan modal Masuk memakai pilihan peran yang sama. Website belum menyediakan pemulihan kata sandi, dashboard penjual, atau unggah produk. Tombol Keluar akan menghapus sesi lokal.",
+    "answerEn": "To create an account, click Register in the navigation bar. Choose the Exporter (seller) or Importer (buyer) role, enter the business name and email, optionally upload a logo, then click Continue. The session is stored in the browser, and the Login modal uses the same role choices. The website does not yet provide password recovery, a seller dashboard, or product upload. Logout removes the local session.",
+    "sources": []
+  },
+  {
+    "id": "rfq-website",
+    "title": "Alur RFQ di Website NusaBridge",
+    "keywords": [
+      "ajukan rfq",
+      "cara rfq",
+      "rfq nusabridge",
+      "status rfq",
+      "nomor rfq",
+      "kirim rfq",
+      "rfq form",
+      "submit rfq",
+      "cara mengajukan rfq",
+      "cara kirim rfq",
+      "how do i submit an rfq",
+      "how to submit an rfq",
+      "submit an rfq"
+    ],
+    "patterns": [
+      "\\b(cara|bagaimana|how)\\b.*\\b(ajukan|mengajukan|kirim|submit|buat|create|isi|fill)\\b.*\\b(rfq|request for quotation)\\b",
+      "\\b(rfq|request for quotation)\\b.*\\b(cara|bagaimana|how)\\b.*\\b(ajukan|mengajukan|kirim|submit|buat|create|isi|fill)\\b"
+    ],
+    "answer": "Alur RFQ di NusaBridge: buka halaman Produk, pilih produk, lalu klik Ajukan RFQ. Produk sudah terpilih; isi jumlah, pilih Incoterms (FOB, CIF, CNF, atau EXW), pelabuhan tujuan, dan email kontak, lalu klik Kirim RFQ. Jika tersimpan, website menampilkan nomor RFQ, detail permintaan, status Diajukan — menunggu peninjauan, dan tahapan proses. Tombol Perbarui Status mengambil status terbaru untuk nomor tersebut. Bukti RFQ bukan bukti pembayaran atau pesanan yang sudah disepakati; website tidak otomatis mengirim RFQ ke pemasok, menerima atau membandingkan penawaran, atau menyediakan dashboard negosiasi.",
+    "answerEn": "NusaBridge RFQ flow: open the Products page, choose a product, then click Submit RFQ. The product is preselected; enter the quantity, choose Incoterms (FOB, CIF, CNF, or EXW), the destination port, and a contact email, then click Send RFQ. If saved, the site shows the RFQ number, request details, the status Submitted — awaiting review, and process steps. Refresh Status fetches the latest status for that number. An RFQ receipt is not proof of payment or a confirmed order; the site does not automatically send the RFQ to a supplier, collect or compare quotations, or provide a negotiation dashboard.",
+    "sources": []
+  },
+  {
+    "id": "auto-pdf-website",
+    "title": "Auto-PDF di Website NusaBridge",
+    "keywords": [
+      "auto pdf",
+      "auto-pdf",
+      "generator pdf",
+      "proforma invoice",
+      "sales contract",
+      "cetak dokumen",
+      "draft dokumen",
+      "document generator"
+    ],
+    "answer": "Auto-PDF ada di halaman Solusi AI, tab Auto-PDF Document Generator. Fitur ini membuat draf Proforma Invoice atau Sales Contract dari formulir, lalu menyediakan tombol cetak dan salin. Hasilnya adalah draf untuk ditinjau, bukan dokumen resmi yang sudah diverifikasi. NusaBridge tidak mengirim dokumen ke Bea Cukai dan tidak menggantikan penasihat hukum atau perdagangan.",
+    "answerEn": "Auto-PDF is on the AI Solutions page, in the Auto-PDF Document Generator tab. It creates a draft Proforma Invoice or Sales Contract from the form, then provides print and copy actions. The output is a draft for review, not an officially verified document. NusaBridge does not submit documents to Customs and does not replace a legal or trade advisor.",
+    "sources": []
+  },
+  {
+    "id": "kyc-website",
+    "title": "KYC Hub di Website NusaBridge",
+    "keywords": [
+      "kyc hub",
+      "fitur kyc",
+      "verifikasi nib di website",
+      "audit legalitas website",
+      "cek nib",
+      "kyc nusabridge",
+      "kyc simulation"
+    ],
+    "answer": "KYC Hub ada di halaman Solusi AI. Fitur ini menyimulasikan pemeriksaan kepatuhan memakai NIB dan NPWP yang dimasukkan, lalu menampilkan checklist untuk negara tujuan yang dipilih. Ini simulasi dan checklist edukatif: data tidak diverifikasi ke OSS, Bea Cukai, atau otoritas negara tujuan, dan hasilnya bukan sertifikat kepatuhan resmi.",
+    "answerEn": "KYC Hub is on the AI Solutions page. It simulates a compliance check using the NIB and NPWP entered, then shows a checklist for the selected destination country. This is a simulation and educational checklist: data is not verified against OSS, Customs, or a foreign authority, and the result is not an official compliance certificate.",
+    "sources": []
+  },
+  {
+    "id": "kepatuhan-negara-tujuan",
+    "title": "Verifikasi Kepatuhan Standar Negara Tujuan",
+    "keywords": [
+      "verifikasi kepatuhan",
+      "standar kepatuhan",
+      "kepatuhan negara tujuan",
+      "checklist kepatuhan",
+      "compliance check",
+      "destination compliance",
+      "standar fda",
+      "standar eudr",
+      "sertifikasi halal",
+      "fda eudr jas halal"
+    ],
+    "patterns": [
+      "\\b(verifikasi|cek|check|kepatuhan|compliance|standar|standard)\\b.*\\b(fda|eudr|jas|halal|negara tujuan|destination|kepatuhan|compliance)\\b",
+      "\\b(fda|eudr|jas|halal)\\b.*\\b(verifikasi|cek|check|kepatuhan|compliance|standar|standard)\\b"
+    ],
+    "answer": "Untuk memeriksa kepatuhan standar negara tujuan di NusaBridge, buka halaman Solusi AI lalu gunakan KYC Hub. Masukkan NIB dan NPWP, pilih negara tujuan, dan tinjau checklist yang muncul (misalnya FDA untuk Amerika Serikat, EUDR untuk Uni Eropa, JAS untuk Jepang, atau Halal untuk UEA). Ini simulasi dan checklist edukatif, bukan verifikasi resmi; konfirmasikan persyaratan terbaru ke Bea Cukai/INSW dan otoritas negara tujuan sebelum mengirim barang.",
+    "answerEn": "To review destination compliance standards on NusaBridge, open the AI Solutions page and use KYC Hub. Enter the NIB and NPWP, choose a destination country, and review the checklist shown (for example FDA for the United States, EUDR for the European Union, JAS for Japan, or Halal for the UAE). This is an educational simulation and checklist, not official verification; confirm the latest requirements with Customs/INSW and the destination authority before shipping.",
+    "sources": []
+  },
+  {
+    "id": "escrow-website",
+    "title": "Simulasi Escrow Vault di Website",
+    "keywords": [
+      "escrow vault",
+      "simulasi escrow",
+      "escrow nusabridge",
+      "pencairan dana website",
+      "vault nusabridge",
+      "escrow simulation",
+      "escrow memproses",
+      "uang sungguhan",
+      "escrow simulasi"
+    ],
+    "answer": "Escrow Vault di NusaBridge adalah simulasi pencairan empat fase: 30% saat kontrak disepakati, 30% saat milestone PEB/stuffing, 20% saat kapal berlayar dan B/L terbit, serta 20% saat kargo tiba dan buyer mengonfirmasi. Tombol fase di halaman Solusi AI menampilkan contoh notifikasi. Website tidak memproses pembayaran sungguhan, tidak menyimpan dana, dan bukan layanan escrow berlisensi.",
+    "answerEn": "NusaBridge Escrow Vault is a four-phase payout simulation: 30% when the contract is agreed, 30% at the PEB/stuffing milestone, 20% when the vessel sails and the B/L is issued, and 20% when the cargo arrives and the buyer confirms. Phase buttons on the AI Solutions page show example notifications. The website does not process real payments, hold funds, or act as a licensed escrow service.",
+    "sources": []
+  },
+  {
+    "id": "harga-paket-website",
+    "title": "Paket dan Harga NusaBridge",
+    "keywords": [
+      "paket harga",
+      "harga langganan",
+      "pricing nusabridge",
+      "voucher subsidi",
+      "paket umkm",
+      "biaya langganan",
+      "plans pricing",
+      "harga paket",
+      "biaya paket"
+    ],
+    "answer": "Halaman Harga NusaBridge memiliki paket Starter/Sandbox gratis, paket UMKM Eksportir berbayar (1 bulan, 5 bulan, atau 1 tahun), dan paket Enterprise kustom melalui WhatsApp. Voucher subsidi 15% tersedia untuk pilihan 5 bulan dan 12 bulan. Harga, pajak, dan ketentuan voucher ditampilkan di halaman tersebut. Website tidak memproses pembayaran; halaman Harga menyediakan informasi paket dan jalur kontak.",
+    "answerEn": "The NusaBridge Pricing page has a free Starter/Sandbox plan, a paid UMKM Exporter plan (1 month, 5 months, or 1 year), and a custom Enterprise plan via WhatsApp. A 15% subsidy voucher is available for the 5-month and 12-month options. Prices, taxes, and voucher terms are shown on that page. The website does not process payments; the Pricing page provides plan information and a contact route.",
+    "sources": []
+  },
+  {
+    "id": "katalog-website",
+    "title": "Katalog Produk NusaBridge",
+    "keywords": [
+      "katalog nusabridge",
+      "daftar produk nusabridge",
+      "50 produk",
+      "produk apa saja",
+      "kategori produk",
+      "catalog nusabridge",
+      "how many products"
+    ],
+    "answer": "Katalog NusaBridge berisi 50 produk: 20 kopi, 10 rempah & hasil alam, 10 kriya & kerajinan, dan 10 tekstil & wastra. Halaman Produk menyediakan pencarian, filter kategori, sortir harga/MOQ, 12 produk per halaman, modal spesifikasi, dan tombol Ajukan RFQ. Setiap produk memuat nama, asal, harga acuan USD, satuan, MOQ, kode HS, deskripsi, spesifikasi, sertifikasi, dan pelabuhan pengiriman. Harga katalog adalah acuan, bukan penawaran final.",
+    "answerEn": "The NusaBridge catalog contains 50 products: 20 coffee, 10 spices & natural products, 10 crafts & handicrafts, and 10 textiles & wastra. The Products page provides search, category filters, price/MOQ sorting, 12 products per page, a specification modal, and a Submit RFQ button. Each product includes name, origin, reference price in USD, unit, MOQ, HS code, description, specifications, certifications, and shipping port. Catalog prices are references, not final quotations.",
+    "sources": []
+  },
+  {
+    "id": "batasan-ai",
+    "title": "Cakupan dan Batasan NusaBridge AI",
+    "keywords": [
+      "ai nusabridge",
+      "batasan ai",
+      "bisa jawab apa",
+      "di luar topik",
+      "off topic",
+      "cakupan ai",
+      "what can you answer",
+      "ai scope",
+      "cara kerja ai nusabridge"
+    ],
+    "answer": "NusaBridge AI menjawab pertanyaan tentang website NusaBridge (halaman, fitur, peran akun, katalog, RFQ, Auto-PDF, KYC Hub, Escrow Vault, dan harga paket) serta panduan umum ekspor-impor. AI tidak menjawab topik di luar itu seperti pemrograman, resep, politik, hiburan, kesehatan, matematika, atau teori AI umum. AI juga tidak mengarang fitur, harga, stok, status transaksi, atau regulasi.",
+    "answerEn": "NusaBridge AI answers questions about the NusaBridge website (pages, features, account roles, catalog, RFQ, Auto-PDF, KYC Hub, Escrow Vault, and pricing) and general export-import guidance. It does not answer unrelated topics such as programming, recipes, politics, entertainment, health, mathematics, or general AI theory. It also does not invent features, prices, stock, transaction status, or regulations.",
+    "sources": []
+  },
+  {
+    "id": "halaman-website",
+    "title": "Halaman dan Navigasi Website NusaBridge",
+    "keywords": [
+      "halaman website",
+      "navigasi nusabridge",
+      "menu nusabridge",
+      "di mana fitur",
+      "website pages",
+      "nusabridge navigation"
+    ],
+    "answer": "Halaman website NusaBridge: Beranda (ringkasan platform, alur ekspor, CTA pendaftaran), Produk (katalog, pencarian/filter/sortir, spesifikasi, RFQ), Solusi AI (chat AI, empat pilar, studio RFQ/Auto-PDF/KYC/Escrow), dan Harga (paket, voucher, kalkulator estimasi). Modal Masuk/Daftar tersedia dari navigation bar. Tidak ada dashboard transaksi atau halaman unggah produk.",
+    "answerEn": "NusaBridge pages: Home (platform overview, export flow, registration CTA), Products (catalog, search/filter/sort, specifications, RFQ), AI Solutions (AI chat, four pillars, RFQ/Auto-PDF/KYC/Escrow studio), and Pricing (plans, voucher, estimate calculator). The Login/Register modal is available from the navigation bar. There is no transaction dashboard or product-upload page.",
+    "sources": []
+  },
+  {
+    "id": "cara-beli-katalog",
+    "title": "Cara Membeli dan Memesan Komoditas dari Katalog",
+    "keywords": [
+      "cara beli",
+      "cara membeli",
+      "cara memesan",
+      "cara order",
+      "beli barang",
+      "beli produk",
+      "beli komoditas",
+      "order komoditas",
+      "langkah beli",
+      "langkah membeli",
+      "beli dari katalog",
+      "pesan produk",
+      "how to buy",
+      "how to purchase",
+      "order from catalog"
+    ],
+    "patterns": [
+      "\\b(cara|bagaimana|langkah)\\b.*\\b(beli|pesan|order)\\b",
+      "\\b(beli|pesan|order)\\b.*\\b(katalog|komoditas|produk|barang)\\b"
+    ],
+    "answer": "Untuk membeli atau memesan komoditas melalui NusaBridge: (1) Buka halaman Produk (/produk) untuk menelusuri 50 komoditas kurasi (Kopi, Rempah, Kriya, Tekstil); (2) Gunakan filter kategori atau pencarian untuk menemukan produk yang diinginkan, lalu klik kartu produk untuk memeriksa spesifikasi teknis dan hasil uji mutu lab; (3) Klik tombol \"Ajukan RFQ\" pada produk terpilih; (4) Masukkan jumlah pesanan, pilih Incoterms (FOB/CIF/CNF/EXW), pelabuhan tujuan, dan email kontak; (5) Klik \"Kirim RFQ\" untuk menerima nomor RFQ dan alur proses. Pembayaran dapat dipantau keamanannya melalui simulasi Escrow Vault 4 fase.",
+    "answerEn": "To purchase commodities on NusaBridge: (1) Open the Products page (/produk) to browse 50 curated Indonesian commodities (Coffee, Spices, Crafts, Textiles); (2) Use search and category filters, and click any item to inspect its lab specifications and certifications; (3) Click \"Ajukan RFQ\" (Submit RFQ); (4) Enter your quantity, select Incoterms (FOB/CIF/CNF/EXW), destination port, and contact email; (5) Click \"Kirim RFQ\" to receive an RFQ reference number and review steps. Payments can be securely simulated via the 4-phase Escrow Vault.",
+    "sources": [
+      {
+        "title": "NusaBridge — Katalog Produk Ekspor",
+        "url": "/produk",
+        "domain": "nusabridge.id",
+        "snippet": "Katalog 50 komoditas ekspor Indonesia dengan spesifikasi lab dan form RFQ."
+      }
+    ]
+  },
+  {
+    "id": "rekomendasi-komoditas",
+    "title": "Rekomendasi Komoditas Ekspor Unggulan Indonesia",
+    "keywords": [
+      "rekomendasi produk",
+      "rekomendasi komoditas",
+      "kopi terbaik",
+      "produk unggulan",
+      "komoditas paling laku",
+      "saran produk",
+      "rekomendasikan",
+      "produk terlaris",
+      "best export products",
+      "recommended commodities"
+    ],
+    "patterns": [
+      "\\b(rekomendasi|rekomendasikan|saran|terbaik|unggulan)\\b.*\\b(produk|komoditas|kopi|rempah|kriya|tekstil)\\b"
+    ],
+    "answer": "Rekomendasi komoditas ekspor unggulan di NusaBridge meliputi: (1) Kopi: Kopi Arabika Gayo Specialty (SCA 89.0, Aceh), Kopi Robusta Lampung Super (kadar air < 12%), dan Kopi Toraja Sapan; (2) Rempah: Cengkeh Lalpari Maluku (kadar minyak > 19%), Lada Putih Muntok Bangka (piperin 5-7%), Pala Papua Grade ABCD, dan Vanila Planifolia Alor Gourmet; (3) Kriya: Set Kursi Anyaman Rotan Alami Cirebon (ISPM 15 & V-Legal) dan Ukiran Kayu Jati Jepara; (4) Tekstil: Kain Batik Tulis Sutra Solo dan Tenun Ikat Pewarna Alam Sumba. Buka halaman Produk untuk melihat spesifikasi lengkap dan harga acuan USD.",
+    "answerEn": "Recommended export commodities on NusaBridge include: (1) Coffee: Aceh Gayo Specialty Arabica (SCA 89.0), Lampung Super Robusta, and Toraja Sapan; (2) Spices: Maluku Lalpari Cloves (oil > 19%), Muntok White Pepper, Papua Nutmeg ABCD, and Alor Gourmet Vanilla; (3) Crafts: Cirebon Natural Rattan Chairs (ISPM 15 & V-Legal) and Jepara Teak Wood Carvings; (4) Textiles: Solo Silk Hand-drawn Batik and Sumba Handwoven Ikat. Open the Products page for full specifications and USD reference prices.",
+    "sources": [
+      {
+        "title": "NusaBridge — Katalog Komoditas",
+        "url": "/produk",
+        "domain": "nusabridge.id",
+        "snippet": "50 komoditas ekspor Indonesia pilihan siap kirim internasional."
+      }
+    ]
+  },
+  {
+    "id": "pengembang-nusabridge",
+    "title": "Pengembang & Inovator Platform NusaBridge",
+    "keywords": [
+      "siapa pembuat",
+      "siapa yang membuat",
+      "siapa pengembang",
+      "tim pengembang",
+      "arjika",
+      "smk antartika",
+      "pembuat website",
+      "who made nusabridge",
+      "developer nusabridge",
+      "developer team",
+      "dibuat oleh siapa",
+      "dibuat siapa",
+      "siapa pencipta",
+      "siapa yang bikin",
+      "siapa inovator",
+      "website ini dibuat oleh siapa",
+      "who developed this website",
+      "who created nusabridge",
+      "who made this website",
+      "who developed nusabridge"
+    ],
+    "patterns": [
+      "\\b(siapa|siapakah|tim|asal)\\b.*\\b(pembuat|pengembang|bikin|buat|dibuat|developer|pencipta|inovator)\\b",
+      "\\b(pembuat|pengembang|bikin|buat|dibuat|developer|pencipta|inovator)\\b.*\\b(siapa|siapakah)\\b",
+      "\\b(arjika|antartika)\\b",
+      "\\b(who)\\b.*\\b(developed|created|made|built)\\b"
+    ],
+    "answer": "NusaBridge dikembangkan oleh Tim Arjika Labs dari SMK Antartika 1 Sidoarjo. Platform ini diciptakan sebagai inovasi fasilitasi perdagangan dan edukasi ekspor-impor bagi pelaku UMKM Indonesia, menggabungkan katalog produk ekspor, AI Sales Assistant, otomasi draf dokumen legal (Proforma Invoice & Sales Contract), validasi kepatuhan KYC Hub, dan simulasi 4 fase pembayaran aman di Escrow Vault.",
+    "answerEn": "NusaBridge is developed by the Arjika Labs Team from SMK Antartika 1 Sidoarjo. The platform was created as an integrated trade facilitation and educational innovation for Indonesian SMEs, combining an export commodity catalog, AI Sales Assistant, legal document drafting (Proforma Invoice & Sales Contract), KYC compliance validation, and a 4-phase secure Escrow Vault simulation.",
+    "sources": [
+      {
+        "title": "NusaBridge — Tim Pengembang Arjika Labs",
+        "url": "/",
+        "domain": "nusabridge.id",
+        "snippet": "Inovasi digital ekspor-impor UMKM Indonesia oleh Tim Arjika Labs SMK Antartika 1 Sidoarjo."
+      }
+    ]
+  },
+  {
+    "id": "kegunaan-seller",
+    "title": "Kegunaan & Fitur Khusus Eksportir Indonesia (Seller)",
+    "keywords": [
+      "kegunaan seller",
+      "fitur seller",
+      "keuntungan eksportir",
+      "manfaat eksportir",
+      "fitur eksportir",
+      "akun seller untuk apa",
+      "apa guna seller",
+      "fungsi eksportir",
+      "kegunaan eksportir",
+      "seller benefits"
+    ],
+    "patterns": [
+      "\\b(kegunaan|fungsi|manfaat|keuntungan|fitur)\\b.*\\b(seller|eksportir)\\b",
+      "\\b(seller|eksportir)\\b.*\\b(kegunaan|fungsi|manfaat|fitur|bisa apa)\\b"
+    ],
+    "answer": "Kegunaan dan fitur untuk akun Eksportir (Seller) di NusaBridge: (1) Menyiapkan profil usaha dan menampilkan komoditas ekspor; (2) Memvalidasi NIB 13 digit OSS RBA dan NPWP di KYC Hub untuk lencana Verified Global Exporter Shield; (3) Menerima dan menganalisis permintaan RFQ dari buyer luar negeri dengan kalkulasi margin aman Incoterms 2020; (4) Menerbitkan draf dokumen ekspor (Proforma Invoice, Sales Contract, draft PEB) di Auto-PDF Generator; serta (5) Memantau simulasi pencairan 4 fase di Escrow Vault (30% DP, 30% PEB/stuffing, 20% B/L, 20% tiba) untuk mencegah risiko gagal bayar.",
+    "answerEn": "Features and usage for Exporter (Seller) accounts on NusaBridge: (1) Prepare business profile and showcase export commodities; (2) Validate 13-digit NIB OSS RBA and NPWP in KYC Hub to earn the Verified Global Exporter Shield; (3) Review and calculate buyer RFQs with Incoterms safe margins; (4) Generate draft export documents (Proforma Invoice, Sales Contract, PEB) via Auto-PDF Generator; and (5) Monitor the 4-phase Escrow Vault payout simulation (30% DP, 30% PEB, 20% B/L, 20% arrival) to mitigate non-payment risks.",
+    "sources": []
+  },
+  {
+    "id": "kegunaan-buyer",
+    "title": "Kegunaan & Fitur Khusus Importir Global (Buyer)",
+    "keywords": [
+      "kegunaan buyer",
+      "fitur buyer",
+      "keuntungan importir",
+      "manfaat importir",
+      "fitur importir",
+      "akun buyer untuk apa",
+      "apa guna buyer",
+      "fungsi importir",
+      "kegunaan importir",
+      "buyer benefits"
+    ],
+    "patterns": [
+      "\\b(kegunaan|fungsi|manfaat|keuntungan|fitur)\\b.*\\b(buyer|importir)\\b",
+      "\\b(buyer|importir)\\b.*\\b(kegunaan|fungsi|manfaat|fitur|bisa apa)\\b"
+    ],
+    "answer": "Kegunaan dan fitur untuk akun Importir (Buyer) di NusaBridge: (1) Menjelajah 50 komoditas ekspor unggulan Indonesia dengan parameter mutu lab dan HS Code; (2) Mengajukan RFQ instan dengan Incoterms pilihan (FOB/CIF/CNF/EXW) dan pelabuhan tujuan; (3) Memeriksa checklist regulasi negara tujuan di KYC Hub (FDA USA, EUDR Uni Eropa, JAS Jepang, Halal UEA); (4) Meninjau draf Sales Contract berstandar ICC 2020; (5) Mengamankan pembayaran di simulasi Escrow Vault multi-valas (dana terlindungi hingga kargo lolos verifikasi); serta (6) Melacak posisi kapal kargo maritim secara real-time melalui telemetri AIS.",
+    "answerEn": "Features and usage for Importer (Buyer) accounts on NusaBridge: (1) Browse 50 curated Indonesian export commodities with lab specs and HS codes; (2) Submit structured RFQs with chosen Incoterms (FOB/CIF/CNF/EXW) and destination ports; (3) Check destination compliance in KYC Hub (US FDA, EU EUDR, Japan JAS, UAE Halal); (4) Review draft ICC 2020 Sales Contracts; (5) Secure payments via the multi-currency Escrow Vault simulation; and (6) Track cargo vessels via real-time AIS maritime radar telemetries.",
+    "sources": []
+  },
+  {
+    "id": "ekspor-ke-jerman-eropa",
+    "title": "Panduan Ekspor ke Jerman & Uni Eropa",
+    "keywords": [
+      "ekspor ke jerman",
+      "ekspor ke eropa",
+      "jerman",
+      "uni eropa",
+      "eudr",
+      "syarat ekspor jerman",
+      "kirim ke jerman",
+      "jualan ke jerman",
+      "export to germany",
+      "export to europe"
+    ],
+    "patterns": [
+      "\\b(ekspor|kirim|jual|jualan)\\b.*\\b(jerman|eropa|uni eropa|germany|europe)\\b"
+    ],
+    "answer": "Untuk mengekspor komoditas (terutama kopi, rempah, kayu/rotan) ke Jerman dan Uni Eropa: (1) Penuhi aturan EUDR (European Union Deforestation Regulation) dengan bukti koordinat kebun bebas deforestasi dan nomor Due Diligence Statement (DDS) TRACES NT; (2) Uji laboratorium bebas residu pestisida terlarang dan kadar mikotoksin/aflatoksin; (3) Siapkan dokumen ekspor: Commercial Invoice, Packing List, Ocean Bill of Lading, dan COO Form A / REX System untuk tarif preferensi GSP+; (4) Sepakati Incoterms (biasanya CIF Hamburg atau FOB Pelabuhan Belawan/Priok); (5) Gunakan simulasi KYC Hub di NusaBridge untuk memeriksa checklist lengkap standar Uni Eropa.",
+    "answerEn": "To export commodities (especially coffee, spices, wood/rattan) to Germany and the EU: (1) Comply with EUDR regulations with deforestation-free geolocations and TRACES NT Due Diligence Statements; (2) Pass lab testing for pesticide residues and mycotoxins; (3) Prepare export documents: Commercial Invoice, Packing List, B/L, and COO (REX System / Form A) for GSP+ tariff benefits; (4) Agree on Incoterms (CIF Hamburg or FOB Belawan/Priok); (5) Use the KYC Hub simulation on NusaBridge to review the complete EU checklist.",
+    "sources": [
+      {
+        "title": "European Commission — EUDR TRACES NT",
+        "url": "https://green-business.ec.europa.eu/deforestation-regulation-implementation_en",
+        "domain": "ec.europa.eu",
+        "snippet": "Regulasi anti-deforestasi Uni Eropa untuk komoditas kopi, kakao, dan kayu."
+      }
+    ]
+  },
+  {
+    "id": "ekspor-ke-amerika",
+    "title": "Panduan Ekspor ke Amerika Serikat",
+    "keywords": [
+      "ekspor ke amerika",
+      "ekspor ke usa",
+      "fda",
+      "syarat ekspor amerika",
+      "kirim ke amerika",
+      "jualan ke amerika",
+      "prior notice",
+      "export to usa"
+    ],
+    "patterns": [
+      "\\b(ekspor|kirim|jual|jualan)\\b.*\\b(amerika|usa|serikat|united states)\\b"
+    ],
+    "answer": "Untuk mengekspor komoditas ke Amerika Serikat: (1) Daftarkan fasilitas pangan ke US FDA (Food Facility Registration); (2) Lengkapi FDA Prior Notice sebelum kapal kargo tiba di pelabuhan tujuan (seperti Port of Los Angeles atau New York); (3) Pastikan kebersihan rempah/kopi memenuhi standar ASTA dan US FSVP; (4) Untuk produk rotan/kayu, wajib memiliki sertifikasi SVLK V-Legal dan perlakuan fumigasi ISPM 15; (5) Siapkan Invoice, Packing List, dan Ocean Bill of Lading. Anda dapat menguji kepatuhan standar FDA pada simulasi KYC Hub di halaman Solusi AI NusaBridge.",
+    "answerEn": "To export commodities to the United States: (1) Register your food facility with the US FDA; (2) File an FDA Prior Notice before arrival at the destination port (e.g. Los Angeles or New York); (3) Ensure spices/coffee meet ASTA cleanliness and FSVP rules; (4) Wood/rattan products require V-Legal SVLK and ISPM 15 fumigation; (5) Prepare Invoice, Packing List, and B/L. Test FDA compliance using the KYC Hub simulation on NusaBridge AI Solutions.",
+    "sources": [
+      {
+        "title": "US FDA — Food Facility Registration",
+        "url": "https://www.fda.gov/food/guidance-regulation-food-and-dietary-supplements/registration-food-facilities-and-other-submissions",
+        "domain": "fda.gov",
+        "snippet": "Registrasi fasilitas dan prior notice kepabeanan ekspor pangan ke AS."
+      }
+    ]
+  },
+  {
+    "id": "ekspor-ke-jepang",
+    "title": "Panduan Ekspor ke Jepang",
+    "keywords": [
+      "ekspor ke jepang",
+      "jas",
+      "ijepa",
+      "syarat ekspor jepang",
+      "kirim ke jepang",
+      "jualan ke jepang",
+      "export to japan"
+    ],
+    "patterns": [
+      "\\b(ekspor|kirim|jual|jualan)\\b.*\\b(jepang|japan|tokyo)\\b"
+    ],
+    "answer": "Untuk mengekspor komoditas ke Jepang: (1) Pastikan produk mematuhi Positive List System MHLW Jepang (batas residu bahan kimia dan pestisida); (2) Untuk komoditas organik, miliki sertifikasi JAS (Japanese Agricultural Standard); (3) Manfaatkan COO Form IJEPA (Indonesia-Japan Economic Partnership) untuk tarif bea masuk 0%; (4) Pastikan inspeksi karantina tumbuhan bebas serangga hidup; (5) Siapkan dokumen Commercial Invoice, Packing List, dan Bill of Lading ke pelabuhan Tokyo, Yokohama, atau Kobe.",
+    "answerEn": "To export commodities to Japan: (1) Ensure compliance with the MHLW Positive List System for pesticide residues; (2) Organic goods require JAS (Japanese Agricultural Standard) certification; (3) Use COO Form IJEPA for 0% duty tariffs under the trade agreement; (4) Ensure quarantine clearance for live pests; (5) Prepare Commercial Invoice, Packing List, and B/L to Tokyo, Yokohama, or Kobe ports.",
+    "sources": []
+  },
+  {
+    "id": "radar-maritim-logistik",
+    "title": "Radar Maritim AIS & Pelacakan Kontainer",
+    "keywords": [
+      "radar maritim",
+      "pelacakan kapal",
+      "tracking kontainer",
+      "ais",
+      "posisi kapal",
+      "pengiriman kargo",
+      "maritime radar",
+      "radar kapal",
+      "melacak kapal",
+      "lacak kapal",
+      "lacak kargo",
+      "melacak kargo",
+      "tracking kapal"
+    ],
+    "patterns": [
+      "\\b(radar|pelacakan|tracking)\\b.*\\b(maritim|kapal|kontainer|kargo|ais)\\b",
+      "\\\\b(lacak|melacak|pantau|memantau|tracking)\\\\b.*\\\\b(kapal|kontainer|kargo|ais|pengiriman)\\\\b"
+    ],
+    "answer": "Fitur Radar Maritim NusaBridge menampilkan pelacakan langsung kapal kargo ekspor-impor menggunakan telemetri AIS (Automatic Identification System). Pengguna dapat melihat nama kapal (seperti KM Baruna Nusantara rute Priok-Hamburg, MV Samudera Raya rute Perak-LA, KM Celebes Express rute Belawan-Tokyo), koordinat laut, kecepatan berlayar dalam knots, persentase progres, dan estimasi waktu tiba (ETA). Terkoneksi dengan pemantauan Escrow Vault saat Bill of Lading (B/L) on-board telah terbit.",
+    "answerEn": "The NusaBridge Maritime Radar displays live tracking of export-import cargo vessels using AIS (Automatic Identification System) telemetries. Users can observe vessel names (KM Baruna Nusantara, MV Samudera Raya, KM Celebes Express), trans-oceanic routes, nautical coordinates, speed in knots, progress percentage, and ETA. It integrates with Escrow Vault milestones once on-board B/L documents are verified.",
+    "sources": []
+  },
+  {
+    "id": "bisa-chat-bebas",
+    "title": "Konsultasi & Chat Bebas di NusaBridge AI",
+    "keywords": [
+      "bisa chat bebas",
+      "bisa tanya bebas",
+      "chat bebas",
+      "tanya bebas",
+      "bebas bertanya",
+      "bisa tanya apa saja",
+      "bisa tanya apa aja",
+      "kamu bisa apa",
+      "bisa bantu apa",
+      "bisa ngobrol",
+      "apakah bisa chat bebas",
+      "can i chat freely",
+      "can i ask anything",
+      "what can you help with"
+    ],
+    "patterns": [
+      "\\b(bisa|apakah bisa|boleh)\\b.*\\b(chat|tanya|ngobrol|konsultasi|bicara)\\b.*\\b(bebas|apa saja|apa aja)\\b",
+      "\\b(bisa|apakah bisa|kamu bisa)\\b.*\\b(bantu apa|jawab apa|membantu apa)\\b",
+      "\\b(can i|can we)\\b.*\\b(chat|ask)\\b.*\\b(freely|anything)\\b"
+    ],
+    "answer": "Tentu saja! Anda bisa bertanya secara bebas apa saja seputar website NusaBridge dan tata niaga perdagangan ekspor-impor internasional. Saya siap membantu Anda memahami:\n\n1. **Katalog & Komoditas**: Spesifikasi 50 produk ekspor Indonesia (Kopi, Rempah, Kriya, Tekstil), harga acuan USD, MOQ, dan kode HS.\n2. **Fitur Ekspor & Impor**: Alur pengajuan RFQ, penerbitan draf Auto-PDF (Proforma Invoice & Sales Contract), validasi legalitas NIB di KYC Hub, dan simulasi 4 fase pembayaran di Escrow Vault.\n3. **Peran Akun**: Manfaat serta alur kerja akun Eksportir Indonesia (Seller) dan Importir Global (Buyer).\n4. **Regulasi & Dokumen**: Incoterms 2020 (FOB, CIF, CNF, EXW), kepabeanan (PEB/PIB, B/L, COO, Packing List), hingga standar sertifikasi negara tujuan (FDA USA, EUDR Uni Eropa, JAS Jepang, Halal UEA).\n\n*Catatan*: Agar jawaban selalu akurat dan bermanfaat, saya hanya melayani topik perdagangan dan website NusaBridge. Pertanyaan di luar cakupan tersebut (seperti resep masakan, koding umum, hiburan, atau politik) tidak akan saya jawab.",
+    "answerEn": "Yes, absolutely! You can freely ask anything about the NusaBridge website and international export-import trade. I am ready to guide you on:\n\n1. **Catalog & Commodities**: Specifications of 50 Indonesian export products (Coffee, Spices, Crafts, Textiles), reference USD prices, MOQ, and HS codes.\n2. **Export & Import Features**: RFQ submissions, Auto-PDF drafts (Proforma Invoice & Sales Contract), KYC Hub NIB verification, and the 4-phase Escrow Vault safe settlement simulation.\n3. **Account Roles**: Usability and workflows for Indonesian Exporter (Seller) and Global Importer (Buyer) accounts.\n4. **Trade Regulations & Paperwork**: Incoterms 2020 (FOB, CIF, CNF, EXW), customs paperwork (PEB/PIB, B/L, COO, Packing List), and foreign standards (FDA USA, EUDR Europe, JAS Japan, Halal UAE).\n\n*Note*: To maintain accurate and reliable guidance, I strictly focus on international trade and this website. Off-topic questions (such as recipes, coding, gossip, or politics) will be declined.",
+    "sources": []
+  },
+  {
+    "id": "fitur-ekspor-website",
+    "title": "Fitur Ekspor NusaBridge untuk Eksportir Indonesia",
+    "keywords": [
+      "fitur ekspor",
+      "fitur seller",
+      "fitur untuk eksportir",
+      "apa saja fitur ekspor",
+      "layanan ekspor",
+      "fasilitas ekspor",
+      "keunggulan eksportir",
+      "alat ekspor nusabridge",
+      "export features",
+      "features for exporters"
+    ],
+    "patterns": [
+      "\\b(fitur|fasilitas|layanan|alat|kegunaan)\\b.*\\b(ekspor|seller|eksportir)\\b",
+      "\\b(ekspor|seller|eksportir)\\b.*\\b(fitur|fasilitas|layanan|alat)\\b"
+    ],
+    "answer": "Fitur ekspor di NusaBridge didesain khusus untuk memberdayakan UMKM Indonesia go global secara mandiri dan aman:\n\n1. **Showcase Katalog Ekspor**: Menampilkan komoditas Anda dengan standar spesifikasi internasional, kode HS kepabeanan, dan harga acuan pasar global.\n2. **RFQ Studio & AI Parser**: Menerima inquiry buyer luar negeri dan menyusun penawaran resmi terstruktur sesuai Incoterms 2020 (FOB/CIF).\n3. **Auto-PDF Generator**: Menerbitkan instan draf dokumen ekspor legal berstandar ICC (Proforma Invoice dan Sales Contract siap cetak/unduh).\n4. **KYC Hub Regulatory Screener**: Memvalidasi NIB 13 digit OSS RBA dan mengecek kesiapan regulasi ekspor ke negara tujuan (FDA USA, EUDR Eropa, JAS Jepang, Halal UEA).\n5. **Escrow Vault Milestone Protection**: Mencegah risiko gagal bayar dengan simulasi pencairan dana bertahap 4 fase (30% kontrak disepakati, 30% stuffing kargo & PEB, 20% penerbitan Bill of Lading, 20% kargo tiba).\n6. **Radar Maritim AIS**: Memantau pergerakan rute kapal kargo trans-samudera dari pelabuhan muat Indonesia ke pelabuhan tujuan buyer.",
+    "answerEn": "Export features on NusaBridge are built to empower Indonesian SMEs to enter global trade with confidence:\n\n1. **Export Catalog Showcase**: Displays commodities with international lab specifications, customs HS codes, and global reference prices.\n2. **RFQ Studio & AI Parser**: Processes overseas buyer inquiries into standardized Incoterms 2020 quotations (FOB/CIF).\n3. **Auto-PDF Generator**: Automatically drafts legal trade paperwork (Proforma Invoices and Sales Contracts under ICC rules).\n4. **KYC Hub Regulatory Screener**: Validates 13-digit OSS NIB and audits compliance for destination markets (FDA USA, EUDR Europe, JAS Japan, Halal UAE).\n5. **Escrow Vault Milestone Protection**: Eliminates buyer default risk with 4-phase milestone payouts (30% contract, 30% PEB/stuffing, 20% B/L, 20% arrival).\n6. **Maritime AIS Radar**: Tracks oceanic cargo vessel trajectories from Indonesian ports to destination terminals worldwide.",
+    "sources": []
+  },
+  {
+    "id": "fitur-impor-website",
+    "title": "Fitur Impor NusaBridge untuk Importir Global",
+    "keywords": [
+      "fitur impor",
+      "fitur buyer",
+      "fitur untuk importir",
+      "apa saja fitur impor",
+      "layanan impor",
+      "fasilitas impor",
+      "keunggulan importir",
+      "alat impor nusabridge",
+      "import features",
+      "features for importers",
+      "features for buyers"
+    ],
+    "patterns": [
+      "\\b(fitur|fasilitas|layanan|alat|kegunaan)\\b.*\\b(impor|buyer|importir)\\b",
+      "\\b(impor|buyer|importir)\\b.*\\b(fitur|fasilitas|layanan|alat)\\b"
+    ],
+    "answer": "Fitur impor di NusaBridge dirancang untuk importir global yang ingin memesan dan mendatangkan komoditas terkurasi Indonesia dengan proteksi maksimal:\n\n1. **Katalog 50 Komoditas Unggulan**: Telusuri komoditas kurasi (Kopi Specialty, Rempah Nusantara, Kerajinan Anyaman/Kayu, Tekstil Wastra) dengan rincian kadar air, kadar abu, sertifikasi, dan MOQ.\n2. **Pengajuan RFQ Terstruktur**: Ajukan permintaan penawaran resmi dalam hitungan detik dengan memilih produk, kuantitas, Incoterms (FOB, CIF, CNF, EXW), dan pelabuhan tujuan kargo.\n3. **Verifikasi Kepatuhan Standar**: Pastikan pemasok dan produk memenuhi standar mutu serta karantina yang dipersyaratkan oleh negara Anda.\n4. **Draf Kontrak Perdagangan Instan**: Dapatkan draf Proforma Invoice dan Sales Contract berkekuatan hukum dengan klausul ICC dan arbitrase internasional.\n5. **Proteksi Dana Escrow Vault**: Dana pembayaran Anda aman di rekening escrow multi-valas dan hanya dicairkan kepada penjual setelah dokumen pengapalan resmi (B/L) terbit dan barang terverifikasi tiba.\n6. **Pelacakan Telemetri Kontainer**: Pantau posisi kapal kargo pengangkut kontainer pesanan Anda secara transparan melalui Radar Maritim AIS.",
+    "answerEn": "Import features on NusaBridge are tailored for international buyers seeking reliable commodity sourcing with complete financial protection:\n\n1. **50 Curated Commodities Catalog**: Explore Indonesian export commodities (Specialty Coffee, Spices, Rattan/Wood Crafts, Textiles) with lab parameters and MOQ.\n2. **Structured RFQ Generator**: Submit formal quotation requests with selected quantities, Incoterms (FOB, CIF, CNF, EXW), and destination ports.\n3. **Compliance & Standards Verification**: Ensure Indonesian exporters meet the safety, quarantine, and import criteria of your country.\n4. **Instant Legal Trade Drafts**: Receive standardized Proforma Invoices and Sales Contracts with clear ICC trade and arbitration clauses.\n5. **Escrow Vault Fund Protection**: Your payments remain safely locked in escrow and are only released to suppliers upon validated shipping documents (B/L) and confirmed port arrival.\n6. **Container Vessel Telemetry**: Track the exact position of your cargo vessel in real time using the Maritime AIS Radar.",
     "sources": []
   }
 ]

@@ -222,7 +222,11 @@ export default function Navbar() {
               />
               <div className="ulp-info">
                 <span className="ulp-name">{session.company || session.name}</span>
-                <span className="ulp-badge">● Terverifikasi OSS</span>
+                <span className="ulp-badge">
+                  {session.role === 'buyer' || session.role === 'importer'
+                    ? t('nav_badge_buyer', lang === 'en' ? '● Global Buyer' : '● Importir Global')
+                    : t('nav_badge_seller', lang === 'en' ? '● Indonesian Exporter' : '● Eksportir Indonesia')}
+                </span>
               </div>
               <button className="btn-logout" type="button" title="Keluar dari sesi akun" onClick={logout}>
                 {t('btn_logout', 'Keluar')}

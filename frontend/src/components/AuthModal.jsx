@@ -38,6 +38,13 @@ export default function AuthModal() {
     }
   }, [open]);
 
+  // Tombol "Daftar sebagai eksportir/importir" memilih tab yang sesuai.
+  useEffect(() => {
+    if (open && (modal?.role === 'seller' || modal?.role === 'buyer')) {
+      setTab(modal.role);
+    }
+  }, [open, modal?.role]);
+
   if (!open) return null;
 
   const title = isEn
@@ -118,6 +125,22 @@ export default function AuthModal() {
             {isEn ? 'Global Importer (Buyer)' : 'Importir Global (Buyer)'}
           </button>
         </div>
+
+        <p className="modal-role-desc">
+          {tab === 'buyer'
+            ? t(
+                'auth_role_buyer_desc',
+                isEn
+                  ? 'Buyer accounts focus on the catalog, product specifications, RFQs, Incoterms, and the Escrow simulation.'
+                  : 'Akun buyer berfokus pada katalog, spesifikasi produk, RFQ, Incoterms, dan simulasi Escrow.'
+              )
+            : t(
+                'auth_role_seller_desc',
+                isEn
+                  ? 'Seller accounts focus on business profile, product information, the RFQ flow, document drafts, KYC data, and the Escrow simulation.'
+                  : 'Akun seller berfokus pada profil usaha, informasi produk, alur RFQ, draf dokumen, data KYC, dan simulasi Escrow.'
+              )}
+        </p>
 
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="form-group">

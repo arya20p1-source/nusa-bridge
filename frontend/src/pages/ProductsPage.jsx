@@ -115,11 +115,11 @@ function SpecModal({ prod, onClose, onLanjutRfq }) {
 }
 
 // Modal RFQ AI
-function RfqModal({ product, onClose }) {
+function RfqModal({ product, onClose, session }) {
   const [qty, setQty] = useState('');
   const [terms, setTerms] = useState('FOB');
   const [port, setPort] = useState('');
-  const [contact, setContact] = useState('');
+  const [contact, setContact] = useState(session?.email || '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [receipt, setReceipt] = useState(null);
@@ -292,7 +292,13 @@ function RfqModal({ product, onClose }) {
 }
 
 export default function ProductsPage() {
-  const { openAuth } = useApp();
+  const { openAuth, session, t, lang } = useApp();
+  const isEn = lang === 'en';
+  const role = session?.role === 'buyer' || session?.role === 'importer'
+    ? 'buyer'
+    : session?.role === 'seller'
+      ? 'seller'
+      : 'guest';
   const [searchParams] = useSearchParams();
 
   const [query, setQuery] = useState(searchParams.get('search') || '');
@@ -377,6 +383,71 @@ export default function ProductsPage() {
             <div className="pb-stat"><T k="produk_stat_3" /></div>
             <div className="pb-divider" />
             <div className="pb-stat"><T k="produk_stat_4" /></div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== ROLE-AWARE GUIDANCE ==================== */}
+      <section className="product-role-banner">
+        <div className="site-container">
+          <div className={`product-role-card role-${role}`}>
+            <div className="prc-copy">
+              <span className="pill-badge pill-blue">
+                {role === 'buyer'
+                  ? t('produk_role_buyer_pill', isEn ? 'BUYER WORKSPACE' : 'RUANG IMPORTIR')
+                  : role === 'seller'
+                    ? t('produk_role_seller_pill', isEn ? 'SELLER WORKSPACE' : 'RUANG EKSPORTIR')
+                    : t('produk_role_guest_pill', isEn ? 'CHOOSE YOUR ROLE' : 'PILIH PERAN ANDA')}
+              </span>
+              <h2 className="prc-title">
+                {role === 'buyer'
+                  ? t('produk_role_buyer_title', isEn ? 'You are browsing as a global importer' : 'Anda menjelajah sebagai importir global')
+                  : role === 'seller'
+                    ? t('produk_role_seller_title', isEn ? 'You are browsing as an Indonesian exporter' : 'Anda menjelajah sebagai eksportir Indonesia')
+                    : t('produk_role_guest_title', isEn ? 'Start with the role that fits your business' : 'Mulai sesuai peran usaha Anda')}
+              </h2>
+              <p className="prc-desc">
+                {role === 'buyer'
+                  ? t(
+                      'produk_role_buyer_desc',
+                      isEn
+                        ? 'Compare product specifications, then submit an RFQ. Your account email is pre-filled in the RFQ form so the request is easier to follow up.'
+                        : 'Bandingkan spesifikasi produk, lalu ajukan RFQ. Email akun Anda sudah terisi otomatis di formulir RFQ agar permintaan mudah ditindaklanjuti.'
+                    )
+                  : role === 'seller'
+                    ? t(
+                        'produk_role_seller_desc',
+                        isEn
+                          ? 'Use the catalog to review sample products, reference prices, and specifications. RFQ, document drafts, KYC, and Escrow are available as simulations on the AI Solutions page.'
+                          : 'Gunakan katalog untuk melihat contoh produk, harga acuan, dan spesifikasi. Alur RFQ, draf dokumen, KYC, dan Escrow tersedia sebagai simulasi di halaman Solusi AI.'
+                      )
+                    : t(
+                        'produk_role_guest_desc',
+                        isEn
+                          ? 'Exporters can prepare a business profile and learn the RFQ flow. Global importers can compare specifications and submit an RFQ. The catalog is a showcase, not an automatic product-upload flow.'
+                          : 'Eksportir dapat menyiapkan profil usaha dan mempelajari alur RFQ. Importir global dapat membandingkan spesifikasi dan mengajukan RFQ. Katalog ini adalah showcase, bukan alur unggah produk otomatis.'
+                      )}
+              </p>
+            </div>
+
+            <div className="prc-actions">
+              {role === 'guest' ? (
+                <>
+                  <button className="btn btn-primary" type="button" onClick={() => openAuth('register', { role: 'seller' })}>
+                    {t('produk_role_cta_seller', isEn ? 'Register as Exporter' : 'Daftar sebagai Eksportir')}
+                  </button>
+                  <button className="btn btn-outline" type="button" onClick={() => openAuth('register', { role: 'buyer' })}>
+                    {t('produk_role_cta_buyer', isEn ? 'Register as Importer' : 'Daftar sebagai Importir')}
+                  </button>
+                </>
+              ) : (
+                <Link to="/solusi" className="btn btn-outline">
+                  {role === 'buyer'
+                    ? t('produk_role_cta_rfq', isEn ? 'Learn how RFQ works' : 'Pelajari alur RFQ')
+                    : t('produk_role_cta_tools', isEn ? 'Open the AI Solutions page' : 'Buka halaman Solusi AI')}
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -565,13 +636,13 @@ export default function ProductsPage() {
           <div className="seller-cta-box">
             <div className="seller-cta-content">
               <div className="pill-badge pill-translucent-blue">UNTUK PELAKU USAHA UMKM</div>
-              <h2 className="seller-cta-title">Punya Produk Berkualitas dan Siap Go Global?</h2>
+              <h2 className="seller-cta-title">Siap Menyiapkan Profil Eksportir Anda?</h2>
               <p className="seller-cta-sub">
-                Daftarkan produk Anda sekarang ke katalog NusaBridge. AI Agent kami akan membantu validasi legalitas, kalkulasi Incoterms, serta menghubungkan Anda dengan jaringan buyer terpercaya dari Eropa, Timur Tengah, dan Amerika.
+                Buat akun eksportir untuk mempelajari alur RFQ, menyiapkan data legalitas, serta mencoba draf dokumen dan simulasi Escrow. Katalog ini adalah showcase; penambahan produk baru dilakukan bersama tim NusaBridge.
               </p>
               <div className="seller-cta-buttons">
-                <button className="btn btn-primary btn-lg" type="button" onClick={() => openAuth('register')}>
-                  Daftarkan Produk Saya
+                <button className="btn btn-primary btn-lg" type="button" onClick={() => openAuth('register', { role: 'seller' })}>
+                  Daftar sebagai Eksportir
                 </button>
                 <Link to="/solusi" className="btn btn-glass btn-lg">Pelajari Alur Ekspor AI</Link>
               </div>
@@ -600,7 +671,7 @@ export default function ProductsPage() {
           }
         }}
       />
-      {rfqProd && <RfqModal product={rfqProd} onClose={() => setRfqProd(null)} />}
+      {rfqProd && <RfqModal product={rfqProd} onClose={() => setRfqProd(null)} session={session} />}
     </>
   );
 }

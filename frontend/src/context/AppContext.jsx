@@ -72,7 +72,7 @@ export function AppContextProvider({ children }) {
       name: user.company.replace(/^(CV|PT|UD|Koperasi)\s+/i, '') || 'UMKM Indonesia',
       company: user.company,
       email: user.email,
-      role: user.role || 'seller',
+      role: user.role === 'buyer' || user.role === 'importer' ? 'buyer' : 'seller',
       nib: user.nib || '1294801928415',
       plan: user.plan || 'Free Trial (1 Bulan)',
       logo: user.logo || '',
@@ -125,8 +125,10 @@ export function AppContextProvider({ children }) {
   const openModal = useCallback((payload) => setModal(payload), []);
   const closeModal = useCallback(() => setModal(null), []);
 
+  // openAuth('register', { role: 'seller' }) memungkinkan tombol peran
+  // langsung membuka tab yang tepat di AuthModal.
   const openAuth = useCallback(
-    (mode = 'login') => openModal({ type: 'auth', mode }),
+    (mode = 'login', opts = {}) => openModal({ type: 'auth', mode, ...opts }),
     [openModal]
   );
   const openInfo = useCallback(

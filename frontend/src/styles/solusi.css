@@ -1381,3 +1381,240 @@
     display: none;
   }
 }
+
+/* ---------- PERAN & KEGUNAAN ---------- */
+.section-role-usage {
+  padding: 4rem 0;
+  background: #f8fafc;
+}
+
+.role-usage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.role-usage-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+}
+
+.role-usage-card.is-active {
+  border-color: var(--primary);
+  box-shadow: 0 14px 34px rgba(37, 99, 235, 0.12);
+}
+
+.ruc-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.ruc-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--primary-light);
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.ruc-title {
+  margin: 2px 0 0;
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: var(--navy-title);
+  line-height: 1.35;
+}
+
+.ruc-active {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #059669;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ruc-desc {
+  margin: 0;
+  color: var(--text-body);
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+.ruc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ruc-list li {
+  display: flex;
+  gap: 9px;
+  color: var(--text-body);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.ruc-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.role-usage-note {
+  max-width: 780px;
+  margin: 26px auto 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.65;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .role-usage-grid {
+    grid-template-columns: 1fr;
+  }
+  .role-usage-card {
+    padding: 22px;
+  }
+}
+
+/* ---------- RFQ STUDIO ROLE MODE SWITCHER & BUYER BUILDER ---------- */
+.rfq-mode-bar {
+  display: flex;
+  background: #f1f5f9;
+  padding: 5px;
+  border-radius: 12px;
+  gap: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.rfq-mode-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 9px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rfq-mode-btn:hover {
+  color: var(--navy-title);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.rfq-mode-btn.active {
+  background: #ffffff;
+  color: var(--primary);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.rfq-mode-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.rfq-buyer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 768px) {
+  .rfq-buyer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rfq-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rfq-field-group label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--navy-title);
+}
+
+.rfq-field-group .custom-input,
+.rfq-field-group .custom-select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border-light);
+  border-radius: 8px;
+  font-size: 13px;
+  background: #ffffff;
+  color: var(--navy-title);
+  box-sizing: border-box;
+}
+
+.rfq-field-group .custom-input:focus,
+.rfq-field-group .custom-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(27, 104, 248, 0.12);
+}
+
+.rfq-generated-box {
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 20px;
+  color: #e2e8f0;
+  margin-top: 18px;
+  border: 1px solid #1e293b;
+}
+
+.rfq-preview-pre {
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: #38bdf8;
+  margin: 14px 0;
+  border: 1px solid #334155;
+}

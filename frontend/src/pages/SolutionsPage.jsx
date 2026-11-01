@@ -5,8 +5,7 @@ import { useApp } from '../context/AppContext.jsx';
 import T from '../components/T.jsx';
 import { downloadHtmlFile } from '../utils/downloadHtmlFile.js';
 import { formatAiText } from '../utils/aiText.js';
-import { findLocalReferenceAnswer } from '../utils/referenceAnswers.js';
-import { apiUrl } from '../utils/api.js';
+import { sendAiChat, getLocalAiReply } from '../utils/chat.js';
 
 /**
  * ==========================================================================
@@ -19,8 +18,81 @@ import { apiUrl } from '../utils/api.js';
 const SAMPLE_BUYER_TEXTS = {
   kopi: 'Looking for 20 MT Robusta green beans CIF Hamburg port, packaging 60kg gunny bags, delivery schedule November 2026.',
   rempah: 'Need 5 MT Clove Lalpari CIF Los Angeles port, FDA approved required, shipment from Indonesia.',
+  briket: 'Inquiry for 1 FCL 20ft (20 MT) Premium Coconut Charcoal Briquettes for hookah CIF Jebel Ali Port Dubai, 10kg master carton, drop test certified.',
   kriya: 'RFQ for 2,000 pcs Handwoven Rattan Chairs FOB Tanjung Priok to Tokyo port, ISPM 15 fumigation standard.',
 };
+
+const BUYER_COMMODITY_PRESETS = [
+  {
+    id: 'kopi-gayo',
+    name: 'Kopi Arabika Gayo Specialty Grade 1',
+    hsCode: '0901.11.10',
+    pol: 'Pelabuhan Belawan, Medan (IDBLW)',
+    defaultQty: '20,000 Kg (20 MT / 1 FCL 20ft)',
+    packaging: '60 Kg GrainPro Gunny Bags',
+    qualitySpec: 'Moisture <12%, Defect <4%, Screen 16/18, Cupping Score >84',
+    estFob: 4.25,
+  },
+  {
+    id: 'kopi-robusta',
+    name: 'Kopi Robusta Lampung Super Grade 1',
+    hsCode: '0901.11.20',
+    pol: 'Pelabuhan Panjang / Tanjung Priok',
+    defaultQty: '20,000 Kg (20 MT / 1 FCL 20ft)',
+    packaging: '60 Kg Jute Gunny Bags',
+    qualitySpec: 'Moisture <13%, Defect <8%, Screen 16/18 Clean Sorted',
+    estFob: 3.85,
+  },
+  {
+    id: 'cengkeh',
+    name: 'Cengkeh Lalpari Maluku Super Clean',
+    hsCode: '0907.10.00',
+    pol: 'Pelabuhan Tanjung Perak, Surabaya',
+    defaultQty: '5,000 Kg (5 MT)',
+    packaging: '25 Kg Polypropylene (PP) Double Laminated Bags',
+    qualitySpec: 'Handpicked Clean, Moisture <11.5%, Volatile Oil >19%, ASTA Cleanliness Standard',
+    estFob: 12.50,
+  },
+  {
+    id: 'briket',
+    name: 'Arang Briket Batok Kelapa Premium (Shisha/BBQ)',
+    hsCode: '4402.90.10',
+    pol: 'Pelabuhan Tanjung Priok, Jakarta',
+    defaultQty: '20,000 Kg (20 MT / 1 FCL 20ft)',
+    packaging: '1 Kg Inner Box with Brand, 10 Kg Master Corrugated Carton',
+    qualitySpec: '100% Coconut Shell, Fixed Carbon >80%, Ash <2.5%, White Ash, Heat >7,200 Kcal',
+    estFob: 1.35,
+  },
+  {
+    id: 'nilam',
+    name: 'Minyak Atsiri Nilam Murni (Patchouli Oil)',
+    hsCode: '3301.29.10',
+    pol: 'Pelabuhan Belawan, Medan',
+    defaultQty: '2,000 Kg (2 MT)',
+    packaging: '200 Kg Epoxy Coated Steel Drums',
+    qualitySpec: 'Patchouli Alcohol (PA) >32%, Acid Value <5, 100% Pure Steam Distilled',
+    estFob: 55.00,
+  },
+  {
+    id: 'rotan',
+    name: 'Kursi Rotan Alami Cirebon (Handwoven Rattan)',
+    hsCode: '9401.52.00',
+    pol: 'Pelabuhan Tanjung Priok, Jakarta',
+    defaultQty: '2,000 Pcs (2 x 40ft High Cube Container)',
+    packaging: 'Corrugated Paper Wrapping & Fumigated Wooden Crates',
+    qualitySpec: 'Grade A Natural Manau Rattan, Kiln Dried Moisture <12%, ISPM 15 Fumigated',
+    estFob: 78.00,
+  },
+];
+
+const DESTINATION_PORTS = [
+  { id: 'hamburg', name: 'Port of Hamburg, Germany (DEHAM)', country: 'Germany', oceanFreightPerUnit: 0.42 },
+  { id: 'la', name: 'Port of Los Angeles, USA (USLAX)', country: 'United States', oceanFreightPerUnit: 0.65 },
+  { id: 'tokyo', name: 'Tokyo Port, Japan (JPTYO)', country: 'Japan', oceanFreightPerUnit: 0.35 },
+  { id: 'dubai', name: 'Port of Jebel Ali, Dubai, UAE (AEJEA)', country: 'United Arab Emirates', oceanFreightPerUnit: 0.28 },
+  { id: 'rotterdam', name: 'Port of Rotterdam, Netherlands (NLRTM)', country: 'Netherlands', oceanFreightPerUnit: 0.40 },
+  { id: 'singapore', name: 'Port of Singapore (SGSIN)', country: 'Singapore', oceanFreightPerUnit: 0.15 },
+];
 
 const KYC_REGULATION_KNOWLEDGE = {
   usa: {
@@ -107,31 +179,92 @@ function nowTime() {
   return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 }
 
-const CHAT_SUGGESTIONS = {
-  id: [
-    'Bagaimana cara mulai ekspor lewat NusaBridge?',
-    'Dokumen apa yang biasanya dibutuhkan untuk ekspor?',
-    'Apa perbedaan FOB dan CIF?',
-    'Bagaimana cara mengajukan RFQ ke buyer?',
-    'Apakah simulasi Escrow Vault memproses pembayaran sungguhan?',
-    'Bagaimana mengetahui persyaratan ekspor negara tujuan?',
-  ],
-  en: [
-    'How do I start exporting through NusaBridge?',
-    'What documents are usually needed for exporting?',
-    'What is the difference between FOB and CIF?',
-    'How do I submit an RFQ to a buyer?',
-    'Does the Escrow Vault simulation process real payments?',
-    'How do I find the export requirements of a destination country?',
-  ],
+const ROLE_SUGGESTIONS = {
+  seller: {
+    id: [
+      'Apa saja fitur ekspor untuk UMKM di NusaBridge?',
+      'Dokumen apa yang dibutuhkan untuk ekspor (Auto-PDF)?',
+      'Bagaimana cara validasi NIB di KYC Hub?',
+      'Bagaimana alur pencairan dana di Escrow Vault?',
+      'Apa perbedaan Incoterms FOB dan CIF?',
+      'Apakah saya bisa chat bebas seputar ekspor?',
+    ],
+    en: [
+      'What export features does NusaBridge provide for SMEs?',
+      'What documents are generated by Auto-PDF for export?',
+      'How do I validate an NIB in KYC Hub?',
+      'How does milestone payout work in Escrow Vault?',
+      'What is the difference between FOB and CIF?',
+      'Can I freely consult on export regulations here?',
+    ],
+  },
+  buyer: {
+    id: [
+      'Apa saja fitur impor untuk buyer global di NusaBridge?',
+      'Bagaimana cara mengajukan RFQ di katalog produk?',
+      'Bagaimana proteksi dana saya di Escrow Vault?',
+      'Komoditas unggulan apa saja yang tersedia di katalog?',
+      'Bagaimana cara verifikasi standar kepatuhan produk?',
+      'Apakah saya bisa chat bebas seputar komoditas?',
+    ],
+    en: [
+      'What import features does NusaBridge provide for global buyers?',
+      'How do I submit an RFQ from the product catalog?',
+      'How are my funds protected in Escrow Vault?',
+      'What featured commodities are listed in the catalog?',
+      'How do I verify destination compliance standards?',
+      'Can I freely consult on commodity sourcing here?',
+    ],
+  },
+  guest: {
+    id: [
+      'Apakah saya bisa chat bebas di NusaBridge AI?',
+      'Apa perbedaan peran Eksportir (Seller) dan Importir (Buyer)?',
+      'Fitur ekspor dan impor apa saja yang ada di website ini?',
+      'Bagaimana alur kerja ekspor dan impor di NusaBridge?',
+      'Siapa pengembang platform NusaBridge?',
+      'Kopi dan rempah apa saja yang tersedia di katalog?',
+    ],
+    en: [
+      'Can I freely chat and consult with NusaBridge AI?',
+      'What is the difference between Exporter and Importer roles?',
+      'What export and import features are on this website?',
+      'How do export and import workflows operate on NusaBridge?',
+      'Who developed the NusaBridge platform?',
+      'What coffee and spices are available in the catalog?',
+    ],
+  },
 };
 
-function createWelcomeMessage(lang) {
+function getSuggestions(role = 'guest', lang = 'id') {
+  const normRole = role === 'buyer' || role === 'importer' ? 'buyer' : role === 'seller' ? 'seller' : 'guest';
+  const normLang = lang === 'en' ? 'en' : 'id';
+  return ROLE_SUGGESTIONS[normRole]?.[normLang] || ROLE_SUGGESTIONS.guest[normLang];
+}
+
+const CHAT_SUGGESTIONS = ROLE_SUGGESTIONS.guest;
+
+function createWelcomeMessage(lang, role = 'guest') {
+  const isEn = lang === 'en';
+  let raw;
+
+  if (role === 'seller') {
+    raw = isEn
+      ? 'Hi! I am **NusaBridge AI**. You are signed in as an **Indonesian exporter**, so I will focus on business profile, product information, the RFQ flow, document drafts, KYC data, and the Escrow simulation.'
+      : 'Halo! Saya **NusaBridge AI**. Anda masuk sebagai **eksportir Indonesia**, jadi saya akan memfokuskan jawaban pada profil usaha, informasi produk, alur RFQ, draf dokumen, data KYC, dan simulasi Escrow.';
+  } else if (role === 'buyer') {
+    raw = isEn
+      ? 'Hi! I am **NusaBridge AI**. You are signed in as a **global importer**, so I will focus on the catalog, product specifications, RFQ submission, Incoterms, documents, and the Escrow simulation.'
+      : 'Halo! Saya **NusaBridge AI**. Anda masuk sebagai **importir global**, jadi saya akan memfokuskan jawaban pada katalog, spesifikasi produk, pengajuan RFQ, Incoterms, dokumen, dan simulasi Escrow.';
+  } else {
+    raw = isEn
+      ? 'Hi! I can help explain NusaBridge website features and export workflows. Choose a question below or type your own.'
+      : 'Halo! Saya bisa menjelaskan fitur website NusaBridge dan alur ekspor. Pilih pertanyaan di bawah atau ketik pertanyaan Anda sendiri.';
+  }
+
   return {
     sender: 'agent',
-    raw: lang === 'en'
-      ? 'Hi! I can help explain NusaBridge website features and export workflows. Choose a question below or type your own.'
-      : 'Halo! Saya bisa menjelaskan fitur website NusaBridge dan alur ekspor. Pilih pertanyaan di bawah atau ketik pertanyaan Anda sendiri.',
+    raw,
     label: 'NusaBridge AI',
     time: nowTime(),
     welcome: true,
@@ -142,8 +275,13 @@ function createWelcomeMessage(lang) {
 // NusaBridge chat workspace
 // =====================================================================
 function GeminiWorkspace() {
-  const { lang } = useApp();
-  const [msgs, setMsgs] = useState(() => [createWelcomeMessage(lang)]);
+  const { lang, session, t } = useApp();
+  const role = session?.role === 'buyer' || session?.role === 'importer'
+    ? 'buyer'
+    : session?.role === 'seller'
+      ? 'seller'
+      : 'guest';
+  const [msgs, setMsgs] = useState(() => [createWelcomeMessage(lang, role)]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const sendingRef = useRef(false);
@@ -159,11 +297,16 @@ function GeminiWorkspace() {
 
   function push(sender, raw, label) {
     const id = ++msgIdRef.current;
+    const userLabel = session?.role === 'buyer' || session?.role === 'importer'
+      ? (lang === 'en' ? 'You (Buyer)' : 'Anda (Buyer)')
+      : session?.role === 'seller'
+        ? (lang === 'en' ? 'You (Seller)' : 'Anda (Seller)')
+        : (lang === 'en' ? 'You (Guest)' : 'Anda (Tamu)');
     setMsgs((prev) => [...prev, {
       id,
       sender,
       raw,
-      label: label || (sender === 'user' ? 'Anda (Buyer / Eksportir)' : 'NusaBridge AI'),
+      label: label || (sender === 'user' ? userLabel : 'NusaBridge AI'),
       time: nowTime(),
     }]);
     scrollBottom();
@@ -173,6 +316,16 @@ function GeminiWorkspace() {
   async function processQuery(text) {
     if (!text || !text.trim()) return;
     const promptText = text.trim();
+
+    // Riwayat diambil sebelum pertanyaan baru ditambahkan agar tidak duplikat.
+    const history = msgs
+      .filter((item) => !item.welcome && ['user', 'agent'].includes(item.sender))
+      .slice(-8)
+      .map((item) => ({
+        role: item.sender === 'agent' ? 'assistant' : 'user',
+        content: item.raw,
+      }));
+
     push('user', promptText);
     setInput('');
     if (inputRef.current) inputRef.current.style.height = 'auto';
@@ -183,64 +336,26 @@ function GeminiWorkspace() {
     const timeoutId = setTimeout(() => controller.abort(), 35000);
 
     try {
-      const res = await fetch(apiUrl('/api/ai/chat'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: promptText,
-          lang,
-          context: {
-            history: msgs
-              .filter((item) => !item.welcome && ['user', 'agent'].includes(item.sender))
-              .slice(-8)
-              .map((item) => ({
-                role: item.sender === 'agent' ? 'assistant' : 'user',
-                content: item.raw,
-              })),
-          },
-        }),
+      const data = await sendAiChat({
+        message: promptText,
+        lang,
+        role: session?.role,
+        page: 'solutions',
+        history,
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.reply) {
-          setTyping(false);
-          push('agent', data.reply, 'NusaBridge AI');
-          return;
-        }
-      } else {
-        const data = await res.json().catch(() => ({}));
-        if (data.message) throw new Error(data.message);
-      }
+      setTyping(false);
+      push('agent', data.reply, 'NusaBridge AI');
     } catch (e) {
       clearTimeout(timeoutId);
-      const reference = findLocalReferenceAnswer(promptText, lang);
       setTyping(false);
       push(
         'agent',
-        reference
-          ? reference.answer
-          : lang === 'en'
-            ? 'The AI service is temporarily unavailable. Please check that the backend is running and try again.'
-            : 'Layanan AI sedang tidak tersedia. Pastikan backend berjalan, lalu coba lagi.',
+        getLocalAiReply({ message: promptText, lang, role: session?.role, page: 'solutions' }),
         'NusaBridge AI'
       );
-      return;
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 350));
-    setTyping(false);
-    const reference = findLocalReferenceAnswer(promptText, lang);
-    push(
-      'agent',
-      reference
-        ? reference.answer
-        : lang === 'en'
-          ? 'The AI service is temporarily unavailable. Please check that the backend is running and try again.'
-          : 'Layanan AI sedang tidak tersedia. Pastikan backend berjalan, lalu coba lagi.',
-      'NusaBridge AI'
-    );
   }
 
   async function handleSend(e) {
@@ -292,13 +407,13 @@ function GeminiWorkspace() {
                   type="button"
                   title="Bersihkan riwayat percakapan"
                   onClick={() => {
-                    setMsgs([createWelcomeMessage(lang)]);
+                    setMsgs([createWelcomeMessage(lang, role)]);
                   }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                   </svg>
-                  <span>Bersihkan Chat</span>
+                  <span>{t('solusi_btn_clear', 'Bersihkan Chat')}</span>
                 </button>
               </div>
             </div>
@@ -326,7 +441,7 @@ function GeminiWorkspace() {
                             ? 'Quick questions — click to see the answer:'
                             : 'Pertanyaan cepat — klik untuk melihat jawabannya:'}
                         </div>
-                        {CHAT_SUGGESTIONS[lang === 'en' ? 'en' : 'id'].map((question) => (
+                        {getSuggestions(role, lang).map((question) => (
                           <button
                             key={question}
                             type="button"
@@ -374,7 +489,7 @@ function GeminiWorkspace() {
                   className="chat-textarea"
                   rows={1}
                   data-i18n-placeholder="solusi_input_ph"
-                  placeholder="Tanyakan apa saja ke NusaBridge AI..."
+                  placeholder={t('solusi_input_ph', 'Tanyakan fitur website NusaBridge atau alur ekspor-impor...')}
                   value={input}
                   onChange={(e) => { setInput(e.target.value); onAutoResize(); }}
                   onKeyDown={(e) => {
@@ -398,6 +513,146 @@ function GeminiWorkspace() {
             </div>
           </main>
         </div>
+      </div>
+    </section>
+  );
+}
+
+// =====================================================================
+// Peran & Kegunaan
+// =====================================================================
+function RolesSection() {
+  const { lang, session, openAuth, t } = useApp();
+  const isEn = lang === 'en';
+  const activeRole = session?.role === 'buyer' || session?.role === 'importer'
+    ? 'buyer'
+    : session?.role === 'seller'
+      ? 'seller'
+      : 'guest';
+
+  const cards = [
+    {
+      role: 'seller',
+      icon: '🌱',
+      title: t('role_seller_title', isEn ? 'Indonesian Exporter (Seller)' : 'Eksportir Indonesia (Seller)'),
+      desc: t(
+        'role_seller_desc',
+        isEn
+          ? 'For Indonesian SMEs that want to prepare export information and learn the workflow before dealing with overseas buyers.'
+          : 'Untuk UMKM Indonesia yang ingin menyiapkan informasi ekspor dan memahami alurnya sebelum berhadapan dengan buyer luar negeri.'
+      ),
+      features: isEn
+        ? [
+            'Legal & Regulatory Readiness Check: Simulate NIB/NPWP checks and review destination checklists (FDA, EUDR, JAS, Halal) in KYC Hub.',
+            'HPP & Margin Simulation: Estimate FOB/CIF costs and quotation margins in RFQ Studio.',
+            'Export Document Drafts: Draft a Proforma Invoice or Sales Contract in Auto-PDF, then review it before use.',
+            'Milestone Payout Simulation: Learn the 30% contract, 30% PEB, 20% B/L, and 20% arrival stages in Escrow Vault (not a real transaction).',
+          ]
+        : [
+            'Cek Kesiapan Legalitas: Simulasikan pemeriksaan NIB/NPWP dan tinjau checklist negara tujuan (FDA, EUDR, JAS, Halal) di KYC Hub.',
+            'Simulasi HPP & Margin: Perkirakan biaya FOB/CIF dan margin penawaran di RFQ Studio.',
+            'Draf Dokumen Ekspor: Buat draf Proforma Invoice atau Sales Contract di Auto-PDF, lalu tinjau sebelum digunakan.',
+            'Simulasi Pencairan Bertahap: Pelajari tahapan 30% kontrak, 30% PEB, 20% B/L, dan 20% tiba di Escrow Vault (bukan transaksi nyata).',
+          ],
+      cta: t('role_seller_cta', isEn ? 'Register as Exporter' : 'Daftar sebagai Eksportir'),
+    },
+    {
+      role: 'buyer',
+      icon: '🌍',
+      title: t('role_buyer_title', isEn ? 'Global Importer (Buyer)' : 'Importir Global (Buyer)'),
+      desc: t(
+        'role_buyer_desc',
+        isEn
+          ? 'For overseas buyers who want to compare Indonesian products and send a structured quotation request.'
+          : 'Untuk buyer luar negeri yang ingin membandingkan produk Indonesia dan mengirim permintaan penawaran yang terstruktur.'
+      ),
+      features: isEn
+        ? [
+            'Indonesian Commodity Exploration: Compare coffee, spices, essential oils, briquettes, and rattan products with HS codes, specs, MOQ, and USD reference prices.',
+            'Structured RFQ Drafting: Build a quotation request with Incoterms (FOB/CIF/CNF/EXW), quantity, and a destination port.',
+            'Destination Compliance Checklist: Review FDA, EUDR, JAS, and Halal checklists in KYC Hub; results are simulations, not official verification.',
+            'Escrow Simulation: Learn the four payout stages in Escrow Vault; the website does not process or hold real funds.',
+          ]
+        : [
+            'Eksplorasi Komoditas Nusantara: Bandingkan kopi, rempah, minyak atsiri, briket, dan rotan dengan HS Code, spesifikasi, MOQ, dan harga acuan USD.',
+            'Penyusunan RFQ Terstruktur: Susun permintaan penawaran dengan Incoterms (FOB/CIF/CNF/EXW), jumlah, dan pelabuhan tujuan.',
+            'Checklist Kepatuhan Tujuan: Tinjau checklist FDA, EUDR, JAS, dan Halal di KYC Hub; hasilnya simulasi, bukan verifikasi resmi.',
+            'Simulasi Escrow: Pelajari empat tahap pencairan di Escrow Vault; website tidak memproses atau menyimpan dana sungguhan.',
+          ],
+      cta: t('role_buyer_cta', isEn ? 'Register as Importer' : 'Daftar sebagai Importir'),
+    },
+  ];
+
+  return (
+    <section className="section-role-usage" id="peran-kegunaan">
+      <div className="site-container">
+        <div className="section-header text-center">
+          <div className="pill-badge pill-blue">{t('role_section_pill', isEn ? 'ROLES & USAGE' : 'PERAN & KEGUNAAN')}</div>
+          <h2 className="section-title">
+            {t('role_section_title', isEn ? 'Choose the role that matches your needs' : 'Pilih peran yang sesuai kebutuhan Anda')}
+          </h2>
+          <p className="section-subtitle">
+            {t(
+              'role_section_sub',
+              isEn
+                ? 'A NusaBridge account has one role. The role shapes the guidance, language, and form defaults you see.'
+                : 'Akun NusaBridge memiliki satu peran. Peran menentukan panduan, bahasa, dan isi awal formulir yang Anda lihat.'
+            )}
+          </p>
+        </div>
+
+        <div className="role-usage-grid">
+          {cards.map((card) => {
+            const active = activeRole === card.role;
+            return (
+              <article className={`role-usage-card${active ? ' is-active' : ''}`} key={card.role}>
+                <div className="ruc-head">
+                  <span className="ruc-icon" aria-hidden="true">{card.icon}</span>
+                  <div>
+                    <h3 className="ruc-title">{card.title}</h3>
+                    {active && (
+                      <span className="ruc-active">✓ {isEn ? 'Active role' : 'Peran aktif'}</span>
+                    )}
+                  </div>
+                </div>
+                <p className="ruc-desc">{card.desc}</p>
+                <ul className="ruc-list">
+                  {card.features.map((feature) => (
+                    <li key={feature}><span className="ruc-check">✓</span>{feature}</li>
+                  ))}
+                </ul>
+                {session?.loggedIn ? (
+                  card.role === 'seller' ? (
+                    <a href="#ai-interactive-suite" className="btn btn-primary btn-block">
+                      {isEn ? 'Try RFQ & Document Suite' : 'Coba Studio RFQ & Dokumen Ekspor'}
+                    </a>
+                  ) : (
+                    <Link to="/produk" className="btn btn-outline btn-block">
+                      {isEn ? 'Explore Verified Catalog' : 'Eksplorasi Katalog Komoditas Impor'}
+                    </Link>
+                  )
+                ) : (
+                  <button
+                    className={`btn ${card.role === 'seller' ? 'btn-primary' : 'btn-outline'} btn-block`}
+                    type="button"
+                    onClick={() => openAuth('register', { role: card.role })}
+                  >
+                    {card.cta}
+                  </button>
+                )}
+              </article>
+            );
+          })}
+        </div>
+
+        <p className="role-usage-note">
+          {t(
+            'role_usage_note',
+            isEn
+              ? 'The role currently affects guidance and form defaults. A seller dashboard, automatic product upload, and real-time negotiation are not available in this version.'
+              : 'Saat ini peran memengaruhi panduan dan isi awal formulir. Dashboard seller, unggah produk otomatis, dan negosiasi real-time belum tersedia di versi ini.'
+          )}
+        </p>
       </div>
     </section>
   );
@@ -645,11 +900,11 @@ function PillarsSection() {
 }
 
 // =====================================================================
-// Tab 1: RFQ Studio
+// Tab 1: RFQ Studio (Mode Eksportir & Mode Importir)
 // =====================================================================
 function computeRfq(textLower) {
   let commodity = 'Kopi Robusta Lampung Grade 1';
-  let hsCode = '0901.11.10';
+  let hsCode = '0901.11.20';
   let pol = 'Pelabuhan Tanjung Priok, Jakarta';
   let pod = 'Port of Hamburg, Germany';
   let incoterm = 'CIF Hamburg (Incoterms 2020)';
@@ -666,7 +921,25 @@ function computeRfq(textLower) {
     qty = '5,000 Kg (5 MT)';
     fobPrice = 12.5;
     freightInsurance = 1.15;
-  } else if (textLower.includes('rattan') || textLower.includes('rotan') || textLower.includes('tokyo')) {
+  } else if (textLower.includes('briket') || textLower.includes('charcoal') || textLower.includes('dubai') || textLower.includes('jebel ali')) {
+    commodity = 'Arang Briket Batok Kelapa Premium';
+    hsCode = '4402.90.10';
+    pol = 'Pelabuhan Tanjung Priok, Jakarta';
+    pod = 'Port of Jebel Ali, Dubai, UAE';
+    incoterm = 'CIF Dubai (Incoterms 2020)';
+    qty = '20,000 Kg (20 MT)';
+    fobPrice = 1.35;
+    freightInsurance = 0.28;
+  } else if (textLower.includes('nilam') || textLower.includes('patchouli') || textLower.includes('rotterdam')) {
+    commodity = 'Minyak Atsiri Nilam Murni (Patchouli Oil)';
+    hsCode = '3301.29.10';
+    pol = 'Pelabuhan Belawan, Medan';
+    pod = 'Port of Rotterdam, Netherlands';
+    incoterm = 'CIF Rotterdam (Incoterms 2020)';
+    qty = '2,000 Kg (2 MT)';
+    fobPrice = 55.0;
+    freightInsurance = 2.40;
+  } else if (textLower.includes('rattan') || textLower.includes('rotan') || textLower.includes('tokyo') || textLower.includes('kursi')) {
     commodity = 'Kursi Rotan Alami Cirebon';
     hsCode = '9401.52.00';
     pol = 'Pelabuhan Tanjung Priok, Jakarta';
@@ -675,6 +948,15 @@ function computeRfq(textLower) {
     qty = '2,000 Pcs (2 x 40ft High Cube)';
     fobPrice = 78.0;
     freightInsurance = 0.0;
+  } else if (textLower.includes('arabika') || textLower.includes('gayo')) {
+    commodity = 'Kopi Arabika Gayo Specialty Grade 1';
+    hsCode = '0901.11.10';
+    pol = 'Pelabuhan Belawan, Medan';
+    pod = 'Port of Hamburg, Germany';
+    incoterm = 'CIF Hamburg (Incoterms 2020)';
+    qty = '20,000 Kg (20 MT)';
+    fobPrice = 4.25;
+    freightInsurance = 0.45;
   }
 
   const marginPct = 18.5;
@@ -688,96 +970,346 @@ function computeRfq(textLower) {
 }
 
 function RfqTab({ goDocGen }) {
+  const { session, lang, showToast } = useApp();
+  const isEn = lang === 'en';
+
+  // Toggle Mode Peran di RFQ Studio
+  const [rfqMode, setRfqMode] = useState(
+    session?.role === 'buyer' || session?.role === 'importer' ? 'buyer' : 'seller'
+  );
+
+  // State Mode Eksportir (Seller)
   const [rawInput, setRawInput] = useState(SAMPLE_BUYER_TEXTS.kopi);
   const [converting, setConverting] = useState(false);
   const [resultText, setResultText] = useState(SAMPLE_BUYER_TEXTS.kopi);
 
+  // State Mode Importir (Buyer)
+  const [buyerCommodityId, setBuyerCommodityId] = useState('kopi-gayo');
+  const [buyerPortId, setBuyerPortId] = useState('hamburg');
+  const [buyerIncoterm, setBuyerIncoterm] = useState('CIF');
+  const [buyerQty, setBuyerQty] = useState('20,000 Kg (20 MT / 1 FCL 20ft)');
+  const [buyerCompany, setBuyerCompany] = useState(session?.company || 'Hanseatic Trade Partners GmbH');
+  const [buyerNotes, setBuyerNotes] = useState('Requires Sucofindo/SGS inspection Certificate of Analysis, Food Grade packaging, shipment within 30 days.');
+  const [buyerGeneratedText, setBuyerGeneratedText] = useState('');
+
   const rfq = useMemo(() => computeRfq(resultText.toLowerCase()), [resultText]);
+
+  const selectedCommodity = useMemo(
+    () => BUYER_COMMODITY_PRESETS.find((c) => c.id === buyerCommodityId) || BUYER_COMMODITY_PRESETS[0],
+    [buyerCommodityId]
+  );
+
+  const selectedPort = useMemo(
+    () => DESTINATION_PORTS.find((p) => p.id === buyerPortId) || DESTINATION_PORTS[0],
+    [buyerPortId]
+  );
 
   function handleConvert() {
     setConverting(true);
     setTimeout(() => {
       setResultText(rawInput);
       setConverting(false);
-    }, 400);
+    }, 350);
+  }
+
+  function handleBuildBuyerRfq() {
+    const refCode = `RFQ-2026-${selectedPort.country.slice(0, 2).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
+    const termStr = `${buyerIncoterm} ${selectedPort.name} (Incoterms 2020)`;
+    const inquiry = `[OFFICIAL TRADE INQUIRY & RFQ]
+Reference: #${refCode}
+Buyer: ${buyerCompany} (${selectedPort.country})
+Target Commodity: ${selectedCommodity.name} (HS Code: ${selectedCommodity.hsCode})
+Requested Quantity: ${buyerQty}
+Trade Term: ${termStr}
+Port of Loading: ${selectedCommodity.pol}
+Quality Specs: ${selectedCommodity.qualitySpec}
+Packaging Standard: ${selectedCommodity.packaging}
+Notes & Requirements: ${buyerNotes}
+Settlement Terms: 100% Escrow Vault Protection with 4 Milestones (30% DP, 30% PEB, 20% BL, 20% Port Arrival).`;
+
+    setBuyerGeneratedText(inquiry);
+  }
+
+  function handleCopyBuyerRfq() {
+    if (!buyerGeneratedText) return;
+    navigator.clipboard.writeText(buyerGeneratedText).then(() => {
+      if (showToast) {
+        showToast('📋 Dokumen RFQ resmi berhasil disalin ke clipboard!');
+      } else {
+        window.alert('Dokumen RFQ resmi berhasil disalin!');
+      }
+    });
+  }
+
+  function handleTransferToSeller() {
+    if (!buyerGeneratedText) handleBuildBuyerRfq();
+    const textToTransfer = buyerGeneratedText || `Looking for ${buyerQty} ${selectedCommodity.name} ${buyerIncoterm} ${selectedPort.name}, packaging ${selectedCommodity.packaging}.`;
+    setRawInput(textToTransfer);
+    setResultText(textToTransfer);
+    setRfqMode('seller');
+    if (showToast) {
+      showToast('⚡ RFQ berhasil dialihkan ke Mode Eksportir untuk kalkulasi HPP!');
+    }
   }
 
   return (
     <div className="ai-tab-pane active">
       <div className="sim-wrapper-card">
-        <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-          <label style={{ fontWeight: 700, fontSize: '13px', color: 'var(--navy-title)' }}>Pesan / Permintaan Informal dari Buyer Luar Negeri:</label>
-          <div className="rfq-sample-chips">
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Contoh Cepat:</span>
-            {Object.entries(SAMPLE_BUYER_TEXTS).map(([key, text]) => (
-              <button
-                key={key}
-                type="button"
-                className="rfq-sample-btn"
-                onClick={() => { setRawInput(text); setResultText(text); }}
-              >
-                {key === 'kopi' ? 'Kopi Robusta (Hamburg, DE)' : key === 'rempah' ? 'Cengkeh Lalpari (Los Angeles, US)' : 'Kursi Rotan (Tokyo, JP)'}
-              </button>
-            ))}
-          </div>
-        </div>
 
-        <textarea
-          className="rfq-input-area"
-          placeholder="Masukkan pesan chat/email dari buyer luar negeri (cth: Looking for 20 MT Robusta green beans CIF Hamburg port, packaging 60kg gunny bags)..."
-          value={rawInput}
-          onChange={(e) => setRawInput(e.target.value)}
-        />
-
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <button className="btn btn-primary btn-lg" type="button" onClick={handleConvert} disabled={converting}>
-            {converting
-              ? <span>🧠 NusaBridge AI Memproses Incoterms 2020...</span>
-              : <span>✨ Konversi Pesan Buyer Menjadi RFQ Resmi (Incoterms 2020)</span>}
+        {/* Mode Switcher: Eksportir vs Importir */}
+        <div className="rfq-mode-bar">
+          <button
+            type="button"
+            className={`rfq-mode-btn${rfqMode === 'seller' ? ' active' : ''}`}
+            onClick={() => setRfqMode('seller')}
+          >
+            <span>🌱</span>
+            <span>{isEn ? 'Exporter Mode: Analyze Buyer Inquiry & Calculate Quotation' : 'Mode Eksportir: Analisis Pesan Buyer & Hitung HPP Penawaran'}</span>
+            <span className="rfq-mode-badge">{isEn ? 'Seller' : 'Eksportir'}</span>
+          </button>
+          <button
+            type="button"
+            className={`rfq-mode-btn${rfqMode === 'buyer' ? ' active' : ''}`}
+            onClick={() => {
+              setRfqMode('buyer');
+              if (!buyerGeneratedText) handleBuildBuyerRfq();
+            }}
+          >
+            <span>🌍</span>
+            <span>{isEn ? 'Importer Mode: Official RFQ & Inquiry Builder' : 'Mode Importir: Penyusun RFQ & Inquiry Resmi'}</span>
+            <span className="rfq-mode-badge">{isEn ? 'Buyer' : 'Importir'}</span>
           </button>
         </div>
 
-        <div className="sim-output-panel">
-          <div className="sop-header">
-            <span className="sop-dot" />
-            <strong>Request for Quotation (RFQ) Terbit Otomatis &bull; Incoterms 2020</strong>
-          </div>
-          <div className="sop-grid">
-            <div className="sop-col">
-              <h5>1. Ekstraksi Entitas &amp; Parameter RFQ</h5>
-              <div className="sop-val-big" style={{ fontSize: '1.15rem', color: '#60a5fa' }}>{rfq.commodity}</div>
-              <p className="sop-desc"><strong>Volume / Satuan:</strong> {rfq.qty}</p>
-              <p className="sop-desc"><strong>Pelabuhan Muat (POL):</strong> {rfq.pol}</p>
-              <p className="sop-desc"><strong>Pelabuhan Bongkar (POD):</strong> {rfq.pod}</p>
-              <div className="sop-badge green">✅ Incoterms Terdeteksi: {rfq.incoterm}</div>
+        {/* ==================== KONTEN MODE EKSPORTIR (SELLER) ==================== */}
+        {rfqMode === 'seller' && (
+          <div>
+            <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+              <label style={{ fontWeight: 700, fontSize: '13px', color: 'var(--navy-title)' }}>
+                {isEn ? 'Informal Buyer Message / Inquiry from Overseas:' : 'Pesan / Permintaan Informal dari Buyer Luar Negeri:'}
+              </label>
+              <div className="rfq-sample-chips">
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{isEn ? 'Quick Samples:' : 'Contoh Cepat:'}</span>
+                {Object.entries(SAMPLE_BUYER_TEXTS).map(([key, text]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    className="rfq-sample-btn"
+                    onClick={() => { setRawInput(text); setResultText(text); }}
+                  >
+                    {key === 'kopi'
+                      ? 'Kopi Robusta (Hamburg, DE)'
+                      : key === 'rempah'
+                        ? 'Cengkeh (Los Angeles, US)'
+                        : key === 'briket'
+                          ? 'Briket Kelapa (Dubai, AE)'
+                          : 'Kursi Rotan (Tokyo, JP)'}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="sop-col">
-              <h5>2. Rincian Struktur Biaya Ekspor (Per Satuan)</h5>
-              <div className="sop-highlight-box">
-                <div className="shb-row"><span>Biaya Produksi &amp; Kemasan:</span> <strong>USD {rfq.baseProductionCost}</strong></div>
-                <div className="shb-row"><span>Trucking &amp; Port Handling:</span> <strong>USD {rfq.truckingPortCost}</strong></div>
-                <div className="shb-row"><span>Ocean Freight &amp; Asuransi:</span> <strong>USD {rfq.freightInsurance.toFixed(2)}</strong></div>
-                <div className="shb-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.2)', paddingTop: '4px' }}>
-                  <span style={{ color: '#34d399' }}>Margin Aman UMKM (+{rfq.marginPct}%):</span>
-                  <strong style={{ color: '#34d399' }}>+USD {rfq.netProfitMargin}</strong>
+            <textarea
+              className="rfq-input-area"
+              placeholder={isEn ? 'Paste buyer inquiry message here (e.g., Looking for 20 MT Robusta green beans CIF Hamburg port, packaging 60kg gunny bags)...' : 'Masukkan pesan chat/email dari buyer luar negeri (cth: Looking for 20 MT Robusta green beans CIF Hamburg port, packaging 60kg gunny bags)...'}
+              value={rawInput}
+              onChange={(e) => setRawInput(e.target.value)}
+            />
+
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <button className="btn btn-primary btn-lg" type="button" onClick={handleConvert} disabled={converting}>
+                {converting
+                  ? <span>🧠 NusaBridge AI Memproses Incoterms 2020...</span>
+                  : <span>✨ Konversi Pesan Buyer Menjadi RFQ Resmi (Incoterms 2020)</span>}
+              </button>
+            </div>
+
+            <div className="sim-output-panel">
+              <div className="sop-header">
+                <span className="sop-dot" />
+                <strong>Request for Quotation (RFQ) Terbit Otomatis &bull; Incoterms 2020</strong>
+              </div>
+              <div className="sop-grid">
+                <div className="sop-col">
+                  <h5>1. Ekstraksi Entitas &amp; Parameter RFQ</h5>
+                  <div className="sop-val-big" style={{ fontSize: '1.15rem', color: '#60a5fa' }}>{rfq.commodity}</div>
+                  <p className="sop-desc"><strong>Volume / Satuan:</strong> {rfq.qty}</p>
+                  <p className="sop-desc"><strong>Pelabuhan Muat (POL):</strong> {rfq.pol}</p>
+                  <p className="sop-desc"><strong>Pelabuhan Bongkar (POD):</strong> {rfq.pod}</p>
+                  <div className="sop-badge green">✅ Incoterms Terdeteksi: {rfq.incoterm}</div>
+                </div>
+
+                <div className="sop-col">
+                  <h5>2. Rincian Struktur Biaya Ekspor (Per Satuan)</h5>
+                  <div className="sop-highlight-box">
+                    <div className="shb-row"><span>Biaya Produksi &amp; Kemasan:</span> <strong>USD {rfq.baseProductionCost}</strong></div>
+                    <div className="shb-row"><span>Trucking &amp; Port Handling:</span> <strong>USD {rfq.truckingPortCost}</strong></div>
+                    <div className="shb-row"><span>Ocean Freight &amp; Asuransi:</span> <strong>USD {rfq.freightInsurance.toFixed(2)}</strong></div>
+                    <div className="shb-row" style={{ borderTop: '1px dashed rgba(255,255,255,0.2)', paddingTop: '4px' }}>
+                      <span style={{ color: '#34d399' }}>Margin Aman UMKM (+{rfq.marginPct}%):</span>
+                      <strong style={{ color: '#34d399' }}>+USD {rfq.netProfitMargin}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sop-col">
+                  <h5>3. Rekomendasi Kuotasi &amp; Nilai Kontrak</h5>
+                  <div className="sop-highlight-box" style={{ background: 'rgba(16,185,129,0.12)', borderColor: '#10b981' }}>
+                    <div className="shb-row"><span>Harga Penawaran Final:</span> <strong style={{ fontSize: '1.25rem', color: '#34d399' }}>USD {rfq.finalUnitPrice}</strong></div>
+                    <div className="shb-row"><span>Estimasi Nilai Kontrak:</span> <strong style={{ color: '#ffffff' }}>USD {rfq.totalContractVal}</strong></div>
+                    <div className="shb-row"><span>Rekomendasi HS Code:</span> <code>{rfq.hsCode}</code></div>
+                  </div>
+                  <button className="btn btn-primary btn-sm btn-block" type="button" onClick={goDocGen}>
+                    Terbitkan Proforma Invoice Otomatis →
+                  </button>
                 </div>
               </div>
             </div>
+          </div>
+        )}
 
-            <div className="sop-col">
-              <h5>3. Rekomendasi Kuotasi &amp; Nilai Kontrak</h5>
-              <div className="sop-highlight-box" style={{ background: 'rgba(16,185,129,0.12)', borderColor: '#10b981' }}>
-                <div className="shb-row"><span>Harga Penawaran Final:</span> <strong style={{ fontSize: '1.25rem', color: '#34d399' }}>USD {rfq.finalUnitPrice}</strong></div>
-                <div className="shb-row"><span>Estimasi Nilai Kontrak:</span> <strong style={{ color: '#ffffff' }}>USD {rfq.totalContractVal}</strong></div>
-                <div className="shb-row"><span>Rekomendasi HS Code:</span> <code>{rfq.hsCode}</code></div>
+        {/* ==================== KONTEN MODE IMPORTIR (BUYER) ==================== */}
+        {rfqMode === 'buyer' && (
+          <div>
+            <div style={{ marginBottom: '14px' }}>
+              <h4 style={{ margin: '0 0 6px', fontSize: '15px', color: 'var(--navy-title)' }}>
+                {isEn ? 'Structured RFQ & Inquiry Builder (For Global Importers):' : 'Penyusun RFQ & Dokumen Inquiry Resmi (Untuk Importir Global):'}
+              </h4>
+              <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-muted)' }}>
+                {isEn
+                  ? 'Select commodity, destination port, volume, and trade terms to generate a standardized international inquiry.'
+                  : 'Pilih komoditas unggulan Indonesia, pelabuhan tujuan, volume, dan klausul Incoterms untuk menerbitkan dokumen penawaran resmi.'}
+              </p>
+            </div>
+
+            <div className="rfq-buyer-grid">
+              <div className="rfq-field-group">
+                <label>Pilihan Komoditas Ekspor Indonesia:</label>
+                <select
+                  className="custom-select"
+                  value={buyerCommodityId}
+                  onChange={(e) => {
+                    setBuyerCommodityId(e.target.value);
+                    const comm = BUYER_COMMODITY_PRESETS.find((c) => c.id === e.target.value);
+                    if (comm) setBuyerQty(comm.defaultQty);
+                  }}
+                >
+                  {BUYER_COMMODITY_PRESETS.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} &bull; HS {c.hsCode}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <button className="btn btn-primary btn-sm btn-block" type="button" onClick={goDocGen}>
-                Terbitkan Proforma Invoice Otomatis →
+
+              <div className="rfq-field-group">
+                <label>Pelabuhan Tujuan Bongkar (Port of Discharge):</label>
+                <select
+                  className="custom-select"
+                  value={buyerPortId}
+                  onChange={(e) => setBuyerPortId(e.target.value)}
+                >
+                  {DESTINATION_PORTS.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} ({p.country})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="rfq-field-group">
+                <label>Klausul Ketentuan Perdagangan (Incoterms 2020):</label>
+                <select
+                  className="custom-select"
+                  value={buyerIncoterm}
+                  onChange={(e) => setBuyerIncoterm(e.target.value)}
+                >
+                  <option value="CIF">CIF (Cost, Insurance &amp; Freight) - Penjual tanggung kirim &amp; asuransi ke pelabuhan tujuan</option>
+                  <option value="FOB">FOB (Free On Board) - Penjual tanggung barang sampai di atas kapal pelabuhan muat Indonesia</option>
+                </select>
+              </div>
+
+              <div className="rfq-field-group">
+                <label>Target Kuantitas / Volume Pengapalan:</label>
+                <input
+                  type="text"
+                  className="custom-input"
+                  value={buyerQty}
+                  onChange={(e) => setBuyerQty(e.target.value)}
+                  placeholder="Contoh: 20,000 Kg (20 MT / 1 FCL 20ft)"
+                />
+              </div>
+
+              <div className="rfq-field-group">
+                <label>Nama Perusahaan Importir (Buyer Company):</label>
+                <input
+                  type="text"
+                  className="custom-input"
+                  value={buyerCompany}
+                  onChange={(e) => setBuyerCompany(e.target.value)}
+                  placeholder="Nama perusahaan Anda"
+                />
+              </div>
+
+              <div className="rfq-field-group">
+                <label>Spesifikasi Mutu &amp; Standar Kemasan:</label>
+                <input
+                  type="text"
+                  className="custom-input"
+                  value={selectedCommodity.qualitySpec}
+                  readOnly
+                  style={{ background: '#f8fafc', color: '#475569' }}
+                />
+              </div>
+            </div>
+
+            <div className="rfq-field-group" style={{ marginBottom: '18px' }}>
+              <label>Catatan Tambahan, Sertifikasi, &amp; Syarat Dokumen Pengapalan:</label>
+              <textarea
+                className="custom-input"
+                rows={2}
+                value={buyerNotes}
+                onChange={(e) => setBuyerNotes(e.target.value)}
+                placeholder="Misal: Perlu sertifikasi Sucofindo, Certificate of Origin (COO), karantina bebas serangga..."
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button className="btn btn-primary btn-lg" type="button" onClick={handleBuildBuyerRfq}>
+                ✨ Terbitkan Draf Dokumen RFQ Resmi
               </button>
             </div>
+
+            {buyerGeneratedText && (
+              <div className="rfq-generated-box">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', borderBottom: '1px solid #334155', paddingBottom: '12px' }}>
+                  <div>
+                    <strong style={{ color: '#38bdf8', fontSize: '14px' }}>📄 Formal Request for Quotation (RFQ) Dokumen Siap Kirim</strong>
+                    <div style={{ fontSize: '11px', color: '#94a3b8' }}>Standar Incoterms 2020 &bull; Siap dikirim ke Eksportir Indonesia</div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="btn btn-outline btn-sm" type="button" style={{ borderColor: '#64748b', color: '#e2e8f0' }} onClick={handleCopyBuyerRfq}>
+                      📋 Salin RFQ
+                    </button>
+                    <button className="btn btn-primary btn-sm" type="button" onClick={handleTransferToSeller}>
+                      ⚡ Simulasikan di Mode Eksportir (HPP &amp; Margin) →
+                    </button>
+                  </div>
+                </div>
+
+                <pre className="rfq-preview-pre">{buyerGeneratedText}</pre>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.05)', padding: '10px 14px', borderRadius: '8px', fontSize: '11.5px', color: '#94a3b8' }}>
+                  <span>🛡️ Pembayaran terlindungi di <strong>NusaBridge Escrow Vault</strong> multi-valas berjenjang 4 fase.</span>
+                  <Link to="/produk" style={{ color: '#38bdf8', fontWeight: 700, textDecoration: 'underline' }}>
+                    Lihat Katalog Produk Terkait →
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        )}
+
       </div>
     </div>
   );
@@ -1057,17 +1589,20 @@ function KycTab() {
 // Tab 4: Escrow Vault 4 Fase
 // =====================================================================
 function EscrowTab() {
-  const { lang } = useApp();
+  const { lang, session } = useApp();
   const [phase, setPhase] = useState(1);
   const [vaultStatus, setVaultStatus] = useState('VAULT AKTIF');
   const [chat, setChat] = useState([
     {
       sender: 'agent',
-      header: 'Smart Contract Live System',
-      html: 'Selamat datang di Simulasi Escrow Vault NusaBridge. Sistem ini mengamankan pembayaran ekspor bernilai tinggi agar UMKM tidak menanggung risiko gagal bayar buyer luar negeri. Klik salah satu tombol 4 Fase di sebelah kiri untuk menguji notifikasi pencairan bertahap.',
+      header: 'Smart Contract Simulation',
+      text: lang === 'en'
+        ? 'Welcome to the NusaBridge Escrow Vault simulation. This sandbox shows how milestone-based payouts work. Click one of the four phase buttons on the left to see the simulated release notification.'
+        : 'Selamat datang di Simulasi Escrow Vault NusaBridge. Sandbox ini menunjukkan cara kerja pencairan dana bertahap. Klik salah satu tombol 4 Fase di sebelah kiri untuk melihat notifikasi pencairan simulasi.',
     },
   ]);
   const [chatInput, setChatInput] = useState('');
+  const [sending, setSending] = useState(false);
   const boxRef = useRef(null);
 
   function scrollBottom() {
@@ -1076,8 +1611,8 @@ function EscrowTab() {
     });
   }
 
-  function pushAgent(html, header) {
-    setChat((prev) => [...prev, { sender: 'agent', header, html }]);
+  function pushAgent(text, header) {
+    setChat((prev) => [...prev, { sender: 'agent', header, text }]);
     scrollBottom();
   }
 
@@ -1087,84 +1622,51 @@ function EscrowTab() {
     if (!data) return;
     setVaultStatus(`PROGRES VAULT: ${data.pct}`);
     pushAgent(
-      `<div style="font-weight:750; color:#34d399; margin-bottom:4px;">${data.title}</div>
-      <p style="margin:0 0 6px;">${data.msg}</p>
-      <div style="font-size:11px; color:#94a3b8; border-top:1px solid #334155; padding-top:4px;">
-        Pencairan Dana: <strong style="color:#ffffff;">${data.amount}</strong> &bull; Total Progres: <strong style="color:#34d399;">${data.pct}</strong><br>
-        Hash Smart Contract: <code>${data.hash}</code>
-      </div>`,
+      `**${data.title}**\n\n${data.msg}\n\n---\nPencairan Dana: **${data.amount}** · Total Progres: **${data.pct}**\nHash Smart Contract: ${data.hash}`,
       `NOTIFIKASI ESCROW VAULT - ${data.tag}`
     );
   }
 
   async function handleSend() {
     const text = (chatInput || '').trim();
-    if (!text) return;
-    setChat((prev) => [...prev, { sender: 'user', html: text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }]);
+    if (!text || sending) return;
+
+    const history = chat
+      .filter((item) => item.text)
+      .slice(-8)
+      .map((item) => ({
+        role: item.sender === 'agent' ? 'assistant' : 'user',
+        content: item.text,
+      }));
+
+    setChat((prev) => [...prev, { sender: 'user', text }]);
     setChatInput('');
+    setSending(true);
     scrollBottom();
 
-    const lower = text.toLowerCase();
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
 
     try {
-      const res = await fetch(apiUrl('/api/ai/chat'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, lang }),
+      const data = await sendAiChat({
+        message: text,
+        lang,
+        role: session?.role,
+        page: 'escrow',
+        history,
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.reply) {
-          pushAgent(data.reply.replace(/\n/g, '<br>'), 'NusaBridge AI');
-          return;
-        }
-      }
+      pushAgent(data.reply, 'NusaBridge AI');
     } catch (e) {
       clearTimeout(timeoutId);
-      // Backend offline -> rule engine cerdas lokal
+      pushAgent(
+        getLocalAiReply({ message: text, lang, role: session?.role, page: 'escrow' }),
+        'NusaBridge AI'
+      );
+    } finally {
+      setSending(false);
     }
-
-    setTimeout(() => {
-      let reply;
-      if (lower.includes('hamburg') || (lower.includes('robusta') && (lower.includes('cif') || lower.includes('kopi')))) {
-        reply = `Halo Hanseatic Coffee Importers! Terima kasih telah menggunakan NusaBridge. Berikut adalah analisis transaksi ekspor Kopi Robusta Lampung Anda:<br><br>
-📊 <strong>1. Kalkulasi RFQ Studio (Pilar 1)</strong><br>
-Harga Dasar FOB Tanjung Priok: $3.85 / Kg ($77,000 USD)<br>
-Ocean Freight &amp; Asuransi Kargo: $0.42 / Kg ($8,400 USD)<br>
-Total Penawaran CIF Hamburg: <strong>$85,400 USD</strong> ($4.27 / Kg)<br>
-Margin Aman UMKM: <strong>+18.5% Net Profit</strong><br><br>
-🛡️ <strong>2. Audit Legalitas &amp; KYC Hub (Pilar 3)</strong><br>
-NIB Pelaku Usaha: Valid &amp; Aktif Ekspor<br>
-Sertifikasi Saniter: Phytosanitary &amp; Karantina Lolos (Bebas Hama Organisme)<br>
-Skor Kepatuhan: <strong>100% Score (Verified Seller Shield)</strong><br><br>
-📄 <strong>3. Otomatisasi Dokumen Legal (Pilar 2)</strong><br>
-Commercial Invoice #INV-2026-DE-088 dan Sales Contract (CIF Hamburg) telah secara otomatis diterbitkan berformat PDF.<br><br>
-🔒 <strong>4. Skema Escrow Vault (Pilar 4)</strong><br>
-Pembayaran sebesar $85,400 USD akan dikunci secara aman di Escrow Vault dan dicairkan secara bertahap:<br>
-• <strong>Tahap 1 (30% - $25,620)</strong>: DP Cair saat Kontrak Ditandatangani.<br>
-• <strong>Tahap 2 (30% - $25,620)</strong>: Cair saat Dokumen PEB &amp; Stuffing Container Selesai.<br>
-• <strong>Tahap 3 (20% - $17,080)</strong>: Cair saat Kapal Berlayar &amp; Bill of Lading (B/L) Terbit.<br>
-• <strong>Tahap 4 (20% - $17,080)</strong>: Settlement Final saat Kontainer Tiba di Hamburg Port.`;
-      } else if (lower.includes('dp') || lower.includes('uang muka') || lower.includes('fase 1')) {
-        reply = 'Untuk pencairan 30% Down Payment, buyer wajib menandatangani Sales Contract secara digital dan menyetor 100% dana ke Escrow Vault. Begitu dana terkunci, 30% langsung cair ke rekening UMKM.';
-      } else if (lower.includes('peb') || lower.includes('bea cukai')) {
-        reply = 'Pencairan Fase 2 (30%) memerlukan nomor pendaftaran PEB yang valid dari sistem CEISA Bea Cukai. AI Agent NusaBridge otomatis memverifikasi status NPE (Nota Pelayanan Ekspor).';
-      } else if (lower.includes('kapal') || lower.includes('b/l') || lower.includes('bill of lading')) {
-        reply = 'Pencairan Fase 3 (20%) terhubung langsung dengan sensor AIS kapal kargo. Saat kargo dimuat (on-board) dan B/L terbit, sistem langsung membuka kunci dana.';
-      } else {
-        reply = `Halo! Saya <strong>NusaBridge AI</strong>, asisten B2B perdagangan ekspor-impor pintar untuk UMKM Indonesia.<br><br>
-Saya siap mengawal transaksi ekspor Anda dengan <strong>4 Pilar NusaBridge</strong>:<br>
-1. <strong>RFQ Studio &amp; Incoterms 2020</strong>: Menghitung estimasi FOB, Ocean Freight, Asuransi maritim, hingga harga CIF dengan margin aman UMKM.<br>
-2. <strong>Otomatisasi Dokumen</strong>: Menerbitkan draf berkas resmi Proforma Invoice, Commercial Invoice, dan Export Sales Contract berformat PDF instan.<br>
-3. <strong>KYC Hub &amp; Kepatuhan Global</strong>: Memverifikasi NIB, NPWP, Phytosanitary, izin US FDA, sertifikasi JAS Jepang, atau regulasi EUDR Eropa dengan skor 100%.<br>
-4. <strong>Escrow Vault Multivalas</strong>: Melindungi dana transaksi dengan pelepasan bertahap 4 fase (30% DP → 30% PEB → 20% Bill of Lading → 20% Pelunasan Akhir).`;
-      }
-      pushAgent(reply, 'NusaBridge AI');
-    }, 350);
   }
 
   return (
@@ -1205,17 +1707,17 @@ Saya siap mengawal transaksi ekspor Anda dengan <strong>4 Pilar NusaBridge</stro
                 <strong style={{ fontSize: '13px' }}>🤖 NusaBridge Escrow AI Agent</strong>
                 <div style={{ fontSize: '10.5px', color: '#94a3b8' }}>Smart Contract Vault Multivalas (USD/IDR)</div>
               </div>
-              <span className="ecb-status">⚡ Live WebSocket Connected</span>
+              <span className="ecb-status">{lang === 'en' ? '● Local simulation' : '● Simulasi lokal'}</span>
             </div>
 
             <div className="ecb-messages" ref={boxRef}>
               {chat.map((m, i) => (
                 m.sender === 'user' ? (
-                  <div key={i} className="ecb-msg" style={{ background: '#2563eb', color: '#ffffff', alignSelf: 'flex-end', borderRadius: '12px', maxWidth: '85%', padding: '9px 13px', fontSize: '12.5px' }} dangerouslySetInnerHTML={{ __html: m.html }} />
+                  <div key={i} className="ecb-msg" style={{ background: '#2563eb', color: '#ffffff', alignSelf: 'flex-end', borderRadius: '12px', maxWidth: '85%', padding: '9px 13px', fontSize: '12.5px' }}>{m.text}</div>
                 ) : (
                   <div key={i} className="ecb-msg agent">
                     <strong>🤖 {m.header || 'NusaBridge Escrow AI'} &bull; {nowTime()}</strong>
-                    {m.html ? <span dangerouslySetInnerHTML={{ __html: m.html }} /> : null}
+                    {m.text ? <span dangerouslySetInnerHTML={{ __html: formatAiText(m.text) }} /> : null}
                   </div>
                 )
               ))}
@@ -1225,12 +1727,15 @@ Saya siap mengawal transaksi ekspor Anda dengan <strong>4 Pilar NusaBridge</stro
               <input
                 type="text"
                 className="ecb-input"
-                placeholder="Tanyakan status pelepasan dana atau klausul escrow..."
+                placeholder={lang === 'en' ? 'Ask about escrow milestones or clauses...' : 'Tanyakan tahap escrow atau klausulnya...'}
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleSend(); }}
+                disabled={sending}
               />
-              <button className="ecb-send-btn" type="button" onClick={handleSend}>Kirim</button>
+              <button className="ecb-send-btn" type="button" onClick={handleSend} disabled={sending}>
+                {sending ? (lang === 'en' ? 'Sending…' : 'Mengirim…') : (lang === 'en' ? 'Send' : 'Kirim')}
+              </button>
             </div>
           </div>
         </div>
@@ -1271,6 +1776,9 @@ export default function SolutionsPage() {
 
       {/* ==================== 4 PILAR UTAMA ==================== */}
       <PillarsSection />
+
+      {/* ==================== PERAN & KEGUNAAN ==================== */}
+      <RolesSection />
 
       {/* ==================== AI SUITE INTERAKTIF ==================== */}
       <section className="section-ai-simulator" id="ai-interactive-suite">

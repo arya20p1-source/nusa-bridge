@@ -40,7 +40,7 @@ const HOME_PRODUCTS = ['kopi', 'rempah', 'kriya', 'tekstil']
     img: product.image,
   }));
 
-const WORKFLOW_STEPS = [
+const EXPORT_STEPS = [
   { n: 1, icon: '/assets/icons/icon-5.webp', k: 'step_1' },
   { n: 2, icon: '/assets/icons/icon-2.webp', k: 'step_2' },
   { n: 3, icon: '/assets/icons/icon-7.webp', k: 'step_3' },
@@ -48,6 +48,17 @@ const WORKFLOW_STEPS = [
   { n: 5, icon: '/assets/icons/icon-9.webp', k: 'step_5' },
   { n: 6, icon: '/assets/icons/icon-4.webp', k: 'step_6' },
 ];
+
+const IMPORT_STEPS = [
+  { n: 1, icon: '/assets/icons/icon-1.webp', k: 'import_step_1' },
+  { n: 2, icon: '/assets/icons/icon-3.webp', k: 'import_step_2' },
+  { n: 3, icon: '/assets/icons/icon-7.webp', k: 'import_step_3' },
+  { n: 4, icon: '/assets/icons/icon-6.webp', k: 'import_step_4' },
+  { n: 5, icon: '/assets/icons/icon-4.webp', k: 'import_step_5' },
+  { n: 6, icon: '/assets/icons/icon-9.webp', k: 'import_step_6' },
+];
+
+const WORKFLOW_STEPS = EXPORT_STEPS;
 
 const SOLUTION_CARDS = [
   { pillar: 1, icon: '/assets/icons/icon-1.webp', tK: 'sol_1_title', dK: 'sol_1_desc' },
@@ -74,9 +85,9 @@ const MOCK_NAV = [
 ];
 
 const TX_ROWS = [
-  { txKey: 'gayo', img: '/assets/tx-thumb-1.webp', name: 'Kopi Arabika Gayo', val: 'USD 12,000', badge: 'Negosiasi' },
-  { txKey: 'rempah', img: '/assets/tx-thumb-2.webp', name: 'Rempah Nusantara', val: 'USD 8,700', badge: 'Proses Dokumen' },
-  { txKey: 'tenun', img: '/assets/tx-thumb-3.webp', name: 'Tenun Ikat', val: 'USD 24,000', badge: 'Dalam Pengiriman' },
+  { txKey: 'gayo', img: '/assets/tx-thumb-1.webp', name: 'Kopi Arabika Gayo', val: 'USD 12,000', badge: 'Negosiasi', buyerBadge: 'Kapal Menuju Hamburg' },
+  { txKey: 'rempah', img: '/assets/tx-thumb-2.webp', name: 'Rempah Nusantara', val: 'USD 8,700', badge: 'Proses Dokumen', buyerBadge: 'Dokumen Impor Siap' },
+  { txKey: 'tenun', img: '/assets/tx-thumb-3.webp', name: 'Tenun Ikat', val: 'USD 24,000', badge: 'Dalam Pengiriman', buyerBadge: 'Simulasi Escrow Vault' },
 ];
 
 const DOC_COMMODITIES = [
@@ -133,12 +144,17 @@ function ProductCardItem({ p, onClick }) {
 }
 
 // ---------------- Sub: Dashboard mockup views ----------------
-function OverviewView({ openTxModal }) {
+function OverviewView({ openTxModal, role = 'seller' }) {
+  const isBuyer = role === 'buyer';
   return (
     <div className="mockup-sandbox-view">
       <div className="mockup-welcome">
-        <h3 className="welcome-heading"><T k="mock_welcome_title" /></h3>
-        <p className="welcome-sub"><T k="mock_welcome_sub" /></p>
+        <h3 className="welcome-heading">
+          {isBuyer ? <T k="mock_buyer_welcome" /> : <T k="mock_welcome_title" />}
+        </h3>
+        <p className="welcome-sub">
+          {isBuyer ? <T k="mock_buyer_sub" /> : <T k="mock_welcome_sub" />}
+        </p>
       </div>
 
       <div className="mockup-stats-row">
@@ -149,8 +165,8 @@ function OverviewView({ openTxModal }) {
             </svg>
           </div>
           <div className="mstat-texts">
-            <span className="mstat-val">12</span>
-            <span className="mstat-lbl"><T k="mstat_rfq" /></span>
+            <span className="mstat-val">{isBuyer ? '5' : '12'}</span>
+            <span className="mstat-lbl">{isBuyer ? <T k="mstat_buyer_rfq" /> : <T k="mstat_rfq" />}</span>
           </div>
         </div>
         <div className="mstat-card">
@@ -160,8 +176,8 @@ function OverviewView({ openTxModal }) {
             </svg>
           </div>
           <div className="mstat-texts">
-            <span className="mstat-val">7</span>
-            <span className="mstat-lbl"><T k="mstat_docs" /></span>
+            <span className="mstat-val">{isBuyer ? '3' : '7'}</span>
+            <span className="mstat-lbl">{isBuyer ? <T k="mstat_buyer_contract" /> : <T k="mstat_docs" />}</span>
           </div>
         </div>
         <div className="mstat-card">
@@ -171,8 +187,8 @@ function OverviewView({ openTxModal }) {
             </svg>
           </div>
           <div className="mstat-texts">
-            <span className="mstat-val">3</span>
-            <span className="mstat-lbl"><T k="mstat_tx" /></span>
+            <span className="mstat-val">{isBuyer ? '$42K' : '3'}</span>
+            <span className="mstat-lbl">{isBuyer ? <T k="mstat_buyer_escrow" /> : <T k="mstat_tx" />}</span>
           </div>
         </div>
         <div className="mstat-card">
@@ -182,8 +198,8 @@ function OverviewView({ openTxModal }) {
             </svg>
           </div>
           <div className="mstat-texts">
-            <span className="mstat-val">98%</span>
-            <span className="mstat-lbl"><T k="mstat_eff" /></span>
+            <span className="mstat-val">{isBuyer ? '100%' : '98%'}</span>
+            <span className="mstat-lbl">{isBuyer ? <T k="mstat_buyer_compliance" /> : <T k="mstat_eff" />}</span>
           </div>
         </div>
       </div>
@@ -195,7 +211,9 @@ function OverviewView({ openTxModal }) {
         {/* Transaksi terbaru */}
         <div className="mwidget-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <h4 className="widget-title" style={{ marginBottom: 0 }}><T k="mwidget_tx" /></h4>
+            <h4 className="widget-title" style={{ marginBottom: 0 }}>
+              {isBuyer ? 'Pengadaan Impor Berjalan' : <T k="mwidget_tx" />}
+            </h4>
             <small
               style={{ color: 'var(--primary)', fontWeight: 700, cursor: 'pointer' }}
               onClick={() => openTxModal('gayo')}
@@ -217,7 +235,7 @@ function OverviewView({ openTxModal }) {
                   <span className="tx-name">{r.name}</span>
                   <span className="tx-val">{r.val}</span>
                 </div>
-                <span className="tx-badge badge-blue">{r.badge}</span>
+                <span className="tx-badge badge-blue">{isBuyer ? r.buyerBadge : r.badge}</span>
               </div>
             ))}
           </div>
@@ -613,7 +631,7 @@ function ProductsView({ goRfq, showToast }) {
           <h4 className="sandbox-title">Katalog &amp; Manajemen Komoditas Ekspor</h4>
           <span className="sandbox-badge">50+ Komoditas UMKM Siap Ekspor</span>
         </div>
-        <Link to="/produk" className="btn btn-primary btn-sm">Lihat Semua 120 Produk &rarr;</Link>
+        <Link to="/produk" className="btn btn-primary btn-sm">Lihat Semua 50 Produk &rarr;</Link>
       </div>
 
       <div style={{ background: '#ffffff', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -801,7 +819,14 @@ function SettingsView({ showToast }) {
 function DashboardShowcase() {
   const { showToast, openModal, lang, session } = useApp();
   const [activeView, setActiveView] = useState('overview');
+  const [dashboardRole, setDashboardRole] = useState(() => (session?.role === 'buyer' ? 'buyer' : 'seller'));
   const location = useLocation();
+
+  useEffect(() => {
+    if (session?.role) {
+      setDashboardRole(session.role === 'buyer' ? 'buyer' : 'seller');
+    }
+  }, [session?.role]);
 
   const viewLabels = {
     overview: lang === 'en' ? '🏠 Export Home Dashboard Active' : '🏠 Dashboard Beranda Ekspor Aktif',
@@ -855,8 +880,8 @@ function DashboardShowcase() {
   }, [switchTo]);
   const goDocs = useCallback(() => switchTo('docs'), [switchTo]);
 
-  const userName = session?.name || 'UMKM Indonesia';
-  const userCompany = session?.company || 'UMKM Mandiri';
+  const userName = session?.name || (dashboardRole === 'buyer' ? 'Nordic Coffee Importers GmbH' : 'UMKM Indonesia');
+  const userCompany = session?.company || (dashboardRole === 'buyer' ? 'Global Importer Partner' : 'UMKM Mandiri');
 
   return (
     <section className="section-dashboard-showcase">
@@ -886,6 +911,50 @@ function DashboardShowcase() {
 
             {/* Main App Content */}
             <div className="mockup-content">
+              {/* Role Switcher in Mockup Topbar */}
+              <div className="mockup-role-tabs" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 14px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', flexWrap: 'wrap', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>Mode:</span>
+                  <button
+                    type="button"
+                    className={`mock-role-btn ${dashboardRole === 'seller' ? 'active' : ''}`}
+                    style={{
+                      padding: '4px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '20px', border: '1.5px solid',
+                      borderColor: dashboardRole === 'seller' ? 'var(--primary)' : '#cbd5e1',
+                      background: dashboardRole === 'seller' ? 'var(--primary)' : '#ffffff',
+                      color: dashboardRole === 'seller' ? '#ffffff' : '#334155',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      setDashboardRole('seller');
+                      showToast('👨‍💼 Beralih ke Mode Eksportir Indonesia (Seller)');
+                    }}
+                  >
+                    👨‍💼 <T k="mock_role_seller" />
+                  </button>
+                  <button
+                    type="button"
+                    className={`mock-role-btn ${dashboardRole === 'buyer' ? 'active' : ''}`}
+                    style={{
+                      padding: '4px 12px', fontSize: '12px', fontWeight: 700, borderRadius: '20px', border: '1.5px solid',
+                      borderColor: dashboardRole === 'buyer' ? 'var(--primary)' : '#cbd5e1',
+                      background: dashboardRole === 'buyer' ? 'var(--primary)' : '#ffffff',
+                      color: dashboardRole === 'buyer' ? '#ffffff' : '#334155',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      setDashboardRole('buyer');
+                      showToast('🌍 Beralih ke Mode Importir Global (Buyer)');
+                    }}
+                  >
+                    🌍 <T k="mock_role_buyer" />
+                  </button>
+                </div>
+                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 600 }}>
+                  {dashboardRole === 'buyer' ? '● Fitur: Pengadaan Komoditas, Kontrak & Proteksi Escrow' : '● Fitur: Penjualan Ekspor, Analisis RFQ & Dokumen Legal'}
+                </span>
+              </div>
+
               <div className="mockup-topbar">
                 <div className="mockup-search">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2">
@@ -907,7 +976,7 @@ function DashboardShowcase() {
                   </button>
                   <div
                     className="mockup-user-profile"
-                    onClick={() => showToast(`👤 Akun ${userCompany} • Status: Verified Seller (NIB: 1294801928415)`)}
+                    onClick={() => showToast(`👤 Akun ${userCompany} • Role: ${dashboardRole === 'buyer' ? 'Importir Global' : 'Eksportir Terdaftar'}`)}
                   >
                     {session?.logo ? (
                       <img src={session.logo} alt={`Logo ${userCompany}`} className="user-avatar-img" />
@@ -924,7 +993,7 @@ function DashboardShowcase() {
                 </div>
               </div>
 
-              {activeView === 'overview' && <OverviewView openTxModal={openTxModal} />}
+              {activeView === 'overview' && <OverviewView openTxModal={openTxModal} role={dashboardRole} />}
               {activeView === 'products' && <ProductsView goRfq={goRfq} showToast={showToast} />}
               {activeView === 'rfq' && <RfqView showToast={showToast} goDocs={goDocs} />}
               {activeView === 'docs' && <DocsView showToast={showToast} />}
@@ -945,6 +1014,7 @@ export default function HomePage() {
   const { openAuth, openModal, openInfo } = useApp();
   const navigate = useNavigate();
   const [activeCat, setActiveCat] = useState('all');
+  const [workflowTab, setWorkflowTab] = useState('export'); // 'export' | 'import'
   const carouselRef = useRef(null);
 
   function scrollCarousel(dir) {
@@ -1183,7 +1253,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ==================== ALUR EKSPOR ==================== */}
+      {/* ==================== ALUR EKSPOR & IMPOR ==================== */}
       <section className="section-workflow" id="alur-ekspor">
         <div className="workflow-wave-top">
           <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
@@ -1197,15 +1267,41 @@ export default function HomePage() {
 
         <div className="site-container workflow-content">
           <div className="workflow-header">
-            <div className="pill-badge pill-translucent"><T k="workflow_pill" /></div>
-            <h2 className="workflow-title"><T k="workflow_title" /></h2>
-            <p className="workflow-subtitle"><T k="workflow_sub" /></p>
+            <div className="pill-badge pill-translucent">
+              {workflowTab === 'export' ? <T k="workflow_pill_export" /> : <T k="workflow_pill_import" />}
+            </div>
+            <h2 className="workflow-title">
+              {workflowTab === 'export' ? <T k="workflow_title_export" /> : <T k="workflow_title_import" />}
+            </h2>
+            <p className="workflow-subtitle">
+              {workflowTab === 'export' ? <T k="workflow_sub_export" /> : <T k="workflow_sub_import" />}
+            </p>
+
+            {/* Toggle Alur Ekspor vs Alur Impor */}
+            <div className="workflow-direction-toggle" style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '16px' }}>
+              <button
+                type="button"
+                className={`btn ${workflowTab === 'export' ? 'btn-primary' : 'btn-glass'}`}
+                style={{ borderRadius: '30px', padding: '8px 22px', fontSize: '13px', fontWeight: 700 }}
+                onClick={() => setWorkflowTab('export')}
+              >
+                🚢 <T k="workflow_tab_export" />
+              </button>
+              <button
+                type="button"
+                className={`btn ${workflowTab === 'import' ? 'btn-primary' : 'btn-glass'}`}
+                style={{ borderRadius: '30px', padding: '8px 22px', fontSize: '13px', fontWeight: 700 }}
+                onClick={() => setWorkflowTab('import')}
+              >
+                🌍 <T k="workflow_tab_import" />
+              </button>
+            </div>
           </div>
 
           <div className="workflow-steps-timeline">
             <div className="timeline-line" />
-            {WORKFLOW_STEPS.map((s) => (
-              <div className="workflow-step-item" key={s.n}>
+            {(workflowTab === 'export' ? EXPORT_STEPS : IMPORT_STEPS).map((s) => (
+              <div className="workflow-step-item" key={s.k}>
                 <div className="step-circle-wrap">
                   <div className="step-circle">
                     <img src={s.icon} alt="" className="step-icon" />

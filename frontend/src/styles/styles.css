@@ -3606,3 +3606,11 @@ select:focus-visible {
     margin: 1.5cm 1cm;
   }
 }
+
+/* ---------- DESKRIPSI PERAN DI MODAL AUTH ---------- */
+.modal-role-desc {
+  margin: -2px 0 16px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}

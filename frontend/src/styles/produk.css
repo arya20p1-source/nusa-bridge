@@ -650,7 +650,7 @@
   padding: 10px 18px;
 }
 
-/* ---------- 6. PAGINASI KATALOG PRODUK (105+ KOMODITAS) ---------- */
+/* ---------- 6. PAGINASI KATALOG PRODUK (50 KOMODITAS) ---------- */
 .pagination-container {
   display: flex;
   justify-content: center;
@@ -704,4 +704,66 @@
   color: var(--text-muted);
   font-weight: 600;
   margin: 0 6px;
+}
+
+/* ---------- 7. PANDUAN PERAN DI HALAMAN KATALOG ---------- */
+.product-role-banner {
+  padding: 1.5rem 0 0;
+}
+
+.product-role-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 20px 24px;
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--primary);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.product-role-card.role-seller {
+  border-left-color: #10b981;
+}
+
+.product-role-card.role-buyer {
+  border-left-color: #0ea5e9;
+}
+
+.prc-copy {
+  flex: 1 1 460px;
+}
+
+.prc-title {
+  margin: 8px 0 6px;
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--navy-title);
+  line-height: 1.4;
+}
+
+.prc-desc {
+  margin: 0;
+  color: var(--text-body);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.prc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .product-role-card {
+    padding: 18px;
+  }
+  .prc-actions,
+  .prc-actions .btn {
+    width: 100%;
+  }
 }
