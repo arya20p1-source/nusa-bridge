@@ -1,5 +1,37 @@
 [
   {
+    "id": "mulai-impor",
+    "title": "Panduan Awal Mengimpor Barang ke Indonesia",
+    "keywords": [
+      "impor",
+      "import",
+      "cara impor",
+      "memulai impor",
+      "impor ke indonesia",
+      "dokumen impor",
+      "prosedur impor",
+      "start importing into indonesia",
+      "how to import goods into indonesia",
+      "import documents indonesia"
+    ],
+    "answer": "Untuk memulai impor ke Indonesia, susun checklist berikut: (1) lengkapi deskripsi barang dan pastikan klasifikasi HS; (2) cek tarif, larangan/pembatasan, dan izin yang mungkin diperlukan melalui INSW serta konfirmasi kepada Bea Cukai atau instansi terkait; (3) pastikan legalitas dan akses kepabeanan usaha sesuai jenis barang; (4) sepakati pemasok, Incoterm, mata uang, jumlah, dan jadwal; (5) siapkan commercial invoice, packing list, Bill of Lading atau Air Waybill, serta Certificate of Origin atau sertifikat lain bila diwajibkan; dan (6) proses PIB serta pembayaran kewajiban melalui prosedur resmi. Persyaratan dan bea/pajak bergantung pada klasifikasi, asal, dan aturan terbaru, jadi jangan gunakan estimasi AI sebagai penetapan resmi.",
+    "answerEn": "To start importing goods into Indonesia, prepare this checklist: (1) provide a complete goods description and confirm the HS classification; (2) check tariffs, restrictions, and any required permits through INSW and confirm with Customs or the relevant authority; (3) ensure the business has the appropriate legality and customs access for the goods; (4) agree on the supplier, Incoterm, currency, quantity, and schedule; (5) prepare the commercial invoice, packing list, Bill of Lading or Air Waybill, and a Certificate of Origin or other certificates if required; and (6) process the import declaration (PIB) and applicable payments through official procedures. Requirements and duties/taxes depend on classification, origin, and current rules, so do not treat an AI estimate as an official determination.",
+    "sources": [
+      {
+        "title": "INSW — Informasi Tarif & HS Code",
+        "url": "https://insw.go.id/",
+        "domain": "insw.go.id",
+        "snippet": "Portal tarif, kode HS, dan persyaratan perdagangan ekspor-impor."
+      },
+      {
+        "title": "Bea Cukai — Kepabeanan & Dokumen Ekspor",
+        "url": "https://www.beacukai.go.id/",
+        "domain": "beacukai.go.id",
+        "snippet": "Informasi resmi prosedur kepabeanan dan ketentuan ekspor-impor."
+      }
+    ]
+  },
+  {
     "id": "mulai-ekspor",
     "title": "Langkah Awal Memulai Ekspor",
     "keywords": [

@@ -84,6 +84,12 @@ app.get('/api/health', async (req, res) => {
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password, company, role = 'seller', nib, npwp, plan = 'Free Trial' } = req.body;
+    const requestedRole = String(role).trim().toLowerCase();
+    const accountRole = requestedRole === 'importer' ? 'buyer' : requestedRole;
+
+    if (!['seller', 'buyer'].includes(accountRole)) {
+      return res.status(400).json({ success: false, message: 'Role harus seller (eksportir) atau buyer (importir).' });
+    }
 
     if (!name || !email) {
       return res.status(400).json({ success: false, message: 'Nama dan email wajib diisi.' });
@@ -105,7 +111,7 @@ app.post('/api/auth/register', async (req, res) => {
       name,
       email,
       company: company || name,
-      role, // 'seller' atau 'buyer'
+      role: accountRole,
       nib: nib || '12' + Math.floor(10000000000 + Math.random() * 90000000000),
       npwp: npwp || '01.' + Math.floor(100 + Math.random() * 900) + '.' + Math.floor(100 + Math.random() * 900) + '.0-012.000',
       status: 'verified',
@@ -1176,9 +1182,9 @@ Apakah ada aspek pemrograman, API, atau arsitektur teknologi tertentu yang ingin
           ? `\nINFORMASI RUJUKAN YANG MUNGKIN RELEVAN (gunakan hanya bila sesuai; jawab secara alami dan jangan menyebut sumber):\n${reference.answer}`
           : '';
 
-        const sysInstruction = `Kamu adalah asisten untuk website NusaBridge, platform informasi dan simulasi alur ekspor UMKM Indonesia.
+        const sysInstruction = `Kamu adalah asisten untuk website NusaBridge, platform informasi dan simulasi perdagangan ekspor-impor untuk UMKM Indonesia.
 ATURAN:
-1. Percakapan bersifat terbuka: jawab pertanyaan pengguna dengan langsung dan relevan, terutama tentang website NusaBridge, fitur, katalog produk, RFQ, dan alur ekspor. Pertanyaan lanjutan boleh memakai konteks chat sebelumnya.
+      1. Percakapan bersifat terbuka: jawab pertanyaan pengguna dengan langsung dan relevan, terutama tentang website NusaBridge, fitur, katalog produk, RFQ, serta panduan umum ekspor dan impor. Pertanyaan lanjutan boleh memakai konteks chat sebelumnya.
 2. Jawab langsung sesuai pertanyaan. Jangan melebar, mengulang pertanyaan, menambahkan topik yang tidak diminta, atau menampilkan sumber/link eksternal.
 3. Jika pertanyaan tidak berkaitan dengan NusaBridge atau ekspor, jelaskan dengan singkat bahwa asisten ini fokus pada website NusaBridge, lalu tawarkan topik website yang bisa dibantu.
 4. Jangan mengarang fitur, status transaksi, harga, stok, regulasi, atau data produk. Katalog di bawah adalah satu-satunya sumber fakta produk. Hanya sebutkan informasi yang tercantum persis di data katalog; jangan menyimpulkan kualitas, manfaat, target pasar, atau spesifikasi tambahan.
@@ -1197,6 +1203,9 @@ ALUR RFQ WEBSITE (FAKTA AKTUAL):
 - Pada formulir, produk sudah terpilih. Pengguna mengisi jumlah, memilih Incoterms (FOB, CIF, C&F, atau EXW), pelabuhan tujuan, dan email buyer/kontak, lalu klik "Kirim RFQ".
 - Jika berhasil disimpan, website menampilkan bukti pengajuan dengan nomor RFQ, detail permintaan, status "Diajukan — menunggu peninjauan", dan tahapan proses. "Perbarui Status" mengambil status terbaru untuk nomor RFQ tersebut.
 - Bukti RFQ bukan bukti pembayaran atau pesanan yang sudah disepakati. Website tidak otomatis mengirim permintaan ke pemasok, menerima penawaran, membandingkan penawaran, atau menyediakan dashboard/negosiasi RFQ.
+PANDUAN IMPOR UMUM:
+- Untuk impor ke Indonesia, bantu pengguna menyusun checklist: deskripsi barang dan HS code, negara asal, pengecekan tarif serta larangan/pembatasan melalui INSW/Bea Cukai, izin yang relevan, dokumen pemasok (commercial invoice, packing list, B/L atau AWB, dan COO bila diperlukan), serta proses PIB.
+- Jangan menetapkan klasifikasi HS, kelayakan izin, besaran bea/pajak, atau status kepabeanan tanpa data dan verifikasi resmi. Terangkan bahwa syarat bergantung pada barang, asal, dan aturan yang berlaku.
 ${referenceContext}`;
 
       const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {

@@ -99,8 +99,8 @@ export default function AuthModal() {
           <h3 className="modal-title">{title}</h3>
           <p className="modal-subtitle">
             {isEn
-              ? 'Access AI Agent for UMKM export automation and management.'
-              : 'Akses AI Agent untuk otomasi dan pengelolaan ekspor UMKM.'}
+              ? 'Access AI trade tools for Indonesian exporters and global importers.'
+              : 'Akses fitur perdagangan AI untuk eksportir Indonesia dan importir global.'}
           </p>
         </div>
 
@@ -109,13 +109,13 @@ export default function AuthModal() {
             className={`modal-tab ${tab === 'seller' ? 'active' : ''}`}
             onClick={() => setTab('seller')}
           >
-            {isEn ? 'UMKM Business (Seller)' : 'Pelaku UMKM (Seller)'}
+            {isEn ? 'Indonesian Exporter (Seller)' : 'Eksportir Indonesia (Seller)'}
           </button>
           <button
             className={`modal-tab ${tab === 'buyer' ? 'active' : ''}`}
             onClick={() => setTab('buyer')}
           >
-            {isEn ? 'Global Buyer' : 'Global Buyer'}
+            {isEn ? 'Global Importer (Buyer)' : 'Importir Global (Buyer)'}
           </button>
         </div>
 
