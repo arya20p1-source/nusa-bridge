@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useApp } from '../context/AppContext.jsx';
 import T from '../components/T.jsx';
@@ -1750,11 +1750,25 @@ function EscrowTab() {
 export default function SolutionsPage() {
   const { openAuth } = useApp();
   const { showToast } = useApp();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('tab-rfq');
 
+  // Deep link dari navbar: /solusi#rfq-studio dan /solusi#dokumen
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    const hash = (location.hash || '').replace('#', '').toLowerCase();
+    if (hash === 'rfq-studio') setActiveTab('tab-rfq');
+    if (hash === 'dokumen' || hash === 'pdf' || hash === 'documents') setActiveTab('tab-pdf');
+    if (!hash) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    requestAnimationFrame(() => {
+      const el =
+        document.getElementById(hash) ||
+        document.getElementById('ai-interactive-suite');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [location.hash]);
 
   function goDocGen() {
     setActiveTab('tab-pdf');
@@ -1789,6 +1803,8 @@ export default function SolutionsPage() {
             <p className="section-subtitle">Uji coba interaktif 4 kemampuan inti AI: Konversi RFQ Incoterms 2020, penerbitan draf berkas PDF resmi, audit legalitas KYC Hub, dan notifikasi 4 fase Escrow Vault.</p>
           </div>
 
+          <span id="rfq-studio" className="section-anchor" aria-hidden="true" />
+          <span id="dokumen" className="section-anchor" aria-hidden="true" />
           <div className="ai-tabs-nav">
             {AI_TABS.map((t) => (
               <button

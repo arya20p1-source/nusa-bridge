@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 
 import { useApp } from '../context/AppContext.jsx';
 import T from '../components/T.jsx';
+import TransportPanel from '../components/TransportPanel.jsx';
 import { apiUrl } from '../utils/api.js';
 import { PRODUCTS_DATA } from '../data/products.js';
 
@@ -105,6 +106,7 @@ function SpecModal({ prod, onClose, onLanjutRfq }) {
             </div>
           </div>
         </div>
+        <TransportPanel product={prod} />
         <div className="modal-footer-spec">
           <button className="btn btn-outline" type="button" onClick={onClose}>Tutup</button>
           <button className="btn btn-primary" type="button" onClick={onLanjutRfq}>Ajukan Permintaan Harga (RFQ)</button>
@@ -582,6 +584,9 @@ export default function ProductsPage() {
                           Ajukan RFQ
                         </button>
                       </div>
+                      <Link to={`/transportasi?product=${encodeURIComponent(prod.id)}`} className="card-shipping-link">
+                        🚚 Cek opsi &amp; estimasi pengiriman →
+                      </Link>
                     </div>
                   </div>
                 );

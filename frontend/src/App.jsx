@@ -15,6 +15,8 @@ import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
 import SolutionsPage from './pages/SolutionsPage.jsx';
 import PricingPage from './pages/PricingPage.jsx';
+import TransportPage from './pages/TransportPage.jsx';
+import TrackingPage from './pages/TrackingPage.jsx';
 
 /**
  * ==========================================================================
@@ -38,6 +40,12 @@ export default function App() {
         <Route path="/produk" element={<ProductsPage />} />
         <Route path="/solusi" element={<SolutionsPage />} />
         <Route path="/harga" element={<PricingPage />} />
+        <Route path="/transportasi" element={<TransportPage />} />
+        <Route path="/logistik" element={<TransportPage />} />
+        <Route path="/pelacakan" element={<TrackingPage />} />
+        <Route path="/pelacakan/:id" element={<TrackingPage />} />
+        <Route path="/lacak" element={<TrackingPage />} />
+        <Route path="/lacak/:id" element={<TrackingPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
 

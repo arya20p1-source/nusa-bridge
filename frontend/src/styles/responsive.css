@@ -152,13 +152,7 @@ table {
 
 @media (max-width: 480px) {
   .modal-card {
-    padding: 18px 14px 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .modal-card {
-    padding: 18px 14px 24px;
+    padding: 18px 16px 24px;
   }
 }
 
@@ -308,7 +302,7 @@ table {
 
 @media (max-width: 480px) {
   .site-container {
-    padding: 0 12px;
+    padding: 0 16px;
   }
 
   .hero-title {
@@ -321,6 +315,112 @@ table {
 
   .page-hero-title {
     font-size: 32px !important;
+  }
+}
+
+/* 6b. Padding horizontal 16-20px agar konten tidak menempel di tepi layar */
+@media (max-width: 640px) {
+  .site-container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .nav-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* 6c. Anchor hash tidak tertutup navbar sticky */
+.section-anchor {
+  display: block;
+  height: 0;
+  overflow: hidden;
+  scroll-margin-top: 92px;
+}
+
+section[id],
+header[id],
+.section-workflow[id],
+[id="alur-ekspor"],
+[id="alur-impor"],
+[id="kontak"],
+[id="rfq-studio"],
+[id="dokumen"] {
+  scroll-margin-top: 92px;
+}
+
+/* 6d. Carousel produk di HP: swipeable, kartu proporsional, teks utuh */
+@media (max-width: 640px) {
+  .products-carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(240px, 78vw);
+    grid-template-columns: none;
+    gap: 14px;
+    padding: 8px 2px 18px;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+
+  .products-carousel > * {
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+
+  .product-card {
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .product-thumb-wrap {
+    aspect-ratio: 4 / 3;
+  }
+
+  .product-img {
+    object-fit: cover;
+  }
+
+  .product-name {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+  }
+
+  /* Kartu katalog: judul & deskripsi tidak terpotong */
+  .card-item-title,
+  .card-item-desc,
+  .card-location,
+  .catalog-card-content {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .catalog-card-image {
+    height: 190px;
+  }
+
+  .slider-arrow {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .products-carousel {
+    grid-auto-columns: minmax(220px, 82vw);
+  }
+
+  .catalog-card-image {
+    height: 170px;
   }
 }
 

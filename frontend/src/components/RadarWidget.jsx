@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import RadarMap from './radar/RadarMap.jsx';
 import {
@@ -66,6 +67,12 @@ export default function RadarWidget() {
           </span>
         </div>
         <div className="radar-quick-actions">
+          <Link to="/transportasi" className="btn-radar-link" title="Pilih moda transportasi multimoda">
+            🚚 <span>Multimoda</span>
+          </Link>
+          <Link to="/pelacakan" className="btn-radar-link" title="Buka halaman pelacakan pengiriman">
+            📍 <span>Lacak</span>
+          </Link>
           <button
             className="btn-radar-fullscreen"
             type="button"
@@ -147,6 +154,17 @@ export default function RadarWidget() {
           >
             KM Celebes (Asia)
           </button>
+        </div>
+
+        {/* Ringkasan rute multimoda simulasi */}
+        <div className="radar-multimodal-strip">
+          <span className="rms-label">Rute multimoda</span>
+          <span className="rms-mode">🚚 Darat</span>
+          <span className="rms-arrow">→</span>
+          <span className="rms-mode">🚢 Laut</span>
+          <span className="rms-arrow">→</span>
+          <span className="rms-mode">🚚 Darat</span>
+          <span className="rms-change">🔁 1 pergantian moda</span>
         </div>
       </div>
     </div>

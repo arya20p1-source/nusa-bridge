@@ -716,9 +716,13 @@ function LogisticsView({ showToast }) {
           <h4 className="sandbox-title">Pelacakan Logistik Maritim &amp; Kontainer Ekspor</h4>
           <span className="sandbox-badge" style={{ background: '#ecfdf5', color: '#059669' }}>3 Kapal Kargo Aktif Pelayaran</span>
         </div>
-        <button className="btn btn-outline btn-sm" type="button" disabled={loading} onClick={refresh}>
-          {loading ? 'Memperbarui AIS...' : '🔄 Refresh Telemetri AIS'}
-        </button>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <Link to="/transportasi" className="btn btn-primary btn-sm">🚚 Pilih Transportasi</Link>
+          <Link to="/pelacakan" className="btn btn-outline btn-sm">📍 Lacak Pengiriman</Link>
+          <button className="btn btn-outline btn-sm" type="button" disabled={loading} onClick={refresh}>
+            {loading ? 'Memperbarui AIS...' : '🔄 Refresh AIS'}
+          </button>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
@@ -1013,9 +1017,17 @@ function DashboardShowcase() {
 export default function HomePage() {
   const { openAuth, openModal, openInfo } = useApp();
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeCat, setActiveCat] = useState('all');
   const [workflowTab, setWorkflowTab] = useState('export'); // 'export' | 'import'
   const carouselRef = useRef(null);
+
+  // Deep link: /#alur-impor membuka tab impor, /#alur-ekspor membuka tab ekspor.
+  useEffect(() => {
+    const rawHash = (location.hash || '').replace('#', '').toLowerCase();
+    if (rawHash === 'alur-impor') setWorkflowTab('import');
+    if (rawHash === 'alur-ekspor') setWorkflowTab('export');
+  }, [location.hash]);
 
   function scrollCarousel(dir) {
     if (carouselRef.current) {
@@ -1255,6 +1267,7 @@ export default function HomePage() {
 
       {/* ==================== ALUR EKSPOR & IMPOR ==================== */}
       <section className="section-workflow" id="alur-ekspor">
+        <span id="alur-impor" className="section-anchor" aria-hidden="true" />
         <div className="workflow-wave-top">
           <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
             <path d="M0,0 L1440,0 L1440,24 C1360,34 1280,58 1160,60 C960,64 820,14 620,18 C380,22 220,64 0,44 Z" fill="#ffffff" />
@@ -1341,7 +1354,7 @@ export default function HomePage() {
       </section>
 
       {/* ==================== CTA BANNER ==================== */}
-      <section className="section-cta-banner">
+      <section className="section-cta-banner" id="kontak">
         <div className="cta-banner-wave">
           <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
             <path d="M0,0 L1440,0 L1440,24 C1360,34 1280,58 1160,60 C960,64 820,14 620,18 C380,22 220,64 0,44 Z" fill="#ffffff" />

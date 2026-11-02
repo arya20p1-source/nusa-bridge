@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext.jsx';
 import { getInitials, readLogoFile } from '../utils/logo.js';
 import T from './T.jsx';
@@ -76,23 +76,64 @@ export default function Navbar() {
     return () => document.removeEventListener('click', onOutside);
   }, []);
 
+  // Kunci scroll & tutup menu lewat Escape saat menu mobile terbuka.
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    const onResize = () => {
+      if (window.innerWidth > 768) setMenuOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeyDown);
+    window.addEventListener('resize', onResize);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [menuOpen]);
+
+  // Menu navigasi sesuai kebutuhan: Beranda, Produk, RFQ Studio, Dokumen,
+  // Alur Ekspor, Alur Impor, Kontak.
   const navLinks = [
-    { to: '/', key: 'nav_home', section: 'hero' },
-    { to: '/produk', key: 'nav_products' },
-    { to: '/solusi', key: 'nav_solutions' },
-    { to: '/#alur-ekspor', key: 'nav_workflow', section: 'alur-ekspor' },
-    { to: '/harga', key: 'nav_pricing' },
-    { to: '/#tentang', key: 'nav_about', section: 'tentang' },
+    { key: 'nav_home', path: '/', hash: '', section: 'hero' },
+    { key: 'nav_products', path: '/produk', hash: '', section: '' },
+    { key: 'nav_rfq_studio', path: '/solusi', hash: 'rfq-studio', section: '' },
+    { key: 'nav_documents', path: '/solusi', hash: 'dokumen', section: '' },
+    { key: 'nav_export_flow', path: '/', hash: 'alur-ekspor', section: 'alur-ekspor' },
+    { key: 'nav_import_flow', path: '/', hash: 'alur-impor', section: '' },
+    { key: 'nav_contact', path: '/', hash: 'kontak', section: 'kontak' },
   ];
 
-  function handleSectionLink(to, section) {
+  function scrollToHash(hash) {
+    if (!hash) return;
+    const el = document.getElementById(hash);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function handleNavLink(e, link) {
+    e.preventDefault();
     setMenuOpen(false);
-    if (location.pathname === to && section) {
-      const el = document.getElementById(section);
-      if (el) window.scrollTo({ top: el.offsetTop - 90, behavior: 'smooth' });
-    } else {
-      navigate(section ? `${to}#${section}` : to);
+    const { path, hash } = link;
+
+    if (location.pathname === path) {
+      if (hash) {
+        if (location.hash !== `#${hash}`) {
+          navigate(`${path}#${hash}`, { replace: true });
+        }
+        // Beri kesempatan React merender tab/section tujuan sebelum scroll.
+        requestAnimationFrame(() => scrollToHash(hash));
+      } else {
+        if (location.hash) navigate(path, { replace: true });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
     }
+
+    navigate(hash ? `${path}#${hash}` : path);
   }
 
   async function handleLogoChange(e) {
@@ -116,46 +157,61 @@ export default function Navbar() {
           <img src="/assets/logo-transparent.webp" alt="NusaBridge Logo" className="brand-logo" />
         </Link>
 
-        <nav className={`nav-menu ${menuOpen ? 'mobile-open' : ''}`} id="navMenu">
+        <nav className={`nav-menu ${menuOpen ? 'mobile-open' : ''}`} id="navMenu" aria-label="Navigasi utama">
           {navLinks.map((l) => {
-            const isHash = l.to.startsWith('/#');
             const active = l.section
-              ? activeSection === l.section
-              : location.pathname === l.to;
-            return isHash ? (
+              ? location.pathname === '/' && activeSection === l.section
+              : l.hash
+                ? location.pathname === l.path && location.hash === `#${l.hash}`
+                : location.pathname === l.path && !location.hash;
+            const href = l.hash ? `${l.path}#${l.hash}` : l.path;
+            return (
               <a
                 key={l.key}
                 className={`nav-link ${active ? 'active' : ''}`}
-                href={l.to}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSectionLink('/', l.section);
-                }}
+                href={href}
+                onClick={(e) => handleNavLink(e, l)}
                 data-i18n={l.key}
+                aria-current={active ? 'page' : undefined}
               >
                 <T k={l.key} />
               </a>
-            ) : (
-              <NavLink
-                key={l.key}
-                to={l.to}
-                className={() => `nav-link ${active ? 'active' : ''}`}
-                onClick={() => setMenuOpen(false)}
-                data-i18n={l.key}
-              >
-                <T k={l.key} />
-              </NavLink>
             );
           })}
 
-          <div className="mobile-nav-auth">
-            <button className="btn btn-outline btn-block" type="button" onClick={() => { setMenuOpen(false); openAuth('login'); }}>
-              <T k="btn_login" />
-            </button>
-            <button className="btn btn-primary btn-block" type="button" onClick={() => { setMenuOpen(false); openAuth('register'); }}>
-              <T k="btn_register" /> <ArrowRightIcon />
-            </button>
-          </div>
+          {session?.loggedIn && (
+            <div className="mobile-nav-user">
+              <div className="mnu-profile">
+                {session.logo ? (
+                  <img src={session.logo} alt={`Logo ${session.company || session.name}`} className="mnu-avatar" />
+                ) : (
+                  <span className="mnu-avatar mnu-initials">{getInitials(session.company || session.name)}</span>
+                )}
+                <div>
+                  <strong>{session.company || session.name}</strong>
+                  <span>
+                    {session.role === 'buyer' || session.role === 'importer'
+                      ? (lang === 'en' ? 'Global Buyer' : 'Importir Global')
+                      : (lang === 'en' ? 'Indonesian Exporter' : 'Eksportir Indonesia')}
+                  </span>
+                </div>
+              </div>
+              <button className="btn btn-outline btn-block" type="button" onClick={() => { setMenuOpen(false); logout(); }}>
+                {t('btn_logout', lang === 'en' ? 'Sign out' : 'Keluar')}
+              </button>
+            </div>
+          )}
+
+          {!session?.loggedIn && (
+            <div className="mobile-nav-auth">
+              <button className="btn btn-outline btn-block" type="button" onClick={() => { setMenuOpen(false); openAuth('login'); }}>
+                <T k="btn_login" />
+              </button>
+              <button className="btn btn-primary btn-block" type="button" onClick={() => { setMenuOpen(false); openAuth('register'); }}>
+                <T k="btn_register" /> <ArrowRightIcon />
+              </button>
+            </div>
+          )}
         </nav>
 
         <div className="nav-actions">
@@ -240,17 +296,23 @@ export default function Navbar() {
               <button className="btn btn-primary nav-desktop-auth" onClick={() => openAuth('register')}>
                 <T k="btn_register" /> <ArrowRightIcon />
               </button>
-              <button
-                className={`mobile-toggle ${menuOpen ? 'open' : ''}`}
-                aria-label="Toggle menu"
-                onClick={() => setMenuOpen((v) => !v)}
-              >
-                <span />
-                <span />
-                <span />
-              </button>
             </>
           )}
+
+          <button
+            className={`mobile-toggle ${menuOpen ? 'open' : ''}`}
+            type="button"
+            aria-label={menuOpen
+              ? (lang === 'en' ? 'Close navigation menu' : 'Tutup menu navigasi')
+              : (lang === 'en' ? 'Open navigation menu' : 'Buka menu navigasi')}
+            aria-expanded={menuOpen}
+            aria-controls="navMenu"
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
       </div>
     </header>

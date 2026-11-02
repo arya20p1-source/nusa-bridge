@@ -322,6 +322,39 @@ export default function RadarMap({ variant = 'home', onSelectVessel }) {
         <path className="air-route" d="M477 181 Q526 112 532 104" />
         <path className="air-route" d="M477 181 Q560 135 600 141 M0 141 Q56 116 103 106" />
 
+        {/* Lapisan rute multimoda simulasi: darat, kereta, laut, udara.
+            Warna berbeda + ikon moda + node pergantian transportasi. */}
+        <g className="multimodal-overlay" aria-label="Simulasi rute multimoda darat, laut, dan udara">
+          <path className="multimodal-route land" d="M477 181 C492 188 508 196 524 202" />
+          <path className="multimodal-route rail" d="M477 181 C456 198 434 210 412 218" />
+          <path className="multimodal-route sea" d="M477 181 C506 172 534 158 560 144" />
+          <path className="multimodal-route air" d="M477 181 C455 150 432 132 408 118" />
+
+          <g transform="translate(524 202)">
+            <circle r="9" fill="#0b172c" stroke="#f59e0b" strokeWidth="1.2" />
+            <text x="0" y="4" textAnchor="middle" fontSize="10">🚚</text>
+          </g>
+          <g transform="translate(412 218)">
+            <circle r="9" fill="#0b172c" stroke="#34d399" strokeWidth="1.2" />
+            <text x="0" y="4" textAnchor="middle" fontSize="10">🚆</text>
+          </g>
+          <g transform="translate(560 144)">
+            <circle r="9" fill="#0b172c" stroke="#38bdf8" strokeWidth="1.2" />
+            <text x="0" y="4" textAnchor="middle" fontSize="10">🚢</text>
+          </g>
+          <g transform="translate(408 118)">
+            <circle r="9" fill="#0b172c" stroke="#c084fc" strokeWidth="1.2" />
+            <text x="0" y="4" textAnchor="middle" fontSize="10">✈️</text>
+          </g>
+
+          {/* Node pergantian moda di Jakarta (simulasi) */}
+          <g transform="translate(477 181)">
+            <circle r="12" fill="none" stroke="#38bdf8" strokeWidth="1" strokeDasharray="2 2" className="multimodal-change-ring" />
+            <circle r="4" fill="#38bdf8" />
+            <text x="8" y="-8" fill="#7dd3fc" fontSize="7" fontWeight="700">🔁 CHANGE</text>
+          </g>
+        </g>
+
         <g className="aircraft-marker" transform="translate(397 112) rotate(-38)" role="img" aria-label="Pesawat pada rute udara Jakarta-Hamburg">
           <text x="0" y="0">✈</text>
         </g>
@@ -360,8 +393,10 @@ export default function RadarMap({ variant = 'home', onSelectVessel }) {
         {VESSEL_KEYS.map((key) => renderVessel(key))}
       </svg>
       <div className="map-transport-legend" aria-label="Legenda jenis pengiriman">
-        <span><b className="legend-sea">●</b> Rute laut</span>
-        <span><b className="legend-air">✈</b> Rute udara</span>
+        <span><b className="legend-sea">🚢</b> Laut</span>
+        <span><b className="legend-air">✈️</b> Udara</span>
+        <span><b className="legend-land">🚚</b> Darat</span>
+        <span><b className="legend-train">🚆</b> Kereta</span>
       </div>
     </>
   );
