@@ -3,7 +3,7 @@ import downloadHtmlFile from '../utils/downloadHtmlFile.js';
 
 export const TX_DATA = {
   gayo: {
-    title: 'Kontrak Ekspor #TRX-2026-GY-01',
+    title: 'Kontrak Ekspor & Impor #TRX-2026-GY-01',
     product: 'Kopi Arabika Gayo Specialty Grade 1',
     buyer: 'Hanseatic Coffee Importers GmbH (Hamburg, Jerman 🇩🇪)',
     value: 'USD 12,000 (FOB Belawan Port)',
@@ -14,7 +14,7 @@ export const TX_DATA = {
     docs: ['Draft Sales Contract #SC-088', 'Proforma Invoice #INV-049', 'Sertifikat Uji Organik ICO'],
   },
   rempah: {
-    title: 'Kontrak Ekspor #TRX-2026-RP-04',
+    title: 'Kontrak Ekspor & Impor #TRX-2026-RP-04',
     product: 'Cengkeh Lal Maluku Kering Pilihan (Cloves)',
     buyer: 'Spice Orient FZE (Dubai, Uni Emirat Arab 🇦🇪)',
     value: 'USD 8,750 (CIF Jebel Ali Port)',
@@ -25,7 +25,7 @@ export const TX_DATA = {
     docs: ['Commercial Invoice Resmi', 'Packing List 56 Colly', 'Draft PEB Beacukai', 'Phytosanitary Cert'],
   },
   tenun: {
-    title: 'Kontrak Ekspor #TRX-2026-TN-09',
+    title: 'Kontrak Ekspor & Impor #TRX-2026-TN-09',
     product: 'Kain Tenun Ikat Pewarna Alami Sumba',
     buyer: 'Artisan Heritage Gallery (Amsterdam, Belanda 🇳🇱)',
     value: 'USD 24,000 (Air Freight Door to Port)',
@@ -117,8 +117,8 @@ export default function TxModal() {
     `;
 
     downloadHtmlFile(
-      `Kontrak-Ekspor-${t.product.replace(/[^a-zA-Z0-9]/g, '-')}.html`,
-      `Kontrak Ekspor - ${t.product}`,
+      `Kontrak-Ekspor-Impor-${t.product.replace(/[^a-zA-Z0-9]/g, '-')}.html`,
+      `Kontrak Ekspor & Impor - ${t.product}`,
       contractHtml
     );
     showToast('📄 Dokumen ekspor resmi berhasil diunduh ke perangkat Anda!');

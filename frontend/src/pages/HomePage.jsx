@@ -1277,7 +1277,7 @@ export default function HomePage() {
               {workflowTab === 'export' ? <T k="workflow_sub_export" /> : <T k="workflow_sub_import" />}
             </p>
 
-            {/* Toggle Alur Ekspor vs Alur Impor */}
+            {/* Toggle Alur Ekspor & Impor vs Alur Impor */}
             <div className="workflow-direction-toggle" style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '16px' }}>
               <button
                 type="button"

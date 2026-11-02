@@ -218,7 +218,7 @@ const ROLE_SUGGESTIONS = {
   },
   guest: {
     id: [
-      'Apakah saya bisa chat bebas di NusaBridge AI?',
+      'Apakah saya bisa chat bebas di NusaBridge AI untuk ekspor & impor?',
       'Apa perbedaan peran Eksportir (Seller) dan Importir (Buyer)?',
       'Fitur ekspor dan impor apa saja yang ada di website ini?',
       'Bagaimana alur kerja ekspor dan impor di NusaBridge?',
@@ -226,7 +226,7 @@ const ROLE_SUGGESTIONS = {
       'Kopi dan rempah apa saja yang tersedia di katalog?',
     ],
     en: [
-      'Can I freely chat and consult with NusaBridge AI?',
+      'Can I freely chat and consult with NusaBridge AI about export & import?',
       'What is the difference between Exporter and Importer roles?',
       'What export and import features are on this website?',
       'How do export and import workflows operate on NusaBridge?',
@@ -551,7 +551,7 @@ function RolesSection() {
         : [
             'Cek Kesiapan Legalitas: Simulasikan pemeriksaan NIB/NPWP dan tinjau checklist negara tujuan (FDA, EUDR, JAS, Halal) di KYC Hub.',
             'Simulasi HPP & Margin: Perkirakan biaya FOB/CIF dan margin penawaran di RFQ Studio.',
-            'Draf Dokumen Ekspor: Buat draf Proforma Invoice atau Sales Contract di Auto-PDF, lalu tinjau sebelum digunakan.',
+            'Draf Dokumen Ekspor & Impor: Buat draf Proforma Invoice atau Sales Contract di Auto-PDF, lalu tinjau sebelum digunakan.',
             'Simulasi Pencairan Bertahap: Pelajari tahapan 30% kontrak, 30% PEB, 20% B/L, dan 20% tiba di Escrow Vault (bukan transaksi nyata).',
           ],
       cta: t('role_seller_cta', isEn ? 'Register as Exporter' : 'Daftar sebagai Eksportir'),
@@ -624,7 +624,7 @@ function RolesSection() {
                 {session?.loggedIn ? (
                   card.role === 'seller' ? (
                     <a href="#ai-interactive-suite" className="btn btn-primary btn-block">
-                      {isEn ? 'Try RFQ & Document Suite' : 'Coba Studio RFQ & Dokumen Ekspor'}
+                      {isEn ? 'Try RFQ & Document Suite' : 'Coba Studio RFQ & Dokumen'}
                     </a>
                   ) : (
                     <Link to="/produk" className="btn btn-outline btn-block">
@@ -725,7 +725,7 @@ function PillarsSection() {
         <div className="pillar-row reverse" id="pilar-2">
           <div className="pillar-text">
             <div className="pill-badge pill-blue">PILAR 2</div>
-            <h2 className="pillar-title">Otomatisasi Dokumen Ekspor Resmi</h2>
+            <h2 className="pillar-title">Otomatisasi Dokumen Ekspor & Impor Resmi</h2>
             <p className="pillar-desc">
               Mengisi puluhan lembar dokumen ekspor yang rumit kini digantikan dengan satu klik. AI Agent NusaBridge menerbitkan dokumen resmi yang memenuhi persyaratan Bea Cukai dan International Chamber of Commerce (ICC).
             </p>

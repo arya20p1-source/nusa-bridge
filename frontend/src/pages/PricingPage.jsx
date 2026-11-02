@@ -204,7 +204,7 @@ export default function PricingPage() {
 
   function konsultasiWA() {
     const discInfo = voucherClaimed ? ` (Voucher Subsidi Aktif: ${VOUCHER_CODE} 15%)` : '';
-    const waMsg = `Halo Tim NusaBridge, saya pelaku UMKM telah menghitung estimasi transaksi ekspor senilai USD ${calcContract} dengan estimasi net profit ${calcs.netProfitText}${discInfo}. Mohon asistensi untuk eksekusi kontrak ini. Terima kasih!`;
+    const waMsg = `Halo Tim NusaBridge, saya pelaku UMKM telah menghitung estimasi transaksi ekspor & impor senilai USD ${calcContract} dengan estimasi net profit ${calcs.netProfitText}${discInfo}. Mohon asistensi untuk eksekusi kontrak ini. Terima kasih!`;
     window.open(`https://wa.me/6285735800491?text=${encodeURIComponent(waMsg)}`, '_blank');
   }
 

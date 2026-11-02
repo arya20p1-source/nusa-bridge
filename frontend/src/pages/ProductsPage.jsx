@@ -644,7 +644,7 @@ export default function ProductsPage() {
                 <button className="btn btn-primary btn-lg" type="button" onClick={() => openAuth('register', { role: 'seller' })}>
                   Daftar sebagai Eksportir
                 </button>
-                <Link to="/solusi" className="btn btn-glass btn-lg">Pelajari Alur Ekspor AI</Link>
+                <Link to="/solusi" className="btn btn-glass btn-lg">Pelajari Alur Ekspor & Impor AI</Link>
               </div>
             </div>
             <div className="seller-cta-visual">

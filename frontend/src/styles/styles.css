@@ -1986,6 +1986,14 @@ ul {
   .seller-cta-title {
     font-size: 24px;
   }
+  .footer-top-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .hero-section {
+    padding: 100px 0 24px 0;
+    min-height: auto;
+  }
 }
 
 /* ==================== 10. FOOTER ==================== */
@@ -2557,10 +2565,11 @@ ul {
   }
 
   .nav-container {
-    padding: 10px 16px;
+    padding: 10px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
   }
 
   .nav-brand {
@@ -2586,6 +2595,14 @@ ul {
 
   .mobile-toggle {
     display: flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-toggle span {
+    width: 24px;
   }
 
   .lang-selector-btn {
@@ -2637,14 +2654,14 @@ ul {
 
   /* Hero Section Mobile */
   .hero-section {
-    padding-top: 24px;
+    padding-top: 90px;
     padding-bottom: 24px;
     min-height: auto;
   }
 
   .hero-title {
-    font-size: 28px;
-    line-height: 1.22;
+    font-size: 32px;
+    line-height: 1.18;
   }
 
   .hero-description {
@@ -2663,6 +2680,7 @@ ul {
   .hero-actions .btn {
     width: 100%;
     justify-content: center;
+    min-height: 48px;
   }
 
   .hero-trust-list {

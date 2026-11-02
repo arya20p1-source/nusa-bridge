@@ -18,8 +18,8 @@ export default function Footer() {
     },
     {
       key: 'res_docs',
-      id: 'Panduan alur ekspor dapat dilihat pada bagian Alur Ekspor di beranda.',
-      en: 'The export workflow guide is available in the Export Flow section on the home page.',
+      id: 'Panduan alur ekspor & impor dapat dilihat pada bagian Alur Ekspor & Impor di beranda.',
+      en: 'The export & import workflow guide is available in the Export & Import Flow section on the home page.',
     },
     {
       key: 'res_blog',

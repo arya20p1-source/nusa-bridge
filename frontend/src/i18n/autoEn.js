@@ -39,7 +39,7 @@ export const AUTO_EN = {
   'Ajukan RFQ': 'Request RFQ',
   'Phytosanitary Karantina': 'Phytosanitary Quarantine',
   'UNTUK PELAKU USAHA UMKM': 'FOR MSME BUSINESSES',
-  'Pelajari Alur Ekspor AI': 'Learn AI Export Flow',
+  'Pelajari Alur Ekspor AI': 'Learn AI Export & Import Flow',
   '100% Proteksi Transaksi': '100% Transaction Protection',
   'Escrow Vault 4 Tahap Dana Aman': 'Escrow Vault 4-Stage Safe Funds',
   '(Hal': '(Page',
@@ -88,7 +88,7 @@ export const AUTO_EN = {
   'Harga Dasar FOB Tanjung Priok:': 'Base Price FOB Tanjung Priok:',
   'Rekomendasi Penawaran CIF:': 'Recommended CIF Offer:',
   'Margin Aman: +18.5% Net Profit': 'Safe Margin: +18.5% Net Profit',
-  'Otomatisasi Dokumen Ekspor Resmi': 'Official Export Document Automation',
+  'Otomatisasi Dokumen Ekspor & Impor Resmi': 'Official Export & Import Document Automation',
   'Terbit instan dengan klausul perlindungan hukum internasional untuk melindungi hak penjual lokal.':
     'Issued instantly with international legal protection clauses to safeguard local sellers.',
   'Kalkulasi berat bersih (net weight), berat kotor (gross weight), dan volume CBM peti kemas tanpa salah hitung.':

@@ -38,14 +38,17 @@ export function getSmartIndexReply(userQuery, lang = 'id') {
     q.startsWith('halo ') || q.startsWith('hai ') ||
     q.includes('selamat pagi') || q.includes('selamat siang') || q.includes('selamat malam') || q.includes('apa kabar')
   ) {
-    return `Halo! Saya adalah **NusaBridge AI**, asisten perdagangan ekspor-impor cerdas untuk UMKM Indonesia.
+    return `Halo! Saya adalah **NusaBridge AI**, asisten perdagangan ekspor & impor cerdas untuk UMKM Indonesia.
+
+Saya akan berpikir terlebih dahulu untuk memahami pertanyaan Anda dan memberikan jawaban yang relevan, jelas, dan fokus pada ekspor-impor.
 
 Ada yang bisa saya bantu hari ini? Anda dapat menanyakan:
 • Cara kerja kecerdasan buatan NusaBridge AI
 • Kalkulasi harga Incoterms 2020 (FOB, Ocean Freight, Asuransi, CIF)
 • Pengecekan izin usaha NIB OSS & sertifikasi karantina
-• Rekomendasi 50 komoditas ekspor unggulan (Kopi, Rempah, Kriya, Tekstil)
+• Rekomendasi 50 komoditas ekspor & impor unggulan (Kopi, Rempah, Kriya, Tekstil)
 • Skema transaksi aman 4 tahap di Escrow Vault
+• Alur ekspor & impor untuk UMKM
 
 Silakan ketik pertanyaan Anda!`;
   }
@@ -75,15 +78,15 @@ Berdasarkan indeks harga komoditas dan rute pelayaran maritim, penawaran harga d
 Dokumen Proforma Invoice dan Sales Contract telah secara otomatis diterbitkan berstandar ICC Incoterms 2020 berformat PDF lengkap dengan klausul termin pembayaran bertahap Escrow Vault (30% DP / 30% PEB / 20% B/L / 20% Tiba).`;
   }
 
-  // 7. Cara Memulai Ekspor
-  if (q.includes('cara ekspor') || q.includes('langkah ekspor') || q.includes('ekspor pemula') || q.includes('bagaimana ekspor')) {
-    return `🚀 **6 Langkah Memulai Ekspor untuk UMKM:**
-1. Daftarkan NIB perorangan secara gratis di oss.go.id (berlaku sebagai hak kepabeanan).
+  // 7. Cara Memulai Ekspor & Impor
+  if (q.includes('cara ekspor') || q.includes('langkah ekspor') || q.includes('ekspor pemula') || q.includes('bagaimana ekspor') || q.includes('cara impor') || q.includes('langkah impor')) {
+    return `🚀 **6 Langkah Memulai Ekspor & Impor untuk UMKM:**
+1. Daftarkan NIB perorangan secara gratis di oss.go.id (berlaku sebagai hak kepabeanan untuk ekspor maupun impor).
 2. Siapkan komoditas unggulan dan uji mutu (kadar air & kebersihan).
 3. Hitung harga penawaran Incoterms (FOB / CIF) dengan margin aman.
-4. Kirim sampel produk ke calon buyer luar negeri.
+4. Kirim sampel produk ke calon buyer/importir luar negeri atau telusuri katalog untuk impor.
 5. Gunakan pembayaran aman via Escrow Vault (DP 30% di awal).
-6. Proses muat kontainer (stuffing), terbitkan dokumen PEB, dan kapal kargo bertolak!`;
+6. Proses muat/bongkar kontainer, terbitkan dokumen PEB/PIB, dan pantau melalui sistem!`;
   }
 
   // 8. Tentang NusaBridge & Pengembang
