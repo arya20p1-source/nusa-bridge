@@ -252,6 +252,7 @@ app.post('/api/rfq', async (req, res) => {
       buyerCompany: String(buyerCompany || '').trim(),
       buyerEmail,
       buyerCountry: cleanPort,
+      destinationPort: cleanPort,
       productId: String(productId || '').trim() || null,
       productName: cleanProductName,
       quantity: requestedQuantity,

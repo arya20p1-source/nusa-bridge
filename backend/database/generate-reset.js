@@ -1,0 +1,1049 @@
+/**
+ * ==========================================================================
+ * NUSABRIDGE - GENERATOR RESET SUPABASE
+ * File: database/generate-reset.js
+ *
+ * Menghasilkan:
+ *   - database/reset-supabase.sql  (lengkap: reset + 28 tabel + seed)
+ *   - database/setup.sql           (sama dengan reset-supabase.sql)
+ *   - database/schema.sql          (DDL saja: tabel + relasi + index + RLS)
+ *   - database/seed.sql            (data contoh saja)
+ *
+ * Isi database:
+ *   - DROP semua tabel aplikasi lama
+ *   - CREATE 28 tabel baru (id identity + code unik untuk tabel bisnis)
+ *   - Foreign key, index, trigger updated_at, RLS
+ *   - Seed akun demo, paket, voucher, produk, RFQ, transaksi, escrow,
+ *     kategori, pengaturan aplikasi, dan kurs
+ *
+ * Jalankan: node database/generate-reset.js
+ * ==========================================================================
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const PRODUCTS = require('./products-fallback.json');
+
+function sqlString(value) {
+  if (value === null || value === undefined) return 'null';
+  return `'${String(value).replace(/'/g, "''")}'`;
+}
+
+function sqlJson(value) {
+  return `${sqlString(JSON.stringify(value ?? null))}::jsonb`;
+}
+
+function sqlTextArray(values) {
+  if (!Array.isArray(values) || values.length === 0) return `'{}'::text[]`;
+  return `array[${values.map((item) => sqlString(item)).join(', ')}]::text[]`;
+}
+
+function incotermsFromShipping(shipping) {
+  const first = String(shipping || '').trim().split(/\s+/)[0].toUpperCase();
+  return ['FOB', 'CIF', 'CNF', 'EXW'].includes(first) ? first : 'FOB';
+}
+
+function portFromShipping(shipping) {
+  const text = String(shipping || '').trim();
+  const first = text.split(/\s+/)[0].toUpperCase();
+  if (['FOB', 'CIF', 'CNF', 'EXW'].includes(first)) {
+    return text.slice(first.length).trim() || null;
+  }
+  return text || null;
+}
+
+const productRows = PRODUCTS.map((product) => {
+  const code = product.id;
+  return `  (${[
+    sqlString(code),
+    sqlString(product.name),
+    sqlString(code),
+    sqlString(product.category),
+    Number(product.price) || 0,
+    sqlString('USD'),
+    sqlString(product.unit),
+    Number(product.moq) || 1,
+    sqlString(product.origin),
+    sqlString(product.hsCode || null),
+    sqlString(product.image || null),
+    sqlJson([]),
+    sqlString(product.desc || null),
+    sqlJson(product.specs || []),
+    sqlTextArray(product.certs || []),
+    sqlString(product.shipping || null),
+    sqlString(incotermsFromShipping(product.shipping)),
+    sqlString(portFromShipping(product.shipping)),
+    sqlString('published'),
+    product.verifiedExporter ? 'true' : 'false',
+    sqlString(product.createdAt || new Date().toISOString()),
+  ].join(', ')})`;
+}).join(',\n');
+
+const sql = `-- ==========================================================================
+-- NUSABRIDGE - RESET TOTAL DATABASE SUPABASE (V2 - 28 TABEL)
+-- File: database/reset-supabase.sql
+--
+-- ⚠️ PERINGATAN: FILE INI MENGHAPUS SEMUA TABEL APLIKASI LAMA.
+--    Jalankan hanya jika kamu sudah siap mengganti seluruh database.
+--
+-- CARA PAKAI:
+--   1. Buka Supabase Dashboard -> SQL Editor -> New query
+--   2. Copy SELURUH isi file ini
+--   3. Klik Run
+--   4. Cek Table Editor: users, products, rfqs, transactions, dst. (28 tabel)
+--   5. Jalankan: npm.cmd run db:check (di folder backend)
+--
+-- STRUKTUR ID:
+--   id   = bigint identity, Primary Key internal
+--   code = text unik, ID bisnis yang dipakai aplikasi
+--          (mis. prod_kopi_001, rfq_001, use_179..., tx_2026_089)
+-- ==========================================================================
+
+begin;
+
+-- ==========================================================================
+-- 1. HAPUS TABEL LAMA (urutan child -> parent)
+-- ==========================================================================
+drop table if exists public.audit_logs cascade;
+drop table if exists public.app_settings cascade;
+drop table if exists public.exchange_rates cascade;
+drop table if exists public.product_categories cascade;
+drop table if exists public.escrow_events cascade;
+drop table if exists public.rfq_messages cascade;
+drop table if exists public.email_verifications cascade;
+drop table if exists public.password_resets cascade;
+drop table if exists public.sessions cascade;
+drop table if exists public.ai_chat_messages cascade;
+drop table if exists public.ai_chat_sessions cascade;
+drop table if exists public.notifications cascade;
+drop table if exists public.transport_quotes cascade;
+drop table if exists public.transport_options cascade;
+drop table if exists public.voucher_claims cascade;
+drop table if exists public.payments cascade;
+drop table if exists public.subscriptions cascade;
+drop table if exists public.kyc_verifications cascade;
+drop table if exists public.documents cascade;
+drop table if exists public.shipment_events cascade;
+drop table if exists public.shipment_segments cascade;
+drop table if exists public.shipments cascade;
+drop table if exists public.transactions cascade;
+drop table if exists public.rfqs cascade;
+drop table if exists public.products cascade;
+drop table if exists public.vouchers cascade;
+drop table if exists public.plans cascade;
+drop table if exists public.users cascade;
+
+-- Tabel versi lama
+drop table if exists public.orderan cascade;
+drop table if exists public.login cascade;
+
+-- ==========================================================================
+-- 2. TABEL UTAMA
+-- ==========================================================================
+
+-- 2.1 USERS (pengganti tabel login)
+create table public.users (
+  id                bigint generated by default as identity primary key,
+  code              text not null unique,
+  name              text not null,
+  email             text not null,
+  password_hash     text,
+  company           text,
+  role              text not null default 'seller'
+                    check (role in ('seller', 'buyer', 'admin')),
+  nib               text,
+  npwp              text,
+  status            text not null default 'pending'
+                    check (status in ('pending', 'verified', 'rejected', 'suspended')),
+  plan              text default 'Free Trial (1 Bulan)',
+  logo_url          text,
+  phone             text,
+  email_verified_at timestamptz,
+  last_login_at     timestamptz,
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz not null default now(),
+  deleted_at        timestamptz
+);
+
+create unique index users_email_lower_uidx on public.users (lower(email));
+create index users_role_idx on public.users (role);
+create index users_status_idx on public.users (status);
+
+-- 2.2 PLANS (paket harga)
+create table public.plans (
+  id              bigint generated by default as identity primary key,
+  code            text not null unique,
+  name            text not null,
+  description     text,
+  duration_months smallint not null default 1 check (duration_months > 0),
+  price_idr       numeric(14,2) not null default 0 check (price_idr >= 0),
+  discount_pct    numeric(5,2) not null default 0 check (discount_pct between 0 and 100),
+  features        jsonb not null default '[]'::jsonb,
+  is_active       boolean not null default true,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+-- 2.3 VOUCHERS
+create table public.vouchers (
+  id           bigint generated by default as identity primary key,
+  code         text not null unique,
+  discount_pct numeric(5,2) not null default 0 check (discount_pct between 0 and 100),
+  max_uses     integer,
+  used_count   integer not null default 0 check (used_count >= 0),
+  valid_from   timestamptz not null default now(),
+  valid_until  timestamptz,
+  is_active    boolean not null default true,
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now()
+);
+
+-- 2.4 PRODUCTS
+create table public.products (
+  id                bigint generated by default as identity primary key,
+  code              text not null unique,
+  seller_id         bigint references public.users(id) on delete set null,
+  name              text not null,
+  slug              text unique,
+  category          text not null,
+  price             numeric(14,2) not null default 0 check (price >= 0),
+  currency          text not null default 'USD',
+  unit              text not null,
+  moq               numeric(14,2) not null default 1 check (moq > 0),
+  origin            text not null,
+  hs_code           text,
+  image             text,
+  gallery           jsonb not null default '[]'::jsonb,
+  description       text,
+  specs             jsonb not null default '[]'::jsonb,
+  certs             text[] not null default '{}'::text[],
+  shipping          text,
+  incoterms         text default 'FOB',
+  port_of_loading   text,
+  weight_kg         numeric(12,2) check (weight_kg is null or weight_kg > 0),
+  volume_m3         numeric(12,2) check (volume_m3 is null or volume_m3 > 0),
+  stock             numeric(14,2) not null default 0 check (stock >= 0),
+  status            text not null default 'draft'
+                    check (status in ('draft', 'published', 'archived')),
+  verified_exporter boolean not null default false,
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz not null default now(),
+  deleted_at        timestamptz
+);
+
+create index products_seller_idx on public.products (seller_id);
+create index products_category_idx on public.products (category);
+create index products_name_idx on public.products (name);
+create index products_status_idx on public.products (status);
+
+-- 2.5 RFQS (pengganti tabel orderan)
+create table public.rfqs (
+  id                bigint generated by default as identity primary key,
+  code              text not null unique,
+  buyer_user_id     bigint references public.users(id) on delete set null,
+  seller_id         bigint references public.users(id) on delete set null,
+  product_id        bigint references public.products(id) on delete set null,
+  product_name      text not null,
+  buyer_name        text not null,
+  buyer_company     text,
+  buyer_email       text not null,
+  buyer_phone       text,
+  buyer_country     text,
+  destination_port  text not null,
+  quantity          numeric(14,2) not null check (quantity > 0),
+  unit              text not null,
+  target_incoterms  text not null default 'FOB'
+                    check (target_incoterms in ('FOB', 'CIF', 'CNF', 'EXW')),
+  target_price_usd  numeric(14,2) not null default 0 check (target_price_usd >= 0),
+  total_value_usd   numeric(16,2) not null default 0,
+  currency          text not null default 'USD',
+  status            text not null default 'submitted'
+                    check (status in ('submitted', 'review', 'quoted', 'approved', 'rejected', 'cancelled')),
+  quoted_price_usd  numeric(14,2),
+  quoted_total_usd  numeric(16,2),
+  quoted_at         timestamptz,
+  valid_until       timestamptz,
+  notes             text,
+  attachments       jsonb not null default '[]'::jsonb,
+  ai_analysis       jsonb,
+  process           jsonb not null default '[]'::jsonb,
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz not null default now(),
+  deleted_at        timestamptz
+);
+
+create index rfqs_buyer_user_idx on public.rfqs (buyer_user_id);
+create index rfqs_seller_idx on public.rfqs (seller_id);
+create index rfqs_product_idx on public.rfqs (product_id);
+create index rfqs_status_idx on public.rfqs (status);
+create index rfqs_created_idx on public.rfqs (created_at desc);
+
+-- 2.6 TRANSACTIONS
+create table public.transactions (
+  id                   bigint generated by default as identity primary key,
+  code                 text not null unique,
+  contract_no          text not null unique,
+  rfq_id               bigint references public.rfqs(id) on delete set null,
+  seller_id            bigint references public.users(id) on delete set null,
+  buyer_id             bigint references public.users(id) on delete set null,
+  product_id           bigint references public.products(id) on delete set null,
+  product_name         text not null,
+  quantity             numeric(14,2),
+  unit                 text,
+  incoterms            text not null,
+  contract_value_usd   numeric(16,2) not null default 0 check (contract_value_usd >= 0),
+  currency             text not null default 'USD',
+  escrow_total_usd     numeric(16,2) not null default 0,
+  escrow_released_usd  numeric(16,2) not null default 0,
+  escrow_remaining_usd numeric(16,2) not null default 0,
+  escrow_stages        jsonb not null default '[]'::jsonb,
+  contract_date        date,
+  vessel_name          text,
+  eta                  timestamptz,
+  status               text not null default 'draft'
+                       check (status in ('draft', 'active', 'in_transit', 'completed', 'cancelled', 'disputed')),
+  documents            jsonb not null default '[]'::jsonb,
+  created_at           timestamptz not null default now(),
+  updated_at           timestamptz not null default now(),
+  deleted_at           timestamptz
+);
+
+create index transactions_rfq_idx on public.transactions (rfq_id);
+create index transactions_seller_idx on public.transactions (seller_id);
+create index transactions_buyer_idx on public.transactions (buyer_id);
+create index transactions_status_idx on public.transactions (status);
+create index transactions_created_idx on public.transactions (created_at desc);
+
+-- 2.7 SHIPMENTS (pelacakan pengiriman)
+create table public.shipments (
+  id             bigint generated by default as identity primary key,
+  code           text not null unique,
+  resi           text not null unique,
+  transaction_id bigint references public.transactions(id) on delete set null,
+  rfq_id         bigint references public.rfqs(id) on delete set null,
+  product_id     bigint references public.products(id) on delete set null,
+  seller_id      bigint references public.users(id) on delete set null,
+  buyer_id       bigint references public.users(id) on delete set null,
+  product_name   text not null,
+  seller_name    text,
+  buyer_name     text,
+  origin         text not null,
+  destination    text not null,
+  service_type   text not null
+                 check (service_type in ('local', 'interisland', 'export', 'import')),
+  weight_kg      numeric(12,2) not null default 0 check (weight_kg >= 0),
+  volume_m3      numeric(12,2) not null default 0 check (volume_m3 >= 0),
+  current_step   smallint not null default 1 check (current_step between 1 and 8),
+  progress       smallint not null default 0 check (progress between 0 and 100),
+  status_text    jsonb,
+  eta            timestamptz,
+  last_update    timestamptz not null default now(),
+  created_at     timestamptz not null default now(),
+  updated_at     timestamptz not null default now()
+);
+
+create index shipments_transaction_idx on public.shipments (transaction_id);
+create index shipments_rfq_idx on public.shipments (rfq_id);
+create index shipments_product_idx on public.shipments (product_id);
+create index shipments_step_idx on public.shipments (current_step);
+
+-- 2.8 SHIPMENT_SEGMENTS (rute multimoda)
+create table public.shipment_segments (
+  id            bigint generated by default as identity primary key,
+  shipment_id   bigint not null references public.shipments(id) on delete cascade,
+  seq           smallint not null check (seq > 0),
+  mode          text not null check (mode in ('land', 'sea', 'air')),
+  option_code   text,
+  icon          text,
+  label         jsonb not null default '{}'::jsonb,
+  from_location text not null,
+  to_location   text not null,
+  distance_km   numeric(10,2),
+  cost_usd      numeric(12,2) not null default 0,
+  hours         numeric(8,2) not null default 0,
+  availability  text not null default 'available'
+                check (availability in ('available', 'limited', 'scheduled', 'unavailable')),
+  created_at    timestamptz not null default now(),
+  unique (shipment_id, seq)
+);
+
+create index shipment_segments_shipment_idx on public.shipment_segments (shipment_id);
+
+-- 2.9 SHIPMENT_EVENTS (riwayat 8 tahap)
+create table public.shipment_events (
+  id             bigint generated by default as identity primary key,
+  shipment_id    bigint not null references public.shipments(id) on delete cascade,
+  step           smallint not null check (step between 1 and 8),
+  title          jsonb not null default '{}'::jsonb,
+  description    jsonb not null default '{}'::jsonb,
+  location       text,
+  event_at       timestamptz not null default now(),
+  is_mode_change boolean not null default false,
+  from_mode      text,
+  to_mode        text,
+  created_at     timestamptz not null default now()
+);
+
+create index shipment_events_shipment_idx on public.shipment_events (shipment_id);
+create index shipment_events_event_idx on public.shipment_events (event_at desc);
+
+-- 2.10 DOCUMENTS
+create table public.documents (
+  id             bigint generated by default as identity primary key,
+  code           text not null unique,
+  transaction_id bigint references public.transactions(id) on delete set null,
+  rfq_id         bigint references public.rfqs(id) on delete set null,
+  user_id        bigint references public.users(id) on delete set null,
+  doc_type       text not null
+                 check (doc_type in ('invoice', 'contract', 'peb', 'coo', 'packing_list', 'bl')),
+  status         text not null default 'draft'
+                 check (status in ('draft', 'generated', 'signed', 'cancelled')),
+  payload        jsonb not null default '{}'::jsonb,
+  file_url       text,
+  generated_at   timestamptz not null default now(),
+  created_at     timestamptz not null default now(),
+  updated_at     timestamptz not null default now()
+);
+
+create index documents_transaction_idx on public.documents (transaction_id);
+create index documents_rfq_idx on public.documents (rfq_id);
+create index documents_user_idx on public.documents (user_id);
+
+-- 2.11 KYC_VERIFICATIONS
+create table public.kyc_verifications (
+  id             bigint generated by default as identity primary key,
+  user_id        bigint not null references public.users(id) on delete cascade,
+  nib            text not null,
+  npwp           text,
+  company_name   text not null,
+  status         text not null default 'pending'
+                 check (status in ('pending', 'verified', 'rejected')),
+  oss_status     text,
+  kbli           text,
+  business_scale text,
+  verified_at    timestamptz,
+  response       jsonb not null default '{}'::jsonb,
+  created_at     timestamptz not null default now()
+);
+
+create index kyc_user_idx on public.kyc_verifications (user_id);
+create index kyc_status_idx on public.kyc_verifications (status);
+
+-- 2.12 SUBSCRIPTIONS
+create table public.subscriptions (
+  id          bigint generated by default as identity primary key,
+  user_id     bigint not null references public.users(id) on delete cascade,
+  plan_id     bigint not null references public.plans(id) on delete restrict,
+  voucher_id  bigint references public.vouchers(id) on delete set null,
+  status      text not null default 'active'
+              check (status in ('trial', 'active', 'expired', 'cancelled')),
+  started_at  timestamptz not null default now(),
+  expires_at  timestamptz,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+create index subscriptions_user_idx on public.subscriptions (user_id);
+create index subscriptions_status_idx on public.subscriptions (status);
+
+-- 2.13 PAYMENTS
+create table public.payments (
+  id              bigint generated by default as identity primary key,
+  invoice_no      text not null unique,
+  user_id         bigint not null references public.users(id) on delete cascade,
+  subscription_id bigint references public.subscriptions(id) on delete set null,
+  transaction_id  bigint references public.transactions(id) on delete set null,
+  amount          numeric(16,2) not null default 0 check (amount >= 0),
+  currency        text not null default 'IDR',
+  method          text,
+  status          text not null default 'pending'
+                  check (status in ('pending', 'paid', 'failed', 'refunded')),
+  paid_at         timestamptz,
+  gateway_ref     text,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+create index payments_user_idx on public.payments (user_id);
+create index payments_status_idx on public.payments (status);
+
+-- 2.14 VOUCHER_CLAIMS
+create table public.voucher_claims (
+  id         bigint generated by default as identity primary key,
+  voucher_id bigint not null references public.vouchers(id) on delete cascade,
+  user_id    bigint not null references public.users(id) on delete cascade,
+  claimed_at timestamptz not null default now(),
+  used_at    timestamptz,
+  created_at timestamptz not null default now(),
+  unique (voucher_id, user_id)
+);
+
+create index voucher_claims_user_idx on public.voucher_claims (user_id);
+
+-- 2.15 TRANSPORT_OPTIONS (master moda)
+create table public.transport_options (
+  id            bigint generated by default as identity primary key,
+  code          text not null unique,
+  category      text not null check (category in ('land', 'sea', 'air')),
+  name          jsonb not null default '{}'::jsonb,
+  description   jsonb not null default '{}'::jsonb,
+  icon          text,
+  capacity_kg   numeric(12,2) not null default 0,
+  capacity_m3   numeric(12,2) not null default 0,
+  speed_kph     numeric(8,2) not null default 0,
+  base_cost_usd numeric(12,2) not null default 0,
+  cost_per_kg   numeric(12,4) not null default 0,
+  cost_per_m3   numeric(12,4) not null default 0,
+  fixed_hours   numeric(8,2) not null default 0,
+  availability  text not null default 'available'
+                check (availability in ('available', 'limited', 'scheduled', 'unavailable')),
+  color         text,
+  coverage      jsonb not null default '{}'::jsonb,
+  is_active     boolean not null default true,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
+
+create index transport_options_category_idx on public.transport_options (category);
+
+-- 2.16 TRANSPORT_QUOTES
+create table public.transport_quotes (
+  id             bigint generated by default as identity primary key,
+  user_id        bigint references public.users(id) on delete set null,
+  product_id     bigint references public.products(id) on delete set null,
+  service_type   text not null
+                 check (service_type in ('local', 'interisland', 'export', 'import')),
+  origin         text,
+  destination    text,
+  weight_kg      numeric(12,2) not null default 0,
+  volume_m3      numeric(12,2) not null default 0,
+  selected_modes text[] not null default '{}'::text[],
+  result         jsonb not null default '[]'::jsonb,
+  total_cost_usd numeric(12,2),
+  total_hours    numeric(8,2),
+  created_at     timestamptz not null default now()
+);
+
+create index transport_quotes_user_idx on public.transport_quotes (user_id);
+
+-- 2.17 NOTIFICATIONS
+create table public.notifications (
+  id         bigint generated by default as identity primary key,
+  user_id    bigint not null references public.users(id) on delete cascade,
+  type       text not null,
+  title      text not null,
+  message    text not null,
+  link       text,
+  is_read    boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+create index notifications_user_idx on public.notifications (user_id, is_read);
+
+-- 2.18 AI_CHAT_SESSIONS
+create table public.ai_chat_sessions (
+  id         bigint generated by default as identity primary key,
+  user_id    bigint references public.users(id) on delete set null,
+  role       text not null default 'seller'
+             check (role in ('seller', 'buyer', 'admin')),
+  page       text,
+  started_at timestamptz not null default now(),
+  ended_at   timestamptz,
+  created_at timestamptz not null default now()
+);
+
+-- 2.19 AI_CHAT_MESSAGES
+create table public.ai_chat_messages (
+  id         bigint generated by default as identity primary key,
+  session_id bigint not null references public.ai_chat_sessions(id) on delete cascade,
+  role       text not null check (role in ('user', 'assistant', 'system')),
+  content    text not null,
+  model      text,
+  created_at timestamptz not null default now()
+);
+
+create index ai_chat_messages_session_idx on public.ai_chat_messages (session_id);
+
+-- 2.20 AUDIT_LOGS
+create table public.audit_logs (
+  id         bigint generated by default as identity primary key,
+  user_id    bigint references public.users(id) on delete set null,
+  action     text not null,
+  table_name text not null,
+  record_id  text,
+  old_data   jsonb,
+  new_data   jsonb,
+  created_at timestamptz not null default now()
+);
+
+create index audit_logs_user_idx on public.audit_logs (user_id);
+create index audit_logs_table_idx on public.audit_logs (table_name, record_id);
+
+-- 2.21 SESSIONS (token login yang tersimpan di server)
+create table public.sessions (
+  id           bigint generated by default as identity primary key,
+  user_id      bigint not null references public.users(id) on delete cascade,
+  token_hash   text not null unique,
+  ip_address   inet,
+  user_agent   text,
+  expires_at   timestamptz not null,
+  revoked_at   timestamptz,
+  last_used_at timestamptz,
+  created_at   timestamptz not null default now()
+);
+
+create index sessions_user_idx on public.sessions (user_id);
+create index sessions_expires_idx on public.sessions (expires_at);
+
+-- 2.22 PASSWORD_RESETS (token reset password)
+create table public.password_resets (
+  id         bigint generated by default as identity primary key,
+  user_id    bigint not null references public.users(id) on delete cascade,
+  token_hash text not null unique,
+  expires_at timestamptz not null,
+  used_at    timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index password_resets_user_idx on public.password_resets (user_id);
+
+-- 2.23 EMAIL_VERIFICATIONS (token verifikasi email)
+create table public.email_verifications (
+  id         bigint generated by default as identity primary key,
+  user_id    bigint not null references public.users(id) on delete cascade,
+  email      text not null,
+  token_hash text not null unique,
+  expires_at timestamptz not null,
+  verified_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index email_verifications_user_idx on public.email_verifications (user_id);
+
+-- 2.24 RFQ_MESSAGES (negosiasi / balasan penawaran)
+create table public.rfq_messages (
+  id             bigint generated by default as identity primary key,
+  rfq_id         bigint not null references public.rfqs(id) on delete cascade,
+  sender_user_id bigint references public.users(id) on delete set null,
+  sender_role    text not null default 'seller'
+                 check (sender_role in ('seller', 'buyer', 'admin', 'system')),
+  message        text not null,
+  attachments    jsonb not null default '[]'::jsonb,
+  created_at     timestamptz not null default now()
+);
+
+create index rfq_messages_rfq_idx on public.rfq_messages (rfq_id, created_at);
+
+-- 2.25 ESCROW_EVENTS (riwayat pencairan escrow)
+create table public.escrow_events (
+  id             bigint generated by default as identity primary key,
+  transaction_id bigint not null references public.transactions(id) on delete cascade,
+  stage          smallint not null check (stage between 1 and 4),
+  pct            numeric(5,2) not null default 0 check (pct between 0 and 100),
+  amount_usd     numeric(16,2) not null default 0 check (amount_usd >= 0),
+  status         text not null default 'pending'
+                 check (status in ('pending', 'in_vault', 'released', 'refunded')),
+  note           text,
+  actor_user_id  bigint references public.users(id) on delete set null,
+  created_at     timestamptz not null default now()
+);
+
+create index escrow_events_transaction_idx on public.escrow_events (transaction_id, stage);
+
+-- 2.26 APP_SETTINGS (konfigurasi aplikasi)
+create table public.app_settings (
+  id          bigint generated by default as identity primary key,
+  key         text not null unique,
+  value       jsonb not null default 'null'::jsonb,
+  description text,
+  is_public   boolean not null default false,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+-- 2.27 EXCHANGE_RATES (kurs mata uang)
+create table public.exchange_rates (
+  id             bigint generated by default as identity primary key,
+  base_currency  text not null,
+  quote_currency text not null,
+  rate           numeric(18,8) not null check (rate > 0),
+  source         text,
+  effective_at   timestamptz not null default now(),
+  created_at     timestamptz not null default now(),
+  updated_at     timestamptz not null default now(),
+  unique (base_currency, quote_currency)
+);
+
+-- 2.28 PRODUCT_CATEGORIES (kategori katalog)
+create table public.product_categories (
+  id          bigint generated by default as identity primary key,
+  code        text not null unique,
+  name        jsonb not null default '{}'::jsonb,
+  description jsonb,
+  icon        text,
+  sort_order  integer not null default 0,
+  is_active   boolean not null default true,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+create index product_categories_sort_idx on public.product_categories (sort_order);
+
+-- ==========================================================================
+-- 3. TRIGGER UPDATED_AT
+-- ==========================================================================
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger users_set_updated_at before update on public.users
+  for each row execute function public.set_updated_at();
+create trigger plans_set_updated_at before update on public.plans
+  for each row execute function public.set_updated_at();
+create trigger vouchers_set_updated_at before update on public.vouchers
+  for each row execute function public.set_updated_at();
+create trigger products_set_updated_at before update on public.products
+  for each row execute function public.set_updated_at();
+create trigger rfqs_set_updated_at before update on public.rfqs
+  for each row execute function public.set_updated_at();
+create trigger transactions_set_updated_at before update on public.transactions
+  for each row execute function public.set_updated_at();
+create trigger shipments_set_updated_at before update on public.shipments
+  for each row execute function public.set_updated_at();
+create trigger documents_set_updated_at before update on public.documents
+  for each row execute function public.set_updated_at();
+create trigger subscriptions_set_updated_at before update on public.subscriptions
+  for each row execute function public.set_updated_at();
+create trigger payments_set_updated_at before update on public.payments
+  for each row execute function public.set_updated_at();
+create trigger transport_options_set_updated_at before update on public.transport_options
+  for each row execute function public.set_updated_at();
+create trigger app_settings_set_updated_at before update on public.app_settings
+  for each row execute function public.set_updated_at();
+create trigger exchange_rates_set_updated_at before update on public.exchange_rates
+  for each row execute function public.set_updated_at();
+create trigger product_categories_set_updated_at before update on public.product_categories
+  for each row execute function public.set_updated_at();
+
+-- ==========================================================================
+-- 4. ROW LEVEL SECURITY
+-- Backend memakai SERVICE ROLE KEY sehingga melewati RLS.
+-- Policy di bawah hanya untuk akses publik via anon key.
+-- ==========================================================================
+alter table public.users               enable row level security;
+alter table public.plans               enable row level security;
+alter table public.vouchers            enable row level security;
+alter table public.products            enable row level security;
+alter table public.rfqs                enable row level security;
+alter table public.transactions        enable row level security;
+alter table public.shipments           enable row level security;
+alter table public.shipment_segments   enable row level security;
+alter table public.shipment_events     enable row level security;
+alter table public.documents           enable row level security;
+alter table public.kyc_verifications   enable row level security;
+alter table public.subscriptions       enable row level security;
+alter table public.payments            enable row level security;
+alter table public.voucher_claims      enable row level security;
+alter table public.transport_options   enable row level security;
+alter table public.transport_quotes    enable row level security;
+alter table public.notifications       enable row level security;
+alter table public.ai_chat_sessions    enable row level security;
+alter table public.ai_chat_messages    enable row level security;
+alter table public.audit_logs          enable row level security;
+alter table public.sessions            enable row level security;
+alter table public.password_resets     enable row level security;
+alter table public.email_verifications enable row level security;
+alter table public.rfq_messages        enable row level security;
+alter table public.escrow_events       enable row level security;
+alter table public.app_settings        enable row level security;
+alter table public.exchange_rates      enable row level security;
+alter table public.product_categories  enable row level security;
+
+create policy "public_read_published_products"
+  on public.products for select
+  to anon, authenticated
+  using (status = 'published');
+
+create policy "public_read_active_plans"
+  on public.plans for select
+  to anon, authenticated
+  using (is_active = true);
+
+create policy "public_read_active_vouchers"
+  on public.vouchers for select
+  to anon, authenticated
+  using (is_active = true);
+
+create policy "public_read_active_transport_options"
+  on public.transport_options for select
+  to anon, authenticated
+  using (is_active = true);
+
+create policy "public_read_active_product_categories"
+  on public.product_categories for select
+  to anon, authenticated
+  using (is_active = true);
+
+create policy "public_read_public_app_settings"
+  on public.app_settings for select
+  to anon, authenticated
+  using (is_public = true);
+
+-- ==========================================================================
+-- 5. SEED DATA DASAR
+-- ==========================================================================
+
+-- 5.1 AKUN DEMO
+insert into public.users (code, name, email, company, role, nib, npwp, status, plan, created_at) values
+  ('use_1792387445560_531', 'Admin NusaBridge', 'owner@bisnis.id', 'NusaBridge Demo', 'seller', '1294801928415', '01.861.639.0-012.000', 'verified', 'Free Trial (1 Bulan)', '2026-10-19T05:24:05.556Z'),
+  ('usr_001', 'Budi Santoso', 'budi@kopinusantara.id', 'CV Kopi Nusantara Mandiri', 'seller', '1294801928415', '01.234.567.8-012.000', 'verified', 'Paket 5 Bulan', '2026-10-15T08:00:00.000Z'),
+  ('usr_002', 'Heinrich Schmidt', 'h.schmidt@nordictrade.de', 'Nordic Coffee Importers GmbH', 'buyer', null, null, 'verified', null, '2026-10-16T10:30:00.000Z')
+on conflict do nothing;
+
+-- 5.2 PAKET HARGA
+insert into public.plans (code, name, description, duration_months, price_idr, discount_pct, features, is_active) values
+  ('free_trial', 'Free Trial (1 Bulan)', 'Masa evaluasi gratis untuk UMKM.', 1, 0, 0, '[]'::jsonb, true),
+  ('plan_1m', 'Paket UMKM Eksportir (1 Bulan)', 'Ditagih bulanan Rp 50.000, fleksibel tanpa komitmen.', 1, 50000, 0, '[]'::jsonb, true),
+  ('plan_5m', 'Paket UMKM Eksportir (5 Bulan)', 'Ditagih Rp 200.000 untuk 5 bulan.', 5, 200000, 20, '[]'::jsonb, true),
+  ('plan_12m', 'Paket UMKM Eksportir (1 Tahun)', 'Ditagih Rp 820.000 untuk 12 bulan.', 12, 820000, 0, '[]'::jsonb, true)
+on conflict do nothing;
+
+-- 5.3 VOUCHER
+insert into public.vouchers (code, discount_pct, max_uses, used_count, valid_from, valid_until, is_active) values
+  ('SUBSIDI-UMKM-15', 15, null, 0, now(), null, true)
+on conflict do nothing;
+
+-- 5.4 PRODUK KATALOG (${PRODUCTS.length} produk)
+insert into public.products (
+  code, name, slug, category, price, currency, unit, moq, origin,
+  hs_code, image, gallery, description, specs, certs, shipping,
+  incoterms, port_of_loading, status, verified_exporter, created_at
+) values
+${productRows}
+on conflict do nothing;
+
+-- 5.5 RFQ DEMO
+insert into public.rfqs (
+  code, seller_id, product_id, product_name, buyer_name, buyer_company,
+  buyer_email, buyer_country, destination_port, quantity, unit,
+  target_incoterms, target_price_usd, total_value_usd, status,
+  ai_analysis, process, created_at
+) values
+  (
+    'rfq_001',
+    (select id from public.users where code = 'usr_001'),
+    (select id from public.products where code = 'prod_kopi_001'),
+    'Kopi Arabika Gayo Specialty Grade 1',
+    'Heinrich Schmidt',
+    'Nordic Coffee Importers GmbH',
+    'h.schmidt@nordictrade.de',
+    'Hamburg, Germany',
+    'Hamburg, Germany',
+    18000,
+    'Kg (1 FCL 20ft Container)',
+    'CIF',
+    9.2,
+    165600,
+    'review',
+    ${sqlJson({
+      feasibilityScore: 94,
+      recommendedFOB: 8.1,
+      freightEstimate: 1800,
+      netMarginPct: 28.5,
+      riskLevel: 'Rendah (Dokumen & Kuota Lengkap)',
+    })},
+    ${sqlJson([
+      { key: 'submitted', label: 'RFQ diterima', status: 'done', at: '2026-10-18T04:20:00.000Z' },
+      { key: 'review', label: 'Menunggu peninjauan dan penawaran', status: 'waiting', at: null },
+      { key: 'confirmed', label: 'Menunggu konfirmasi buyer', status: 'waiting', at: null },
+    ])},
+    '2026-10-18T04:20:00.000Z'
+  ),
+  (
+    'rfq_002',
+    (select id from public.users where code = 'usr_001'),
+    (select id from public.products where code = 'prod_kriya_001'),
+    'Set Kursi & Meja Rotan Alami Cirebon',
+    'Arthur Pendelton',
+    'Pacific Green Living Corp',
+    'arthur@pacificgreen.example',
+    'Los Angeles, USA',
+    'Los Angeles, USA',
+    120,
+    'Set (1 FCL 40ft High Cube)',
+    'FOB',
+    180,
+    21600,
+    'approved',
+    ${sqlJson({
+      feasibilityScore: 96,
+      recommendedFOB: 180,
+      netMarginPct: 34,
+      riskLevel: 'Rendah (V-Legal SVLK Terbit)',
+    })},
+    ${sqlJson([
+      { key: 'submitted', label: 'RFQ diterima', status: 'done', at: '2026-10-19T02:15:00.000Z' },
+      { key: 'review', label: 'Menunggu peninjauan dan penawaran', status: 'done', at: '2026-10-19T05:00:00.000Z' },
+      { key: 'confirmed', label: 'Menunggu konfirmasi buyer', status: 'done', at: '2026-10-19T08:00:00.000Z' },
+    ])},
+    '2026-10-19T02:15:00.000Z'
+  )
+on conflict do nothing;
+
+-- 5.6 TRANSAKSI DEMO
+insert into public.transactions (
+  code, contract_no, rfq_id, seller_id, buyer_id, product_id, product_name,
+  quantity, unit, incoterms, contract_value_usd, currency,
+  escrow_total_usd, escrow_released_usd, escrow_remaining_usd,
+  escrow_stages, contract_date, vessel_name, eta, status, created_at
+) values
+  (
+    'tx_2026_089',
+    'NB/EXP/2026/X/089',
+    (select id from public.rfqs where code = 'rfq_001'),
+    (select id from public.users where code = 'usr_001'),
+    (select id from public.users where code = 'usr_002'),
+    (select id from public.products where code = 'prod_kopi_001'),
+    'Kopi Arabika Gayo Specialty Grade 1',
+    18000,
+    'Kg',
+    'CIF',
+    165600,
+    'USD',
+    165600,
+    99360,
+    66240,
+    ${sqlJson([
+      { stage: 1, pct: 30, amountUSD: 49680, status: 'released', label: 'Uang Muka (DP) Penandatanganan Kontrak' },
+      { stage: 2, pct: 30, amountUSD: 49680, status: 'released', label: 'Barang Dimuat & Bill of Lading (B/L) Terbit' },
+      { stage: 3, pct: 20, amountUSD: 33120, status: 'in_vault', label: 'Kapal Melewati Terusan Suez & Bea Cukai Kliring' },
+      { stage: 4, pct: 20, amountUSD: 33120, status: 'pending', label: 'Barang Diterima & Uji Mutu Lab Hamburg Selesai' },
+    ])},
+    '2026-10-12',
+    'KM Baruna Nusantara',
+    '2026-10-24T00:00:00Z',
+    'in_transit',
+    '2026-10-12T00:00:00.000Z'
+  )
+on conflict do nothing;
+
+-- 5.7 KATEGORI PRODUK
+insert into public.product_categories (code, name, description, icon, sort_order, is_active) values
+  ('kopi',   '{"id":"Kopi Ekspor","en":"Export Coffee"}'::jsonb, '{"id":"Kopi arabika, robusta, dan specialty dari seluruh Indonesia.","en":"Arabica, robusta, and specialty coffee from across Indonesia."}'::jsonb, 'coffee', 1, true),
+  ('rempah', '{"id":"Rempah & Hasil Alam","en":"Spices & Natural Products"}'::jsonb, '{"id":"Rempah dan hasil alam terverifikasi.","en":"Verified spices and natural products."}'::jsonb, 'sparkles', 2, true),
+  ('kriya',  '{"id":"Kriya","en":"Crafts"}'::jsonb, '{"id":"Produk kerajinan tangan dan furnitur ekspor.","en":"Handicrafts and export furniture."}'::jsonb, 'hand', 3, true),
+  ('tekstil','{"id":"Tekstil","en":"Textiles"}'::jsonb, '{"id":"Kain, batik, dan produk tekstil siap ekspor.","en":"Fabrics, batik, and export-ready textiles."}'::jsonb, 'shirt', 4, true)
+on conflict do nothing;
+
+-- 5.8 PENGATURAN APLIKASI
+insert into public.app_settings (key, value, description, is_public) values
+  ('app_name', '"NusaBridge"'::jsonb, 'Nama platform', true),
+  ('contact_email', '"owner@bisnis.id"'::jsonb, 'Email kontak resmi', true),
+  ('voucher_code', '"SUBSIDI-UMKM-15"'::jsonb, 'Kode voucher aktif', true),
+  ('voucher_discount_pct', '15'::jsonb, 'Diskon voucher dalam persen', true),
+  ('usd_to_idr', '16000'::jsonb, 'Kurs tampilan USD ke IDR', true),
+  ('escrow_stages', '[30,30,20,20]'::jsonb, 'Persentase 4 tahap escrow', true)
+on conflict do nothing;
+
+-- 5.9 KURS MATA UANG
+insert into public.exchange_rates (base_currency, quote_currency, rate, source, effective_at) values
+  ('USD', 'IDR', 16000, 'seed', now()),
+  ('USD', 'EUR', 0.92, 'seed', now())
+on conflict do nothing;
+
+-- 5.10 PESAN RFQ DEMO
+insert into public.rfq_messages (rfq_id, sender_user_id, sender_role, message, created_at)
+select
+  (select id from public.rfqs where code = 'rfq_001'),
+  (select id from public.users where code = 'usr_001'),
+  'seller',
+  'Terima kasih atas RFQ Anda. Kami sedang meninjau spesifikasi dan akan mengirim penawaran resmi.',
+  '2026-10-18T05:00:00.000Z'
+where (select id from public.rfqs where code = 'rfq_001') is not null
+  and not exists (
+    select 1 from public.rfq_messages
+    where rfq_id = (select id from public.rfqs where code = 'rfq_001')
+  );
+
+-- 5.11 RIWAYAT ESCROW DEMO
+insert into public.escrow_events (transaction_id, stage, pct, amount_usd, status, note, created_at)
+select v.transaction_id, v.stage, v.pct, v.amount_usd, v.status, v.note, v.created_at
+from (values
+  ((select id from public.transactions where code = 'tx_2026_089'), 1, 30::numeric, 49680::numeric, 'released', 'Uang muka setelah kontrak ditandatangani.', '2026-10-12T10:00:00.000Z'::timestamptz),
+  ((select id from public.transactions where code = 'tx_2026_089'), 2, 30::numeric, 49680::numeric, 'released', 'Barang dimuat dan B/L diterbitkan.', '2026-10-15T08:30:00.000Z'::timestamptz),
+  ((select id from public.transactions where code = 'tx_2026_089'), 3, 20::numeric, 33120::numeric, 'in_vault', 'Dana ditahan di escrow sampai barang melewati Suez.', '2026-10-20T12:00:00.000Z'::timestamptz),
+  ((select id from public.transactions where code = 'tx_2026_089'), 4, 20::numeric, 33120::numeric, 'pending', 'Menunggu barang diterima dan uji mutu selesai.', '2026-10-22T09:00:00.000Z'::timestamptz)
+) as v(transaction_id, stage, pct, amount_usd, status, note, created_at)
+where v.transaction_id is not null
+  and not exists (
+    select 1 from public.escrow_events e
+    where e.transaction_id = v.transaction_id and e.stage = v.stage
+  );
+
+commit;
+
+notify pgrst, 'reload schema';
+
+-- Selesai.
+`;
+
+const outputPath = path.join(__dirname, 'reset-supabase.sql');
+fs.writeFileSync(outputPath, sql, 'utf8');
+console.log(`OK: ${outputPath}`);
+
+// setup.sql = file lengkap (DDL + seed) supaya dokumentasi lama tetap valid.
+fs.writeFileSync(path.join(__dirname, 'setup.sql'), sql, 'utf8');
+
+// schema.sql = DDL saja (drop + create + trigger + RLS).
+const seedMarker = '-- 5. SEED DATA DASAR';
+const seedIndex = sql.indexOf(seedMarker);
+const lastCommit = sql.lastIndexOf('commit;');
+const ddlBody = sql.slice(sql.indexOf('begin;'), seedIndex);
+const seedBody = sql.slice(seedIndex, lastCommit);
+
+const schemaHeader = `-- ==========================================================================
+-- NUSABRIDGE - SUPABASE DATABASE SCHEMA (V2)
+-- File: database/schema.sql
+--
+-- ⚠️ PERINGATAN: file ini MENGHAPUS semua tabel aplikasi lama.
+--    Jalankan hanya jika kamu siap mengganti seluruh database.
+--
+-- CARA PAKAI:
+--   1. Buka Supabase Dashboard -> SQL Editor -> New query
+--   2. Copy SELURUH isi file ini, lalu klik Run
+--   3. Jalankan database/seed.sql untuk mengisi data contoh
+-- ==========================================================================
+
+`;
+
+const seedHeader = `-- ==========================================================================
+-- NUSABRIDGE - SUPABASE SEED DATA (V2)
+-- File: database/seed.sql
+--
+-- Jalankan SETELAH database/schema.sql berhasil.
+-- ==========================================================================
+
+`;
+
+fs.writeFileSync(
+  path.join(__dirname, 'schema.sql'),
+  schemaHeader + ddlBody + 'commit;\n\nnotify pgrst, \'reload schema\';\n',
+  'utf8'
+);
+fs.writeFileSync(
+  path.join(__dirname, 'seed.sql'),
+  seedHeader + 'begin;\n\n' + seedBody + 'commit;\n\nnotify pgrst, \'reload schema\';\n',
+  'utf8'
+);
+
+console.log(`OK: ${path.join(__dirname, 'setup.sql')}`);
+console.log(`OK: ${path.join(__dirname, 'schema.sql')}`);
+console.log(`OK: ${path.join(__dirname, 'seed.sql')}`);
+console.log(`Produk: ${PRODUCTS.length}`);

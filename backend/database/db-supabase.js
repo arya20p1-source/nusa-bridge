@@ -5,10 +5,18 @@
  * Deskripsi: Menghubungkan backend Express ke database Supabase.
  *
  * Tabel yang dipakai:
- *   login        -> data akun pengguna
+ *   users        -> data akun pengguna
  *   products     -> katalog produk ekspor
- *   orderan      -> RFQ / pesanan masuk
+ *   rfqs         -> RFQ / pesanan masuk
  *   transactions -> kontrak & escrow
+ *
+ * Struktur ID (lihat database/reset-supabase.sql):
+ *   id   = bigint identity, Primary Key internal
+ *   code = text unik, ID bisnis yang dipakai aplikasi
+ *          (mis. prod_kopi_001, rfq_001, use_179..., tx_2026_089)
+ *
+ * Adapter ini memetakan code <-> id supaya kode aplikasi dan frontend tidak
+ * perlu diubah: dari sisi aplikasi, field `id` tetap berisi kode bisnis.
  *
  * Kunci akses diambil dari backend/.env:
  *   SUPABASE_URL
@@ -24,11 +32,81 @@ const SUPABASE_KEY =
 
 // Nama tabel di kode (logis) -> nama tabel asli di Supabase
 const TABLES = {
-  users: 'login',
+  users: 'users',
   products: 'products',
-  rfq: 'orderan',
+  rfq: 'rfqs',
   transactions: 'transactions',
+  plans: 'plans',
+  vouchers: 'vouchers',
+  voucher_claims: 'voucher_claims',
+  subscriptions: 'subscriptions',
+  payments: 'payments',
+  kyc_verifications: 'kyc_verifications',
+  documents: 'documents',
+  shipments: 'shipments',
+  shipment_segments: 'shipment_segments',
+  shipment_events: 'shipment_events',
+  transport_options: 'transport_options',
+  transport_quotes: 'transport_quotes',
+  notifications: 'notifications',
+  ai_chat_sessions: 'ai_chat_sessions',
+  ai_chat_messages: 'ai_chat_messages',
+  audit_logs: 'audit_logs',
+  sessions: 'sessions',
+  password_resets: 'password_resets',
+  email_verifications: 'email_verifications',
+  rfq_messages: 'rfq_messages',
+  escrow_events: 'escrow_events',
+  app_settings: 'app_settings',
+  exchange_rates: 'exchange_rates',
+  product_categories: 'product_categories',
 };
+
+// Prefix untuk membuat code otomatis saat aplikasi menambah data baru.
+const ID_PREFIX = {
+  users: 'use',
+  plans: 'plan',
+  vouchers: 'voucher',
+  products: 'prod',
+  rfq: 'rfq',
+  transactions: 'tx',
+  shipments: 'shp',
+  documents: 'doc',
+  transport_options: 'trn',
+  product_categories: 'cat',
+};
+
+// Tabel yang memakai pasangan kolom id (identity) + code (ID bisnis).
+const CODE_TABLES = new Set([
+  'users',
+  'plans',
+  'vouchers',
+  'products',
+  'rfqs',
+  'transactions',
+  'shipments',
+  'documents',
+  'transport_options',
+  'product_categories',
+]);
+
+// Tabel yang punya kolom updated_at (dipakai trigger set_updated_at).
+const UPDATED_AT_TABLES = new Set([
+  'users',
+  'plans',
+  'vouchers',
+  'products',
+  'rfqs',
+  'transactions',
+  'shipments',
+  'documents',
+  'subscriptions',
+  'payments',
+  'transport_options',
+  'app_settings',
+  'exchange_rates',
+  'product_categories',
+]);
 
 function hasValue(value) {
   return Boolean(value && !/(YOUR_|PROJECT-REF|PLACEHOLDER)/i.test(value));
@@ -36,28 +114,42 @@ function hasValue(value) {
 
 // Nama field di kode (camelCase) -> nama kolom Supabase (snake_case)
 const COLUMN_MAP = {
-  login: {
+  users: {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
+    logoUrl: 'logo_url',
+    emailVerifiedAt: 'email_verified_at',
+    lastLoginAt: 'last_login_at',
   },
   products: {
     desc: 'description',
     hsCode: 'hs_code',
     verifiedExporter: 'verified_exporter',
+    portOfLoading: 'port_of_loading',
+    weightKg: 'weight_kg',
+    volumeM3: 'volume_m3',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
   },
-  orderan: {
+  rfqs: {
     buyerName: 'buyer_name',
     buyerCompany: 'buyer_company',
     buyerCountry: 'buyer_country',
+    buyerEmail: 'buyer_email',
+    buyerPhone: 'buyer_phone',
+    buyerUserId: 'buyer_user_id',
+    sellerId: 'seller_id',
     productId: 'product_id',
     productName: 'product_name',
     targetIncoterms: 'target_incoterms',
     targetPriceUSD: 'target_price_usd',
     totalValueUSD: 'total_value_usd',
+    quotedPriceUSD: 'quoted_price_usd',
+    quotedTotalUSD: 'quoted_total_usd',
+    quotedAt: 'quoted_at',
+    validUntil: 'valid_until',
     aiAnalysis: 'ai_analysis',
-    buyerEmail: 'buyer_email',
+    destinationPort: 'destination_port',
     process: 'process',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
@@ -65,8 +157,17 @@ const COLUMN_MAP = {
   transactions: {
     contractNo: 'contract_no',
     contractValueUSD: 'contract_value_usd',
+    escrowTotalUSD: 'escrow_total_usd',
+    escrowReleasedUSD: 'escrow_released_usd',
+    escrowRemainingUSD: 'escrow_remaining_usd',
     escrowStages: 'escrow_stages',
     vesselName: 'vessel_name',
+    rfqId: 'rfq_id',
+    sellerId: 'seller_id',
+    buyerId: 'buyer_id',
+    productId: 'product_id',
+    productName: 'product_name',
+    contractDate: 'contract_date',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
   },
@@ -81,7 +182,7 @@ const supabase = createClient(
 function ensureConfigured() {
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     throw new Error(
-      'Supabase belum dikonfigurasi. Isi SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY di backend/.env (lihat PASANG-SUPABASE.md).'
+      'Supabase belum dikonfigurasi. Isi SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY di backend/.env (lihat database/CARA-PASANG.md).'
     );
   }
 }
@@ -101,33 +202,74 @@ function physicalTable(table) {
   return TABLES[table] || table;
 }
 
+function usesCode(table) {
+  return CODE_TABLES.has(table);
+}
+
+/** Filter kolom untuk mencari satu baris: pakai code untuk ID bisnis. */
+function idFilter(table, id) {
+  const value = String(id);
+  if (usesCode(table) && !/^\d+$/.test(value)) {
+    return { column: 'code', value };
+  }
+  return { column: 'id', value };
+}
+
 /** Ubah objek aplikasi (camelCase) -> baris Supabase (snake_case) */
 function toRow(table, item) {
-  const map = COLUMN_MAP[physicalTable(table)] || {};
-  const reverse = Object.fromEntries(
-    Object.entries(map).map(([camel, snake]) => [camel, snake])
-  );
-
+  const physical = physicalTable(table);
+  const map = COLUMN_MAP[physical] || {};
   const row = {};
+
   for (const [key, value] of Object.entries(item)) {
-    if (value === undefined) continue;
-    row[reverse[key] || toSnakeCase(key)] = value;
+    if (value === undefined || key === 'dbId') continue;
+    if (key === 'id' && usesCode(physical)) {
+      row.code = String(value);
+      continue;
+    }
+    row[map[key] || toSnakeCase(key)] = value;
   }
   return row;
 }
 
 /** Ubah baris Supabase (snake_case) -> objek aplikasi (camelCase) */
 function toObject(table, row) {
-  const map = COLUMN_MAP[physicalTable(table)] || {};
+  const physical = physicalTable(table);
+  const map = COLUMN_MAP[physical] || {};
   const reverse = Object.fromEntries(
     Object.entries(map).map(([camel, snake]) => [snake, camel])
   );
 
   const obj = {};
   for (const [key, value] of Object.entries(row)) {
+    // `code` tidak diekspos terpisah; nilainya dipakai sebagai `id` aplikasi.
+    if (key === 'code' && usesCode(physical)) continue;
     obj[reverse[key] || toCamelCase(key)] = value;
   }
+
+  if (usesCode(physical)) {
+    obj.id = row.code ?? row.id;
+    obj.dbId = row.id;
+  }
   return obj;
+}
+
+/** Cari ID internal produk dari code bisnis (mis. prod_kopi_001). */
+async function resolveProductId(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const text = String(value).trim();
+  if (/^\d+$/.test(text)) return Number(text);
+
+  const { data, error } = await supabase
+    .from('products')
+    .select('id')
+    .eq('code', text)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Gagal mencari produk ${text}: ${error.message}`);
+  }
+  return data ? data.id : null;
 }
 
 class SupabaseDatabase {
@@ -197,14 +339,16 @@ class SupabaseDatabase {
     return data.filter(filterFn);
   }
 
-  /** Cari satu data berdasarkan ID */
+  /** Cari satu data berdasarkan ID bisnis (code) atau ID internal */
   async findById(table, id) {
     ensureConfigured();
     const physical = physicalTable(table);
+    const filter = idFilter(physical, id);
+
     const { data, error } = await supabase
       .from(physical)
       .select('*')
-      .eq('id', String(id))
+      .eq(filter.column, filter.value)
       .maybeSingle();
 
     if (error) {
@@ -219,19 +363,40 @@ class SupabaseDatabase {
     return data.find(filterFn) || null;
   }
 
-  /** Tambah data baru (auto ID bila tidak ada) */
+  /** Tambah data baru (code otomatis bila tidak ada) */
   async create(table, item) {
     ensureConfigured();
     const physical = physicalTable(table);
-    const prefix = table.slice(0, 3);
+    const prefix = ID_PREFIX[table] || 'row';
 
     const payload = {
-      id:
-        item.id ||
-        `${prefix}_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-      createdAt: new Date().toISOString(),
       ...item,
+      createdAt: item.createdAt || new Date().toISOString(),
     };
+    delete payload.id;
+    delete payload.dbId;
+
+    // Hanya tabel dengan kolom `code` yang memakai ID bisnis.
+    if (usesCode(physical)) {
+      payload.code =
+        item.code ||
+        item.id ||
+        `${prefix}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    }
+
+    // Kolom yang tidak ada di schema baru.
+    if (physical === 'users') delete payload.password;
+
+    // RFQ menyimpan product_id sebagai bigint; terima code dari aplikasi.
+    if (physical === 'rfqs') {
+      if (payload.productId !== undefined) {
+        payload.productId = await resolveProductId(payload.productId);
+      }
+      // Form lama hanya mengirim buyerCountry; destination_port wajib di schema.
+      if (!payload.destinationPort && payload.buyerCountry) {
+        payload.destinationPort = payload.buyerCountry;
+      }
+    }
 
     const { data, error } = await supabase
       .from(physical)
@@ -245,20 +410,27 @@ class SupabaseDatabase {
     return toObject(table, data);
   }
 
-  /** Perbarui data berdasarkan ID */
+  /** Perbarui data berdasarkan ID bisnis (code) atau ID internal */
   async update(table, id, updates) {
     ensureConfigured();
     const physical = physicalTable(table);
 
-    const row = toRow(table, {
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    });
+    const payload = { ...updates };
+    if (UPDATED_AT_TABLES.has(physical)) {
+      payload.updatedAt = new Date().toISOString();
+    }
+    delete payload.id;
+    delete payload.dbId;
 
+    if (physical === 'rfqs' && payload.productId !== undefined) {
+      payload.productId = await resolveProductId(payload.productId);
+    }
+
+    const filter = idFilter(physical, id);
     const { data, error } = await supabase
       .from(physical)
-      .update(row)
-      .eq('id', String(id))
+      .update(toRow(table, payload))
+      .eq(filter.column, filter.value)
       .select()
       .maybeSingle();
 
@@ -268,15 +440,16 @@ class SupabaseDatabase {
     return data ? toObject(table, data) : null;
   }
 
-  /** Hapus data berdasarkan ID */
+  /** Hapus data berdasarkan ID bisnis (code) atau ID internal */
   async delete(table, id) {
     ensureConfigured();
     const physical = physicalTable(table);
+    const filter = idFilter(physical, id);
 
     const { data, error } = await supabase
       .from(physical)
       .delete()
-      .eq('id', String(id))
+      .eq(filter.column, filter.value)
       .select('id');
 
     if (error) {
