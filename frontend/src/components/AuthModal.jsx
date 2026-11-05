@@ -3,16 +3,6 @@ import { useApp } from '../context/AppContext.jsx';
 import { apiUrl } from '../utils/api.js';
 import { getInitials, readLogoFile } from '../utils/logo.js';
 
-function buildRegisterArgs(sessionUser) {
-  return JSON.stringify({
-    name: sessionUser.company,
-    company: sessionUser.company,
-    email: sessionUser.email,
-    role: sessionUser.role,
-    plan: sessionUser.plan,
-  });
-}
-
 /**
  * Modal Masuk / Daftar (Pelaku UMKM vs Global Buyer).
  * Versi React dari markup authModal di index.html + produk.html.
@@ -24,8 +14,11 @@ export default function AuthModal() {
   const [tab, setTab] = useState('seller'); // seller | buyer
   const [company, setCompany] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [logo, setLogo] = useState('');
   const [logoBusy, setLogoBusy] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState('');
   const logoInputRef = useRef(null);
 
   const open = modal?.type === 'auth';
@@ -35,6 +28,9 @@ export default function AuthModal() {
     if (!open) {
       setLogo('');
       setLogoBusy(false);
+      setPassword('');
+      setFormError('');
+      setSaving(false);
     }
   }, [open]);
 
@@ -69,6 +65,11 @@ export default function AuthModal() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (saving) return;
+
+    setSaving(true);
+    setFormError('');
+
     const sessionUser = {
       company: company.trim() || 'CV Kopi Nusantara Mandiri',
       email: email.trim() || 'owner@bisnis.id',
@@ -77,19 +78,69 @@ export default function AuthModal() {
       logo,
     };
 
-    login(sessionUser);
-
-    // Kirim ke backend registration API (best-effort, backend mungkin tidak berjalan)
     try {
-      await fetch(apiUrl('/api/auth/register'), {
+      const isRegister = modal.mode === 'register';
+      const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
+      const payload = isRegister
+        ? {
+            name: sessionUser.company,
+            company: sessionUser.company,
+            email: sessionUser.email,
+            password,
+            role: sessionUser.role,
+            plan: sessionUser.plan,
+          }
+        : {
+            email: sessionUser.email,
+            ...(password ? { password } : {}),
+          };
+
+      let response = await fetch(apiUrl(endpoint), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: buildRegisterArgs(sessionUser),
+        body: JSON.stringify(payload),
       });
-    } catch (_) {}
+      let data = await response.json().catch(() => ({}));
 
-    closeModal();
-    showToast(`🎉 Selamat datang, ${sessionUser.company}! Akun Anda aktif.`);
+      // Registrasi dengan email yang sudah ada: arahkan ke login agar
+      // perilaku lama (langsung masuk) tetap terasa, tetapi token tetap
+      // diterbitkan oleh server setelah kredensial diperiksa.
+      if (
+        isRegister &&
+        response.status === 409 &&
+        data.code === 'EMAIL_ALREADY_REGISTERED'
+      ) {
+        response = await fetch(apiUrl('/api/auth/login'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: sessionUser.email,
+            ...(password ? { password } : {}),
+          }),
+        });
+        data = await response.json().catch(() => ({}));
+      }
+
+      if (!response.ok || !data.success || !data.token || !data.user) {
+        throw new Error(
+          data.message || 'Tidak dapat memproses akun. Periksa data dan coba lagi.'
+        );
+      }
+
+      login(data.user, { token: data.token, logo });
+      closeModal();
+      showToast(
+        `🎉 Selamat datang, ${data.user.company || data.user.name || sessionUser.company}!`
+      );
+    } catch (err) {
+      const message =
+        err.message ||
+        'Tidak dapat menghubungi server. Akun tidak dibuat dan Anda belum masuk.';
+      setFormError(message);
+      showToast(`❌ ${message}`);
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -168,6 +219,30 @@ export default function AuthModal() {
           </div>
 
           <div className="form-group">
+            <label>
+              {modal.mode === 'register'
+                ? (isEn ? 'Password (min. 8 characters)' : 'Kata Sandi (min. 8 karakter)')
+                : (isEn ? 'Password (admin accounts)' : 'Kata Sandi (akun admin)')}
+            </label>
+            <input
+              type="password"
+              id="authPassword"
+              autoComplete={modal.mode === 'register' ? 'new-password' : 'current-password'}
+              required={modal.mode === 'register'}
+              minLength={modal.mode === 'register' ? 8 : undefined}
+              placeholder={
+                modal.mode === 'register'
+                  ? (isEn ? 'Create a password for your account' : 'Buat kata sandi untuk akun Anda')
+                  : (isEn
+                      ? 'Required for admin, optional for legacy accounts'
+                      : 'Wajib untuk admin, opsional untuk akun lama')
+              }
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
             <label>{isEn ? 'Business Logo (optional)' : 'Logo Usaha (opsional)'}</label>
             <div className="logo-picker">
               <div className={`logo-preview ${logo ? 'has-logo' : ''}`}>
@@ -227,8 +302,12 @@ export default function AuthModal() {
             <p className="plan-summary-inline">{modal.plan}</p>
           )}
 
-          <button type="submit" className="btn btn-primary btn-block">
-            {isEn ? ('Continue') : 'Lanjutkan'}
+          {formError && <p className="rfq-form-error" role="alert">{formError}</p>}
+
+          <button type="submit" className="btn btn-primary btn-block" disabled={saving}>
+            {saving
+              ? (isEn ? 'Processing…' : 'Memproses…')
+              : (isEn ? 'Continue' : 'Lanjutkan')}
           </button>
         </form>
       </div>

@@ -12,6 +12,16 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const db = require('./database/db');
+const {
+  authenticate,
+  requireAuth,
+  createToken,
+  hashPassword,
+  verifyPassword,
+  normalizeAccountRole,
+} = require('./auth');
+const { publicUser, isAdmin, ownsProduct, writeAudit } = require('./authorization');
+const rbacRouter = require('./routes/rbac');
 const { findReferenceAnswer } = require('./reference-answers');
 const {
   FALLBACK_PRODUCTS,
@@ -32,6 +42,10 @@ app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Autentikasi opsional dijalankan untuk SEMUA /api. Token yang valid memuat
+// ulang user dari database, sehingga role/status selalu berasal dari server.
+app.use(authenticate);
 
 // Serve static files (struktur folder terpisah: frontend & backend)
 // frontend/public  -> aset statis (assets, favicon)
@@ -89,96 +103,204 @@ app.get('/api/health', async (req, res) => {
 });
 
 // ==========================================================================
-// 2. AUTHENTICATION (REGISTER & LOGIN)
+// 2. AUTHENTICATION (REGISTER, LOGIN, SESSION)
 // ==========================================================================
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { name, email, password, company, role = 'seller', nib, npwp, plan = 'Free Trial' } = req.body;
-    const requestedRole = String(role).trim().toLowerCase();
-    const accountRole = requestedRole === 'importer' ? 'buyer' : requestedRole;
+    const {
+      name,
+      email,
+      password,
+      company,
+      role = 'seller',
+      nib,
+      npwp,
+      plan = 'Free Trial',
+    } = req.body || {};
 
-    if (!['seller', 'buyer'].includes(accountRole)) {
-      return res.status(400).json({ success: false, message: 'Role harus seller (eksportir) atau buyer (importir).' });
+    const requestedRole = normalizeAccountRole(role);
+    if (requestedRole === 'admin') {
+      return res.status(400).json({
+        success: false,
+        code: 'ADMIN_ROLE_FORBIDDEN',
+        message: 'Akun admin tidak dapat didaftarkan sendiri melalui API publik.',
+      });
     }
-
-    if (!name || !email) {
-      return res.status(400).json({ success: false, message: 'Nama dan email wajib diisi.' });
-    }
-
-    // Cek apakah email sudah terdaftar
-    const existing = await db.findOne('users', u => u.email.toLowerCase() === email.toLowerCase());
-    if (existing) {
-      return res.json({
-        success: true,
-        message: 'Akun sudah terdaftar. Berhasil masuk langsung!',
-        user: existing,
-        token: `nb_token_${existing.id}_${Date.now()}`
+    if (!['seller', 'buyer'].includes(requestedRole)) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_ROLE',
+        message: 'Role harus seller (eksportir) atau buyer (importir).',
       });
     }
 
-    // Buat user baru
+    const cleanName = String(name || '').trim().slice(0, 160);
+    const cleanEmail = String(email || '').trim().toLowerCase().slice(0, 240);
+    if (!cleanName) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_NAME',
+        message: 'Nama wajib diisi.',
+      });
+    }
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_EMAIL',
+        message: 'Email wajib diisi dengan format yang valid.',
+      });
+    }
+
+    const existing = await db.findOne(
+      'users',
+      (user) => !user.deletedAt && String(user.email || '').toLowerCase() === cleanEmail
+    );
+    if (existing) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_ALREADY_REGISTERED',
+        message: 'Email ini sudah terdaftar. Silakan masuk menggunakan email tersebut.',
+      });
+    }
+
+    // Akun baru wajib memiliki password. Akun lama tanpa password tetap bisa
+    // login dengan email saja (kompatibilitas), tetapi begitu password diatur,
+    // password tersebut wajib diverifikasi pada setiap login.
+    const passwordValue = password === undefined || password === null ? '' : String(password);
+    if (passwordValue.length < 8) {
+      return res.status(400).json({
+        success: false,
+        code: 'WEAK_PASSWORD',
+        message: 'Password wajib diisi dan minimal 8 karakter.',
+      });
+    }
+
     const newUser = await db.create('users', {
-      name,
-      email,
-      company: company || name,
-      role: accountRole,
-      nib: nib || '12' + Math.floor(10000000000 + Math.random() * 90000000000),
-      npwp: npwp || '01.' + Math.floor(100 + Math.random() * 900) + '.' + Math.floor(100 + Math.random() * 900) + '.0-012.000',
+      name: cleanName,
+      email: cleanEmail,
+      passwordHash: hashPassword(passwordValue),
+      company: String(company || cleanName).trim().slice(0, 200),
+      role: requestedRole,
+      nib: String(nib || '').trim().slice(0, 40) || `12${Math.floor(10000000000 + Math.random() * 90000000000)}`,
+      npwp: String(npwp || '').trim().slice(0, 40) || `01.${Math.floor(100 + Math.random() * 900)}.${Math.floor(100 + Math.random() * 900)}.0-012.000`,
       status: 'verified',
-      plan,
-      createdAt: new Date().toISOString()
+      plan: String(plan || 'Free Trial').trim().slice(0, 120),
+      lastLoginAt: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
     });
 
-    res.status(201).json({
+    await writeAudit(req, {
+      action: 'auth.register',
+      tableName: 'users',
+      recordId: newUser.id,
+      newData: publicUser(newUser),
+    });
+
+    return res.status(201).json({
       success: true,
       message: 'Registrasi berhasil! Akun Anda aktif dan otomatis login.',
-      user: newUser,
-      token: `nb_token_${newUser.id}_${Date.now()}`
+      user: publicUser(newUser),
+      token: createToken(newUser),
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Gagal memproses registrasi: ' + err.message });
+    console.error('[Register]:', err.message);
+    res.status(500).json({
+      success: false,
+      code: 'REGISTER_FAILED',
+      message: 'Gagal memproses registrasi: ' + err.message,
+    });
   }
 });
 
 app.post('/api/auth/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
+    const cleanEmail = String(email || '').trim().toLowerCase().slice(0, 240);
 
-    if (!email) {
-      return res.status(400).json({ success: false, message: 'Email wajib diisi.' });
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_EMAIL',
+        message: 'Email wajib diisi dengan format yang valid.',
+      });
     }
 
-    const user = await db.findOne('users', u => u.email.toLowerCase() === email.toLowerCase());
+    let user = await db.findOne(
+      'users',
+      (row) => !row.deletedAt && String(row.email || '').toLowerCase() === cleanEmail
+    );
+
+    // Akun harus terdaftar. Jangan membuat akun otomatis dari email yang belum
+    // terdaftar, karena itu memungkinkan siapa pun membuat sesi tanpa mendaftar
+    // dan tanpa password.
     if (!user) {
-      // Untuk kemudahan demo prototipe lomba: jika email belum ada, auto-register!
-      const autoUser = await db.create('users', {
-        name: email.split('@')[0].toUpperCase(),
-        email,
-        company: `UMKM ${email.split('@')[0]}`,
-        role: 'seller',
-        nib: '1294801928415',
-        status: 'verified',
-        plan: 'Free Trial (1 Bulan)',
-        createdAt: new Date().toISOString()
-      });
-
-      return res.json({
-        success: true,
-        message: 'Akun demo baru berhasil dibuat & otomatis login!',
-        user: autoUser,
-        token: `nb_token_${autoUser.id}_${Date.now()}`
+      return res.status(401).json({
+        success: false,
+        code: 'INVALID_CREDENTIALS',
+        message: 'Email atau password salah. Jika belum punya akun, silakan daftar terlebih dahulu.',
       });
     }
 
-    res.json({
+    if (String(user.status || '').toLowerCase() === 'suspended') {
+      return res.status(403).json({
+        success: false,
+        code: 'ACCOUNT_SUSPENDED',
+        message: 'Akun ini sedang ditangguhkan. Hubungi admin NusaBridge.',
+      });
+    }
+
+    const role = normalizeAccountRole(user.role);
+
+    // Jika akun sudah memiliki password, password wajib benar untuk SEMUA
+    // role. Hanya akun lama yang belum pernah mengatur password yang masih
+    // dapat login dengan email saja. Admin tanpa password tidak boleh masuk.
+    if (user.passwordHash) {
+      if (!password || !verifyPassword(password, user.passwordHash)) {
+        return res.status(401).json({
+          success: false,
+          code: 'INVALID_CREDENTIALS',
+          message: role === 'admin'
+            ? 'Email atau password admin salah.'
+            : 'Email atau password salah.',
+        });
+      }
+    } else if (role === 'admin') {
+      return res.status(403).json({
+        success: false,
+        code: 'ADMIN_PASSWORD_NOT_SET',
+        message: 'Akun admin belum memiliki password. Atur password admin melalui script admin:create.',
+      });
+    }
+
+    const updatedUser = await db.update('users', user.id, {
+      lastLoginAt: new Date().toISOString(),
+    });
+
+    return res.json({
       success: true,
       message: 'Login berhasil! Selamat datang kembali.',
-      user,
-      token: `nb_token_${user.id}_${Date.now()}`
+      user: publicUser(updatedUser || user),
+      token: createToken(updatedUser || user),
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Gagal memproses login: ' + err.message });
+    console.error('[Login]:', err.message);
+    res.status(500).json({
+      success: false,
+      code: 'LOGIN_FAILED',
+      message: 'Gagal memproses login: ' + err.message,
+    });
   }
+});
+
+app.get('/api/auth/me', requireAuth, (req, res) => {
+  res.json({ success: true, user: publicUser(req.auth) });
+});
+
+app.post('/api/auth/logout', requireAuth, (req, res) => {
+  // Token stateless: logout cukup menghapus token di sisi klien. Endpoint ini
+  // disediakan agar klien punya jalur eksplisit dan tidak menganggap logout
+  // memalsukan data server.
+  res.json({ success: true, message: 'Sesi berhasil diakhiri di perangkat ini.' });
 });
 
 // ==========================================================================
@@ -203,9 +325,18 @@ app.get('/api/products', async (req, res) => {
 app.get('/api/products/:id', async (req, res) => {
   try {
     const product = await db.findById('products', req.params.id);
-    if (!product) {
+    if (!product || product.deletedAt) {
       return res.status(404).json({ success: false, message: 'Produk tidak ditemukan.' });
     }
+
+    // Produk draft/arsip tidak boleh bocor ke publik. Pemilik dan admin tetap
+    // dapat melihatnya untuk keperluan pengelolaan.
+    const published = !product.status || product.status === 'published';
+    const privileged = Boolean(req.auth && (isAdmin(req.auth) || ownsProduct(req.auth, product)));
+    if (!published && !privileged) {
+      return res.status(404).json({ success: false, message: 'Produk tidak ditemukan.' });
+    }
+
     res.json({ success: true, product });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -213,117 +344,11 @@ app.get('/api/products/:id', async (req, res) => {
 });
 
 // ==========================================================================
-// 4. REQUEST FOR QUOTATION (RFQ)
+// 4. RFQ / PESANAN
+// Ditangani oleh routes/rbac.js agar validasi idempotency, kepemilikan, dan
+// RBAC berada di satu tempat. Guest tetap dapat mengirim RFQ dan menerima
+// token akses untuk mengecek status.
 // ==========================================================================
-app.post('/api/rfq', async (req, res) => {
-  try {
-    const { buyerName, buyerCompany, buyerCountry, productId, productName, quantity, unit, targetIncoterms, targetPriceUSD } = req.body;
-    const buyerEmail = String(req.body.buyerEmail || '').trim().toLowerCase();
-    const cleanProductName = String(productName || '').trim();
-    const cleanPort = String(buyerCountry || '').trim();
-    const cleanIncoterms = String(targetIncoterms || '').trim().toUpperCase();
-    const requestedQuantity = Number(quantity);
-    const referencePrice = Number(targetPriceUSD);
-
-    if (!cleanProductName || cleanProductName.length > 200) {
-      return res.status(400).json({ success: false, message: 'Nama produk wajib diisi (maksimal 200 karakter).' });
-    }
-    if (!Number.isFinite(requestedQuantity) || requestedQuantity <= 0) {
-      return res.status(400).json({ success: false, message: 'Jumlah pesanan harus berupa angka lebih dari 0.' });
-    }
-    if (!buyerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail)) {
-      return res.status(400).json({ success: false, message: 'Email kontak buyer wajib diisi dengan format yang valid.' });
-    }
-    if (!cleanPort || cleanPort.length > 120) {
-      return res.status(400).json({ success: false, message: 'Pelabuhan tujuan wajib diisi (maksimal 120 karakter).' });
-    }
-    if (!['FOB', 'CIF', 'CNF', 'EXW'].includes(cleanIncoterms)) {
-      return res.status(400).json({ success: false, message: 'Pilihan Incoterms tidak valid.' });
-    }
-    if (!Number.isFinite(referencePrice) || referencePrice < 0) {
-      return res.status(400).json({ success: false, message: 'Harga acuan produk tidak valid.' });
-    }
-
-    const createdAt = new Date().toISOString();
-    const buyer = buyerEmail.split('@')[0];
-
-    const newRfq = await db.create('rfq', {
-      buyerName: String(buyerName || buyer).trim(),
-      buyerCompany: String(buyerCompany || '').trim(),
-      buyerEmail,
-      buyerCountry: cleanPort,
-      destinationPort: cleanPort,
-      productId: String(productId || '').trim() || null,
-      productName: cleanProductName,
-      quantity: requestedQuantity,
-      unit: String(unit || 'unit').trim(),
-      targetIncoterms: cleanIncoterms,
-      targetPriceUSD: referencePrice,
-      totalValueUSD: referencePrice * requestedQuantity,
-      status: 'submitted',
-      process: [
-        {
-          key: 'submitted',
-          label: 'RFQ diterima',
-          status: 'done',
-          at: createdAt,
-        },
-        {
-          key: 'review',
-          label: 'Menunggu peninjauan dan penawaran',
-          status: 'waiting',
-          at: null,
-        },
-        {
-          key: 'confirmed',
-          label: 'Menunggu konfirmasi buyer',
-          status: 'waiting',
-          at: null,
-        },
-      ],
-      createdAt,
-    });
-
-    res.status(201).json({
-      success: true,
-      message: 'Permintaan RFQ berhasil dicatat.',
-      rfq: newRfq
-    });
-  } catch (err) {
-    console.error('[RFQ submit]:', err.message);
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-app.get('/api/rfq/:id', async (req, res) => {
-  try {
-    const rfq = await db.findById('rfq', req.params.id);
-    if (!rfq) {
-      return res.status(404).json({ success: false, message: 'RFQ tidak ditemukan.' });
-    }
-
-    const { id, productName, quantity, unit, targetIncoterms, buyerCountry, status, process, createdAt, updatedAt } = rfq;
-    res.json({
-      success: true,
-      rfq: { id, productName, quantity, unit, targetIncoterms, buyerCountry, status, process, createdAt, updatedAt },
-    });
-  } catch (err) {
-    console.error('[RFQ status]:', err.message);
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-app.get('/api/rfq', async (req, res) => {
-  try {
-    const items = await db.read('rfq');
-    const rfqs = items.map((rfq) =>
-      Object.fromEntries(Object.entries(rfq).filter(([key]) => key !== 'buyerEmail'))
-    );
-    res.json({ success: true, count: rfqs.length, rfqs });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
 
 // ==========================================================================
 // 5. KYC & LEGALITY OSS VERIFICATION SANDBOX
@@ -434,7 +459,6 @@ function getStoredApiKey() {
   const fromEnv = sanitizeApiKey(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY);
   if (isPlausibleApiKey(fromEnv)) return fromEnv;
   try {
-    const fs = require('fs');
     const geminiJsonPath = path.join(__dirname, 'gemini.json');
     if (fs.existsSync(geminiJsonPath)) {
       const data = JSON.parse(fs.readFileSync(geminiJsonPath, 'utf8'));
@@ -636,23 +660,60 @@ app.post('/api/ai/chat', async (req, res) => {
 });
 
 // ==========================================================================
-// 8. ESCROW TRANSACTIONS LIST
+// 8. RBAC, RFQ, PRODUCT MANAGEMENT, & ESCROW TRANSACTIONS
 // ==========================================================================
-app.get('/api/transactions', async (req, res) => {
-  try {
-    const list = await db.read('transactions');
-    res.json({ success: true, count: list.length, transactions: list });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
+app.use('/api', rbacRouter);
+
+// API fallback: jangan biarkan request /api yang tidak dikenal jatuh ke SPA.
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    success: false,
+    code: 'API_NOT_FOUND',
+    message: `Endpoint ${req.method} ${req.originalUrl} tidak ditemukan.`,
+  });
 });
 
-// Jalankan Server
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(`🚀 NusaBridge Backend API Server Berjalan di Port: ${PORT}`);
-  console.log(`📡 URL API: http://localhost:${PORT}/api/health`);
-  console.log(`📦 Database: ${db.provider}`);
-  console.log(`🩺 Periksa databaseReady pada endpoint /api/health untuk status katalog dan tabel.`);
-  console.log(`=======================================================`);
+// Error handler terpusat untuk route async maupun middleware.
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+
+  if (err && err.type === 'entity.parse.failed') {
+    return res.status(400).json({
+      success: false,
+      code: 'INVALID_JSON',
+      message: 'Body request bukan JSON yang valid.',
+    });
+  }
+
+  const status = Number(err && err.status) >= 400 ? Number(err.status) : 500;
+  const code = (err && err.code) || (status === 500 ? 'INTERNAL_ERROR' : 'REQUEST_FAILED');
+
+  if (status >= 500) {
+    console.error('[API Error]:', err && err.stack ? err.stack : err);
+  }
+
+  res.status(status).json({
+    success: false,
+    code,
+    message:
+      status >= 500
+        ? 'Terjadi kesalahan pada server. Silakan coba lagi.'
+        : (err && err.message) || 'Permintaan tidak dapat diproses.',
+    ...((err && err.extra) || {}),
+  });
 });
+
+// Jalankan Server hanya saat file ini dieksekusi langsung, bukan saat di-require
+// oleh test otomatis.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`🚀 NusaBridge Backend API Server Berjalan di Port: ${PORT}`);
+    console.log(`📡 URL API: http://localhost:${PORT}/api/health`);
+    console.log(`📦 Database: ${db.provider}`);
+    console.log(`🩺 Periksa databaseReady pada endpoint /api/health untuk status katalog dan tabel.`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;

@@ -67,18 +67,37 @@ export function AppContextProvider({ children }) {
   // SESI LOGIN / LOGOUT
   // ---------------------------------------------------------------
   const login = useCallback((user, opts = {}) => {
+    const role =
+      user.role === 'buyer' || user.role === 'importer'
+        ? 'buyer'
+        : user.role === 'admin' || user.role === 'administrator'
+          ? 'admin'
+          : 'seller';
+
     const sessionUser = {
       loggedIn: true,
-      name: user.company.replace(/^(CV|PT|UD|Koperasi)\s+/i, '') || 'UMKM Indonesia',
-      company: user.company,
-      email: user.email,
-      role: user.role === 'buyer' || user.role === 'importer' ? 'buyer' : 'seller',
-      nib: user.nib || '1294801928415',
+      id: user.id || '',
+      name:
+        (user.name || user.company || 'Pengguna NusaBridge').replace(
+          /^(CV|PT|UD|Koperasi)\s+/i,
+          ''
+        ) || 'UMKM Indonesia',
+      company: user.company || user.name || 'UMKM Indonesia',
+      email: user.email || '',
+      role,
+      nib: user.nib || '',
+      npwp: user.npwp || '',
       plan: user.plan || 'Free Trial (1 Bulan)',
-      logo: user.logo || '',
-      token: `nb_session_${Date.now()}`,
+      logo: user.logoUrl || user.logo || '',
+      // Token asli dari backend. Jika tidak ada, biarkan kosong: jangan
+      // membuat token palsu yang tidak bisa diverifikasi server.
+      token: opts.token || user.token || '',
       ...opts,
     };
+    // Pastikan opts tidak menghapus role/token yang sudah dihitung.
+    sessionUser.role = role;
+    sessionUser.token = opts.token || user.token || sessionUser.token || '';
+
     setSession(sessionUser);
     try {
       localStorage.setItem(SESSION_KEY, JSON.stringify(sessionUser));

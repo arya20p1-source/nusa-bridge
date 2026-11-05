@@ -52,6 +52,7 @@ const TABLES = {
   ai_chat_sessions: 'ai_chat_sessions',
   ai_chat_messages: 'ai_chat_messages',
   audit_logs: 'audit_logs',
+  idempotency_keys: 'idempotency_keys',
   sessions: 'sessions',
   password_resets: 'password_resets',
   email_verifications: 'email_verifications',
@@ -61,6 +62,9 @@ const TABLES = {
   exchange_rates: 'exchange_rates',
   product_categories: 'product_categories',
 };
+
+// Tabel opsional: fitur tetap berjalan dengan fallback bila migrasi belum ada.
+const OPTIONAL_TABLES = new Set(['idempotency_keys']);
 
 // Prefix untuk membuat code otomatis saat aplikasi menambah data baru.
 const ID_PREFIX = {
@@ -106,6 +110,7 @@ const UPDATED_AT_TABLES = new Set([
   'app_settings',
   'exchange_rates',
   'product_categories',
+  'idempotency_keys',
 ]);
 
 function hasValue(value) {
@@ -151,6 +156,8 @@ const COLUMN_MAP = {
     aiAnalysis: 'ai_analysis',
     destinationPort: 'destination_port',
     process: 'process',
+    idempotencyKey: 'idempotency_key',
+    requestHash: 'request_hash',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
   },
@@ -272,6 +279,68 @@ async function resolveProductId(value) {
   return data ? data.id : null;
 }
 
+/** Cari ID internal user dari code bisnis (mis. usr_001 / use_...). */
+async function resolveUserId(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const text = String(value).trim();
+  if (/^\d+$/.test(text)) return Number(text);
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('id')
+    .eq('code', text)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Gagal mencari pengguna ${text}: ${error.message}`);
+  }
+  return data ? data.id : null;
+}
+
+/** Cari ID internal RFQ dari code bisnis (mis. rfq_001). */
+async function resolveRfqId(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const text = String(value).trim();
+  if (/^\d+$/.test(text)) return Number(text);
+
+  const { data, error } = await supabase
+    .from('rfqs')
+    .select('id')
+    .eq('code', text)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Gagal mencari RFQ ${text}: ${error.message}`);
+  }
+  return data ? data.id : null;
+}
+
+function isDuplicateError(error) {
+  return Boolean(
+    error &&
+      (error.code === '23505' ||
+        /duplicate key|already exists|unique constraint/i.test(error.message || ''))
+  );
+}
+
+function isMissingTableError(error) {
+  return Boolean(
+    error &&
+      (error.code === '42P01' ||
+        /relation .* does not exist|could not find the table|schema cache/i.test(
+          error.message || ''
+        ))
+  );
+}
+
+function isMissingColumnError(error, columnName) {
+  return Boolean(
+    error &&
+      (error.code === '42703' ||
+        new RegExp(`column .*${columnName}|'${columnName}'`, 'i').test(error.message || ''))
+  );
+}
+
 class SupabaseDatabase {
   get configured() {
     return hasValue(SUPABASE_URL) && hasValue(SUPABASE_KEY);
@@ -307,7 +376,7 @@ class SupabaseDatabase {
     return {
       configured: true,
       connected: results.some((table) => table.available),
-      ready: results.every((table) => table.available) &&
+      ready: results.every((table) => table.available || OPTIONAL_TABLES.has(table.name)) &&
         results.find((table) => table.name === 'products').rowCount > 0,
       tables: results,
     };
@@ -387,10 +456,16 @@ class SupabaseDatabase {
     // Kolom yang tidak ada di schema baru.
     if (physical === 'users') delete payload.password;
 
-    // RFQ menyimpan product_id sebagai bigint; terima code dari aplikasi.
+    // Relasi memakai id internal (bigint), sedangkan aplikasi memakai code.
     if (physical === 'rfqs') {
       if (payload.productId !== undefined) {
         payload.productId = await resolveProductId(payload.productId);
+      }
+      if (payload.buyerUserId !== undefined) {
+        payload.buyerUserId = await resolveUserId(payload.buyerUserId);
+      }
+      if (payload.sellerId !== undefined) {
+        payload.sellerId = await resolveUserId(payload.sellerId);
       }
       // Form lama hanya mengirim buyerCountry; destination_port wajib di schema.
       if (!payload.destinationPort && payload.buyerCountry) {
@@ -398,14 +473,42 @@ class SupabaseDatabase {
       }
     }
 
-    const { data, error } = await supabase
-      .from(physical)
-      .insert(toRow(table, payload))
-      .select()
-      .single();
+    if (physical === 'products' && payload.sellerId !== undefined) {
+      payload.sellerId = await resolveUserId(payload.sellerId);
+    }
+
+    if (physical === 'transactions') {
+      if (payload.rfqId !== undefined) payload.rfqId = await resolveRfqId(payload.rfqId);
+      if (payload.buyerId !== undefined) payload.buyerId = await resolveUserId(payload.buyerId);
+      if (payload.sellerId !== undefined) payload.sellerId = await resolveUserId(payload.sellerId);
+      if (payload.productId !== undefined) payload.productId = await resolveProductId(payload.productId);
+    }
+
+    const insert = async (body) =>
+      supabase.from(physical).insert(toRow(table, body)).select().single();
+
+    let { data, error } = await insert(payload);
+
+    // Kompatibilitas sebelum migrasi RBAC dijalankan: kolom idempotency
+    // belum ada. Pesanan tetap dibuat; penjagaan proses tetap berjalan di
+    // adapter idempotency. Setelah migrasi dijalankan, jalur utama aktif.
+    if (
+      error &&
+      physical === 'rfqs' &&
+      (isMissingColumnError(error, 'idempotency_key') ||
+        isMissingColumnError(error, 'request_hash'))
+    ) {
+      delete payload.idempotencyKey;
+      delete payload.requestHash;
+      ({ data, error } = await insert(payload));
+    }
 
     if (error) {
-      throw new Error(`Gagal menambah data ke ${physical}: ${error.message}`);
+      const wrapped = new Error(`Gagal menambah data ke ${physical}: ${error.message}`);
+      wrapped.code = error.code;
+      wrapped.details = error.details;
+      wrapped.cause = error;
+      throw wrapped;
     }
     return toObject(table, data);
   }
@@ -422,8 +525,20 @@ class SupabaseDatabase {
     delete payload.id;
     delete payload.dbId;
 
-    if (physical === 'rfqs' && payload.productId !== undefined) {
-      payload.productId = await resolveProductId(payload.productId);
+    if (physical === 'rfqs') {
+      if (payload.productId !== undefined) {
+        payload.productId = await resolveProductId(payload.productId);
+      }
+      if (payload.buyerUserId !== undefined) {
+        payload.buyerUserId = await resolveUserId(payload.buyerUserId);
+      }
+      if (payload.sellerId !== undefined) {
+        payload.sellerId = await resolveUserId(payload.sellerId);
+      }
+    }
+
+    if (physical === 'products' && payload.sellerId !== undefined) {
+      payload.sellerId = await resolveUserId(payload.sellerId);
     }
 
     const filter = idFilter(physical, id);
@@ -458,6 +573,275 @@ class SupabaseDatabase {
     return (data || []).length > 0;
   }
 
+  // -------------------------------------------------------------------------
+  // IDEMPOTENCY (mencegah duplikasi pesanan saat request bersamaan)
+  // -------------------------------------------------------------------------
+  _fallbackIdempotency() {
+    if (!this._idempotencyFallback) this._idempotencyFallback = new Map();
+    return this._idempotencyFallback;
+  }
+
+  _fallbackKey(scope, key) {
+    return `${scope}\u0000${key}`;
+  }
+
+  _fallbackClaim({ scope, key, requestHash, endpoint }) {
+    const map = this._fallbackIdempotency();
+    const mapKey = this._fallbackKey(scope, key);
+    const now = Date.now();
+    const existing = map.get(mapKey);
+
+    if (!existing) {
+      const record = {
+        id: `idem_${now}_${Math.floor(Math.random() * 1000)}`,
+        scope,
+        idempotencyKey: key,
+        requestHash,
+        endpoint,
+        status: 'processing',
+        responseStatus: null,
+        responseBody: null,
+        resourceType: null,
+        resourceId: null,
+        lockedAt: new Date(now).toISOString(),
+        createdAt: new Date(now).toISOString(),
+        updatedAt: new Date(now).toISOString(),
+      };
+      map.set(mapKey, record);
+      return { status: 'claimed', record: { ...record } };
+    }
+
+    if (existing.requestHash !== requestHash) {
+      return { status: 'conflict', record: { ...existing } };
+    }
+    if (existing.status === 'completed') {
+      return { status: 'replay', record: { ...existing } };
+    }
+
+    const lockedAt = new Date(existing.lockedAt || existing.createdAt || 0).getTime();
+    if (now - lockedAt > 30000) {
+      existing.status = 'processing';
+      existing.lockedAt = new Date(now).toISOString();
+      existing.requestHash = requestHash;
+      existing.updatedAt = new Date(now).toISOString();
+      return { status: 'claimed', record: { ...existing } };
+    }
+    return { status: 'processing', record: { ...existing } };
+  }
+
+  async claimIdempotency({ scope, key, requestHash, endpoint = '' }) {
+    ensureConfigured();
+    if (this._idempotencyTableMissing) {
+      return this._fallbackClaim({ scope, key, requestHash, endpoint });
+    }
+
+    const now = new Date().toISOString();
+    const { data, error } = await supabase
+      .from('idempotency_keys')
+      .insert({
+        scope,
+        idempotency_key: key,
+        request_hash: requestHash,
+        endpoint,
+        status: 'processing',
+        locked_at: now,
+      })
+      .select()
+      .single();
+
+    if (!error) {
+      return { status: 'claimed', record: toObject('idempotency_keys', data) };
+    }
+
+    if (isMissingTableError(error)) {
+      this._idempotencyTableMissing = true;
+      console.warn(
+        '[Idempotency] Tabel idempotency_keys belum ada. Jalankan database/rbac-idempotency.sql. ' +
+          'Sementara memakai penjagaan proses.'
+      );
+      return this._fallbackClaim({ scope, key, requestHash, endpoint });
+    }
+
+    if (!isDuplicateError(error)) {
+      throw new Error(`Gagal mengunci idempotency key: ${error.message}`);
+    }
+
+    const existing = await this.getIdempotency(scope, key);
+    if (!existing) {
+      throw new Error('Idempotency key duplikat tetapi data kunci tidak ditemukan.');
+    }
+    if (existing.requestHash !== requestHash) {
+      return { status: 'conflict', record: existing };
+    }
+    if (existing.status === 'completed') {
+      return { status: 'replay', record: existing };
+    }
+
+    const lockedAt = new Date(existing.lockedAt || existing.createdAt || 0).getTime();
+    if (Date.now() - lockedAt > 30000) {
+      const { data: updated, error: updateError } = await supabase
+        .from('idempotency_keys')
+        .update({ status: 'processing', locked_at: now, request_hash: requestHash })
+        .eq('scope', scope)
+        .eq('idempotency_key', key)
+        .eq('status', 'processing')
+        .select()
+        .maybeSingle();
+
+      if (!updateError && updated) {
+        return { status: 'claimed', record: toObject('idempotency_keys', updated) };
+      }
+    }
+
+    return { status: 'processing', record: existing };
+  }
+
+  async getIdempotency(scope, key) {
+    ensureConfigured();
+    if (this._idempotencyTableMissing) {
+      return this._fallbackIdempotency().get(this._fallbackKey(scope, key)) || null;
+    }
+
+    const { data, error } = await supabase
+      .from('idempotency_keys')
+      .select('*')
+      .eq('scope', scope)
+      .eq('idempotency_key', key)
+      .maybeSingle();
+
+    if (error) {
+      if (isMissingTableError(error)) {
+        this._idempotencyTableMissing = true;
+        return this._fallbackIdempotency().get(this._fallbackKey(scope, key)) || null;
+      }
+      throw new Error(`Gagal membaca idempotency key: ${error.message}`);
+    }
+    return data ? toObject('idempotency_keys', data) : null;
+  }
+
+  async completeIdempotency({
+    scope,
+    key,
+    responseStatus,
+    responseBody,
+    resourceType = null,
+    resourceId = null,
+  }) {
+    ensureConfigured();
+    const safeResourceId =
+      resourceId === null || resourceId === undefined ? null : String(resourceId);
+
+    if (this._idempotencyTableMissing) {
+      const record = this._fallbackIdempotency().get(this._fallbackKey(scope, key));
+      if (!record) return null;
+      Object.assign(record, {
+        status: 'completed',
+        responseStatus,
+        responseBody: JSON.parse(JSON.stringify(responseBody)),
+        resourceType,
+        resourceId: safeResourceId,
+        updatedAt: new Date().toISOString(),
+      });
+      return { ...record };
+    }
+
+    const { data, error } = await supabase
+      .from('idempotency_keys')
+      .update({
+        status: 'completed',
+        response_status: responseStatus,
+        response_body: responseBody,
+        resource_type: resourceType,
+        resource_id: safeResourceId,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('scope', scope)
+      .eq('idempotency_key', key)
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      if (isMissingTableError(error)) {
+        this._idempotencyTableMissing = true;
+        return this.completeIdempotency({
+          scope,
+          key,
+          responseStatus,
+          responseBody,
+          resourceType,
+          resourceId,
+        });
+      }
+      throw new Error(`Gagal menyelesaikan idempotency key: ${error.message}`);
+    }
+    return data ? toObject('idempotency_keys', data) : null;
+  }
+
+  async releaseIdempotency(scope, key) {
+    ensureConfigured();
+    if (this._idempotencyTableMissing) {
+      const map = this._fallbackIdempotency();
+      const mapKey = this._fallbackKey(scope, key);
+      const record = map.get(mapKey);
+      if (record && record.status === 'processing') {
+        map.delete(mapKey);
+        return true;
+      }
+      return false;
+    }
+
+    const { error } = await supabase
+      .from('idempotency_keys')
+      .delete()
+      .eq('scope', scope)
+      .eq('idempotency_key', key)
+      .eq('status', 'processing');
+
+    if (error) {
+      if (isMissingTableError(error)) {
+        this._idempotencyTableMissing = true;
+        return this.releaseIdempotency(scope, key);
+      }
+      throw new Error(`Gagal melepas idempotency key: ${error.message}`);
+    }
+    return true;
+  }
+
+  async findRfqByIdempotencyKey({ key, buyerUserId, buyerEmail }) {
+    ensureConfigured();
+    let data;
+    try {
+      const result = await supabase
+        .from('rfqs')
+        .select('*')
+        .eq('idempotency_key', key)
+        .limit(20);
+      if (result.error) throw result.error;
+      data = result.data;
+    } catch (error) {
+      if (
+        isMissingTableError(error) ||
+        isMissingColumnError(error, 'idempotency_key')
+      ) {
+        return null;
+      }
+      throw new Error(`Gagal mencari RFQ idempotency: ${error.message}`);
+    }
+
+    const rows = (data || []).map((row) => toObject('rfq', row));
+    return (
+      rows.find((row) => {
+        if (buyerUserId !== null && buyerUserId !== undefined) {
+          return String(row.buyerUserId) === String(buyerUserId);
+        }
+        return (
+          String(row.buyerEmail || '').toLowerCase() ===
+          String(buyerEmail || '').toLowerCase()
+        );
+      }) || null
+    );
+  }
+
   /** Query produk: search, filter kategori, sorting, pagination */
   async queryProducts({
     category = 'all',
@@ -467,6 +851,11 @@ class SupabaseDatabase {
     sort = 'featured',
   }) {
     let items = await this.read('products');
+
+    // Katalog publik tidak menampilkan produk yang sudah diarsipkan/dihapus.
+    items = items.filter(
+      (product) => !product.deletedAt && (!product.status || product.status === 'published')
+    );
 
     if (category && category !== 'all') {
       items = items.filter((p) => p.category === category);

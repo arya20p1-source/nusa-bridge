@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
+    "test": "node --test test/*.test.js",
+    "admin:create": "node scripts/create-admin.js",
     "db:check": "node database/check.js",
     "db:generate": "node database/generate-reset.js && node database/generate-lanjutan.js"
   },

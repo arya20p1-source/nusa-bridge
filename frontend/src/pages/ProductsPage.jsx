@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 import { useApp } from '../context/AppContext.jsx';
 import T from '../components/T.jsx';
 import TransportPanel from '../components/TransportPanel.jsx';
-import { apiUrl } from '../utils/api.js';
+import { authFetch } from '../utils/api.js';
 import { PRODUCTS_DATA } from '../data/products.js';
 
 /**
@@ -38,6 +38,13 @@ function formatUSD(num) {
 
 function getCategoryLabel(cat) {
   return CATEGORY_LABELS[cat] || 'Komoditas Unggulan';
+}
+
+function createIdempotencyKey() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return `rfq-${Date.now()}-${Math.random().toString(36).slice(2, 14)}`;
 }
 
 function LocationIcon() {
@@ -125,32 +132,61 @@ function RfqModal({ product, onClose, session }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [receipt, setReceipt] = useState(null);
+  const [accessToken, setAccessToken] = useState('');
+  const idempotencyKeyRef = useRef(createIdempotencyKey());
   const productName = product?.name || 'Komoditas Ekspor';
+
+  function resetIdempotencyKey() {
+    idempotencyKeyRef.current = createIdempotencyKey();
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setSaving(true);
     setError('');
 
+    const body = JSON.stringify({
+      productId: product?.id,
+      productName,
+      quantity: Number(qty),
+      unit: product?.unit || 'unit',
+      targetPriceUSD: Number(product?.price),
+      targetIncoterms: terms,
+      buyerCountry: port.trim(),
+      buyerEmail: contact.trim(),
+    });
+
     try {
-      const res = await fetch(apiUrl('/api/rfq'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productId: product?.id,
-          productName,
-          quantity: Number(qty),
-          unit: product?.unit || 'unit',
-          targetPriceUSD: Number(product?.price),
-          targetIncoterms: terms,
-          buyerCountry: port.trim(),
-          buyerEmail: contact.trim(),
-        }),
-      });
-      const data = await res.json();
+      let res;
+      let data = {};
+
+      // Satu kali retry bila request pertama masih diproses oleh server.
+      // Idempotency-Key yang sama memastikan retry tidak membuat pesanan ganda.
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        res = await authFetch('/api/rfq', {
+          method: 'POST',
+          headers: { 'Idempotency-Key': idempotencyKeyRef.current },
+          body,
+        });
+        data = await res.json().catch(() => ({}));
+
+        if (res.status === 409 && data.code === 'REQUEST_IN_PROGRESS' && attempt === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          continue;
+        }
+        break;
+      }
+
       if (!res.ok || !data.success || !data.rfq?.id) {
+        if (data.code === 'IDEMPOTENCY_CONFLICT') {
+          // Formulir berubah setelah percobaan sebelumnya: gunakan key baru
+          // supaya percobaan berikutnya adalah operasi yang berbeda.
+          resetIdempotencyKey();
+        }
         throw new Error(data.message || 'RFQ gagal disimpan. Coba lagi.');
       }
+
+      setAccessToken(data.accessToken || '');
       setReceipt(data.rfq);
     } catch (submitError) {
       setError(submitError.message || 'Tidak dapat menghubungi server. RFQ belum tercatat.');
@@ -163,7 +199,8 @@ function RfqModal({ product, onClose, session }) {
     if (!receipt?.id) return;
     setError('');
     try {
-      const res = await fetch(apiUrl(`/api/rfq/${encodeURIComponent(receipt.id)}`));
+      const headers = accessToken ? { 'X-RFQ-Access-Token': accessToken } : {};
+      const res = await authFetch(`/api/rfq/${encodeURIComponent(receipt.id)}`, { headers });
       const data = await res.json();
       if (!res.ok || !data.success || !data.rfq) {
         throw new Error(data.message || 'Status RFQ tidak dapat dimuat.');

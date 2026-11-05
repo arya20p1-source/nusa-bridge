@@ -52,6 +52,32 @@ Kalau ingin menjalankan per bagian:
 - `seed.sql` → mengisi data contoh (jalankan setelah `schema.sql`).
 - `setup.sql` → sama dengan `reset-supabase.sql` (lengkap).
 
+## 2b. Migrasi RBAC & idempotency (wajib untuk produksi)
+
+Setelah schema utama berhasil, jalankan **`backend/database/rbac-idempotency.sql`**
+di Supabase SQL Editor. Migrasi ini menambahkan:
+
+- kolom `idempotency_key` dan `request_hash` pada `rfqs`;
+- tabel `idempotency_keys` untuk klaim request secara atomik;
+- unique index yang mencegah dua RFQ dengan pembeli + idempotency key sama.
+
+Tanpa migrasi ini backend tetap berjalan dengan penjagaan idempotency di level
+proses, tetapi perlindungan setelah restart / multi-instance hanya aktif
+setelah migrasi dijalankan.
+
+## 2c. Buat akun admin
+
+Akun admin tidak dibuat otomatis dan tidak bisa didaftarkan lewat API publik.
+Dari folder `backend`:
+
+```bash
+npm run admin:create -- admin@perusahaan.id 'PasswordKuat123' 'Nama Admin'
+```
+
+Script ini membuat akun admin baru atau mempromosikan akun yang sudah ada,
+lalu menyimpan password sebagai hash scrypt. Login admin memerlukan email dan
+password.
+
 ## 3. Cek hasilnya
 
 Di **Table Editor**, pastikan tabel berikut ada:
@@ -60,9 +86,9 @@ Di **Table Editor**, pastikan tabel berikut ada:
 `voucher_claims`, `subscriptions`, `payments`, `kyc_verifications`,
 `documents`, `shipments`, `shipment_segments`, `shipment_events`,
 `transport_options`, `transport_quotes`, `notifications`,
-`ai_chat_sessions`, `ai_chat_messages`, `audit_logs`, `sessions`,
-`password_resets`, `email_verifications`, `rfq_messages`, `escrow_events`,
-`app_settings`, `exchange_rates`, `product_categories`.
+`ai_chat_sessions`, `ai_chat_messages`, `audit_logs`, `idempotency_keys`,
+`sessions`, `password_resets`, `email_verifications`, `rfq_messages`,
+`escrow_events`, `app_settings`, `exchange_rates`, `product_categories`.
 
 Cek juga:
 
@@ -78,6 +104,13 @@ Buat file `backend/.env`:
 ```env
 SUPABASE_URL=https://PROJECT-REF.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=service-role-key-dari-supabase
+AUTH_SECRET=string-acak-panjang-untuk-menandatangani-token
+```
+
+Buat `AUTH_SECRET` dengan:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
 Ambil dari Supabase: **Project Settings** → **API**.

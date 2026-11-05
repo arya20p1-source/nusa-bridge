@@ -10,9 +10,31 @@
  * ==========================================================================
  */
 
+const crypto = require('crypto');
 const PRODUCTS = require('./products-fallback.json');
 
+function hashDemoPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(String(password), salt, 64).toString('hex');
+  return `scrypt$${salt}$${hash}`;
+}
+
+const DEMO_ADMIN_PASSWORD = process.env.DEMO_ADMIN_PASSWORD || 'Admin#2026';
+
 const SEED_USERS = [
+  {
+    id: 'usr_admin_001',
+    name: 'Administrator NusaBridge',
+    email: 'admin@nusabridge.id',
+    company: 'NusaBridge',
+    role: 'admin',
+    nib: null,
+    npwp: null,
+    status: 'verified',
+    plan: 'Internal Admin',
+    passwordHash: hashDemoPassword(DEMO_ADMIN_PASSWORD),
+    createdAt: '2026-01-01T00:00:00.000Z',
+  },
   {
     id: 'use_1792387445560_531',
     name: 'Admin NusaBridge',
@@ -66,6 +88,8 @@ class MemoryDatabase {
       products: clone(PRODUCTS),
       rfq: [],
       transactions: [],
+      audit_logs: [],
+      idempotency_keys: [],
     };
   }
 
@@ -114,6 +138,22 @@ class MemoryDatabase {
 
   async create(table, item) {
     const rows = this.tables[table] || (this.tables[table] = []);
+
+    // Penjaga duplikasi di level database-memori: kombinasi scope + idempotency
+    // key yang sama tidak boleh menghasilkan baris RFQ kedua.
+    if (table === 'rfq' && item.idempotencyKey) {
+      const existing = rows.find(
+        (row) =>
+          row.idempotencyKey === item.idempotencyKey &&
+          ((item.buyerUserId !== undefined &&
+            String(row.buyerUserId) === String(item.buyerUserId)) ||
+            (!item.buyerUserId &&
+              String(row.buyerEmail || '').toLowerCase() ===
+                String(item.buyerEmail || '').toLowerCase()))
+      );
+      if (existing) return clone(existing);
+    }
+
     const payload = {
       id:
         item.id ||
@@ -150,6 +190,120 @@ class MemoryDatabase {
     return true;
   }
 
+  // -------------------------------------------------------------------------
+  // IDEMPOTENCY (dipakai untuk mencegah duplikasi pesanan)
+  // -------------------------------------------------------------------------
+  async claimIdempotency({ scope, key, requestHash, endpoint = '' }) {
+    const rows = this.tables.idempotency_keys || (this.tables.idempotency_keys = []);
+    const now = Date.now();
+    const existing = rows.find(
+      (row) => row.scope === scope && row.idempotencyKey === key
+    );
+
+    if (!existing) {
+      const record = {
+        id: `idem_${now}_${Math.floor(Math.random() * 1000)}`,
+        scope,
+        idempotencyKey: key,
+        requestHash,
+        endpoint,
+        status: 'processing',
+        responseStatus: null,
+        responseBody: null,
+        resourceType: null,
+        resourceId: null,
+        lockedAt: new Date(now).toISOString(),
+        createdAt: new Date(now).toISOString(),
+        updatedAt: new Date(now).toISOString(),
+      };
+      rows.push(record);
+      return { status: 'claimed', record: clone(record) };
+    }
+
+    if (existing.requestHash !== requestHash) {
+      return { status: 'conflict', record: clone(existing) };
+    }
+    if (existing.status === 'completed') {
+      return { status: 'replay', record: clone(existing) };
+    }
+
+    const lockedAt = new Date(existing.lockedAt || existing.createdAt || 0).getTime();
+    if (now - lockedAt > 30000) {
+      existing.status = 'processing';
+      existing.lockedAt = new Date(now).toISOString();
+      existing.requestHash = requestHash;
+      existing.updatedAt = new Date(now).toISOString();
+      return { status: 'claimed', record: clone(existing) };
+    }
+
+    return { status: 'processing', record: clone(existing) };
+  }
+
+  async getIdempotency(scope, key) {
+    const rows = this.tables.idempotency_keys || [];
+    const found = rows.find(
+      (row) => row.scope === scope && row.idempotencyKey === key
+    );
+    return found ? clone(found) : null;
+  }
+
+  async completeIdempotency({
+    scope,
+    key,
+    responseStatus,
+    responseBody,
+    resourceType = null,
+    resourceId = null,
+  }) {
+    const rows = this.tables.idempotency_keys || [];
+    const existing = rows.find(
+      (row) => row.scope === scope && row.idempotencyKey === key
+    );
+    if (!existing) return null;
+    Object.assign(existing, {
+      status: 'completed',
+      responseStatus,
+      responseBody: clone(responseBody),
+      resourceType,
+      resourceId: resourceId === null || resourceId === undefined ? null : String(resourceId),
+      updatedAt: new Date().toISOString(),
+    });
+    return clone(existing);
+  }
+
+  async releaseIdempotency(scope, key) {
+    const rows = this.tables.idempotency_keys || [];
+    const index = rows.findIndex(
+      (row) => row.scope === scope && row.idempotencyKey === key && row.status === 'processing'
+    );
+    if (index === -1) return false;
+    rows.splice(index, 1);
+    return true;
+  }
+
+  async findRfqByIdempotencyKey({ key, buyerUserId, buyerEmail }) {
+    const rows = this.tables.rfq || [];
+    const found = rows.find((row) => {
+      if (row.idempotencyKey !== key) return false;
+      if (buyerUserId !== null && buyerUserId !== undefined) {
+        return String(row.buyerUserId) === String(buyerUserId);
+      }
+      return (
+        String(row.buyerEmail || '').toLowerCase() ===
+        String(buyerEmail || '').toLowerCase()
+      );
+    });
+    return found ? clone(found) : null;
+  }
+
+  /** Khusus test: kosongkan data transaksi tanpa menyentuh katalog/seed user. */
+  async resetTransientData() {
+    this.tables.rfq = [];
+    this.tables.transactions = [];
+    this.tables.audit_logs = [];
+    this.tables.idempotency_keys = [];
+  }
+
   async queryProducts({
     category = 'all',
     search = '',
@@ -158,6 +312,11 @@ class MemoryDatabase {
     sort = 'featured',
   }) {
     let items = await this.read('products');
+
+    // Katalog publik tidak menampilkan produk yang sudah diarsipkan/dihapus.
+    items = items.filter(
+      (product) => !product.deletedAt && (!product.status || product.status === 'published')
+    );
 
     if (category && category !== 'all') {
       items = items.filter((p) => p.category === category);
