@@ -57,6 +57,8 @@ const PAGE_LABELS = {
   solutions: { id: 'Solusi AI', en: 'AI Solutions' },
   escrow: { id: 'Simulasi Escrow Vault', en: 'Escrow Vault Simulation' },
   pricing: { id: 'Paket & Harga', en: 'Plans & Pricing' },
+  transport: { id: 'Transportasi & Logistik', en: 'Transport & Logistics' },
+  tracking: { id: 'Pelacakan', en: 'Tracking' },
   auth: { id: 'Masuk / Daftar', en: 'Login / Register' },
 };
 
@@ -65,6 +67,8 @@ const WEBSITE_PAGES_ID = [
   'Produk (/produk) — katalog 50 komoditas, pencarian, filter kategori, sortir, halaman 12 produk, modal spesifikasi, dan formulir RFQ.',
   'Solusi AI (/solusi) — chat NusaBridge AI, penjelasan 4 pilar, dan studio interaktif RFQ, Auto-PDF, KYC Hub, serta Escrow Vault.',
   'Harga (/harga) — paket UMKM, voucher subsidi, dan kalkulator estimasi.',
+  'Transportasi (/transportasi) — pemilihan transportasi multimoda dan estimasi rute, biaya, serta ETA berdasarkan input pengiriman.',
+  'Pelacakan (/pelacakan) — status dan progres pengiriman menggunakan data simulasi, bukan GPS atau status ekspedisi nyata.',
   'Masuk/Daftar — modal akun dengan pilihan peran Eksportir (seller) atau Importir (buyer), unggah logo, dan sesi tersimpan di browser.',
 ];
 
@@ -76,17 +80,21 @@ const WEBSITE_FACTS_ID = `FAKTA WEBSITE NUSABRIDGE (hanya gunakan fakta ini):
 - Auto-PDF: menghasilkan draf Proforma Invoice dan Sales Contract yang dapat dicetak atau disalin. Ini draf, bukan dokumen resmi yang sudah diverifikasi.
 - KYC Hub: simulasi pemeriksaan format NIB/NPWP dan menampilkan checklist standar negara tujuan. Ini bukan verifikasi resmi OSS, Bea Cukai, atau otoritas negara tujuan.
 - Escrow Vault: simulasi 4 fase pencairan (30% kontrak, 30% PEB/stuffing, 20% B/L, 20% tiba). Website tidak memproses pembayaran atau menyimpan dana sungguhan.
+- Transportasi: pengguna dapat memasukkan detail pengiriman untuk melihat pilihan multimoda dan estimasi rute, biaya, serta ETA; hasilnya adalah estimasi website.
+- Pelacakan: halaman menampilkan status/progres pengiriman dari data demo. Website tidak menampilkan GPS atau status ekspedisi/kepabeanan nyata.
 - Peran akun: Eksportir (seller) dan Importir (buyer). Peran memengaruhi tampilan panduan dan konteks jawaban AI; tidak membuka dashboard transaksi khusus.
 - Bahasa antarmuka: Indonesia dan Inggris. Akun menyimpan nama usaha, email, logo, dan peran di sesi browser.
 - AI: menjawab pertanyaan tentang website NusaBridge dan panduan umum ekspor-impor. AI tidak menjawab topik di luar itu dan tidak boleh mengarang fitur, harga, stok, status transaksi, atau regulasi.`;
 
 const WEBSITE_FACTS_EN = `NUSABRIDGE WEBSITE FACTS (use only these facts):
 - NusaBridge is an information and simulation website for Indonesian SME export-import trade. NusaBridge is not a seller, producer, bank, or official verification authority.
-- Pages: Home (/), Products (/produk), AI Solutions (/solusi), Pricing (/harga), and the Login/Register modal. The product catalog has ${FALLBACK_PRODUCTS.length} products: ${CATALOG_COUNTS.kopi || 0} coffee, ${CATALOG_COUNTS.rempah || 0} spices & natural products, ${CATALOG_COUNTS.kriya || 0} crafts, and ${CATALOG_COUNTS.tekstil || 0} textiles.
+- Pages: Home (/), Products (/produk), AI Solutions (/solusi), Pricing (/harga), Transport (/transportasi), Tracking (/pelacakan), and the Login/Register modal. Transport provides multimodal route/cost/ETA estimates based on shipment inputs. Tracking uses demo data only, not live GPS, carrier, or customs status. The product catalog has ${FALLBACK_PRODUCTS.length} products: ${CATALOG_COUNTS.kopi || 0} coffee, ${CATALOG_COUNTS.rempah || 0} spices & natural products, ${CATALOG_COUNTS.kriya || 0} crafts, and ${CATALOG_COUNTS.tekstil || 0} textiles.
 - RFQ: choose a product, enter quantity, Incoterms (FOB/CIF/CNF/EXW), destination port, and contact email. The site returns an RFQ number, a "submitted — awaiting review" status, process steps, and a status refresh button. It does not automatically contact suppliers, collect or compare quotations, or provide a negotiation dashboard.
 - Auto-PDF: creates printable/copyable draft Proforma Invoice and Sales Contract documents. They are drafts, not officially verified documents.
 - KYC Hub: a simulation that checks NIB/NPWP format and shows destination-country checklists. It is not official verification by OSS, Customs, or a foreign authority.
 - Escrow Vault: a 4-phase payout simulation (30% contract, 30% PEB/stuffing, 20% B/L, 20% arrival). The site does not process real payments or hold funds.
+- Transport: users can enter shipment details to see multimodal options and estimated route, cost, and ETA; results are website estimates.
+- Tracking: the page displays shipment status/progress from demo data. The site does not show real GPS, carrier, or customs status.
 - Account roles: Exporter (seller) and Importer (buyer). The role changes guidance and AI context; it does not unlock a dedicated transaction dashboard.
 - Interface languages: Indonesian and English. The browser session stores business name, email, logo, and role.
 - AI: answers questions about the NusaBridge website and general export-import guidance only. It must not answer unrelated topics or invent features, prices, stock, transaction status, or regulations.`;

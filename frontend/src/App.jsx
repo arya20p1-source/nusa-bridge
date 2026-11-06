@@ -8,6 +8,7 @@ import DemoModal from './components/DemoModal.jsx';
 import InfoModal from './components/InfoModal.jsx';
 import RadarModal from './components/RadarModal.jsx';
 import TxModal from './components/TxModal.jsx';
+import CustomerSupportChat from './components/CustomerSupportChat.jsx';
 import useHashScroll from './hooks/useHashScroll.jsx';
 import AutoTranslate from './components/AutoTranslate.jsx';
 
@@ -52,6 +53,7 @@ export default function App() {
       <Footer />
 
       {/* Global overlays */}
+      <CustomerSupportChat />
       <AutoTranslate />
       <ToastStack />
       <AuthModal />

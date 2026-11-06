@@ -1618,3 +1618,251 @@
   margin: 14px 0;
   border: 1px solid #334155;
 }
+
+/* Website-wide customer support chat */
+.nb-support-chat {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1500;
+  font-family: inherit;
+}
+
+.nb-support-panel {
+  position: absolute;
+  right: 0;
+  bottom: 72px;
+  display: flex;
+  flex-direction: column;
+  width: min(380px, calc(100vw - 32px));
+  height: min(560px, calc(100dvh - 112px));
+  min-height: 320px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #dbe3ee;
+  border-radius: 18px;
+  box-shadow: 0 18px 56px rgba(15, 23, 42, 0.22);
+}
+
+.nb-support-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 14px 16px;
+  color: #fff;
+  background: linear-gradient(120deg, #12366e, #1d64c8);
+}
+
+.nb-support-avatar {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  font-weight: 800;
+}
+
+.nb-support-heading {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nb-support-heading strong {
+  font-size: 14px;
+}
+
+.nb-support-heading span {
+  color: #dbeafe;
+  font-size: 12px;
+}
+
+.nb-support-close {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: transparent;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.nb-support-close:hover,
+.nb-support-close:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.nb-support-messages {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f7f9fc;
+}
+
+.nb-support-message {
+  max-width: 90%;
+  padding: 11px 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.nb-support-message p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.nb-support-message.assistant {
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+  color: #1e293b;
+  background: #fff;
+}
+
+.nb-support-message.user {
+  align-self: flex-end;
+  border-color: #1d4ed8;
+  border-bottom-right-radius: 4px;
+  color: #fff;
+  background: #1d4ed8;
+}
+
+.nb-support-quick-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.nb-support-quick-questions button {
+  padding: 8px 10px;
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  color: #1d4ed8;
+  background: #eff6ff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nb-support-quick-questions button:hover:not(:disabled) {
+  background: #dbeafe;
+}
+
+.nb-support-quick-questions button:disabled {
+  cursor: wait;
+}
+
+.nb-support-typing {
+  align-self: flex-start;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.nb-support-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.nb-support-form textarea {
+  flex: 1;
+  min-width: 0;
+  max-height: 96px;
+  resize: vertical;
+  padding: 10px 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  color: #0f172a;
+  font: inherit;
+  font-size: 13px;
+}
+
+.nb-support-form textarea:focus {
+  outline: 2px solid #93c5fd;
+  border-color: #2563eb;
+}
+
+.nb-support-form button {
+  min-height: 39px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  background: #1d4ed8;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.nb-support-form button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.nb-support-note {
+  margin: 0;
+  padding: 0 12px 10px;
+  color: #64748b;
+  background: #fff;
+  font-size: 10px;
+  text-align: center;
+}
+
+.nb-support-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 58px;
+  height: 58px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(120deg, #1555b7, #17866c);
+  box-shadow: 0 8px 24px rgba(15, 73, 143, 0.32);
+  font: inherit;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.nb-support-launcher span {
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.nb-support-launcher:hover {
+  transform: translateY(-2px);
+}
+
+.nb-support-launcher:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .nb-support-chat {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .nb-support-panel {
+    right: -4px;
+    bottom: 70px;
+    width: calc(100vw - 24px);
+    height: min(580px, calc(100dvh - 102px));
+  }
+}
