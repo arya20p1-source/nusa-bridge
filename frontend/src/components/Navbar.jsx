@@ -36,8 +36,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const wrapperRef = useRef(null);
+  const navGroupRef = useRef(null);
   const logoInputRef = useRef(null);
 
   // Efek navbar saat scroll
@@ -65,11 +67,14 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [location.pathname]);
 
-  // Tutup dropdown bahasa saat klik di luar
+  // Tutup dropdown bahasa & dropdown layanan saat klik di luar
   useEffect(() => {
     const onOutside = (e) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
         setLangOpen(false);
+      }
+      if (navGroupRef.current && !navGroupRef.current.contains(e.target)) {
+        setServicesOpen(false);
       }
     };
     document.addEventListener('click', onOutside);
@@ -96,17 +101,33 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
-  // Menu navigasi sesuai kebutuhan: Beranda, Produk, RFQ Studio, Dokumen,
-  // Alur Ekspor, Alur Impor, Kontak.
+  // Menu utama dibuat ringkas: Beranda, Produk, Domestik, Layanan (dropdown),
+  // dan Kontak. Menu sekunder dikelompokkan agar navbar tidak penuh.
   const navLinks = [
     { key: 'nav_home', path: '/', hash: '', section: 'hero' },
     { key: 'nav_products', path: '/produk', hash: '', section: '' },
-    { key: 'nav_rfq_studio', path: '/solusi', hash: 'rfq-studio', section: '' },
-    { key: 'nav_documents', path: '/solusi', hash: 'dokumen', section: '' },
-    { key: 'nav_export_flow', path: '/', hash: 'alur-ekspor', section: 'alur-ekspor' },
-    { key: 'nav_import_flow', path: '/', hash: 'alur-impor', section: '' },
+    { key: 'nav_domestic', path: '/domestik', hash: '', section: '' },
+    {
+      key: 'nav_services',
+      children: [
+        { key: 'nav_rfq_studio', path: '/solusi', hash: 'rfq-studio', section: '' },
+        { key: 'nav_documents', path: '/solusi', hash: 'dokumen', section: '' },
+        { key: 'nav_export_flow', path: '/', hash: 'alur-ekspor', section: 'alur-ekspor' },
+        { key: 'nav_import_flow', path: '/', hash: 'alur-impor', section: '' },
+      ],
+    },
     { key: 'nav_contact', path: '/', hash: 'kontak', section: 'kontak' },
   ];
+
+  function isLinkActive(link) {
+    if (link.section) {
+      return location.pathname === '/' && activeSection === link.section;
+    }
+    if (link.hash) {
+      return location.pathname === link.path && location.hash === `#${link.hash}`;
+    }
+    return location.pathname === link.path && !location.hash;
+  }
 
   function scrollToHash(hash) {
     if (!hash) return;
@@ -159,11 +180,63 @@ export default function Navbar() {
 
         <nav className={`nav-menu ${menuOpen ? 'mobile-open' : ''}`} id="navMenu" aria-label="Navigasi utama">
           {navLinks.map((l) => {
-            const active = l.section
-              ? location.pathname === '/' && activeSection === l.section
-              : l.hash
-                ? location.pathname === l.path && location.hash === `#${l.hash}`
-                : location.pathname === l.path && !location.hash;
+            if (l.children) {
+              const groupActive = l.children.some(isLinkActive);
+              return (
+                <div
+                  className={`nav-group ${servicesOpen ? 'open' : ''}`}
+                  key={l.key}
+                  ref={navGroupRef}
+                >
+                  <button
+                    type="button"
+                    className={`nav-link nav-group-btn ${groupActive ? 'active' : ''}`}
+                    aria-expanded={servicesOpen}
+                    aria-haspopup="true"
+                    onClick={() => setServicesOpen((v) => !v)}
+                  >
+                    <T k={l.key} />
+                    <svg
+                      className="nav-chevron"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+
+                  <div className="nav-dropdown">
+                    {l.children.map((child) => {
+                      const childActive = isLinkActive(child);
+                      const childHref = child.hash ? `${child.path}#${child.hash}` : child.path;
+                      return (
+                        <a
+                          key={child.key}
+                          className={`nav-dropdown-link ${childActive ? 'active' : ''}`}
+                          href={childHref}
+                          onClick={(e) => {
+                            setServicesOpen(false);
+                            handleNavLink(e, child);
+                          }}
+                          data-i18n={child.key}
+                          aria-current={childActive ? 'page' : undefined}
+                        >
+                          <T k={child.key} />
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            }
+
+            const active = isLinkActive(l);
             const href = l.hash ? `${l.path}#${l.hash}` : l.path;
             return (
               <a

@@ -11,6 +11,12 @@
 import { apiUrl } from './api.js';
 import { PRODUCTS_DATA } from '../data/products.js';
 import { findLocalReferenceAnswer } from './referenceAnswers.js';
+import {
+  localizeProduct,
+  localizeProductName,
+  localizeProductDesc,
+  localizeOrigin,
+} from '../data/productTranslations.js';
 
 const CATEGORY_LABELS = {
   kopi: { id: 'Kopi', en: 'Coffee' },
@@ -128,17 +134,24 @@ function findProducts(message) {
     .map((product) => {
       let score = 0;
       const name = String(product.name || '').toLowerCase();
+      const nameEn = String(localizeProductName(product, 'en') || '').toLowerCase();
       const category = String(product.category || '').toLowerCase();
       const origin = String(product.origin || '').toLowerCase();
+      const originEn = String(localizeOrigin(product.origin, 'en') || '').toLowerCase();
       const desc = String(product.desc || '').toLowerCase();
+      const descEn = String(localizeProductDesc(product, 'en') || '').toLowerCase();
 
       if (qLower.length >= 3 && name.includes(qLower)) score += 60;
+      if (qLower.length >= 3 && nameEn.includes(qLower)) score += 60;
       if (qLower.length >= 3 && category.includes(qLower)) score += 20;
       keywords.forEach((keyword) => {
         if (containsTerm(name, keyword)) score += 15;
+        if (containsTerm(nameEn, keyword)) score += 15;
         if (containsTerm(category, keyword)) score += 8;
         if (containsTerm(origin, keyword)) score += 8;
+        if (containsTerm(originEn, keyword)) score += 8;
         if (containsTerm(desc, keyword)) score += 3;
+        if (containsTerm(descEn, keyword)) score += 3;
       });
       return { product, score };
     })
@@ -176,8 +189,8 @@ function categoriesFromText(text) {
   return found;
 }
 
-function shortName(product) {
-  return String(product?.name || 'Produk').replace(/\s*\([^)]*\)\s*$/, '').trim();
+function shortName(product, lang = 'id') {
+  return String(localizeProductName(product, lang) || 'Produk').replace(/\s*\([^)]*\)\s*$/, '').trim();
 }
 
 function catalogReply(text, lang) {
@@ -193,7 +206,7 @@ function catalogReply(text, lang) {
       const picked = pool.slice(0, Math.min(requested, 20));
       const label = CATEGORY_LABELS[key]?.[isEn ? 'en' : 'id'] || key;
       const lines = picked.map((product, index) =>
-        `${index + 1}. **${shortName(product)}** — ${product.origin} · USD ${Number(product.price).toFixed(2)}/${product.unit} · MOQ ${Number(product.moq).toLocaleString('id-ID')} ${product.unit} · HS ${product.hsCode}`
+        `${index + 1}. **${shortName(product, lang)}** — ${localizeOrigin(product.origin, lang)} · USD ${Number(product.price).toFixed(2)}/${product.unit} · MOQ ${Number(product.moq).toLocaleString(isEn ? 'en-US' : 'id-ID')} ${product.unit} · HS ${product.hsCode}`
       ).join('\n');
       return `${isEn ? `**${label}** — ${pool.length} products:` : `**${label}** — ${pool.length} produk:`}\n${lines}`;
     }).join('\n\n');
@@ -208,7 +221,7 @@ function catalogReply(text, lang) {
     const picked = pool.slice(0, Math.min(requested, 20));
     const label = CATEGORY_LABELS[category]?.[isEn ? 'en' : 'id'] || category;
     const lines = picked.map((product, index) =>
-      `${index + 1}. **${shortName(product)}** — ${product.origin} · USD ${Number(product.price).toFixed(2)}/${product.unit} · MOQ ${Number(product.moq).toLocaleString('id-ID')} ${product.unit} · HS ${product.hsCode}`
+      `${index + 1}. **${shortName(product, lang)}** — ${localizeOrigin(product.origin, lang)} · USD ${Number(product.price).toFixed(2)}/${product.unit} · MOQ ${Number(product.moq).toLocaleString(isEn ? 'en-US' : 'id-ID')} ${product.unit} · HS ${product.hsCode}`
     ).join('\n');
     return isEn
       ? `The catalog has **${pool.length} ${label}** products. Here are ${picked.length}:\n\n${lines}\n\nOpen the Products page for full specifications and the RFQ form.`
@@ -224,7 +237,7 @@ function catalogReply(text, lang) {
     .filter(([key]) => counts[key])
     .map(([key, label]) => {
       const pool = PRODUCTS_DATA.filter((product) => product.category === key);
-      return `- **${label[isEn ? 'en' : 'id']}** (${counts[key]}): ${pool.slice(0, 3).map(shortName).join(', ')}${pool.length > 3 ? ', ...' : ''}`;
+      return `- **${label[isEn ? 'en' : 'id']}** (${counts[key]}): ${pool.slice(0, 3).map((product) => shortName(product, lang)).join(', ')}${pool.length > 3 ? ', ...' : ''}`;
     })
     .join('\n');
 
@@ -235,22 +248,23 @@ function catalogReply(text, lang) {
 
 function productReply(product, lang) {
   const isEn = lang === 'en';
-  const category = CATEGORY_LABELS[product.category]?.[isEn ? 'en' : 'id'] || product.category;
-  const specs = Array.isArray(product.specs) ? product.specs.map((spec) => `${spec.k}: ${spec.v}`).join(' | ') : '';
-  const certs = Array.isArray(product.certs) ? product.certs.join(', ') : '';
+  const view = localizeProduct(product, lang);
+  const category = CATEGORY_LABELS[view.category]?.[isEn ? 'en' : 'id'] || view.category;
+  const specs = Array.isArray(view.specs) ? view.specs.map((spec) => `${spec.k}: ${spec.v}`).join(' | ') : '';
+  const certs = Array.isArray(view.certs) ? view.certs.join(', ') : '';
 
   return [
-    `**${product.name}**`,
+    `**${view.name}**`,
     '',
     `- ${isEn ? 'Category' : 'Kategori'}: ${category}`,
-    `- ${isEn ? 'Origin' : 'Asal'}: ${product.origin}`,
-    `- ${isEn ? 'Reference price' : 'Harga acuan'}: USD ${Number(product.price).toFixed(2)} / ${product.unit}`,
-    `- MOQ: ${Number(product.moq).toLocaleString('id-ID')} ${product.unit}`,
-    `- HS Code: ${product.hsCode}`,
-    `- ${isEn ? 'Shipping' : 'Pengiriman'}: ${product.shipping || '-'}`,
+    `- ${isEn ? 'Origin' : 'Asal'}: ${view.origin}`,
+    `- ${isEn ? 'Reference price' : 'Harga acuan'}: USD ${Number(view.price).toFixed(2)} / ${view.unit}`,
+    `- MOQ: ${Number(view.moq).toLocaleString(isEn ? 'en-US' : 'id-ID')} ${view.unit}`,
+    `- HS Code: ${view.hsCode}`,
+    `- ${isEn ? 'Shipping' : 'Pengiriman'}: ${view.shipping || '-'}`,
     certs ? `- ${isEn ? 'Certifications' : 'Sertifikasi'}: ${certs}` : '',
     specs ? `- ${isEn ? 'Specifications' : 'Spesifikasi'}: ${specs}` : '',
-    product.desc ? `\n${product.desc}` : '',
+    view.desc ? `\n${view.desc}` : '',
     '',
     isEn
       ? 'Open the Products page to review the full specification and submit an RFQ. The reference price is catalog data, not a final quotation.'
@@ -261,9 +275,9 @@ function productReply(product, lang) {
 function greetingReply(role, lang) {
   const info = ROLE_INFO[normalizeRole(role)];
   if (lang === 'en') {
-    return `Hi! I am **NusaBridge AI**, the assistant for the NusaBridge website. Your current role is **${info.en}**, so I will focus on ${info.focusEn}.\n\nAsk about website features, the 50-product catalog, RFQ, Auto-PDF drafts, KYC Hub, Escrow Vault, account roles, or export-import steps.`;
+    return `Hi! I am **NusaBridge AI**, the assistant for the NusaBridge website. Your current role is **${info.en}**, so I will focus on ${info.focusEn}.\n\nAsk about website features, the 50-product catalog, domestic SME trade, RFQ, Auto-PDF drafts, KYC Hub, Escrow Vault, account roles, or export-import steps.`;
   }
-  return `Halo! Saya **NusaBridge AI**, asisten untuk website NusaBridge. Peran akun Anda saat ini adalah **${info.id}**, jadi saya akan memfokuskan jawaban pada ${info.focusId}.\n\nTanyakan fitur website, katalog 50 produk, RFQ, draf Auto-PDF, KYC Hub, Escrow Vault, peran akun, atau langkah ekspor-impor.`;
+  return `Halo! Saya **NusaBridge AI**, asisten untuk website NusaBridge. Peran akun Anda saat ini adalah **${info.id}**, jadi saya akan memfokuskan jawaban pada ${info.focusId}.\n\nTanyakan fitur website, katalog 50 produk, perdagangan domestik UMKM, RFQ, draf Auto-PDF, KYC Hub, Escrow Vault, peran akun, atau langkah ekspor-impor.`;
 }
 
 function chatFreeReply(lang = 'id') {
@@ -340,6 +354,40 @@ function importFeaturesReply(lang = 'id') {
       ].join('\n');
 }
 
+function domesticReply(lang = 'id') {
+  return lang === 'en'
+    ? [
+      '**Domestic Trade (/domestik) — buying and selling between Indonesian SMEs:**',
+      '',
+      'The page has three tabs: **Buy**, **Sell**, and **Orders**.',
+      '',
+      '- **Buy** — search local products, filter by category or province, sort by best-selling/price/stock, and see Rupiah prices, MOQ, stock, seller, and shipping origin.',
+      '- **Checkout** — choose quantity, destination city, local courier or inter-island cargo, and payment (NusaBridge Escrow, bank transfer/VA, or QRIS). The summary shows subtotal, shipping cost, 11% VAT, and total.',
+      '- **Escrow** — a 4-phase simulation: 30% order confirmed, 30% goods ready/delivery note issued, 20% in transit, 20% received by buyer.',
+      '- **Domestic documents** — Purchase Order (PO), Invoice, Delivery Note (Surat Jalan), and Handover Report (BAST) can be downloaded as HTML drafts.',
+      '- **Compliance** — checklist for SNI, BPOM, Halal BPJPH, active NIB/NPWP, and agricultural quarantine.',
+      '- **Sell** — add a listing with name, category, price in Rupiah, unit, MOQ, stock, origin, and description. The listing appears in the domestic catalog and can be deleted.',
+      '- **Orders** — status flows Awaiting Payment → Paid → Processing → Shipped → Completed, with escrow release and document download.',
+      '',
+      'Domestic data is stored in browser localStorage as a demo. This page is separate from international export: it uses Rupiah, 11% VAT, and domestic documents, without PEB, COO, or customs clearance.',
+    ].join('\n')
+    : [
+      '**Perdagangan Domestik (/domestik) — jual-beli antarsesama UMKM Indonesia:**',
+      '',
+      'Halaman ini punya tiga tab: **Beli**, **Jual**, dan **Pesanan**.',
+      '',
+      '- **Beli** — cari produk lokal, filter kategori atau provinsi, sortir terlaris/harga/stok, dan lihat harga Rupiah, MOQ, stok, penjual, serta asal pengiriman.',
+      '- **Checkout** — pilih jumlah, kota tujuan, kurir lokal atau kargo antarpulau, dan pembayaran (Escrow NusaBridge, transfer bank/VA, atau QRIS). Ringkasan menampilkan subtotal, ongkos kirim, PPN 11%, dan total.',
+      '- **Escrow** — simulasi 4 fase: 30% pesanan dikonfirmasi, 30% barang siap/surat jalan terbit, 20% dalam perjalanan, 20% diterima pembeli.',
+      '- **Dokumen domestik** — Purchase Order (PO), Invoice, Surat Jalan, dan Berita Acara Serah Terima (BAST) dapat diunduh sebagai draf HTML.',
+      '- **Kepatuhan** — checklist SNI, BPOM, Halal BPJPH, NIB/NPWP aktif, dan karantina pertanian.',
+      '- **Jual** — tambah listing dengan nama, kategori, harga Rupiah, satuan, MOQ, stok, asal, dan deskripsi. Listing muncul di katalog domestik dan bisa dihapus.',
+      '- **Pesanan** — status pesanan Menunggu Pembayaran → Dibayar → Diproses → Dikirim → Selesai, dengan pencairan escrow dan unduh dokumen.',
+      '',
+      'Data domestik disimpan di localStorage browser sebagai demo. Halaman ini terpisah dari ekspor internasional: memakai Rupiah, PPN 11%, dan dokumen domestik, tanpa PEB, COO, atau bea cukai.',
+    ].join('\n');
+}
+
 function developerReply(lang = 'id') {
   return lang === 'en'
     ? 'NusaBridge is developed by the Arjika Labs Team from SMK Antartika 1 Sidoarjo. The platform was created as an integrated trade facilitation and educational innovation for Indonesian SMEs, combining an export commodity catalog, AI Sales Assistant, legal document drafting (Proforma Invoice & Sales Contract), KYC compliance validation, and a 4-phase secure Escrow Vault simulation.'
@@ -353,6 +401,7 @@ function unknownReply(lang = 'id') {
         '',
         'NusaBridge AI can assist you with:',
         '- **50 Export Commodities Catalog**: Coffee, Spices, Crafts, Textiles (specifications, HS codes, reference prices, MOQ)',
+        '- **Domestic SME Trade**: Rupiah catalog, local/inter-island shipping, 11% VAT, escrow, PO/Invoice/Delivery Note/BAST, seller listings, and orders',
         '- **Export & Import Features**: RFQ submissions, Auto-PDF drafts (Proforma Invoice & Sales Contract), KYC Hub compliance, and the 4-phase Escrow Vault simulation',
         '- **Account Roles**: Indonesian Exporter (Seller) and Global Importer (Buyer) usage',
         '- **Trade Regulations & Paperwork**: Incoterms 2020 (FOB vs CIF), customs declarations (PEB/PIB, B/L, COO), and foreign standards (FDA, EUDR, JAS, Halal)',
@@ -364,6 +413,7 @@ function unknownReply(lang = 'id') {
         '',
         'NusaBridge AI difokuskan untuk membantu Anda seputar:',
         '- **Katalog 50 Komoditas Ekspor**: Kopi, Rempah, Kriya, dan Tekstil (spesifikasi lab, kode HS, harga acuan USD, dan MOQ)',
+        '- **Perdagangan Domestik UMKM**: katalog Rupiah, ongkir lokal/antarpulau, PPN 11%, escrow, PO/Invoice/Surat Jalan/BAST, listing penjual, dan pesanan',
         '- **Fitur Ekspor & Impor**: Alur RFQ, otomasi draf Auto-PDF (Proforma Invoice & Sales Contract), validasi kepatuhan KYC Hub, dan simulasi 4 fase Escrow Vault',
         '- **Peran Akun**: Eksportir Indonesia (Seller) dan Importir Global (Buyer)',
         '- **Regulasi & Dokumen**: Incoterms 2020 (FOB vs CIF), kepabeanan (PEB/PIB, B/L, COO), dan standar negara tujuan (FDA USA, EUDR Uni Eropa, JAS Jepang, Halal UEA)',
@@ -385,6 +435,7 @@ function generalWebsiteReply(lang) {
         '',
         'NusaBridge is an all-in-one trade facilitation and education platform for Indonesian SME export-import:',
         '- **Product Catalog** — 50 curated commodities (Coffee, Spices, Crafts, Textiles) with lab parameters and HS codes.',
+        '- **Domestic Trade** — buy/sell between Indonesian SMEs in Rupiah with local/inter-island shipping, 11% VAT, 4-phase escrow, PO/Invoice/Delivery Note/BAST documents, seller listings, and order history.',
         '- **RFQ Studio** — converts buyer inquiries into structured Incoterms 2020 quotations.',
         '- **Auto-PDF Generator** — instantly drafts Proforma Invoices, Sales Contracts, and PEB drafts.',
         '- **KYC Hub** — validates 13-digit NIB OSS and screens compliance for USA (FDA), EU (EUDR), Japan (JAS), and UAE (Halal BPJPH).',
@@ -398,6 +449,7 @@ function generalWebsiteReply(lang) {
         '',
         'NusaBridge adalah platform fasilitasi perdagangan dan edukasi ekspor-impor terpadu untuk UMKM Indonesia:',
         '- **Katalog Produk** — 50 komoditas ekspor kurasi (Kopi, Rempah, Kriya, Tekstil) lengkap dengan spesifikasi lab dan kode HS.',
+        '- **Perdagangan Domestik** — jual-beli antarsesama UMKM Indonesia dalam Rupiah dengan ongkir lokal/antarpulau, PPN 11%, escrow 4 fase, dokumen PO/Invoice/Surat Jalan/BAST, listing penjual, dan riwayat pesanan.',
         '- **RFQ Studio** — mengubah permintaan buyer menjadi kuotasi terstruktur berstandar Incoterms 2020.',
         '- **Auto-PDF Generator** — menerbitkan draf resmi Proforma Invoice dan Sales Contract siap cetak.',
         '- **KYC Hub** — memvalidasi NIB 13 digit OSS RBA dan memeriksa kepatuhan standar USA (FDA), Uni Eropa (EUDR), Jepang (JAS), dan UEA (Halal BPJPH).',
@@ -466,6 +518,9 @@ export function getLocalAiReply({ message = '', lang = 'id', role = 'guest', pag
   }
   if (/(siapa|siapakah|tim|asal).*(pembuat|pengembang|bikin|buat|dibuat|developer|pencipta)|(pembuat|pengembang|bikin|buat|dibuat|developer|pencipta).*(siapa|siapakah)|arjika|antartika/i.test(textNorm)) {
     return developerReply(lang);
+  }
+  if (/(domestik|domestic|antarpulau|antar pulau|dalam negeri|perdagangan lokal|jualan lokal|beli lokal|umkm lokal|harga rupiah|idr|surat jalan|bast|berita acara serah terima)/i.test(textNorm)) {
+    return domesticReply(lang);
   }
 
   // 8. Respon panduan terarah jika pertanyaan tidak spesifik / di luar domain

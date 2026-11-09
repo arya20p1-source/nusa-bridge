@@ -4,6 +4,8 @@ export const TRANSLATIONS = {
   "id": {
     "nav_home": "Beranda",
     "nav_products": "Produk",
+    "nav_domestic": "Domestik",
+    "nav_services": "Layanan",
     "nav_solutions": "Solusi AI",
     "nav_workflow": "Alur Ekspor & Impor",
     "nav_pricing": "Harga",
@@ -284,6 +286,8 @@ export const TRANSLATIONS = {
   "en": {
     "nav_home": "Home",
     "nav_products": "Products",
+    "nav_domestic": "Domestic",
+    "nav_services": "Services",
     "nav_solutions": "AI Solutions",
     "nav_workflow": "Export & Import Flow",
     "nav_pricing": "Pricing",

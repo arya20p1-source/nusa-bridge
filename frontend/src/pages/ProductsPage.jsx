@@ -6,6 +6,12 @@ import T from '../components/T.jsx';
 import TransportPanel from '../components/TransportPanel.jsx';
 import { authFetch } from '../utils/api.js';
 import { PRODUCTS_DATA } from '../data/products.js';
+import {
+  localizeProduct,
+  localizeProductName,
+  localizeProductDesc,
+  localizeOrigin,
+} from '../data/productTranslations.js';
 
 /**
  * ==========================================================================
@@ -18,11 +24,11 @@ import { PRODUCTS_DATA } from '../data/products.js';
 const ITEMS_PER_PAGE = 12;
 
 const CAT_CHIPS = [
-  { key: 'all', label: 'Semua Komoditas' },
-  { key: 'kopi', label: '☕ Kopi Ekspor Unggulan' },
-  { key: 'rempah', label: '🌿 Rempah & Hasil Alam' },
-  { key: 'kriya', label: '🪑 Kriya & Kerajinan' },
-  { key: 'tekstil', label: '🧵 Tekstil & Wastra Nusantara' },
+  { key: 'all', label: 'Semua Komoditas', labelEn: 'All Commodities' },
+  { key: 'kopi', label: '☕ Kopi Ekspor Unggulan', labelEn: '☕ Premium Export Coffee' },
+  { key: 'rempah', label: '🌿 Rempah & Hasil Alam', labelEn: '🌿 Spices & Natural Products' },
+  { key: 'kriya', label: '🪑 Kriya & Kerajinan', labelEn: '🪑 Crafts & Handicrafts' },
+  { key: 'tekstil', label: '🧵 Tekstil & Wastra Nusantara', labelEn: '🧵 Textiles & Wastra' },
 ];
 
 const CATEGORY_LABELS = {
@@ -32,12 +38,20 @@ const CATEGORY_LABELS = {
   tekstil: 'Tekstil & Wastra Nusantara',
 };
 
+const CATEGORY_LABELS_EN = {
+  kopi: 'Premium Export Coffee',
+  rempah: 'Spices & Natural Products',
+  kriya: 'Crafts & Handicrafts',
+  tekstil: 'Textiles & Wastra',
+};
+
 function formatUSD(num) {
   return Number(num).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
 }
 
-function getCategoryLabel(cat) {
-  return CATEGORY_LABELS[cat] || 'Komoditas Unggulan';
+function getCategoryLabel(cat, isEn = false) {
+  const map = isEn ? CATEGORY_LABELS_EN : CATEGORY_LABELS;
+  return map[cat] || (isEn ? 'Featured Commodity' : 'Komoditas Unggulan');
 }
 
 function createIdempotencyKey() {
@@ -57,8 +71,10 @@ function LocationIcon() {
 }
 
 // Modal Spesifikasi Mutu Lab
-function SpecModal({ prod, onClose, onLanjutRfq }) {
+function SpecModal({ prod, onClose, onLanjutRfq, isEn = false }) {
   if (!prod) return null;
+  const L = (id, en) => (isEn ? en : id);
+  const view = localizeProduct(prod, isEn ? 'en' : 'id');
   return (
     <div
       className="modal-overlay show active"
@@ -67,56 +83,59 @@ function SpecModal({ prod, onClose, onLanjutRfq }) {
       <div className="modal-card modal-large">
         <button className="modal-close-btn" type="button" onClick={onClose}>&times;</button>
         <div className="modal-header">
-          <div className="pill-badge pill-blue">SPESIFIKASI MUTU &amp; EKSPOR</div>
-          <h3 className="modal-title">{prod.name}</h3>
-          <p className="modal-subtitle">Spesifikasi teknis, sertifikat uji lab, dan parameter ekspor internasional.</p>
+          <div className="pill-badge pill-blue">{L('SPESIFIKASI MUTU & EKSPOR', 'QUALITY & EXPORT SPECIFICATIONS')}</div>
+          <h3 className="modal-title">{view.name}</h3>
+          <p className="modal-subtitle">{L('Spesifikasi teknis, sertifikat uji lab, dan parameter ekspor internasional.', 'Technical specifications, lab test certificates, and international export parameters.')}</p>
         </div>
         <div className="modal-body-spec">
           <div className="spec-grid-layout">
             <div className="spec-col-left">
-              <h4>Parameter Laboratorium &amp; Pengapalan</h4>
+              <h4>{L('Parameter Laboratorium & Pengapalan', 'Laboratory & Shipping Parameters')}</h4>
               <table className="spec-table">
                 <tbody>
-                  <tr><th>Asal Daerah / Kebun:</th><td><strong>{prod.origin}</strong></td></tr>
-                  <tr><th>Kode HS Resmi:</th><td><strong>{prod.hsCode}</strong></td></tr>
-                  <tr><th>Pelabuhan Muat:</th><td><strong>{prod.shipping || 'Tanjung Priok / Tanjung Perak'}</strong></td></tr>
-                  <tr><th>Estimasi Harga:</th><td><strong>USD {formatUSD(prod.price)} / {prod.unit}</strong></td></tr>
-                  <tr><th>Minimal Order (MOQ):</th><td><strong>{prod.moq.toLocaleString('id-ID')} {prod.unit}</strong></td></tr>
-                  {prod.specs && prod.specs.length > 0 ? (
-                    prod.specs.map((s) => (
+                  <tr><th>{L('Asal Daerah / Kebun:', 'Origin / Estate:')}</th><td><strong>{view.origin}</strong></td></tr>
+                  <tr><th>{L('Kode HS Resmi:', 'Official HS Code:')}</th><td><strong>{prod.hsCode}</strong></td></tr>
+                  <tr><th>{L('Pelabuhan Muat:', 'Port of Loading:')}</th><td><strong>{view.shipping || L('Tanjung Priok / Tanjung Perak', 'Tanjung Priok / Tanjung Perak')}</strong></td></tr>
+                  <tr><th>{L('Estimasi Harga:', 'Estimated Price:')}</th><td><strong>USD {formatUSD(prod.price)} / {prod.unit}</strong></td></tr>
+                  <tr><th>{L('Minimal Order (MOQ):', 'Minimum Order (MOQ):')}</th><td><strong>{prod.moq.toLocaleString(isEn ? 'en-US' : 'id-ID')} {prod.unit}</strong></td></tr>
+                  {view.specs && view.specs.length > 0 ? (
+                    view.specs.map((s) => (
                       <tr key={s.k}><th>{s.k}</th><td><strong>{s.v}</strong></td></tr>
                     ))
                   ) : (
-                    <tr><th>Standar Mutu</th><td><strong>Standar SNI &amp; Ekspor Internasional</strong></td></tr>
+                    <tr><th>{L('Standar Mutu', 'Quality Standard')}</th><td><strong>{L('Standar SNI & Ekspor Internasional', 'SNI & International Export Standards')}</strong></td></tr>
                   )}
                 </tbody>
               </table>
             </div>
             <div className="spec-col-right">
-              <h4>Sertifikasi &amp; Legalitas Ekspor</h4>
+              <h4>{L('Sertifikasi & Legalitas Ekspor', 'Certifications & Export Legality')}</h4>
               <div className="spec-cert-list">
                 {prod.certs && prod.certs.length > 0 ? (
                   prod.certs.map((c) => (
                     <div className="spec-cert-item" key={c}><span className="sci-check">✓</span> {c}</div>
                   ))
                 ) : (
-                  <div className="spec-cert-item"><span className="sci-check">✓</span> Legalitas NIB &amp; NPWP OSS Terverifikasi</div>
+                  <div className="spec-cert-item"><span className="sci-check">✓</span> {L('Legalitas NIB & NPWP OSS Terverifikasi', 'Verified NIB & NPWP OSS Legality')}</div>
                 )}
               </div>
               <div className="spec-ai-note">
                 <div className="san-icon">🤖</div>
                 <div className="san-text">
-                  <strong>Rekomendasi NusaBridge AI Agent:</strong><br />
-                  Komoditas ini memiliki kelayakan ekspor tinggi. Draf dokumen Proforma Invoice, Certificate of Origin (COO), dan deklarasi Incoterms 2020 dapat di-generate otomatis oleh AI dalam hitungan detik.
+                  <strong>{L('Rekomendasi NusaBridge AI Agent:', 'NusaBridge AI Agent Recommendation:')}</strong><br />
+                  {L(
+                    'Komoditas ini memiliki kelayakan ekspor tinggi. Draf dokumen Proforma Invoice, Certificate of Origin (COO), dan deklarasi Incoterms 2020 dapat di-generate otomatis oleh AI dalam hitungan detik.',
+                    'This commodity has strong export eligibility. Draft Proforma Invoice, Certificate of Origin (COO), and Incoterms 2020 declarations can be generated automatically by AI in seconds.'
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <TransportPanel product={prod} />
+        <TransportPanel product={view} />
         <div className="modal-footer-spec">
-          <button className="btn btn-outline" type="button" onClick={onClose}>Tutup</button>
-          <button className="btn btn-primary" type="button" onClick={onLanjutRfq}>Ajukan Permintaan Harga (RFQ)</button>
+          <button className="btn btn-outline" type="button" onClick={onClose}>{L('Tutup', 'Close')}</button>
+          <button className="btn btn-primary" type="button" onClick={onLanjutRfq}>{L('Ajukan Permintaan Harga (RFQ)', 'Submit a Request for Quotation (RFQ)')}</button>
         </div>
       </div>
     </div>
@@ -124,7 +143,8 @@ function SpecModal({ prod, onClose, onLanjutRfq }) {
 }
 
 // Modal RFQ AI
-function RfqModal({ product, onClose, session }) {
+function RfqModal({ product, onClose, session, isEn = false }) {
+  const L = (id, en) => (isEn ? en : id);
   const [qty, setQty] = useState('');
   const [terms, setTerms] = useState('FOB');
   const [port, setPort] = useState('');
@@ -134,7 +154,7 @@ function RfqModal({ product, onClose, session }) {
   const [receipt, setReceipt] = useState(null);
   const [accessToken, setAccessToken] = useState('');
   const idempotencyKeyRef = useRef(createIdempotencyKey());
-  const productName = product?.name || 'Komoditas Ekspor';
+  const productName = product?.name || (isEn ? 'Export Commodity' : 'Komoditas Ekspor');
 
   function resetIdempotencyKey() {
     idempotencyKeyRef.current = createIdempotencyKey();
@@ -183,13 +203,13 @@ function RfqModal({ product, onClose, session }) {
           // supaya percobaan berikutnya adalah operasi yang berbeda.
           resetIdempotencyKey();
         }
-        throw new Error(data.message || 'RFQ gagal disimpan. Coba lagi.');
+        throw new Error(data.message || (isEn ? 'Failed to save RFQ. Please try again.' : 'RFQ gagal disimpan. Coba lagi.'));
       }
 
       setAccessToken(data.accessToken || '');
       setReceipt(data.rfq);
     } catch (submitError) {
-      setError(submitError.message || 'Tidak dapat menghubungi server. RFQ belum tercatat.');
+      setError(submitError.message || (isEn ? 'Unable to reach the server. RFQ was not recorded.' : 'Tidak dapat menghubungi server. RFQ belum tercatat.'));
     } finally {
       setSaving(false);
     }
@@ -203,11 +223,11 @@ function RfqModal({ product, onClose, session }) {
       const res = await authFetch(`/api/rfq/${encodeURIComponent(receipt.id)}`, { headers });
       const data = await res.json();
       if (!res.ok || !data.success || !data.rfq) {
-        throw new Error(data.message || 'Status RFQ tidak dapat dimuat.');
+        throw new Error(data.message || (isEn ? 'RFQ status could not be loaded.' : 'Status RFQ tidak dapat dimuat.'));
       }
       setReceipt(data.rfq);
     } catch (statusError) {
-      setError(statusError.message || 'Status RFQ tidak dapat dimuat.');
+      setError(statusError.message || (isEn ? 'RFQ status could not be loaded.' : 'Status RFQ tidak dapat dimuat.'));
     }
   }
 
@@ -221,27 +241,27 @@ function RfqModal({ product, onClose, session }) {
         {receipt ? (
           <>
             <div className="modal-header">
-              <div className="pill-badge pill-blue">BUKTI PENGAJUAN RFQ</div>
-              <h3 className="modal-title">Permintaan berhasil dicatat</h3>
-              <p className="modal-subtitle">Ini bukti pengajuan permintaan penawaran, bukan bukti pembayaran.</p>
+              <div className="pill-badge pill-blue">{L('BUKTI PENGAJUAN RFQ', 'RFQ SUBMISSION RECEIPT')}</div>
+              <h3 className="modal-title">{L('Permintaan berhasil dicatat', 'Request successfully recorded')}</h3>
+              <p className="modal-subtitle">{L('Ini bukti pengajuan permintaan penawaran, bukan bukti pembayaran.', 'This is a quotation request receipt, not proof of payment.')}</p>
             </div>
             <div className="rfq-receipt">
               <div className="rfq-receipt-number">
-                <span>Nomor RFQ</span>
+                <span>{L('Nomor RFQ', 'RFQ Number')}</span>
                 <strong>{receipt.id}</strong>
               </div>
               <dl className="rfq-receipt-details">
-                <div><dt>Produk</dt><dd>{receipt.productName}</dd></div>
-                <div><dt>Jumlah</dt><dd>{Number(receipt.quantity).toLocaleString('id-ID')} {receipt.unit}</dd></div>
+                <div><dt>{L('Produk', 'Product')}</dt><dd>{receipt.productName}</dd></div>
+                <div><dt>{L('Jumlah', 'Quantity')}</dt><dd>{Number(receipt.quantity).toLocaleString(isEn ? 'en-US' : 'id-ID')} {receipt.unit}</dd></div>
                 <div><dt>Incoterms</dt><dd>{receipt.targetIncoterms}</dd></div>
-                <div><dt>Pelabuhan tujuan</dt><dd>{receipt.buyerCountry}</dd></div>
+                <div><dt>{L('Pelabuhan tujuan', 'Destination port')}</dt><dd>{receipt.buyerCountry}</dd></div>
                 {Number.isFinite(Number(receipt.targetPriceUSD)) && (
-                  <div><dt>Harga acuan / unit</dt><dd>USD {Number(receipt.targetPriceUSD).toLocaleString('en-US')}</dd></div>
+                  <div><dt>{L('Harga acuan / unit', 'Reference price / unit')}</dt><dd>USD {Number(receipt.targetPriceUSD).toLocaleString('en-US')}</dd></div>
                 )}
                 {Number.isFinite(Number(receipt.totalValueUSD)) && (
-                  <div><dt>Estimasi nilai acuan</dt><dd>USD {Number(receipt.totalValueUSD).toLocaleString('en-US')}</dd></div>
+                  <div><dt>{L('Estimasi nilai acuan', 'Estimated reference value')}</dt><dd>USD {Number(receipt.totalValueUSD).toLocaleString('en-US')}</dd></div>
                 )}
-                <div><dt>Status</dt><dd>{receipt.status === 'submitted' ? 'Diajukan — menunggu peninjauan' : receipt.status}</dd></div>
+                <div><dt>{L('Status', 'Status')}</dt><dd>{receipt.status === 'submitted' ? L('Diajukan — menunggu peninjauan', 'Submitted — awaiting review') : receipt.status}</dd></div>
               </dl>
               <ol className="rfq-process">
                 {(receipt.process || []).map((step) => (
@@ -253,34 +273,34 @@ function RfqModal({ product, onClose, session }) {
               </ol>
               <p className="rfq-process-note">
                 {receipt.process?.length
-                  ? 'Status berikutnya akan berubah setelah tim meninjau permintaan. Simpan nomor RFQ ini untuk pengecekan.'
-                  : 'Proses RFQ tersimpan. Perbarui status dengan tombol di bawah.'}
+                  ? L('Status berikutnya akan berubah setelah tim meninjau permintaan. Simpan nomor RFQ ini untuk pengecekan.', 'The next status will change after the team reviews your request. Keep this RFQ number for tracking.')
+                  : L('Proses RFQ tersimpan. Perbarui status dengan tombol di bawah.', 'The RFQ process is saved. Refresh the status with the button below.')}
               </p>
             </div>
             {error && <p className="rfq-form-error" role="alert">{error}</p>}
             <div className="modal-footer-spec">
-              <button className="btn btn-outline" type="button" onClick={refreshReceipt}>Perbarui Status</button>
-              <button className="btn btn-primary" type="button" onClick={onClose}>Selesai</button>
+              <button className="btn btn-outline" type="button" onClick={refreshReceipt}>{L('Perbarui Status', 'Refresh Status')}</button>
+              <button className="btn btn-primary" type="button" onClick={onClose}>{L('Selesai', 'Done')}</button>
             </div>
           </>
         ) : (
           <>
         <div className="modal-header">
           <div className="pill-badge pill-blue">AI RFQ STUDIO</div>
-          <h3 className="modal-title">Pengajuan Kuotasi Pembelian</h3>
-          <p className="modal-subtitle">Kirim detail permintaan. Setelah tersimpan, Anda mendapat nomor RFQ dan status proses.</p>
+          <h3 className="modal-title">{L('Pengajuan Kuotasi Pembelian', 'Purchase Quotation Request')}</h3>
+          <p className="modal-subtitle">{L('Kirim detail permintaan. Setelah tersimpan, Anda mendapat nomor RFQ dan status proses.', 'Send your request details. Once saved, you receive an RFQ number and process status.')}</p>
         </div>
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Produk Terpilih</label>
+            <label>{L('Produk Terpilih', 'Selected Product')}</label>
             <input type="text" value={productName || ''} readOnly className="input-readonly" />
           </div>
           <div className="form-group-row">
             <div className="form-group">
-              <label>Jumlah Pesanan (Kg/Unit)</label>
+              <label>{L('Jumlah Pesanan (Kg/Unit)', 'Order Quantity (Kg/Unit)')}</label>
               <input
                 type="number"
-                placeholder="contoh: 2000"
+                placeholder={L('contoh: 2000', 'e.g. 2000')}
                 min={1}
                 step="any"
                 required
@@ -289,7 +309,7 @@ function RfqModal({ product, onClose, session }) {
               />
             </div>
             <div className="form-group">
-              <label>Pilihan Incoterms</label>
+              <label>{L('Pilihan Incoterms', 'Incoterms Option')}</label>
               <select className="custom-select" value={terms} onChange={(e) => setTerms(e.target.value)}>
                 <option value="FOB">FOB (Free On Board)</option>
                 <option value="CIF">CIF (Cost, Insurance &amp; Freight)</option>
@@ -299,20 +319,20 @@ function RfqModal({ product, onClose, session }) {
             </div>
           </div>
           <div className="form-group">
-            <label>Pelabuhan Tujuan (Port of Discharge)</label>
+            <label>{L('Pelabuhan Tujuan (Port of Discharge)', 'Destination Port (Port of Discharge)')}</label>
             <input
               type="text"
-              placeholder="contoh: Port of Rotterdam, Hamburg, Los Angeles, Tokyo"
+              placeholder={L('contoh: Port of Rotterdam, Hamburg, Los Angeles, Tokyo', 'e.g. Port of Rotterdam, Hamburg, Los Angeles, Tokyo')}
               required
               value={port}
               onChange={(e) => setPort(e.target.value)}
             />
           </div>
           <div className="form-group">
-            <label>Email Buyer / Kontak Pemohon</label>
+            <label>{L('Email Buyer / Kontak Pemohon', 'Buyer Email / Requester Contact')}</label>
             <input
               type="email"
-              placeholder="nama@perusahaan.com"
+              placeholder={L('nama@perusahaan.com', 'name@company.com')}
               required
               value={contact}
               onChange={(e) => setContact(e.target.value)}
@@ -320,7 +340,7 @@ function RfqModal({ product, onClose, session }) {
           </div>
           {error && <p className="rfq-form-error" role="alert">{error}</p>}
           <button type="submit" className="btn btn-primary btn-block" disabled={saving}>
-            {saving ? 'Menyimpan RFQ...' : 'Kirim RFQ'}
+            {saving ? L('Menyimpan RFQ...', 'Saving RFQ...') : L('Kirim RFQ', 'Send RFQ')}
           </button>
         </form>
           </>
@@ -359,8 +379,11 @@ export default function ProductsPage() {
       const matchQuery =
         !q ||
         p.name.toLowerCase().includes(q) ||
+        localizeProductName(p, 'en').toLowerCase().includes(q) ||
         (p.desc || '').toLowerCase().includes(q) ||
+        localizeProductDesc(p, 'en').toLowerCase().includes(q) ||
         (p.origin || '').toLowerCase().includes(q) ||
+        localizeOrigin(p.origin, 'en').toLowerCase().includes(q) ||
         (p.hsCode || '').toLowerCase().includes(q);
       return matchCat && matchQuery;
     });
@@ -368,8 +391,8 @@ export default function ProductsPage() {
     if (sortBy === 'price-low') list = [...list].sort((a, b) => a.price - b.price);
     else if (sortBy === 'price-high') list = [...list].sort((a, b) => b.price - a.price);
     else if (sortBy === 'moq-low') list = [...list].sort((a, b) => a.moq - b.moq);
-    return list;
-  }, [query, sortBy, category]);
+    return list.map((p) => localizeProduct(p, lang));
+  }, [query, sortBy, category, lang]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const safePage = Math.min(page, totalPages);
@@ -505,7 +528,7 @@ export default function ProductsPage() {
                   type="text"
                   value={query}
                   data-i18n-placeholder="produk_search_ph"
-                  placeholder="Cari nama produk, daerah asal, atau HS Code (cth: Kopi Gayo, Cengkeh, Rotan)..."
+                  placeholder={isEn ? 'Search product name, origin, or HS Code (e.g. Gayo Coffee, Cloves, Rattan)...' : 'Cari nama produk, daerah asal, atau HS Code (cth: Kopi Gayo, Cengkeh, Rotan)...'}
                   onChange={(e) => applyFilter('query', e.target.value)}
                 />
               </div>
@@ -537,7 +560,7 @@ export default function ProductsPage() {
                     className={`filter-chip${category === c.key ? ' active' : ''}`}
                     onClick={() => applyFilter('cat', c.key)}
                   >
-                    {c.label} ({c.key === 'all' ? PRODUCTS_DATA.length : count})
+                    {isEn ? c.labelEn : c.label} ({c.key === 'all' ? PRODUCTS_DATA.length : count})
                   </button>
                 );
               })}
@@ -551,13 +574,13 @@ export default function ProductsPage() {
         <div className="site-container">
           <div className="catalog-result-header">
             <p className="result-count-text">
-              Menampilkan <strong>{filtered.length}</strong> produk siap ekspor
+              {isEn ? 'Showing' : 'Menampilkan'} <strong>{filtered.length}</strong> {isEn ? 'export-ready products' : 'produk siap ekspor'}
             </p>
             <span className="escrow-safe-badge">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="3">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              Dilindungi Sistem NusaBridge Escrow Vault
+              {isEn ? 'Protected by NusaBridge Escrow Vault' : 'Dilindungi Sistem NusaBridge Escrow Vault'}
             </span>
           </div>
 
@@ -565,11 +588,13 @@ export default function ProductsPage() {
             {filtered.length === 0 ? (
               <div className="empty-catalog-state" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem 1.5rem' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🔍</div>
-                <h4 style={{ fontSize: '1.3rem', color: 'var(--navy-title)', marginBottom: '8px' }}>Komoditas Tidak Ditemukan</h4>
+                <h4 style={{ fontSize: '1.3rem', color: 'var(--navy-title)', marginBottom: '8px' }}>{isEn ? 'No Commodity Found' : 'Komoditas Tidak Ditemukan'}</h4>
                 <p style={{ color: 'var(--text-muted)', maxWidth: '480px', margin: '0 auto 16px' }}>
-                  Coba gunakan kata kunci lain (seperti "Kopi", "Pala", "Rotan", "Sutra", "Briket") atau pilih kategori "Semua Komoditas".
+                  {isEn
+                    ? 'Try another keyword (such as "Coffee", "Nutmeg", "Rattan", "Silk", "Briquette") or select the "All Commodities" category.'
+                    : 'Coba gunakan kata kunci lain (seperti "Kopi", "Pala", "Rotan", "Sutra", "Briket") atau pilih kategori "Semua Komoditas".'}
                 </p>
-                <button className="btn btn-outline btn-sm" type="button" onClick={resetSearch}>Reset Pencarian</button>
+                <button className="btn btn-outline btn-sm" type="button" onClick={resetSearch}>{isEn ? 'Reset Search' : 'Reset Pencarian'}</button>
               </div>
             ) : (
               paginated.map((prod) => {
@@ -586,8 +611,8 @@ export default function ProductsPage() {
                           e.currentTarget.src = fallbackImg;
                         }}
                       />
-                      <span className="card-category-pill">{getCategoryLabel(prod.category)}</span>
-                      <span className="card-verified-tag">✓ Verified OSS NIB</span>
+                      <span className="card-category-pill">{getCategoryLabel(prod.category, isEn)}</span>
+                      <span className="card-verified-tag">✓ {isEn ? 'Verified OSS NIB' : 'Terverifikasi OSS NIB'}</span>
                     </div>
                     <div className="catalog-card-content">
                       <div className="card-location">
@@ -599,12 +624,12 @@ export default function ProductsPage() {
 
                       <div className="card-meta-row">
                         <div className="card-price-box">
-                          <span className="cp-label">Estimasi Harga (FOB/CIF):</span>
+                          <span className="cp-label">{isEn ? 'Estimated Price (FOB/CIF):' : 'Estimasi Harga (FOB/CIF):'}</span>
                           <div className="cp-val">USD {formatUSD(prod.price)} <span className="cp-unit">/ {prod.unit}</span></div>
                         </div>
                         <div className="card-moq-box">
-                          <span className="cp-label">Min. Order (MOQ):</span>
-                          <div className="cm-val">{prod.moq.toLocaleString('id-ID')} {prod.unit}</div>
+                          <span className="cp-label">{isEn ? 'Min. Order (MOQ):' : 'Min. Order (MOQ):'}</span>
+                          <div className="cm-val">{prod.moq.toLocaleString(isEn ? 'en-US' : 'id-ID')} {prod.unit}</div>
                         </div>
                       </div>
 
@@ -615,14 +640,14 @@ export default function ProductsPage() {
 
                       <div className="card-actions-grid">
                         <button className="btn btn-outline btn-sm btn-open-spec" type="button" onClick={() => setSpecProd(prod)}>
-                          Lihat Spesifikasi Lab
+                          {isEn ? 'View Lab Specifications' : 'Lihat Spesifikasi Lab'}
                         </button>
                         <button className="btn btn-primary btn-sm btn-rfq-prod" type="button" onClick={() => setRfqProd(prod)}>
-                          Ajukan RFQ
+                          {isEn ? 'Submit RFQ' : 'Ajukan RFQ'}
                         </button>
                       </div>
                       <Link to={`/transportasi?product=${encodeURIComponent(prod.id)}`} className="card-shipping-link">
-                        🚚 Cek opsi &amp; estimasi pengiriman →
+                        🚚 {isEn ? 'Check shipping options & estimates' : 'Cek opsi & estimasi pengiriman'} →
                       </Link>
                     </div>
                   </div>
@@ -666,7 +691,7 @@ export default function ProductsPage() {
                 Next &raquo;
               </button>
 
-              <span className="page-info-text">(Hal {safePage} dari {totalPages})</span>
+              <span className="page-info-text">({isEn ? `Page ${safePage} of ${totalPages}` : `Hal ${safePage} dari ${totalPages}`})</span>
             </div>
           )}
         </div>
@@ -677,24 +702,26 @@ export default function ProductsPage() {
         <div className="site-container">
           <div className="seller-cta-box">
             <div className="seller-cta-content">
-              <div className="pill-badge pill-translucent-blue">UNTUK PELAKU USAHA UMKM</div>
-              <h2 className="seller-cta-title">Siap Menyiapkan Profil Eksportir Anda?</h2>
+              <div className="pill-badge pill-translucent-blue">{isEn ? 'FOR SME BUSINESSES' : 'UNTUK PELAKU USAHA UMKM'}</div>
+              <h2 className="seller-cta-title">{isEn ? 'Ready to Set Up Your Exporter Profile?' : 'Siap Menyiapkan Profil Eksportir Anda?'}</h2>
               <p className="seller-cta-sub">
-                Buat akun eksportir untuk mempelajari alur RFQ, menyiapkan data legalitas, serta mencoba draf dokumen dan simulasi Escrow. Katalog ini adalah showcase; penambahan produk baru dilakukan bersama tim NusaBridge.
+                {isEn
+                  ? 'Create an exporter account to learn the RFQ flow, prepare legality data, and try document drafts and the Escrow simulation. This catalog is a showcase; new products are added together with the NusaBridge team.'
+                  : 'Buat akun eksportir untuk mempelajari alur RFQ, menyiapkan data legalitas, serta mencoba draf dokumen dan simulasi Escrow. Katalog ini adalah showcase; penambahan produk baru dilakukan bersama tim NusaBridge.'}
               </p>
               <div className="seller-cta-buttons">
                 <button className="btn btn-primary btn-lg" type="button" onClick={() => openAuth('register', { role: 'seller' })}>
-                  Daftar sebagai Eksportir
+                  {isEn ? 'Register as Exporter' : 'Daftar sebagai Eksportir'}
                 </button>
-                <Link to="/solusi" className="btn btn-glass btn-lg">Pelajari Alur Ekspor & Impor AI</Link>
+                <Link to="/solusi" className="btn btn-glass btn-lg">{isEn ? 'Learn the AI Export & Import Flow' : 'Pelajari Alur Ekspor & Impor AI'}</Link>
               </div>
             </div>
             <div className="seller-cta-visual">
               <div className="badge-card-floating">
                 <span className="bcf-icon">🛡️</span>
                 <div className="bcf-text">
-                  <strong>100% Proteksi Transaksi</strong>
-                  <small>Escrow Vault 4 Tahap Dana Aman</small>
+                  <strong>{isEn ? '100% Transaction Protection' : '100% Proteksi Transaksi'}</strong>
+                  <small>{isEn ? '4-Phase Escrow Vault, Funds Secured' : 'Escrow Vault 4 Tahap Dana Aman'}</small>
                 </div>
               </div>
             </div>
@@ -705,6 +732,7 @@ export default function ProductsPage() {
       {/* Modals */}
       <SpecModal
         prod={specProd}
+        isEn={isEn}
         onClose={() => setSpecProd(null)}
         onLanjutRfq={() => {
           if (specProd) {
@@ -713,7 +741,7 @@ export default function ProductsPage() {
           }
         }}
       />
-      {rfqProd && <RfqModal product={rfqProd} onClose={() => setRfqProd(null)} session={session} />}
+      {rfqProd && <RfqModal product={rfqProd} onClose={() => setRfqProd(null)} session={session} isEn={isEn} />}
     </>
   );
 }

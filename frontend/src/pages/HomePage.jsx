@@ -7,6 +7,7 @@ import RadarWidget from '../components/RadarWidget.jsx';
 import { downloadHtmlFile } from '../utils/downloadHtmlFile.js';
 import { getInitials } from '../utils/logo.js';
 import { PRODUCTS_DATA } from '../data/products.js';
+import { localizeProductName, localizeOrigin } from '../data/productTranslations.js';
 
 /**
  * ==========================================================================
@@ -34,8 +35,10 @@ const HOME_PRODUCTS = ['kopi', 'rempah', 'kriya', 'tekstil']
   .map((product) => ({
     id: product.id,
     name: product.name,
+    nameEn: localizeProductName(product, 'en'),
     price: `USD ${Number(product.price).toFixed(2)} / ${product.unit}`,
     loc: product.origin,
+    locEn: localizeOrigin(product.origin, 'en'),
     cat: product.category,
     img: product.image,
   }));
@@ -113,11 +116,13 @@ const DOC_TITLES = {
 };
 
 // ---------------- Sub: Produk unggulan beranda ----------------
-function ProductCardItem({ p, onClick }) {
+function ProductCardItem({ p, onClick, isEn = false }) {
+  const displayName = isEn ? (p.nameEn || p.name) : p.name;
+  const displayLoc = isEn ? (p.locEn || p.loc) : p.loc;
   return (
     <div className="product-card" data-category={p.cat} onClick={onClick} style={{ cursor: 'pointer' }}>
       <div className="product-thumb-wrap">
-        <img src={p.img} alt={p.name} className="product-img" />
+        <img src={p.img} alt={displayName} className="product-img" />
         <div className="product-category-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <circle cx="12" cy="12" r="10" />
@@ -126,17 +131,17 @@ function ProductCardItem({ p, onClick }) {
         </div>
       </div>
       <div className="product-body">
-        <h4 className="product-name">{p.name}</h4>
+        <h4 className="product-name">{displayName}</h4>
         <p className="product-price">{p.price}</p>
         <p className="product-location">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          {p.loc}
+          {displayLoc}
         </p>
         <div className="product-verified-badge">
-          <span className="v-check">✓</span> Verified Seller
+          <span className="v-check">✓</span> {isEn ? 'Verified Seller' : 'Penjual Terverifikasi'}
         </div>
       </div>
     </div>
@@ -1015,7 +1020,8 @@ function DashboardShowcase() {
 
 // ---------------- Main Page ----------------
 export default function HomePage() {
-  const { openAuth, openModal, openInfo } = useApp();
+  const { openAuth, openModal, openInfo, lang } = useApp();
+  const isEn = lang === 'en';
   const navigate = useNavigate();
   const location = useLocation();
   const [activeCat, setActiveCat] = useState('all');
@@ -1242,7 +1248,7 @@ export default function HomePage() {
 
           {/* Products Carousel */}
           <div className="products-slider-wrapper">
-            <button className="slider-arrow slider-arrow-left" type="button" aria-label="Produk Sebelumnya" onClick={() => scrollCarousel(-1)}>
+            <button className="slider-arrow slider-arrow-left" type="button" aria-label={isEn ? 'Previous Product' : 'Produk Sebelumnya'} onClick={() => scrollCarousel(-1)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="15 18 9 12 15 6" />
               </svg>
@@ -1251,12 +1257,12 @@ export default function HomePage() {
             <div className="products-carousel" id="productsCarousel" ref={carouselRef}>
               {HOME_PRODUCTS.map((p) => (
                 <div key={p.id} style={{ display: activeCat === 'all' || p.cat === activeCat ? 'flex' : 'none' }}>
-                  <ProductCardItem p={p} onClick={() => openProductFromCatalog(p.name)} />
+                  <ProductCardItem p={p} isEn={isEn} onClick={() => openProductFromCatalog(p.name)} />
                 </div>
               ))}
             </div>
 
-            <button className="slider-arrow slider-arrow-right" type="button" aria-label="Produk Selanjutnya" onClick={() => scrollCarousel(1)}>
+            <button className="slider-arrow slider-arrow-right" type="button" aria-label={isEn ? 'Next Product' : 'Produk Selanjutnya'} onClick={() => scrollCarousel(1)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6" />
               </svg>

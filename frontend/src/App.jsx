@@ -14,6 +14,7 @@ import AutoTranslate from './components/AutoTranslate.jsx';
 
 import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
+import DomesticPage from './pages/DomesticPage.jsx';
 import SolutionsPage from './pages/SolutionsPage.jsx';
 import PricingPage from './pages/PricingPage.jsx';
 import TransportPage from './pages/TransportPage.jsx';
@@ -39,6 +40,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/produk" element={<ProductsPage />} />
+        <Route path="/domestik" element={<DomesticPage />} />
+        <Route path="/domestic" element={<DomesticPage />} />
         <Route path="/solusi" element={<SolutionsPage />} />
         <Route path="/harga" element={<PricingPage />} />
         <Route path="/transportasi" element={<TransportPage />} />

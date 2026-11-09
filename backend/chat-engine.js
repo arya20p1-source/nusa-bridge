@@ -12,7 +12,70 @@
  */
 
 const FALLBACK_PRODUCTS = require('./database/products-fallback.json');
+const PRODUCT_TRANSLATIONS = require('../shared/product-translations.json');
 const { findReferenceAnswer } = require('./reference-answers');
+
+const PRODUCT_EN = PRODUCT_TRANSLATIONS.products || {};
+const SPEC_KEYS_EN = PRODUCT_TRANSLATIONS.specKeys || {};
+const SPEC_VALUES_EN = PRODUCT_TRANSLATIONS.specValues || {};
+const SHIPPING_EN = PRODUCT_TRANSLATIONS.shippingTerms || {};
+const ORIGIN_EN = PRODUCT_TRANSLATIONS.originTerms || {};
+const ORIGIN_KEYS_EN = Object.keys(ORIGIN_EN).sort((a, b) => b.length - a.length);
+
+function localizeProductName(product, lang = 'id') {
+  if (!product) return '';
+  if (lang !== 'en') return product.name || '';
+  return PRODUCT_EN[product.id]?.name || product.name || '';
+}
+
+function localizeProductDesc(product, lang = 'id') {
+  if (!product) return '';
+  if (lang !== 'en') return product.desc || '';
+  return PRODUCT_EN[product.id]?.desc || product.desc || '';
+}
+
+function localizeSpecKey(key, lang = 'id') {
+  if (lang !== 'en') return key;
+  return SPEC_KEYS_EN[key] || key;
+}
+
+function localizeSpecValue(value, lang = 'id') {
+  if (lang !== 'en') return value;
+  return SPEC_VALUES_EN[value] || value;
+}
+
+function localizeShipping(value, lang = 'id') {
+  if (!value || lang !== 'en') return value || '';
+  return SHIPPING_EN[value] || value;
+}
+
+function localizeOrigin(value, lang = 'id') {
+  if (!value || lang !== 'en') return value || '';
+  let result = String(value);
+  ORIGIN_KEYS_EN.forEach((key) => {
+    if (result.includes(key)) result = result.split(key).join(ORIGIN_EN[key]);
+  });
+  return result;
+}
+
+function localizeProduct(product, lang = 'id') {
+  if (!product) return product;
+  if (lang !== 'en') return product;
+  return {
+    ...product,
+    name: localizeProductName(product, lang),
+    desc: localizeProductDesc(product, lang),
+    origin: localizeOrigin(product.origin, lang),
+    shipping: localizeShipping(product.shipping, lang),
+    specs: Array.isArray(product.specs)
+      ? product.specs.map((spec) => ({
+        ...spec,
+        k: localizeSpecKey(spec.k, lang),
+        v: localizeSpecValue(spec.v, lang),
+      }))
+      : product.specs,
+  };
+}
 
 const CATEGORY_LABELS = {
   kopi: { id: 'Kopi', en: 'Coffee' },
@@ -54,6 +117,7 @@ const ROLE_INFO = {
 const PAGE_LABELS = {
   home: { id: 'Beranda', en: 'Home' },
   products: { id: 'Katalog Produk', en: 'Product Catalog' },
+  domestic: { id: 'Perdagangan Domestik', en: 'Domestic Trade' },
   solutions: { id: 'Solusi AI', en: 'AI Solutions' },
   escrow: { id: 'Simulasi Escrow Vault', en: 'Escrow Vault Simulation' },
   pricing: { id: 'Paket & Harga', en: 'Plans & Pricing' },
@@ -65,6 +129,7 @@ const PAGE_LABELS = {
 const WEBSITE_PAGES_ID = [
   'Beranda (/) — ringkasan platform, alur ekspor, dan CTA pendaftaran.',
   'Produk (/produk) — katalog 50 komoditas, pencarian, filter kategori, sortir, halaman 12 produk, modal spesifikasi, dan formulir RFQ.',
+  'Domestik (/domestik, alias /domestic) — perdagangan lokal dan antarpulau untuk UMKM: katalog harga Rupiah, checkout dengan ongkos kirim lokal/kargo antarpulau, PPN 11%, escrow 4 fase, dokumen domestik (PO, Invoice, Surat Jalan, BAST), checklist kepatuhan, panel penjual, dan riwayat pesanan.',
   'Solusi AI (/solusi) — chat NusaBridge AI, penjelasan 4 pilar, dan studio interaktif RFQ, Auto-PDF, KYC Hub, serta Escrow Vault.',
   'Harga (/harga) — paket UMKM, voucher subsidi, dan kalkulator estimasi.',
   'Transportasi (/transportasi) — pemilihan transportasi multimoda dan estimasi rute, biaya, serta ETA berdasarkan input pengiriman.',
@@ -72,31 +137,47 @@ const WEBSITE_PAGES_ID = [
   'Masuk/Daftar — modal akun dengan pilihan peran Eksportir (seller) atau Importir (buyer), unggah logo, dan sesi tersimpan di browser.',
 ];
 
+const WEBSITE_PAGES_EN = [
+  'Home (/) — platform overview, export flow, and registration CTA.',
+  'Products (/produk) — catalog of 50 commodities, search, category filters, sorting, 12 products per page, specification modal, and RFQ form.',
+  'Domestic (/domestik, alias /domestic) — local and inter-island trade for SMEs: Rupiah catalog, checkout with local/inter-island shipping, 11% VAT, 4-phase escrow, domestic documents (PO, Invoice, Delivery Note, Handover Report), compliance checklist, seller panel, and order history.',
+  'AI Solutions (/solusi) — NusaBridge AI chat, explanation of the four pillars, and interactive RFQ, Auto-PDF, KYC Hub, and Escrow Vault studio.',
+  'Pricing (/harga) — SME plans, subsidy voucher, and estimate calculator.',
+  'Transport (/transportasi) — multimodal transport selection and route, cost, and ETA estimates based on shipment input.',
+  'Tracking (/pelacakan) — shipment status and progress using simulated data, not live GPS or carrier status.',
+  'Login/Register — account modal with Exporter (seller) or Importer (buyer) roles, logo upload, and browser-stored session.',
+];
+
 const WEBSITE_FACTS_ID = `FAKTA WEBSITE NUSABRIDGE (hanya gunakan fakta ini):
 - NusaBridge adalah website informasi dan simulasi perdagangan ekspor-impor untuk UMKM Indonesia. NusaBridge bukan penjual, produsen, bank, atau instansi verifikasi resmi.
 - Halaman: ${WEBSITE_PAGES_ID.join(' ')}
-- Katalog berisi ${FALLBACK_PRODUCTS.length} produk: ${CATALOG_COUNTS.kopi || 0} kopi, ${CATALOG_COUNTS.rempah || 0} rempah & hasil alam, ${CATALOG_COUNTS.kriya || 0} kriya, dan ${CATALOG_COUNTS.tekstil || 0} tekstil. Setiap produk memiliki nama, kategori, asal, harga acuan USD, satuan, MOQ, kode HS, deskripsi, spesifikasi, sertifikasi, dan pelabuhan pengiriman.
+- Navigasi utama terdiri dari Beranda, Produk, Domestik, Layanan (dropdown: RFQ Studio, Dokumen, Alur Ekspor, Alur Impor), dan Kontak.
+- Katalog berisi ${FALLBACK_PRODUCTS.length} produk: ${CATALOG_COUNTS.kopi || 0} kopi, ${CATALOG_COUNTS.rempah || 0} rempah & hasil alam, ${CATALOG_COUNTS.kriya || 0} kriya, dan ${CATALOG_COUNTS.tekstil || 0} tekstil. Setiap produk memiliki nama, kategori, asal, harga acuan USD, satuan, MOQ, kode HS, deskripsi, spesifikasi, sertifikasi, dan pelabuhan pengiriman. Dalam bahasa Inggris, nama dan deskripsi produk juga ditampilkan dalam bahasa Inggris.
+- Domestik: halaman untuk jual-beli antarsesama UMKM Indonesia dalam Rupiah. Tiga tab: Beli, Jual, dan Pesanan. Pembeli dapat mencari produk, memfilter kategori/provinsi, memilih kota tujuan, memilih kurir lokal atau kargo antarpulau, memilih pembayaran Escrow/transfer/QRIS, dan melihat rincian ongkir serta PPN 11%. Penjual dapat menambah dan menghapus listing produk. Pesanan memiliki alur status Menunggu Pembayaran → Dibayar → Diproses → Dikirim → Selesai, escrow 4 fase (30/30/20/20), serta dokumen PO, Invoice, Surat Jalan, dan BAST. Data domestik disimpan di localStorage browser sebagai demo.
 - RFQ: pengguna memilih produk, mengisi jumlah, Incoterms (FOB/CIF/CNF/EXW), pelabuhan tujuan, dan email kontak. Setelah tersimpan, website menampilkan nomor RFQ, status "Diajukan — menunggu peninjauan", tahapan proses, dan tombol "Perbarui Status". Website tidak mengirim RFQ otomatis ke pemasok, tidak menerima atau membandingkan penawaran, dan tidak menyediakan dashboard negosiasi.
 - Auto-PDF: menghasilkan draf Proforma Invoice dan Sales Contract yang dapat dicetak atau disalin. Ini draf, bukan dokumen resmi yang sudah diverifikasi.
 - KYC Hub: simulasi pemeriksaan format NIB/NPWP dan menampilkan checklist standar negara tujuan. Ini bukan verifikasi resmi OSS, Bea Cukai, atau otoritas negara tujuan.
-- Escrow Vault: simulasi 4 fase pencairan (30% kontrak, 30% PEB/stuffing, 20% B/L, 20% tiba). Website tidak memproses pembayaran atau menyimpan dana sungguhan.
+- Escrow Vault: simulasi 4 fase pencairan (30% kontrak, 30% PEB/stuffing, 20% B/L, 20% tiba). Website tidak memproses pembayaran atau menyimpan dana sungguhan. Escrow domestik juga simulasi.
 - Transportasi: pengguna dapat memasukkan detail pengiriman untuk melihat pilihan multimoda dan estimasi rute, biaya, serta ETA; hasilnya adalah estimasi website.
 - Pelacakan: halaman menampilkan status/progres pengiriman dari data demo. Website tidak menampilkan GPS atau status ekspedisi/kepabeanan nyata.
 - Peran akun: Eksportir (seller) dan Importir (buyer). Peran memengaruhi tampilan panduan dan konteks jawaban AI; tidak membuka dashboard transaksi khusus.
-- Bahasa antarmuka: Indonesia dan Inggris. Akun menyimpan nama usaha, email, logo, dan peran di sesi browser.
+- Bahasa antarmuka: Indonesia dan Inggris, termasuk nama produk dan kategori. Akun menyimpan nama usaha, email, logo, dan peran di sesi browser.
 - AI: menjawab pertanyaan tentang website NusaBridge dan panduan umum ekspor-impor. AI tidak menjawab topik di luar itu dan tidak boleh mengarang fitur, harga, stok, status transaksi, atau regulasi.`;
 
 const WEBSITE_FACTS_EN = `NUSABRIDGE WEBSITE FACTS (use only these facts):
 - NusaBridge is an information and simulation website for Indonesian SME export-import trade. NusaBridge is not a seller, producer, bank, or official verification authority.
-- Pages: Home (/), Products (/produk), AI Solutions (/solusi), Pricing (/harga), Transport (/transportasi), Tracking (/pelacakan), and the Login/Register modal. Transport provides multimodal route/cost/ETA estimates based on shipment inputs. Tracking uses demo data only, not live GPS, carrier, or customs status. The product catalog has ${FALLBACK_PRODUCTS.length} products: ${CATALOG_COUNTS.kopi || 0} coffee, ${CATALOG_COUNTS.rempah || 0} spices & natural products, ${CATALOG_COUNTS.kriya || 0} crafts, and ${CATALOG_COUNTS.tekstil || 0} textiles.
+- Pages: ${WEBSITE_PAGES_EN.join(' ')}
+- Main navigation: Home, Products, Domestic, Services (dropdown: RFQ Studio, Documents, Export Flow, Import Flow), and Contact.
+- The product catalog has ${FALLBACK_PRODUCTS.length} products: ${CATALOG_COUNTS.kopi || 0} coffee, ${CATALOG_COUNTS.rempah || 0} spices & natural products, ${CATALOG_COUNTS.kriya || 0} crafts, and ${CATALOG_COUNTS.tekstil || 0} textiles. Every product has a name, category, origin, USD reference price, unit, MOQ, HS code, description, specifications, certifications, and shipping port. In English mode, product names and descriptions are also shown in English.
+- Domestic: a page for buying and selling between Indonesian SMEs in Rupiah. Three tabs: Buy, Sell, and Orders. Buyers can search products, filter by category/province, choose a destination city, choose local courier or inter-island cargo, choose Escrow/bank transfer/QRIS payment, and see shipping and 11% VAT details. Sellers can add and delete product listings. Orders follow Awaiting Payment → Paid → Processing → Shipped → Completed, with a 4-phase escrow (30/30/20/20) and PO, Invoice, Delivery Note, and Handover Report documents. Domestic data is stored in browser localStorage as a demo.
 - RFQ: choose a product, enter quantity, Incoterms (FOB/CIF/CNF/EXW), destination port, and contact email. The site returns an RFQ number, a "submitted — awaiting review" status, process steps, and a status refresh button. It does not automatically contact suppliers, collect or compare quotations, or provide a negotiation dashboard.
 - Auto-PDF: creates printable/copyable draft Proforma Invoice and Sales Contract documents. They are drafts, not officially verified documents.
 - KYC Hub: a simulation that checks NIB/NPWP format and shows destination-country checklists. It is not official verification by OSS, Customs, or a foreign authority.
-- Escrow Vault: a 4-phase payout simulation (30% contract, 30% PEB/stuffing, 20% B/L, 20% arrival). The site does not process real payments or hold funds.
+- Escrow Vault: a 4-phase payout simulation (30% contract, 30% PEB/stuffing, 20% B/L, 20% arrival). The site does not process real payments or hold funds. Domestic escrow is also a simulation.
 - Transport: users can enter shipment details to see multimodal options and estimated route, cost, and ETA; results are website estimates.
 - Tracking: the page displays shipment status/progress from demo data. The site does not show real GPS, carrier, or customs status.
 - Account roles: Exporter (seller) and Importer (buyer). The role changes guidance and AI context; it does not unlock a dedicated transaction dashboard.
-- Interface languages: Indonesian and English. The browser session stores business name, email, logo, and role.
+- Interface languages: Indonesian and English, including product names and categories. The browser session stores business name, email, logo, and role.
 - AI: answers questions about the NusaBridge website and general export-import guidance only. It must not answer unrelated topics or invent features, prices, stock, transaction status, or regulations.`;
 
 const OFF_TOPIC_GROUPS = [
@@ -230,18 +311,25 @@ function findMatchingProducts(text, list = FALLBACK_PRODUCTS) {
     .map((item) => {
       let score = 0;
       const name = String(item.name || '').toLowerCase();
+      const nameEn = String(localizeProductName(item, 'en') || '').toLowerCase();
       const category = String(item.category || '').toLowerCase();
       const origin = String(item.origin || '').toLowerCase();
+      const originEn = String(localizeOrigin(item.origin, 'en') || '').toLowerCase();
       const desc = String(item.desc || '').toLowerCase();
+      const descEn = String(localizeProductDesc(item, 'en') || '').toLowerCase();
 
       if (qLower.length >= 3 && name.includes(qLower)) score += 60;
+      if (qLower.length >= 3 && nameEn.includes(qLower)) score += 60;
       if (qLower.length >= 3 && category.includes(qLower)) score += 20;
 
       keywords.forEach((keyword) => {
         if (containsTerm(name, keyword)) score += 15;
+        if (containsTerm(nameEn, keyword)) score += 15;
         if (containsTerm(category, keyword)) score += 8;
         if (containsTerm(origin, keyword)) score += 8;
+        if (containsTerm(originEn, keyword)) score += 8;
         if (containsTerm(desc, keyword)) score += 3;
+        if (containsTerm(descEn, keyword)) score += 3;
       });
 
       return { item, score };
@@ -286,30 +374,31 @@ function categoriesFromText(text) {
   return found;
 }
 
-function productName(product) {
-  return String(product?.name || 'Produk').replace(/\s*\([^)]*\)\s*$/, '').trim();
+function productName(product, lang = 'id') {
+  return String(localizeProductName(product, lang) || 'Produk').replace(/\s*\([^)]*\)\s*$/, '').trim();
 }
 
 function formatProduct(product, lang = 'id') {
   const isEn = lang === 'en';
-  const specs = Array.isArray(product.specs)
-    ? product.specs.map((spec) => `${spec.k}: ${spec.v}`).join(' | ')
+  const view = localizeProduct(product, lang);
+  const specs = Array.isArray(view.specs)
+    ? view.specs.map((spec) => `${spec.k}: ${spec.v}`).join(' | ')
     : '';
-  const certs = Array.isArray(product.certs) ? product.certs.join(', ') : '';
-  const category = CATEGORY_LABELS[product.category]?.[isEn ? 'en' : 'id'] || product.category || '-';
+  const certs = Array.isArray(view.certs) ? view.certs.join(', ') : '';
+  const category = CATEGORY_LABELS[view.category]?.[isEn ? 'en' : 'id'] || view.category || '-';
 
   return [
-    `**${product.name}**`,
+    `**${view.name}**`,
     '',
     `- ${isEn ? 'Category' : 'Kategori'}: ${category}`,
-    `- ${isEn ? 'Origin' : 'Asal'}: ${product.origin || '-'}`,
-    `- ${isEn ? 'Reference price' : 'Harga acuan'}: USD ${Number(product.price).toFixed(2)} / ${product.unit || 'unit'}`,
-    `- ${isEn ? 'Minimum order (MOQ)' : 'Minimum order (MOQ)'}: ${Number(product.moq || 0).toLocaleString('id-ID')} ${product.unit || 'unit'}`,
-    `- HS Code: ${product.hsCode || '-'}`,
-    `- ${isEn ? 'Shipping' : 'Pengiriman'}: ${product.shipping || '-'}`,
+    `- ${isEn ? 'Origin' : 'Asal'}: ${view.origin || '-'}`,
+    `- ${isEn ? 'Reference price' : 'Harga acuan'}: USD ${Number(view.price).toFixed(2)} / ${view.unit || 'unit'}`,
+    `- ${isEn ? 'Minimum order (MOQ)' : 'Minimum order (MOQ)'}: ${Number(view.moq || 0).toLocaleString(isEn ? 'en-US' : 'id-ID')} ${view.unit || 'unit'}`,
+    `- HS Code: ${view.hsCode || '-'}`,
+    `- ${isEn ? 'Shipping' : 'Pengiriman'}: ${view.shipping || '-'}`,
     certs ? `- ${isEn ? 'Certifications' : 'Sertifikasi'}: ${certs}` : '',
     specs ? `- ${isEn ? 'Specifications' : 'Spesifikasi'}: ${specs}` : '',
-    product.desc ? `\n${product.desc}` : '',
+    view.desc ? `\n${view.desc}` : '',
     '',
     isEn
       ? 'Open the Products page to review the full specification and submit an RFQ. The reference price is catalog data, not a final quotation.'
@@ -330,7 +419,7 @@ function formatCatalogList(text, lang = 'id', products = FALLBACK_PRODUCTS) {
       const picked = pool.slice(0, Math.min(requested, 20));
       const label = CATEGORY_LABELS[key]?.[isEn ? 'en' : 'id'] || key;
       const lines = picked.map((product, index) =>
-        `${index + 1}. **${productName(product)}** — ${product.origin || '-'} · USD ${Number(product.price).toFixed(2)}/${product.unit || 'unit'} · MOQ ${Number(product.moq || 0).toLocaleString('id-ID')} ${product.unit || 'unit'} · HS ${product.hsCode || '-'}`
+        `${index + 1}. **${productName(product, lang)}** — ${localizeOrigin(product.origin, lang) || '-'} · USD ${Number(product.price).toFixed(2)}/${product.unit || 'unit'} · MOQ ${Number(product.moq || 0).toLocaleString(isEn ? 'en-US' : 'id-ID')} ${product.unit || 'unit'} · HS ${product.hsCode || '-'}`
       ).join('\n');
       return [
         isEn
@@ -358,7 +447,7 @@ function formatCatalogList(text, lang = 'id', products = FALLBACK_PRODUCTS) {
     const picked = pool.slice(0, Math.min(requested, 20));
     const label = CATEGORY_LABELS[category]?.[isEn ? 'en' : 'id'] || category;
     const lines = picked.map((product, index) =>
-      `${index + 1}. **${productName(product)}** — ${product.origin || '-'} · USD ${Number(product.price).toFixed(2)}/${product.unit || 'unit'} · MOQ ${Number(product.moq || 0).toLocaleString('id-ID')} ${product.unit || 'unit'} · HS ${product.hsCode || '-'}`
+      `${index + 1}. **${productName(product, lang)}** — ${localizeOrigin(product.origin, lang) || '-'} · USD ${Number(product.price).toFixed(2)}/${product.unit || 'unit'} · MOQ ${Number(product.moq || 0).toLocaleString(isEn ? 'en-US' : 'id-ID')} ${product.unit || 'unit'} · HS ${product.hsCode || '-'}`
     ).join('\n');
 
     return [
@@ -378,7 +467,7 @@ function formatCatalogList(text, lang = 'id', products = FALLBACK_PRODUCTS) {
     .filter(([key]) => (CATALOG_COUNTS[key] || 0) > 0)
     .map(([key, label]) => {
       const pool = products.filter((product) => product.category === key);
-      const examples = pool.slice(0, 3).map((product) => productName(product)).join(', ');
+      const examples = pool.slice(0, 3).map((product) => productName(product, lang)).join(', ');
       return `- **${label[isEn ? 'en' : 'id']}** (${CATALOG_COUNTS[key]}): ${examples}${pool.length > 3 ? ', ...' : ''}`;
     })
     .join('\n');
@@ -414,9 +503,10 @@ function greetingReply(role, lang = 'id') {
       'You can ask about:',
       '- Website features and page flows',
       '- The 50-product catalog and product specifications',
+      '- Domestic SME trade in Rupiah, escrow, and domestic documents',
       '- RFQ submission and status',
       '- Auto-PDF drafts, KYC Hub, and the Escrow Vault simulation',
-      '- Account roles, login/register, and plans',
+      '- Transport estimates, tracking, account roles, login/register, and plans',
       '',
       'What would you like to know?',
     ].join('\n');
@@ -428,9 +518,10 @@ function greetingReply(role, lang = 'id') {
     'Anda bisa bertanya tentang:',
     '- Fitur website dan alur tiap halaman',
     '- Katalog 50 produk dan spesifikasi produk',
+    '- Perdagangan domestik UMKM dalam Rupiah, escrow, dan dokumen domestik',
     '- Pengajuan RFQ dan statusnya',
     '- Draf Auto-PDF, KYC Hub, dan simulasi Escrow Vault',
-    '- Peran akun, masuk/daftar, dan paket harga',
+    '- Estimasi transportasi, pelacakan, peran akun, masuk/daftar, dan paket harga',
     '',
     'Apa yang ingin Anda ketahui?',
   ].join('\n');
@@ -556,6 +647,41 @@ function escrowReply(lang = 'id') {
     ].join('\n');
 }
 
+function domesticReply(lang = 'id') {
+  const isEn = lang === 'en';
+  return isEn
+    ? [
+      '**Domestic Trade (/domestik) — buying and selling between Indonesian SMEs:**',
+      '',
+      'The page has three tabs: **Buy**, **Sell**, and **Orders**.',
+      '',
+      '- **Buy** — search local products, filter by category or province, sort by best-selling/price/stock, and see Rupiah prices, MOQ, stock, seller, and shipping origin.',
+      '- **Checkout** — choose quantity, destination city, local courier or inter-island cargo, and payment (NusaBridge Escrow, bank transfer/VA, or QRIS). The summary shows subtotal, shipping cost, 11% VAT, and total.',
+      '- **Escrow** — a 4-phase simulation: 30% order confirmed, 30% goods ready/delivery note issued, 20% in transit, 20% received by buyer.',
+      '- **Domestic documents** — Purchase Order (PO), Invoice, Delivery Note (Surat Jalan), and Handover Report (BAST) can be downloaded as HTML drafts.',
+      '- **Compliance** — checklist for SNI, BPOM, Halal BPJPH, active NIB/NPWP, and agricultural quarantine.',
+      '- **Sell** — add a listing with name, category, price in Rupiah, unit, MOQ, stock, origin, and description. The listing appears in the domestic catalog and can be deleted.',
+      '- **Orders** — order status flows Awaiting Payment → Paid → Processing → Shipped → Completed, with escrow release and document download.',
+      '',
+      'Domestic data is stored in browser localStorage as a demo. This page is separate from international export: it uses Rupiah, 11% VAT, and domestic documents, without PEB, COO, or customs clearance. The Supabase table structure is available in `backend/database/domestic-trade.sql`.',
+    ].join('\n')
+    : [
+      '**Perdagangan Domestik (/domestik) — jual-beli antarsesama UMKM Indonesia:**',
+      '',
+      'Halaman ini punya tiga tab: **Beli**, **Jual**, dan **Pesanan**.',
+      '',
+      '- **Beli** — cari produk lokal, filter kategori atau provinsi, sortir terlaris/harga/stok, dan lihat harga Rupiah, MOQ, stok, penjual, serta asal pengiriman.',
+      '- **Checkout** — pilih jumlah, kota tujuan, kurir lokal atau kargo antarpulau, dan pembayaran (Escrow NusaBridge, transfer bank/VA, atau QRIS). Ringkasan menampilkan subtotal, ongkos kirim, PPN 11%, dan total.',
+      '- **Escrow** — simulasi 4 fase: 30% pesanan dikonfirmasi, 30% barang siap/surat jalan terbit, 20% dalam perjalanan, 20% diterima pembeli.',
+      '- **Dokumen domestik** — Purchase Order (PO), Invoice, Surat Jalan, dan Berita Acara Serah Terima (BAST) dapat diunduh sebagai draf HTML.',
+      '- **Kepatuhan** — checklist SNI, BPOM, Halal BPJPH, NIB/NPWP aktif, dan karantina pertanian.',
+      '- **Jual** — tambah listing dengan nama, kategori, harga Rupiah, satuan, MOQ, stok, asal, dan deskripsi. Listing muncul di katalog domestik dan bisa dihapus.',
+      '- **Pesanan** — status pesanan Menunggu Pembayaran → Dibayar → Diproses → Dikirim → Selesai, dengan pencairan escrow dan unduh dokumen.',
+      '',
+      'Data domestik disimpan di localStorage browser sebagai demo. Halaman ini terpisah dari ekspor internasional: memakai Rupiah, PPN 11%, dan dokumen domestik, tanpa PEB, COO, atau bea cukai. Struktur tabel Supabase tersedia di `backend/database/domestic-trade.sql`.',
+    ].join('\n');
+}
+
 function pricingReply(lang = 'id') {
   return lang === 'en'
     ? [
@@ -576,8 +702,10 @@ function featuresReply(lang = 'id') {
       '**NusaBridge website features:**',
       '',
       '- **Product catalog** — 50 products across coffee, spices, crafts, and textiles, with search, filters, sorting, specifications, and RFQ.',
+      '- **Domestic trade** — Rupiah catalog, local/inter-island shipping, 11% VAT, 4-phase escrow, domestic documents, seller listings, and order history.',
       '- **NusaBridge AI chat** — explains website features and general export-import guidance.',
       '- **AI Solutions studio** — RFQ Studio, Auto-PDF drafts, KYC Hub simulation, and Escrow Vault simulation.',
+      '- **Transport & tracking** — multimodal route/cost/ETA estimates and demo shipment progress.',
       '- **Accounts** — exporter or importer role, business profile, logo, and Indonesian/English interface.',
       '- **Pricing page** — plan information, subsidy voucher, and an estimate calculator.',
       '',
@@ -587,8 +715,10 @@ function featuresReply(lang = 'id') {
       '**Fitur website NusaBridge:**',
       '',
       '- **Katalog produk** — 50 produk kopi, rempah, kriya, dan tekstil, dengan pencarian, filter, sortir, spesifikasi, dan RFQ.',
+      '- **Perdagangan domestik** — katalog Rupiah, ongkir lokal/antarpulau, PPN 11%, escrow 4 fase, dokumen domestik, listing penjual, dan riwayat pesanan.',
       '- **Chat NusaBridge AI** — menjelaskan fitur website dan panduan umum ekspor-impor.',
       '- **Studio Solusi AI** — RFQ Studio, draf Auto-PDF, simulasi KYC Hub, dan simulasi Escrow Vault.',
+      '- **Transportasi & pelacakan** — estimasi rute/biaya/ETA multimoda dan progres pengiriman demo.',
       '- **Akun** — peran eksportir atau importir, profil usaha, logo, dan antarmuka Indonesia/Inggris.',
       '- **Halaman Harga** — informasi paket, voucher subsidi, dan kalkulator estimasi.',
       '',
@@ -603,14 +733,14 @@ function aboutReply(lang = 'id') {
       '',
       'NusaBridge is a platform, not a seller, producer, bank, or official verification authority. Product data comes from the catalog; regulations and trade requirements must still be verified with the relevant authorities.',
       '',
-      'The site has Home, Products, AI Solutions, and Pricing pages, plus exporter/importer accounts.',
+      'The site has Home, Products, Domestic, AI Solutions, Pricing, Transport, and Tracking pages, plus exporter/importer accounts.',
     ].join('\n')
     : [
       '**NusaBridge** adalah website informasi dan simulasi perdagangan ekspor-impor untuk UMKM Indonesia. Website ini menggabungkan katalog produk kurasi, asisten AI, alat draf dokumen, simulasi checklist KYC, dan simulasi pencairan Escrow.',
       '',
       'NusaBridge adalah platform, bukan penjual, produsen, bank, atau otoritas verifikasi resmi. Data produk berasal dari katalog; regulasi dan persyaratan perdagangan tetap harus diverifikasi ke instansi terkait.',
       '',
-      'Halaman yang tersedia: Beranda, Produk, Solusi AI, dan Harga, ditambah akun eksportir/importir.',
+      'Halaman yang tersedia: Beranda, Produk, Domestik, Solusi AI, Harga, Transportasi, dan Pelacakan, ditambah akun eksportir/importir.',
     ].join('\n');
 }
 
@@ -621,8 +751,12 @@ function navigationReply(lang = 'id') {
       '',
       '- **Home** — platform overview, export flow, and registration CTA.',
       '- **Products** — catalog, search/filter/sort, specifications, and RFQ.',
+      '- **Domestic** — local/inter-island SME trade in Rupiah, checkout, escrow, documents, seller listings, and orders.',
+      '- **Services** — dropdown with RFQ Studio, Documents, Export Flow, and Import Flow.',
       '- **AI Solutions** — AI chat, four pillars, and the interactive studio.',
       '- **Pricing** — plans, voucher, and estimate calculator.',
+      '- **Transport** — multimodal options and route/cost/ETA estimates.',
+      '- **Tracking** — demo shipment progress.',
       '- **Login/Register** — account modal with exporter/importer roles.',
       '',
       'Tell me which page you are on and what you want to do, and I will explain the steps.',
@@ -632,8 +766,12 @@ function navigationReply(lang = 'id') {
       '',
       '- **Beranda** — ringkasan platform, alur ekspor, dan CTA pendaftaran.',
       '- **Produk** — katalog, pencarian/filter/sortir, spesifikasi, dan RFQ.',
+      '- **Domestik** — jual-beli UMKM lokal/antarpulau dalam Rupiah, checkout, escrow, dokumen, listing penjual, dan pesanan.',
+      '- **Layanan** — dropdown RFQ Studio, Dokumen, Alur Ekspor, dan Alur Impor.',
       '- **Solusi AI** — chat AI, empat pilar, dan studio interaktif.',
       '- **Harga** — paket, voucher, dan kalkulator estimasi.',
+      '- **Transportasi** — pilihan multimoda dan estimasi rute/biaya/ETA.',
+      '- **Pelacakan** — progres pengiriman demo.',
       '- **Masuk/Daftar** — modal akun dengan peran eksportir/importir.',
       '',
       'Sebutkan halaman yang sedang Anda buka dan tujuan Anda, nanti saya jelaskan langkahnya.',
@@ -797,6 +935,7 @@ function unknownReply(lang = 'id') {
         '',
         'NusaBridge AI can assist you with:',
         '- **50 Export Commodities Catalog**: Coffee, Spices, Crafts, Textiles (specifications, HS codes, reference prices, MOQ)',
+        '- **Domestic SME Trade**: Rupiah catalog, local/inter-island shipping, 11% VAT, escrow, PO/Invoice/Delivery Note/BAST, seller listings, and orders',
         '- **Export & Import Features**: RFQ submissions, Auto-PDF drafts (Proforma Invoice & Sales Contract), KYC Hub compliance, and the 4-phase Escrow Vault simulation',
         '- **Account Roles**: Indonesian Exporter (Seller) and Global Importer (Buyer) usage',
         '- **Trade Regulations & Paperwork**: Incoterms 2020 (FOB vs CIF), customs declarations (PEB/PIB, B/L, COO), and foreign standards (FDA, EUDR, JAS, Halal)',
@@ -808,6 +947,7 @@ function unknownReply(lang = 'id') {
         '',
         'NusaBridge AI difokuskan untuk membantu Anda seputar:',
         '- **Katalog 50 Komoditas Ekspor**: Kopi, Rempah, Kriya, dan Tekstil (spesifikasi lab, kode HS, harga acuan USD, dan MOQ)',
+        '- **Perdagangan Domestik UMKM**: katalog Rupiah, ongkir lokal/antarpulau, PPN 11%, escrow, PO/Invoice/Surat Jalan/BAST, listing penjual, dan pesanan',
         '- **Fitur Ekspor & Impor**: Alur RFQ, otomasi draf Auto-PDF (Proforma Invoice & Sales Contract), validasi kepatuhan KYC Hub, dan simulasi 4 fase Escrow Vault',
         '- **Peran Akun**: Eksportir Indonesia (Seller) dan Importir Global (Buyer)',
         '- **Regulasi & Dokumen**: Incoterms 2020 (FOB vs CIF), kepabeanan (PEB/PIB, B/L, COO), dan standar negara tujuan (FDA USA, EUDR Uni Eropa, JAS Jepang, Halal UEA)',
@@ -824,6 +964,7 @@ function generalWebsiteReply(text, lang = 'id') {
         '',
         'NusaBridge is an all-in-one trade facilitation and education platform for Indonesian SME export-import:',
         '- **Product Catalog** — 50 curated commodities (Coffee, Spices, Crafts, Textiles) with lab parameters and HS codes.',
+        '- **Domestic Trade** — buy/sell between Indonesian SMEs in Rupiah with local/inter-island shipping, 11% VAT, 4-phase escrow, PO/Invoice/Delivery Note/BAST documents, seller listings, and order history.',
         '- **RFQ Studio** — converts buyer inquiries into structured Incoterms 2020 quotations.',
         '- **Auto-PDF Generator** — instantly drafts Proforma Invoices, Sales Contracts, and PEB drafts.',
         '- **KYC Hub** — validates 13-digit NIB OSS and screens compliance for USA (FDA), EU (EUDR), Japan (JAS), and UAE (Halal BPJPH).',
@@ -837,6 +978,7 @@ function generalWebsiteReply(text, lang = 'id') {
         '',
         'NusaBridge adalah platform fasilitasi perdagangan dan edukasi ekspor-impor terpadu untuk UMKM Indonesia:',
         '- **Katalog Produk** — 50 komoditas ekspor kurasi (Kopi, Rempah, Kriya, Tekstil) lengkap dengan spesifikasi lab dan kode HS.',
+        '- **Perdagangan Domestik** — jual-beli antarsesama UMKM Indonesia dalam Rupiah dengan ongkir lokal/antarpulau, PPN 11%, escrow 4 fase, dokumen PO/Invoice/Surat Jalan/BAST, listing penjual, dan riwayat pesanan.',
         '- **RFQ Studio** — mengubah permintaan buyer menjadi kuotasi terstruktur berstandar Incoterms 2020.',
         '- **Auto-PDF Generator** — menerbitkan draf resmi Proforma Invoice dan Sales Contract siap cetak.',
         '- **KYC Hub** — memvalidasi NIB 13 digit OSS RBA dan memeriksa kepatuhan standar USA (FDA), Uni Eropa (EUDR), Jepang (JAS), dan UEA (Halal BPJPH).',
@@ -906,6 +1048,9 @@ function detectIntent(message, products = FALLBACK_PRODUCTS) {
   }
   if (/(kontak|hubungi|support|bantuan|email|whatsapp|contact)/i.test(text)) {
     return 'contact';
+  }
+  if (/(domestik|domestic|antarpulau|antar pulau|dalam negeri|perdagangan lokal|jualan lokal|beli lokal|umkm lokal|harga rupiah|idr|surat jalan|bast|berita acara serah terima)/i.test(text)) {
+    return 'domestic';
   }
   if (/(ekspor|impor|export|import|incoterm|fob|cif|cfr|cnf|exw|dokumen|hs code|kode hs|nib|npwp|oss|karantina|bea cukai|pabean|buyer|supplier|pemasok|logistik|kontainer|pengiriman|asuransi|invoice|packing list|peb|coo|negara tujuan|pembayaran)/i.test(text)) {
     return 'trade';
@@ -1009,6 +1154,8 @@ function buildFallbackReply({
       return navigationReply(lang);
     case 'contact':
       return contactReply(lang);
+    case 'domestic':
+      return domesticReply(lang);
     case 'trade':
       return tradeReply(raw, lang, activeRef);
     default:
@@ -1036,19 +1183,22 @@ function buildSystemPrompt({
 
   const catalogLines = (Array.isArray(products) ? products : [])
     .slice(0, 12)
-    .map((product) => JSON.stringify({
-      name: product.name,
-      category: product.category,
-      origin: product.origin,
-      priceUSD: product.price,
-      unit: product.unit,
-      moq: product.moq,
-      hsCode: product.hsCode,
-      description: product.desc,
-      specifications: product.specs,
-      certifications: product.certs,
-      shipping: product.shipping,
-    }))
+    .map((product) => {
+      const view = localizeProduct(product, lang);
+      return JSON.stringify({
+        name: view.name,
+        category: view.category,
+        origin: view.origin,
+        priceUSD: view.price,
+        unit: view.unit,
+        moq: view.moq,
+        hsCode: view.hsCode,
+        description: view.desc,
+        specifications: view.specs,
+        certifications: view.certs,
+        shipping: view.shipping,
+      });
+    })
     .join('\n');
 
   return isEn ? `You are NusaBridge AI, an intelligent export-import assistant specifically for UMKM (Indonesian SMEs) and the NusaBridge website.
@@ -1113,6 +1263,8 @@ module.exports = {
   ROLE_INFO,
   WEBSITE_FACTS_ID,
   WEBSITE_FACTS_EN,
+  localizeProduct,
+  localizeProductName,
   normalizeRole,
   normalize,
   isGreeting,

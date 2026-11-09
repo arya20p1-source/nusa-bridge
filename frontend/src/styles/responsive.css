@@ -357,7 +357,22 @@ header[id],
   scroll-margin-top: 92px;
 }
 
-/* 6d. Carousel produk di HP: swipeable, kartu proporsional, teks utuh */
+/* 6d. Carousel produk: tablet tetap satu baris yang bisa digeser */
+@media (max-width: 1024px) and (min-width: 641px) {
+  .products-carousel {
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 32px) / 3);
+    grid-template-columns: none;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 641px) {
+  .products-carousel {
+    grid-auto-columns: calc((100% - 16px) / 2);
+  }
+}
+
+/* 6e. Carousel produk di HP: swipeable, kartu proporsional, teks utuh */
 @media (max-width: 640px) {
   .products-carousel {
     display: grid;
@@ -377,6 +392,8 @@ header[id],
 
   .product-card {
     min-height: 0;
+    min-width: 0;
+    width: 100%;
     padding: 12px;
   }
 
@@ -390,10 +407,13 @@ header[id],
 
   .product-name {
     white-space: normal;
-    overflow: visible;
+    overflow: hidden;
     text-overflow: clip;
     overflow-wrap: anywhere;
     line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   /* Kartu katalog: judul & deskripsi tidak terpotong */

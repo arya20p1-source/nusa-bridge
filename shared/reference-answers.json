@@ -504,8 +504,8 @@
       "\\b(alur|workflow)\\b.*\\b(nusabridge|website|ekspor|impor|export|import)\\b",
       "\\b(nusabridge|website)\\b.*\\b(alur|workflow)\\b"
     ],
-    "answer": "Alur utama di website NusaBridge dimulai dari memilih produk di katalog, lalu menggunakan AI Sales Assistant/RFQ Studio untuk merapikan permintaan buyer. Setelah detail disepakati, Auto-PDF dapat membantu menyiapkan draf dokumen. KYC Hub dan Escrow Vault menampilkan simulasi/panduan alur, bukan verifikasi resmi atau pemrosesan pembayaran sungguhan. Periksa kembali data dan dokumen sebelum digunakan untuk transaksi nyata.",
-    "answerEn": "The main NusaBridge website flow starts with choosing a product from the catalog, then using AI Sales Assistant/RFQ Studio to organize a buyer request. Once the details are agreed, Auto-PDF can help prepare draft documents. KYC Hub and Escrow Vault show simulated workflows/guidance; they do not perform official verification or process real payments. Review all information and documents before using them in a real transaction.",
+    "answer": "Alur utama di website NusaBridge: untuk ekspor-impor, mulai dari memilih produk di katalog lalu menggunakan AI Sales Assistant/RFQ Studio untuk merapikan permintaan buyer; setelah detail disepakati, Auto-PDF membantu menyiapkan draf dokumen, sedangkan KYC Hub dan Escrow Vault menampilkan simulasi. Untuk perdagangan lokal, buka halaman Domestik, pilih produk UMKM dalam Rupiah, isi checkout (jumlah, kota tujuan, kurir, pembayaran), lalu pantau pesanan dan unduh dokumen PO/Invoice/Surat Jalan/BAST. Periksa kembali data dan dokumen sebelum digunakan untuk transaksi nyata.",
+    "answerEn": "The main NusaBridge flow: for export-import, start by choosing a product in the catalog, then use AI Sales Assistant/RFQ Studio to organize a buyer request; once details are agreed, Auto-PDF helps prepare draft documents, while KYC Hub and Escrow Vault show simulations. For local trade, open the Domestic page, choose an SME product in Rupiah, complete checkout (quantity, destination city, courier, payment), then track the order and download PO/Invoice/Delivery Note/BAST documents. Review all information and documents before using them in a real transaction.",
     "sources": []
   },
   {
@@ -524,8 +524,8 @@
       "\\bnusabridge\\b.*\\b(apa|tentang|platform)\\b",
       "\\b(apa|tentang)\\b.*\\bnusabridge\\b"
     ],
-    "answer": "NusaBridge adalah website informasi dan simulasi perdagangan ekspor-impor untuk UMKM Indonesia. Website ini menggabungkan katalog 50 produk, chat NusaBridge AI, studio Solusi AI (RFQ Studio, draf Auto-PDF, simulasi KYC Hub, dan simulasi Escrow Vault), serta halaman Harga. NusaBridge adalah platform, bukan penjual, produsen, bank, atau otoritas verifikasi resmi. Halaman utama: Beranda, Produk, Solusi AI, dan Harga, ditambah modal Masuk/Daftar untuk akun eksportir atau importir.",
-    "answerEn": "NusaBridge is an information and simulation website for Indonesian SME export-import trade. It combines a 50-product catalog, NusaBridge AI chat, an AI Solutions studio (RFQ Studio, Auto-PDF drafts, KYC Hub simulation, and Escrow Vault simulation), and a Pricing page. NusaBridge is a platform, not a seller, producer, bank, or official verification authority. Main pages: Home, Products, AI Solutions, and Pricing, plus a Login/Register modal for exporter or importer accounts.",
+    "answer": "NusaBridge adalah website informasi dan simulasi perdagangan ekspor-impor untuk UMKM Indonesia. Website ini menggabungkan katalog 50 produk, halaman Domestik untuk jual-beli antarsesama UMKM dalam Rupiah, chat NusaBridge AI, studio Solusi AI (RFQ Studio, draf Auto-PDF, simulasi KYC Hub, dan simulasi Escrow Vault), halaman Harga, Transportasi, dan Pelacakan. NusaBridge adalah platform, bukan penjual, produsen, bank, atau otoritas verifikasi resmi. Navigasi utama: Beranda, Produk, Domestik, Layanan (RFQ Studio, Dokumen, Alur Ekspor, Alur Impor), dan Kontak, ditambah modal Masuk/Daftar untuk akun eksportir atau importir.",
+    "answerEn": "NusaBridge is an information and simulation website for Indonesian SME export-import trade. It combines a 50-product catalog, a Domestic page for SME-to-SME trade in Rupiah, NusaBridge AI chat, an AI Solutions studio (RFQ Studio, Auto-PDF drafts, KYC Hub simulation, and Escrow Vault simulation), and Pricing, Transport, and Tracking pages. NusaBridge is a platform, not a seller, producer, bank, or official verification authority. Main navigation: Home, Products, Domestic, Services (RFQ Studio, Documents, Export Flow, Import Flow), and Contact, plus a Login/Register modal for exporter or importer accounts.",
     "sources": []
   },
   {
@@ -545,8 +545,8 @@
       "fitur ekspor dan impor",
       "export import features"
     ],
-    "answer": "Fitur utama website NusaBridge: (1) katalog 50 produk dengan pencarian, filter kategori, sortir, halaman 12 produk, modal spesifikasi, dan formulir RFQ; (2) chat NusaBridge AI untuk menjelaskan website dan panduan umum ekspor-impor; (3) studio Solusi AI berisi RFQ Studio, draf Auto-PDF, simulasi KYC Hub, dan simulasi Escrow Vault; (4) akun eksportir/importir dengan profil usaha dan logo; serta (5) halaman Harga dengan informasi paket, voucher, dan kalkulator estimasi. Auto-PDF, KYC Hub, dan Escrow Vault adalah draf atau simulasi, bukan layanan resmi.",
-    "answerEn": "Main NusaBridge features: (1) a 50-product catalog with search, category filters, sorting, 12 products per page, a specification modal, and an RFQ form; (2) NusaBridge AI chat for website and general export-import guidance; (3) an AI Solutions studio with RFQ Studio, Auto-PDF drafts, KYC Hub simulation, and Escrow Vault simulation; (4) exporter/importer accounts with a business profile and logo; and (5) a Pricing page with plan information, a voucher, and an estimate calculator. Auto-PDF, KYC Hub, and Escrow Vault are drafts or simulations, not official services.",
+    "answer": "Fitur utama website NusaBridge: (1) katalog 50 produk dengan pencarian, filter kategori, sortir, halaman 12 produk, modal spesifikasi, dan formulir RFQ; (2) halaman Domestik untuk jual-beli UMKM dalam Rupiah, ongkir lokal/antarpulau, PPN 11%, escrow 4 fase, dokumen PO/Invoice/Surat Jalan/BAST, listing penjual, dan riwayat pesanan; (3) chat NusaBridge AI untuk menjelaskan website dan panduan umum ekspor-impor; (4) studio Solusi AI berisi RFQ Studio, draf Auto-PDF, simulasi KYC Hub, dan simulasi Escrow Vault; (5) halaman Transportasi untuk estimasi multimoda serta Pelacakan dengan data demo; (6) akun eksportir/importir dengan profil usaha dan logo; serta (7) halaman Harga dengan informasi paket, voucher, dan kalkulator estimasi. Auto-PDF, KYC Hub, Escrow, Transportasi, dan Pelacakan adalah draf, estimasi, atau simulasi, bukan layanan resmi.",
+    "answerEn": "Main NusaBridge features: (1) a 50-product catalog with search, category filters, sorting, 12 products per page, a specification modal, and an RFQ form; (2) a Domestic page for SME trade in Rupiah with local/inter-island shipping, 11% VAT, 4-phase escrow, PO/Invoice/Delivery Note/BAST documents, seller listings, and order history; (3) NusaBridge AI chat for website and general export-import guidance; (4) an AI Solutions studio with RFQ Studio, Auto-PDF drafts, KYC Hub simulation, and Escrow Vault simulation; (5) a Transport page for multimodal estimates and a Tracking page with demo data; (6) exporter/importer accounts with a business profile and logo; and (7) a Pricing page with plan information, a voucher, and an estimate calculator. Auto-PDF, KYC Hub, Escrow, Transport, and Tracking are drafts, estimates, or simulations, not official services.",
     "sources": [],
     "patterns": [
       "\\bfitur\\b.*\\b(nusabridge|website)\\b",
@@ -723,8 +723,8 @@
       "catalog nusabridge",
       "how many products"
     ],
-    "answer": "Katalog NusaBridge berisi 50 produk: 20 kopi, 10 rempah & hasil alam, 10 kriya & kerajinan, dan 10 tekstil & wastra. Halaman Produk menyediakan pencarian, filter kategori, sortir harga/MOQ, 12 produk per halaman, modal spesifikasi, dan tombol Ajukan RFQ. Setiap produk memuat nama, asal, harga acuan USD, satuan, MOQ, kode HS, deskripsi, spesifikasi, sertifikasi, dan pelabuhan pengiriman. Harga katalog adalah acuan, bukan penawaran final.",
-    "answerEn": "The NusaBridge catalog contains 50 products: 20 coffee, 10 spices & natural products, 10 crafts & handicrafts, and 10 textiles & wastra. The Products page provides search, category filters, price/MOQ sorting, 12 products per page, a specification modal, and a Submit RFQ button. Each product includes name, origin, reference price in USD, unit, MOQ, HS code, description, specifications, certifications, and shipping port. Catalog prices are references, not final quotations.",
+    "answer": "Katalog NusaBridge berisi 50 produk: 20 kopi, 10 rempah & hasil alam, 10 kriya & kerajinan, dan 10 tekstil & wastra. Halaman Produk menyediakan pencarian, filter kategori, sortir harga/MOQ, 12 produk per halaman, modal spesifikasi, dan tombol Ajukan RFQ. Setiap produk memuat nama, asal, harga acuan USD, satuan, MOQ, kode HS, deskripsi, spesifikasi, sertifikasi, dan pelabuhan pengiriman. Saat bahasa Inggris dipilih, nama dan deskripsi produk ikut diterjemahkan. Harga katalog adalah acuan, bukan penawaran final.",
+    "answerEn": "The NusaBridge catalog contains 50 products: 20 coffee, 10 spices & natural products, 10 crafts & handicrafts, and 10 textiles & wastra. The Products page provides search, category filters, price/MOQ sorting, 12 products per page, a specification modal, and a Submit RFQ button. Each product includes name, origin, reference price in USD, unit, MOQ, HS code, description, specifications, certifications, and shipping port. When English is selected, product names and descriptions are translated too. Catalog prices are references, not final quotations.",
     "sources": []
   },
   {
@@ -756,8 +756,8 @@
       "website pages",
       "nusabridge navigation"
     ],
-    "answer": "Halaman website NusaBridge: Beranda (ringkasan platform, alur ekspor, CTA pendaftaran), Produk (katalog, pencarian/filter/sortir, spesifikasi, RFQ), Solusi AI (chat AI, empat pilar, studio RFQ/Auto-PDF/KYC/Escrow), dan Harga (paket, voucher, kalkulator estimasi). Modal Masuk/Daftar tersedia dari navigation bar. Tidak ada dashboard transaksi atau halaman unggah produk.",
-    "answerEn": "NusaBridge pages: Home (platform overview, export flow, registration CTA), Products (catalog, search/filter/sort, specifications, RFQ), AI Solutions (AI chat, four pillars, RFQ/Auto-PDF/KYC/Escrow studio), and Pricing (plans, voucher, estimate calculator). The Login/Register modal is available from the navigation bar. There is no transaction dashboard or product-upload page.",
+    "answer": "Halaman website NusaBridge: Beranda (ringkasan platform, alur ekspor, CTA pendaftaran), Produk (katalog, pencarian/filter/sortir, spesifikasi, RFQ), Domestik (jual-beli UMKM dalam Rupiah, checkout, escrow, dokumen, listing penjual, pesanan), Solusi AI (chat AI, empat pilar, studio RFQ/Auto-PDF/KYC/Escrow), Harga (paket, voucher, kalkulator estimasi), Transportasi (estimasi multimoda), dan Pelacakan (progres demo). Navigation bar memakai menu Layanan berisi RFQ Studio, Dokumen, Alur Ekspor, dan Alur Impor. Modal Masuk/Daftar tersedia dari navigation bar. Tidak ada dashboard transaksi atau halaman unggah produk khusus ekspor.",
+    "answerEn": "NusaBridge pages: Home (platform overview, export flow, registration CTA), Products (catalog, search/filter/sort, specifications, RFQ), Domestic (SME trade in Rupiah, checkout, escrow, documents, seller listings, orders), AI Solutions (AI chat, four pillars, RFQ/Auto-PDF/KYC/Escrow studio), Pricing (plans, voucher, estimate calculator), Transport (multimodal estimates), and Tracking (demo progress). The navigation bar uses a Services menu containing RFQ Studio, Documents, Export Flow, and Import Flow. The Login/Register modal is available from the navigation bar. There is no transaction dashboard or dedicated export product-upload page.",
     "sources": []
   },
   {
@@ -989,7 +989,7 @@
   },
   {
     "id": "radar-maritim-logistik",
-    "title": "Radar Maritim AIS & Pelacakan Kontainer",
+    "title": "Radar Maritim AIS & Pelacakan Kontainer (Simulasi)",
     "keywords": [
       "radar maritim",
       "pelacakan kapal",
@@ -1009,8 +1009,8 @@
       "\\b(radar|pelacakan|tracking)\\b.*\\b(maritim|kapal|kontainer|kargo|ais)\\b",
       "\\\\b(lacak|melacak|pantau|memantau|tracking)\\\\b.*\\\\b(kapal|kontainer|kargo|ais|pengiriman)\\\\b"
     ],
-    "answer": "Fitur Radar Maritim NusaBridge menampilkan pelacakan langsung kapal kargo ekspor-impor menggunakan telemetri AIS (Automatic Identification System). Pengguna dapat melihat nama kapal (seperti KM Baruna Nusantara rute Priok-Hamburg, MV Samudera Raya rute Perak-LA, KM Celebes Express rute Belawan-Tokyo), koordinat laut, kecepatan berlayar dalam knots, persentase progres, dan estimasi waktu tiba (ETA). Terkoneksi dengan pemantauan Escrow Vault saat Bill of Lading (B/L) on-board telah terbit.",
-    "answerEn": "The NusaBridge Maritime Radar displays live tracking of export-import cargo vessels using AIS (Automatic Identification System) telemetries. Users can observe vessel names (KM Baruna Nusantara, MV Samudera Raya, KM Celebes Express), trans-oceanic routes, nautical coordinates, speed in knots, progress percentage, and ETA. It integrates with Escrow Vault milestones once on-board B/L documents are verified.",
+    "answer": "Fitur Radar Maritim dan halaman Pelacakan NusaBridge menampilkan contoh pergerakan kapal kargo dan progres pengiriman menggunakan data demonstrasi. Pengguna dapat melihat nama kapal contoh, rute, koordinat, kecepatan dalam knots, persentase progres, dan estimasi waktu tiba (ETA). Ini adalah simulasi visual untuk edukasi, bukan GPS langsung, bukan status resmi ekspedisi atau Bea Cukai, dan tidak terhubung ke layanan pelacakan pihak ketiga.",
+    "answerEn": "The NusaBridge Maritime Radar and Tracking page display example cargo-vessel movement and shipment progress using demo data. Users can see sample vessel names, routes, coordinates, speed in knots, progress percentage, and estimated time of arrival (ETA). This is a visual simulation for education, not live GPS, not official carrier or Customs status, and not connected to third-party tracking services.",
     "sources": []
   },
   {
@@ -1086,6 +1086,85 @@
     ],
     "answer": "Fitur impor di NusaBridge dirancang untuk importir global yang ingin memesan dan mendatangkan komoditas terkurasi Indonesia dengan proteksi maksimal:\n\n1. **Katalog 50 Komoditas Unggulan**: Telusuri komoditas kurasi (Kopi Specialty, Rempah Nusantara, Kerajinan Anyaman/Kayu, Tekstil Wastra) dengan rincian kadar air, kadar abu, sertifikasi, dan MOQ.\n2. **Pengajuan RFQ Terstruktur**: Ajukan permintaan penawaran resmi dalam hitungan detik dengan memilih produk, kuantitas, Incoterms (FOB, CIF, CNF, EXW), dan pelabuhan tujuan kargo.\n3. **Verifikasi Kepatuhan Standar**: Pastikan pemasok dan produk memenuhi standar mutu serta karantina yang dipersyaratkan oleh negara Anda.\n4. **Draf Kontrak Perdagangan Instan**: Dapatkan draf Proforma Invoice dan Sales Contract berkekuatan hukum dengan klausul ICC dan arbitrase internasional.\n5. **Proteksi Dana Escrow Vault**: Dana pembayaran Anda aman di rekening escrow multi-valas dan hanya dicairkan kepada penjual setelah dokumen pengapalan resmi (B/L) terbit dan barang terverifikasi tiba.\n6. **Pelacakan Telemetri Kontainer**: Pantau posisi kapal kargo pengangkut kontainer pesanan Anda secara transparan melalui Radar Maritim AIS.",
     "answerEn": "Import features on NusaBridge are tailored for international buyers seeking reliable commodity sourcing with complete financial protection:\n\n1. **50 Curated Commodities Catalog**: Explore Indonesian export commodities (Specialty Coffee, Spices, Rattan/Wood Crafts, Textiles) with lab parameters and MOQ.\n2. **Structured RFQ Generator**: Submit formal quotation requests with selected quantities, Incoterms (FOB, CIF, CNF, EXW), and destination ports.\n3. **Compliance & Standards Verification**: Ensure Indonesian exporters meet the safety, quarantine, and import criteria of your country.\n4. **Instant Legal Trade Drafts**: Receive standardized Proforma Invoices and Sales Contracts with clear ICC trade and arbitration clauses.\n5. **Escrow Vault Fund Protection**: Your payments remain safely locked in escrow and are only released to suppliers upon validated shipping documents (B/L) and confirmed port arrival.\n6. **Container Vessel Telemetry**: Track the exact position of your cargo vessel in real time using the Maritime AIS Radar.",
+    "sources": []
+  },
+  {
+    "id": "domestik-website",
+    "title": "Perdagangan Domestik UMKM (/domestik)",
+    "keywords": [
+      "domestik",
+      "domestic",
+      "perdagangan domestik",
+      "jual beli umkm",
+      "beli dari umkm",
+      "jual ke umkm",
+      "antarpulau",
+      "antar pulau",
+      "kurir lokal",
+      "harga rupiah",
+      "ppn 11",
+      "surat jalan",
+      "bast",
+      "escrow domestik",
+      "domestic trade",
+      "local trade",
+      "sme marketplace",
+      "rupiah catalog"
+    ],
+    "patterns": [
+      "\\b(domestik|domestic)\\b",
+      "\\b(antarpulau|antar pulau|dalam negeri)\\b",
+      "\\b(jual|beli|jualan)\\b.*\\b(umkm|lokal|domestik)\\b",
+      "\\b(ppn|surat jalan|bast)\\b"
+    ],
+    "answer": "Halaman Domestik (/domestik, alias /domestic) adalah fitur jual-beli antarsesama UMKM Indonesia dalam Rupiah. Ada tiga tab: Beli, Jual, dan Pesanan. Pembeli dapat mencari produk, memfilter kategori/provinsi, memilih kota tujuan, memilih kurir lokal atau kargo antarpulau, memilih pembayaran Escrow/transfer/QRIS, lalu melihat subtotal, ongkos kirim, PPN 11%, dan total. Setiap pesanan memiliki escrow 4 fase (30% konfirmasi, 30% barang siap/surat jalan, 20% dalam perjalanan, 20% diterima), dokumen PO/Invoice/Surat Jalan/BAST yang dapat diunduh, serta checklist kepatuhan SNI, BPOM, Halal BPJPH, NIB/NPWP, dan karantina. Penjual dapat menambah dan menghapus listing. Status pesanan: Menunggu Pembayaran → Dibayar → Diproses → Dikirim → Selesai. Data disimpan di localStorage browser sebagai demo; struktur Supabase ada di backend/database/domestic-trade.sql.",
+    "answerEn": "The Domestic page (/domestik, alias /domestic) enables buying and selling between Indonesian SMEs in Rupiah. It has three tabs: Buy, Sell, and Orders. Buyers can search products, filter by category/province, choose a destination city, choose local courier or inter-island cargo, choose Escrow/bank transfer/QRIS payment, and see subtotal, shipping cost, 11% VAT, and total. Each order has a 4-phase escrow (30% confirmation, 30% goods ready/delivery note, 20% in transit, 20% received), downloadable PO/Invoice/Delivery Note/BAST documents, and a compliance checklist for SNI, BPOM, Halal BPJPH, NIB/NPWP, and quarantine. Sellers can add and delete listings. Order status: Awaiting Payment → Paid → Processing → Shipped → Completed. Data is stored in browser localStorage as a demo; the Supabase structure is in backend/database/domestic-trade.sql.",
+    "sources": []
+  },
+  {
+    "id": "transportasi-website",
+    "title": "Halaman Transportasi & Estimasi Multimoda",
+    "keywords": [
+      "transportasi",
+      "transport",
+      "multimoda",
+      "estimasi ongkir",
+      "estimasi biaya kirim",
+      "rute pengiriman",
+      "eta pengiriman",
+      "pilihan kurir",
+      "shipping estimate",
+      "multimodal",
+      "route estimate",
+      "freight estimate"
+    ],
+    "patterns": [
+      "\\b(transportasi|transport|multimoda|multimodal)\\b",
+      "\\b(estimasi|estimate)\\b.*\\b(ongkir|biaya|rute|eta|shipping|freight)\\b"
+    ],
+    "answer": "Halaman Transportasi (/transportasi) membantu pengguna memilih moda transportasi dan melihat estimasi rute, biaya, serta ETA berdasarkan detail pengiriman yang dimasukkan. Pengguna dapat membuka halaman ini dari navigasi atau dari tautan \"Cek opsi & estimasi pengiriman\" pada kartu produk. Hasilnya adalah estimasi website untuk perencanaan, bukan tarif resmi ekspedisi dan bukan pemesanan pengiriman sungguhan.",
+    "answerEn": "The Transport page (/transportasi) helps users choose a transport mode and see estimated route, cost, and ETA based on the shipment details they enter. Users can open it from the navigation or from the \"Check shipping options & estimates\" link on a product card. Results are website estimates for planning, not official carrier rates and not a real shipment booking.",
+    "sources": []
+  },
+  {
+    "id": "pelacakan-website",
+    "title": "Halaman Pelacakan Pengiriman (Data Demo)",
+    "keywords": [
+      "pelacakan",
+      "lacak",
+      "tracking",
+      "progres pengiriman",
+      "status pengiriman",
+      "posisi kapal",
+      "shipment tracking",
+      "delivery status"
+    ],
+    "patterns": [
+      "\\b(pelacakan|lacak|tracking)\\b",
+      "\\b(status|progres|progress)\\b.*\\b(pengiriman|shipment|kiriman)\\b"
+    ],
+    "answer": "Halaman Pelacakan (/pelacakan, alias /lacak) menampilkan status dan progres pengiriman dari data demonstrasi. Pengguna dapat mencari contoh ID pengiriman yang terlihat di layar dan melihat tahapan perjalanan. Data ini bukan GPS langsung, bukan status resmi ekspedisi atau Bea Cukai, dan tidak terhubung ke layanan pelacakan pihak ketiga.",
+    "answerEn": "The Tracking page (/pelacakan, alias /lacak) displays shipment status and progress from demo data. Users can search for a sample shipment ID shown on screen and view the journey stages. This data is not live GPS, not official carrier or Customs status, and not connected to third-party tracking services.",
     "sources": []
   }
 ]

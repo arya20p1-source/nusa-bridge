@@ -1,0 +1,261 @@
+{
+  "_note": "Kamus terjemahan Inggris untuk katalog produk NusaBridge. Dipakai frontend (Vite) dan backend (CommonJS).",
+  "products": {
+    "prod_kopi_001": {
+      "name": "Gayo Arabica Coffee Specialty Grade 1 (Green Beans)",
+      "desc": "Export-grade Green Beans with international standards, SCA cupping score 85.5, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_002": {
+      "name": "Gayo Arabica Coffee Peaberry Specialty (Roasted)",
+      "desc": "Export-grade roasted beans with international standards, SCA cupping score 86.0, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_003": {
+      "name": "Mandheling Arabica Coffee Triple Picked (Green Beans)",
+      "desc": "Export-grade Green Beans with international standards, SCA cupping score 85.0, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_004": {
+      "name": "Mandheling Arabica Coffee Dark Roast Signature",
+      "desc": "Export-grade roasted beans with international standards, SCA cupping score 84.8, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_005": {
+      "name": "Toraja Kalosi Arabica Coffee Grade 1 (Green Beans)",
+      "desc": "Export-grade Green Beans with international standards, SCA cupping score 86.2, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_006": {
+      "name": "Toraja Sapan Arabica Coffee Specialty (Roasted)",
+      "desc": "Export-grade roasted beans with international standards, SCA cupping score 87.0, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_007": {
+      "name": "Kintamani Bali Arabica Coffee Washed (Green Beans)",
+      "desc": "Export-grade Green Beans with international standards, SCA cupping score 85.2, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_008": {
+      "name": "Kintamani Bali Arabica Coffee Citrus Notes (Roasted)",
+      "desc": "Export-grade roasted beans with international standards, SCA cupping score 85.5, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_009": {
+      "name": "Java Ijen Arabica Coffee Honey Process (Green Beans)",
+      "desc": "Export-grade Green Beans with international standards, SCA cupping score 85.0, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_kopi_010": {
+      "name": "Java Preanger Arabica Coffee Heritage (Roasted)",
+      "desc": "Export-grade roasted beans with international standards, SCA cupping score 87.5, controlled moisture below 12%, and strict defect sorting."
+    },
+    "prod_rempah_001": {
+      "name": "Maluku Dried Cloves Grade Super (Lalpari)",
+      "desc": "Bright reddish-brown dried clove buds with essential oil content above 19% and moisture below 11%."
+    },
+    "prod_rempah_002": {
+      "name": "Korintji Cassia Cinnamon Stick Grade A",
+      "desc": "Neatly rolled dried cinnamon bark, 8–10 cm long, with a strong sweet-spicy aroma and free from mold."
+    },
+    "prod_rempah_003": {
+      "name": "Muntok Bangka White Pepper Double Washed",
+      "desc": "Muntok white pepper renowned on the world market for its high piperine pungency and clean sharp aroma."
+    },
+    "prod_rempah_004": {
+      "name": "Lampung Black Pepper ASTA Quality",
+      "desc": "Black pepper meeting American Spice Trade Association (ASTA) standards, moisture below 12%, density 550 g/l."
+    },
+    "prod_rempah_005": {
+      "name": "Papua Gourmet Planifolia Vanilla Beans 18–20 cm",
+      "desc": "Oily, flexible gourmet vanilla pods with natural vanillin above 2.2% and a luxurious sweet floral aroma."
+    },
+    "prod_rempah_006": {
+      "name": "Banda Nutmeg Super ABCD (Shelled)",
+      "desc": "Whole round export-quality nutmeg with the distinctive spice aroma of the legendary Banda Islands."
+    },
+    "prod_rempah_007": {
+      "name": "Banda Dried Mace Grade 1",
+      "desc": "Golden orange-red dried nutmeg mace with an intense aroma and rich, high-spice flavor."
+    },
+    "prod_rempah_008": {
+      "name": "Aceh Patchouli Oil (PA >32%)",
+      "desc": "Essential oil distilled from mature patchouli leaves with pure Patchouli Alcohol above 32% for global perfumery."
+    },
+    "prod_rempah_009": {
+      "name": "Dried Sliced Red Ginger",
+      "desc": "Hygienically oven-dried red ginger slices with concentrated gingerol and a maximally warm spicy aroma."
+    },
+    "prod_rempah_010": {
+      "name": "Dried Java White Cardamom",
+      "desc": "Clean dried white cardamom pods without chemical bleaching, with a citrus-mint spice aroma typical of herbal medicine."
+    },
+    "prod_kriya_001": {
+      "name": "Cirebon Natural Rattan Lounge Chair",
+      "desc": "Export-grade natural rattan lounge chair with a solid wood frame and non-toxic, eco-friendly finishing."
+    },
+    "prod_kriya_002": {
+      "name": "Kulon Progo Water Hyacinth Laundry Basket",
+      "desc": "Mold-resistant dried water hyacinth laundry basket with a sturdy iron frame and ergonomic handles."
+    },
+    "prod_kriya_003": {
+      "name": "Bali Polished Food-Grade Coconut Shell Bowl",
+      "desc": "Eco-friendly coconut shell bowl polished with pure coconut oil, no synthetic lacquer, and food-safe."
+    },
+    "prod_kriya_004": {
+      "name": "Jepara Hand-Carved Teak Wood Plate & Bowl Set",
+      "desc": "Legal Perhutani TPK teak tableware set certified SVLK with a luxurious natural grain pattern."
+    },
+    "prod_kriya_005": {
+      "name": "Solid Mahogany Serving Tray Eco-Finish",
+      "desc": "Oven-dried mahogany serving tray with moisture content below 12% and a water-resistant food-grade beeswax coating."
+    },
+    "prod_kriya_006": {
+      "name": "Kasongan Terracotta Decorative Vase",
+      "desc": "Kasongan clay terracotta flower vase made with traditional firing techniques and weather-resistant."
+    },
+    "prod_kriya_007": {
+      "name": "Tasikmalaya Modern Woven Bamboo Pendant Lamp",
+      "desc": "Interior pendant lamp shade woven from fine bamboo fiber with CE / UL standard electrical fittings."
+    },
+    "prod_kriya_008": {
+      "name": "Papua Coastal Shell Round Wall Mirror",
+      "desc": "Decorative wall mirror combining natural tropical scallop shells with a sturdy wooden backing."
+    },
+    "prod_kriya_009": {
+      "name": "Kebumen Pandan Leaf Fiber Area Rug Eco-Rug",
+      "desc": "Hand-woven pandan leaf fiber floor rug that is durable, cooling, and biodegradable."
+    },
+    "prod_kriya_010": {
+      "name": "Klaten Woven Banana Sheath Tissue Box",
+      "desc": "Aesthetic eco-friendly tissue box made from dried abaca banana sheath fiber with an anti-mold lining."
+    },
+    "prod_tekstil_001": {
+      "name": "Solo Hand-Drawn Silk Batik Parang Rusak Barong Motif",
+      "desc": "Hand-drawn batik using a copper canting on 100% ATBM natural silk with traditional beeswax."
+    },
+    "prod_tekstil_002": {
+      "name": "Pekalongan Coastal Hand-Drawn Batik Buketan Natural Dye",
+      "desc": "Fine hand-drawn batik with European bouquet motifs and natural dyes from indigofera leaves and tingi wood."
+    },
+    "prod_tekstil_003": {
+      "name": "Garutan Stamped Batik Primissima Cotton Pastel Colors",
+      "desc": "Precision copper-stamped batik in bright pastel colors typical of Garut on primissima mori cotton."
+    },
+    "prod_tekstil_004": {
+      "name": "Lasem Three-Country Hand-Drawn Batik Silk Cotton",
+      "desc": "Legendary Javanese-Chinese acculturation batik with three dye stages: chicken-blood red, blue, and sogan brown."
+    },
+    "prod_tekstil_005": {
+      "name": "Madura Gentongan Hand-Drawn Batik Bold Classic Colors",
+      "desc": "Clay-vat dyed batik aged for months in bold red and electric blue that lasts for decades."
+    },
+    "prod_tekstil_006": {
+      "name": "Troso Jepara Traditional Ikat Weaving Cotton Yarn",
+      "desc": "ATBM weft-ikat woven fabric with Nusantara ethnic motifs for fashion apparel and modern interior decoration."
+    },
+    "prod_tekstil_007": {
+      "name": "Sumba NTT Ikat Weaving Horse & Deer Motif Natural Dye",
+      "desc": "Sacred hand-woven cloth with heroic horse motifs, eight months in the making, dyed with noni root and black mud."
+    },
+    "prod_tekstil_008": {
+      "name": "Flores Ende Traditional Ikat Weaving Brown",
+      "desc": "Ikat woven cloth with geometric motifs typical of the Lio Ende tribe, made from soft hand-spun cotton yarn."
+    },
+    "prod_tekstil_009": {
+      "name": "Palembang Songket Limar Motif 24K Gold Thread",
+      "desc": "The queen of Nusantara textiles, combining ATBM woven silk with pure shimmering gold weft thread."
+    },
+    "prod_tekstil_010": {
+      "name": "Pandai Sikek Minangkabau Songket Silver Thread",
+      "desc": "Hand-woven songket with pucuak rabuang and saik galamai motifs, a heritage of the Minangkabau ancestors."
+    },
+    "prod_kopi_131": {
+      "name": "Sulawesi Toraja Luwak Coffee (Roasted)",
+      "desc": "Authentic luwak coffee selected from wild Toraja civets, naturally fermented, washed clean, and medium roasted. Dark chocolate aroma, wild-plant hints, and a creamy body without harsh bitterness."
+    },
+    "prod_kopi_132": {
+      "name": "Malabar Pangalengan Arabica Coffee (Green Beans)",
+      "desc": "Green beans from Malabar estates at 1,400–1,600 m above sea level, grown among pine trees. Notes of mandarin orange, palm sugar, and a floral aftertaste typical of the southern Bandung highlands."
+    },
+    "prod_kopi_133": {
+      "name": "Merapi Bantul Robusta Coffee Natural (Roasted)",
+      "desc": "Volcanic robusta from the slopes of Mount Merapi, natural full sun-dried process. Thick body, milk chocolate and roasted nut aroma, high caffeine — a favorite for espresso blends and modern milk coffee."
+    },
+    "prod_kopi_134": {
+      "name": "Sanani Konawe Arabica Coffee (Green Beans)",
+      "desc": "Sanani is the oldest local variety in Southeast Sulawesi, cultivated since the colonial era at 900–1,200 m above sea level. Light herbal notes, milk chocolate, and low acidity that suits Asian palates."
+    },
+    "prod_kopi_135": {
+      "name": "Pinang Belanda Jambi Robusta Coffee (Green Beans)",
+      "desc": "Pinang Belanda is a heritage variety from Jambi's plantation history, growing wild around the old city ruins. Sweet nutty flavor with spice hints and lower caffeine than common robusta."
+    },
+    "prod_kopi_136": {
+      "name": "Surya Bajo Lombok Arabica Coffee (Roasted)",
+      "desc": "Surya Bajo arabica grows at 900–1,300 m above sea level facing the Alas Strait. An exotic profile of toasted coconut, mandarin orange, and milk chocolate with bright acidity typical of NTB's dry climate."
+    },
+    "prod_kopi_137": {
+      "name": "Lintong Nihuta Toba Arabica Coffee (Green Beans)",
+      "desc": "Sigararutang arabica from limestone volcanic soil on the edge of Lake Toba at 1,400 m. Herbal notes, mandarin orange, and dark chocolate — a premium export favorite of Japanese roasteries."
+    },
+    "prod_kopi_138": {
+      "name": "Petungkriyono Pekalongan Robusta Coffee (Roasted)",
+      "desc": "Premium robusta from Petungkriyono community forests at 1,200 m under pine shade. A 36-hour fermentation gives dark chocolate, caramel, and a subtle natural cinnamon note."
+    },
+    "prod_kopi_139": {
+      "name": "Kalibaru Banyuwangi Arabica Coffee (Roasted)",
+      "desc": "Arabica from old estates on East Java's coast facing Mount Ijen. Milk chocolate, mandarin orange, and light honey with a soft body — suited to single-origin manual brew and retail packaging."
+    },
+    "prod_kopi_140": {
+      "name": "Gayo Wine Process Arabica Coffee (Roasted)",
+      "desc": "Premium Gayo coffee with a 96-hour sealed anaerobic wine process — fermentation yields red wine aroma, tropical fruit, and wine-like sweetness highly sought by European and Japanese specialty roasters."
+    }
+  },
+  "specKeys": {
+    "Tipe Proses": "Process Type",
+    "Kadar Air": "Moisture Content",
+    "Kadar Kemurnian": "Purity",
+    "Standar Ekspor": "Export Standard",
+    "Kemasan": "Packaging",
+    "Material": "Material",
+    "Sertifikasi Kayu": "Wood Certification",
+    "Finishing": "Finishing",
+    "Fumigasi": "Fumigation",
+    "Teknik Pembuatan": "Crafting Technique",
+    "Material Benang": "Yarn Material",
+    "Zat Pewarna": "Dye",
+    "Dimensi Standar": "Standard Dimensions"
+  },
+  "specValues": {
+    "Semi-Washed (Giling Basah 36 Jam) Roasted": "Semi-Washed (36-Hour Wet Hulled) Roasted",
+    "Anaerobic Wine Fermentation 96 Jam (Roasted)": "96-Hour Anaerobic Wine Fermentation (Roasted)",
+    "100% Handcrafted ATBM / Canting Tulis": "100% Handcrafted (ATBM / Hand-Drawn Batik)",
+    "Gunny Bag 50Kg / Karton": "Gunny Bag 50 kg / Carton",
+    "V-Legal / SVLK Kemenhut": "V-Legal / SVLK (Ministry of Forestry)"
+  },
+  "shippingTerms": {
+    "FOB Pelabuhan Belawan": "FOB Belawan Port",
+    "FOB Pelabuhan Makassar": "FOB Makassar Port",
+    "FOB Tanjung Priok / Perak": "FOB Tanjung Priok / Tanjung Perak",
+    "FOB Tanjung Priok / Tanjung Perak": "FOB Tanjung Priok / Tanjung Perak",
+    "FOB Pelabuhan Benoa / Surabaya": "FOB Benoa / Surabaya Port",
+    "FOB Benoa / Surabaya": "FOB Benoa / Surabaya Port",
+    "FOB Belawan / Teluk Bayur": "FOB Belawan / Teluk Bayur",
+    "FOB Pelabuhan Tanjung Priok": "FOB Tanjung Priok Port",
+    "FOB Pelabuhan Kendari": "FOB Kendari Port",
+    "FOB Pelabuhan Palembang": "FOB Palembang Port",
+    "FOB Pelabuhan Lembar": "FOB Lembar Port",
+    "FOB Pelabuhan Tanjung Perak": "FOB Tanjung Perak Port"
+  },
+  "originTerms": {
+    "Aceh Tengah": "Central Aceh",
+    "Aceh Barat Daya": "Southwest Aceh",
+    "Sumatera Utara": "North Sumatra",
+    "Sumatera Selatan": "South Sumatra",
+    "Sumatera Barat": "West Sumatra",
+    "Sumbar": "West Sumatra",
+    "Jawa Timur": "East Java",
+    "Jawa Barat": "West Java",
+    "Jawa Tengah": "Central Java",
+    "Sulawesi Selatan": "South Sulawesi",
+    "Sulawesi Tenggara": "Southeast Sulawesi",
+    "Nusa Tenggara Barat": "West Nusa Tenggara",
+    "Nusa Tenggara Timur": "East Nusa Tenggara",
+    "NTB": "West Nusa Tenggara",
+    "NTT": "East Nusa Tenggara",
+    "D.I. Yogyakarta": "Special Region of Yogyakarta",
+    "Kepulauan Banda": "Banda Islands",
+    "Bangka Belitung": "Bangka Belitung"
+  }
+}

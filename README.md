@@ -11,6 +11,8 @@ Website ditujukan untuk eksportir Indonesia, importir, dan pengunjung yang
 ingin mengenal proses perdagangan. Fitur utamanya:
 
 - Katalog produk ekspor dan formulir permintaan penawaran (RFQ).
+- Perdagangan domestik UMKM: jual-beli antarkota dan antarpulau dalam Rupiah,
+  dengan escrow 4 fase dan dokumen domestik (PO, invoice, surat jalan, BAST).
 - Chat bantuan website untuk pertanyaan seputar NusaBridge dan ekspor-impor.
 - Draf dokumen, pemeriksaan KYC, dan simulasi Escrow.
 - Estimasi transportasi multimoda dan pelacakan berbasis data demo.
@@ -74,7 +76,9 @@ di `http://localhost:5000`.
 
 Mulai dari [indeks dokumentasi](docs/README.md). Petunjuk setup Supabase,
 pilihan SQL migrasi, pembuatan admin, dan pemeriksaan koneksi tersedia di
-[panduan database](backend/database/CARA-PASANG.md).
+[panduan database](backend/database/CARA-PASANG.md). Untuk mengaktifkan
+perdagangan domestik dan skema ekspor-impor terpadu, jalankan
+`backend/database/domestic-trade.sql` setelah schema utama.
 
 **Perhatian:** `backend/database/reset-supabase.sql` menghapus tabel aplikasi
 yang ada sebelum membuat ulang schema. Jangan jalankan jika ingin

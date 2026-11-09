@@ -20,6 +20,7 @@ const QUICK_QUESTIONS = {
 function getPageContext(pathname) {
   if (pathname === '/') return 'home';
   if (pathname.startsWith('/produk')) return 'products';
+  if (pathname.startsWith('/domestik') || pathname.startsWith('/domestic')) return 'domestic';
   if (pathname.startsWith('/solusi')) return 'solutions';
   if (pathname.startsWith('/harga')) return 'pricing';
   if (pathname.startsWith('/transportasi') || pathname.startsWith('/logistik')) return 'transport';
