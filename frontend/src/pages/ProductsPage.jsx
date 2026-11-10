@@ -160,6 +160,60 @@ function RfqModal({ product, onClose, session, isEn = false }) {
     idempotencyKeyRef.current = createIdempotencyKey();
   }
 
+  async function sendRfqRequest(body) {
+    let lastError = null;
+
+    // Maksimal dua percobaan dengan Idempotency-Key yang sama, sehingga retry
+    // tidak pernah membuat pesanan ganda.
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 20000);
+
+      try {
+        const res = await authFetch('/api/rfq', {
+          method: 'POST',
+          headers: { 'Idempotency-Key': idempotencyKeyRef.current },
+          body,
+          signal: controller.signal,
+        });
+
+        const rawText = await res.text();
+        let data = {};
+        if (rawText) {
+          try {
+            data = JSON.parse(rawText);
+          } catch (_) {
+            data = {};
+          }
+        }
+
+        // Server masih memproses request yang sama: tunggu lalu ulangi.
+        if (res.status === 409 && data.code === 'REQUEST_IN_PROGRESS' && attempt === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          continue;
+        }
+
+        // Proxy/backend sedang sibuk atau baru menyala: ulangi sekali.
+        if (!data.success && [502, 503, 504].includes(res.status) && attempt === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 700));
+          continue;
+        }
+
+        return { res, data, rawText };
+      } catch (err) {
+        lastError = err;
+        if (attempt === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 700));
+          continue;
+        }
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    throw lastError || new Error('RFQ request failed');
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setSaving(true);
@@ -177,25 +231,7 @@ function RfqModal({ product, onClose, session, isEn = false }) {
     });
 
     try {
-      let res;
-      let data = {};
-
-      // Satu kali retry bila request pertama masih diproses oleh server.
-      // Idempotency-Key yang sama memastikan retry tidak membuat pesanan ganda.
-      for (let attempt = 0; attempt < 2; attempt += 1) {
-        res = await authFetch('/api/rfq', {
-          method: 'POST',
-          headers: { 'Idempotency-Key': idempotencyKeyRef.current },
-          body,
-        });
-        data = await res.json().catch(() => ({}));
-
-        if (res.status === 409 && data.code === 'REQUEST_IN_PROGRESS' && attempt === 0) {
-          await new Promise((resolve) => setTimeout(resolve, 500));
-          continue;
-        }
-        break;
-      }
+      const { res, data, rawText } = await sendRfqRequest(body);
 
       if (!res.ok || !data.success || !data.rfq?.id) {
         if (data.code === 'IDEMPOTENCY_CONFLICT') {
@@ -203,13 +239,42 @@ function RfqModal({ product, onClose, session, isEn = false }) {
           // supaya percobaan berikutnya adalah operasi yang berbeda.
           resetIdempotencyKey();
         }
-        throw new Error(data.message || (isEn ? 'Failed to save RFQ. Please try again.' : 'RFQ gagal disimpan. Coba lagi.'));
+
+        // Tampilkan sebab sebenarnya, bukan pesan generik. Respons non-JSON
+        // biasanya berarti backend belum menyala atau /api tidak diproxy.
+        const fallbackMessage = rawText
+          ? (isEn
+            ? `The API server returned an unexpected response (HTTP ${res.status}). Make sure /api is forwarded to the backend.`
+            : `Server API mengembalikan respons tak terduga (HTTP ${res.status}). Pastikan /api diteruskan ke backend.`)
+          : (isEn
+            ? `The API server did not respond (HTTP ${res.status}). Make sure the backend is running on port 5000.`
+            : `Server API tidak merespons (HTTP ${res.status}). Pastikan backend berjalan di port 5000.`);
+
+        throw new Error(data.message || fallbackMessage);
       }
 
       setAccessToken(data.accessToken || '');
       setReceipt(data.rfq);
     } catch (submitError) {
-      setError(submitError.message || (isEn ? 'Unable to reach the server. RFQ was not recorded.' : 'Tidak dapat menghubungi server. RFQ belum tercatat.'));
+      const isAbort = submitError && submitError.name === 'AbortError';
+      const isNetworkError = submitError instanceof TypeError
+        || /failed to fetch|networkerror|load failed/i.test(submitError?.message || '');
+
+      let message;
+      if (isAbort) {
+        message = isEn
+          ? 'The request timed out. Please try again.'
+          : 'Waktu tunggu habis. Silakan coba lagi.';
+      } else if (isNetworkError) {
+        message = isEn
+          ? 'Unable to reach the API server. Make sure the backend is running on port 5000.'
+          : 'Tidak dapat menghubungi server API. Pastikan backend berjalan di port 5000.';
+      } else {
+        message = submitError?.message
+          || (isEn ? 'Failed to save RFQ. Please try again.' : 'RFQ gagal disimpan. Coba lagi.');
+      }
+
+      setError(message);
     } finally {
       setSaving(false);
     }
