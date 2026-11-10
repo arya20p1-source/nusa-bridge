@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useApp } from '../context/AppContext.jsx';
-import { apiUrl } from '../utils/api.js';
+import { apiFetch } from '../utils/api.js';
 import { getInitials, readLogoFile } from '../utils/logo.js';
 
 /**
@@ -95,7 +95,7 @@ export default function AuthModal() {
             ...(password ? { password } : {}),
           };
 
-      let response = await fetch(apiUrl(endpoint), {
+      let response = await apiFetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -110,7 +110,7 @@ export default function AuthModal() {
         response.status === 409 &&
         data.code === 'EMAIL_ALREADY_REGISTERED'
       ) {
-        response = await fetch(apiUrl('/api/auth/login'), {
+        response = await apiFetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

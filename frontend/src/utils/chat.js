@@ -8,7 +8,7 @@
  * ==========================================================================
  */
 
-import { apiUrl } from './api.js';
+import { apiFetch } from './api.js';
 import { PRODUCTS_DATA } from '../data/products.js';
 import { findLocalReferenceAnswer } from './referenceAnswers.js';
 import {
@@ -539,7 +539,7 @@ export async function sendAiChat({
   history = [],
   signal,
 } = {}) {
-  const res = await fetch(apiUrl('/api/ai/chat'), {
+  const res = await apiFetch('/api/ai/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

@@ -160,6 +160,47 @@ function RfqModal({ product, onClose, session, isEn = false }) {
     idempotencyKeyRef.current = createIdempotencyKey();
   }
 
+  // Simpan RFQ sebagai demo lokal ketika halaman disajikan oleh hosting statis
+  // yang tidak meneruskan /api (GitHub Pages, Vercel, Netlify, Live Server).
+  // Dengan begitu formulir tetap memberi bukti pengajuan, dan pengguna diberi
+  // tahu bahwa data belum masuk ke dashboard penjual.
+  function saveLocalReceipt() {
+    const quantity = Number(qty);
+    const unitPrice = Number(product?.price);
+    const localReceipt = {
+      id: `RFQ-LOCAL-${Date.now().toString().slice(-8)}`,
+      productId: product?.id,
+      productName,
+      quantity,
+      unit: product?.unit || 'unit',
+      targetIncoterms: terms,
+      buyerCountry: port.trim(),
+      buyerEmail: contact.trim(),
+      targetPriceUSD: unitPrice,
+      totalValueUSD: Number.isFinite(unitPrice) ? unitPrice * quantity : NaN,
+      status: 'submitted',
+      localOnly: true,
+      createdAt: new Date().toISOString(),
+      process: [
+        { key: 'received', label: L('RFQ diterima (demo lokal)', 'RFQ received (local demo)'), status: 'done' },
+        { key: 'quoted', label: L('Menunggu penawaran', 'Awaiting quotation'), status: 'pending' },
+        { key: 'approved', label: L('Pesanan disetujui', 'Order approved'), status: 'pending' },
+      ],
+    };
+
+    try {
+      const previous = JSON.parse(localStorage.getItem('nusabridge_rfq_local') || '[]');
+      const list = Array.isArray(previous) ? previous : [];
+      localStorage.setItem('nusabridge_rfq_local', JSON.stringify([...list, localReceipt].slice(-20)));
+    } catch (_) {
+      // localStorage bisa diblokir (mode privat); bukti tetap ditampilkan.
+    }
+
+    setAccessToken('');
+    setError('');
+    setReceipt(localReceipt);
+  }
+
   async function sendRfqRequest(body) {
     let lastError = null;
 
@@ -240,6 +281,14 @@ function RfqModal({ product, onClose, session, isEn = false }) {
           resetIdempotencyKey();
         }
 
+        // Hosting statis membalas 404/405 untuk POST /api, dan proxy membalas
+        // 502/503/504 saat backend mati. Simpan sebagai demo lokal agar alur
+        // tetap selesai, dengan keterangan jelas di bukti pengajuan.
+        if ([404, 405, 502, 503, 504].includes(res.status)) {
+          saveLocalReceipt();
+          return;
+        }
+
         // Tampilkan sebab sebenarnya, bukan pesan generik. Respons non-JSON
         // biasanya berarti backend belum menyala atau /api tidak diproxy.
         const fallbackMessage = rawText
@@ -266,9 +315,8 @@ function RfqModal({ product, onClose, session, isEn = false }) {
           ? 'The request timed out. Please try again.'
           : 'Waktu tunggu habis. Silakan coba lagi.';
       } else if (isNetworkError) {
-        message = isEn
-          ? 'Unable to reach the API server. Make sure the backend is running on port 5000.'
-          : 'Tidak dapat menghubungi server API. Pastikan backend berjalan di port 5000.';
+        saveLocalReceipt();
+        return;
       } else {
         message = submitError?.message
           || (isEn ? 'Failed to save RFQ. Please try again.' : 'RFQ gagal disimpan. Coba lagi.');
@@ -310,6 +358,17 @@ function RfqModal({ product, onClose, session, isEn = false }) {
               <h3 className="modal-title">{L('Permintaan berhasil dicatat', 'Request successfully recorded')}</h3>
               <p className="modal-subtitle">{L('Ini bukti pengajuan permintaan penawaran, bukan bukti pembayaran.', 'This is a quotation request receipt, not proof of payment.')}</p>
             </div>
+            {receipt.localOnly && (
+              <div className="rfq-local-note" role="status">
+                <strong>{L('Mode demo lokal', 'Local demo mode')}</strong>
+                <p>
+                  {L(
+                    'RFQ ini tersimpan di browser Anda karena server API tidak terjangkau. Jalankan backend di port 5000 atau isi VITE_API_URL agar RFQ masuk ke dashboard penjual.',
+                    'This RFQ is saved in your browser because the API server is unreachable. Run the backend on port 5000 or set VITE_API_URL so the RFQ reaches the seller dashboard.'
+                  )}
+                </p>
+              </div>
+            )}
             <div className="rfq-receipt">
               <div className="rfq-receipt-number">
                 <span>{L('Nomor RFQ', 'RFQ Number')}</span>
@@ -337,14 +396,18 @@ function RfqModal({ product, onClose, session, isEn = false }) {
                 ))}
               </ol>
               <p className="rfq-process-note">
-                {receipt.process?.length
-                  ? L('Status berikutnya akan berubah setelah tim meninjau permintaan. Simpan nomor RFQ ini untuk pengecekan.', 'The next status will change after the team reviews your request. Keep this RFQ number for tracking.')
-                  : L('Proses RFQ tersimpan. Perbarui status dengan tombol di bawah.', 'The RFQ process is saved. Refresh the status with the button below.')}
+                {receipt.localOnly
+                  ? L('RFQ demo lokal ini tidak dikirim ke server. Simpan nomornya untuk keperluan presentasi.', 'This local demo RFQ was not sent to the server. Keep the number for your presentation.')
+                  : receipt.process?.length
+                    ? L('Status berikutnya akan berubah setelah tim meninjau permintaan. Simpan nomor RFQ ini untuk pengecekan.', 'The next status will change after the team reviews your request. Keep this RFQ number for tracking.')
+                    : L('Proses RFQ tersimpan. Perbarui status dengan tombol di bawah.', 'The RFQ process is saved. Refresh the status with the button below.')}
               </p>
             </div>
             {error && <p className="rfq-form-error" role="alert">{error}</p>}
             <div className="modal-footer-spec">
-              <button className="btn btn-outline" type="button" onClick={refreshReceipt}>{L('Perbarui Status', 'Refresh Status')}</button>
+              {!receipt.localOnly && (
+                <button className="btn btn-outline" type="button" onClick={refreshReceipt}>{L('Perbarui Status', 'Refresh Status')}</button>
+              )}
               <button className="btn btn-primary" type="button" onClick={onClose}>{L('Selesai', 'Done')}</button>
             </div>
           </>

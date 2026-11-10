@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useApp } from '../context/AppContext.jsx';
 import { AUTO_EN } from '../i18n/autoEn.js';
-import { apiUrl } from '../utils/api.js';
+import { apiFetch } from '../utils/api.js';
 
 /**
  * ==========================================================================
@@ -133,7 +133,7 @@ async function flushPending() {
 
   inFlight = true;
   try {
-    const res = await fetch(apiUrl('/api/translate'), {
+    const res = await apiFetch('/api/translate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ texts }),
