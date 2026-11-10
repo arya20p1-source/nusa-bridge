@@ -8,8 +8,9 @@
  *   GET  /api/logistics/shipments/:id      -> { success, data: Shipment }
  *   POST /api/logistics/quote              -> { success, data: TransportPlan[] }
  *
- * Selama API belum tersedia, seluruh fungsi mengembalikan data simulasi
- * dari data/logistics.js. Tidak ada klaim GPS atau status pengiriman nyata.
+ * Selama VITE_LOGISTICS_API_URL belum diisi, seluruh fungsi langsung
+ * mengembalikan data simulasi dari data/logistics.js tanpa memanggil jaringan.
+ * Tidak ada klaim GPS atau status pengiriman nyata.
  * ==========================================================================
  */
 
@@ -19,10 +20,18 @@ import {
   getShipmentById,
 } from '../data/logistics.js';
 
-const API_BASE = (import.meta.env.VITE_LOGISTICS_API_URL || '/api/logistics').replace(/\/$/, '');
+const CONFIGURED_API = String(import.meta.env.VITE_LOGISTICS_API_URL || '').trim().replace(/\/$/, '');
+const API_BASE = CONFIGURED_API || '/api/logistics';
 const REQUEST_TIMEOUT_MS = 1800;
 
+// Backend demo belum menyediakan endpoint /api/logistics. Tanpa URL API
+// eksternal, langsung pakai data simulasi agar tidak ada request 404 yang
+// memenuhi console browser.
+const API_ENABLED = Boolean(CONFIGURED_API);
+
 async function request(path, fallback, options = {}) {
+  if (!API_ENABLED) return fallback;
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {

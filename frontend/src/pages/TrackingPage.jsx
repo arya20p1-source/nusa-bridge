@@ -9,6 +9,43 @@ import {
   trl,
 } from '../data/logistics.js';
 import { findShipment, listShipments } from '../utils/logisticsApi.js';
+import { localizeProductName } from '../data/productTranslations.js';
+
+const TRACKING_EN_REPLACEMENTS = [
+  [/\bPelabuhan Belawan \/ Tanjung Priok\b/g, 'Belawan Port / Tanjung Priok'],
+  [/\bPelabuhan Tanjung Priok\b/g, 'Tanjung Priok Port'],
+  [/\bPelabuhan Belawan\b/g, 'Belawan Port'],
+  [/\bPelabuhan Makassar\b/g, 'Makassar Port'],
+  [/\bPelabuhan Ternate\b/g, 'Ternate Port'],
+  [/\bGudang Ternate\b/g, 'Ternate Warehouse'],
+  [/\bTruk Logistik\b/g, 'Logistics Truck'],
+  [/\bKapal Kontainer\b/g, 'Container Ship'],
+  [/\bKapal Antarpulau\b/g, 'Inter-island Vessel'],
+  [/\bPesawat Kargo\b/g, 'Cargo Aircraft'],
+  [/\bMobil Box\b/g, 'Box Van'],
+  [/\bPelabuhan\b/g, 'Port'],
+  [/\bGudang pembeli\b/g, 'Buyer warehouse'],
+  [/\bPerkiraan\b/g, 'Estimated'],
+  [/\bSamudra Hindia\b/g, 'Indian Ocean'],
+  [/\bBandara\b/g, 'Airport'],
+  [/\bOkt\b/g, 'Oct'],
+  [/\bAgu\b/g, 'Aug'],
+  [/\bDes\b/g, 'Dec'],
+  [/\bMei\b/g, 'May'],
+];
+
+function localizeTrackingText(value, lang = 'id') {
+  if (!value) return '';
+  if (lang !== 'en') return String(value);
+  return TRACKING_EN_REPLACEMENTS.reduce(
+    (text, [pattern, replacement]) => text.replace(pattern, replacement),
+    String(value)
+  );
+}
+
+function shipmentProductName(shipment, lang) {
+  return localizeProductName({ id: shipment.productId, name: shipment.product }, lang) || shipment.product;
+}
 
 const CATEGORY_ICON = {
   land: '🚚',
@@ -48,6 +85,8 @@ function StatusProgress({ shipment, lang }) {
 
 function ShipmentDetail({ shipment, lang }) {
   const isEn = lang === 'en';
+  const L = (value) => localizeTrackingText(value, lang);
+  const productName = shipmentProductName(shipment, lang);
   const routeText = `${shipment.origin} → ${shipment.destination}`;
   return (
     <div className="tracking-detail-grid">
@@ -58,7 +97,7 @@ function ShipmentDetail({ shipment, lang }) {
               <span className="pill-badge pill-blue">{shipment.resi}</span>
               <span className="simulation-chip">{isEn ? 'SIMULATED DATA' : 'DATA SIMULASI'}</span>
             </div>
-            <h1 className="tracking-title">{shipment.product}</h1>
+            <h1 className="tracking-title">{productName}</h1>
             <p className="tracking-subtitle">{shipment.statusText ? trl(shipment.statusText, lang) : routeText}</p>
           </div>
           <div className="tracking-progress-ring" style={{ '--progress': `${shipment.progress}%` }}>
@@ -70,7 +109,7 @@ function ShipmentDetail({ shipment, lang }) {
         <div className="tracking-progress-bar-wrap">
           <div className="tracking-progress-labels">
             <span>{routeText}</span>
-            <span>{isEn ? 'ETA' : 'ETA'}: <strong>{shipment.eta}</strong></span>
+            <span>{isEn ? 'ETA' : 'ETA'}: <strong>{L(shipment.eta)}</strong></span>
           </div>
           <div className="tracking-progress-bar">
             <div style={{ width: `${shipment.progress}%` }} />
@@ -120,7 +159,7 @@ function ShipmentDetail({ shipment, lang }) {
                 </div>
                 <div className="tracking-route-info">
                   <strong>{trl(segment.label, lang)}</strong>
-                  <span>{segment.from} → {segment.to}</span>
+                  <span>{L(segment.from)} → {L(segment.to)}</span>
                 </div>
                 {index < shipment.segments.length - 1 && <div className="tracking-route-connector" />}
               </div>
@@ -131,7 +170,7 @@ function ShipmentDetail({ shipment, lang }) {
         <div className="tracking-section">
           <div className="tracking-section-head">
             <h3>{isEn ? 'Shipment Status (8 Steps)' : 'Status Pengiriman (8 Tahap)'}</h3>
-            <span>{isEn ? 'Last update' : 'Pembaruan terakhir'}: {shipment.lastUpdate}</span>
+            <span>{isEn ? 'Last update' : 'Pembaruan terakhir'}: {L(shipment.lastUpdate)}</span>
           </div>
           <StatusProgress shipment={shipment} lang={lang} />
         </div>
@@ -145,9 +184,9 @@ function ShipmentDetail({ shipment, lang }) {
               <div key={`${change.at}-${index}`} className="tracking-mode-change">
                 <span className="tmc-dot" />
                 <div>
-                  <strong>{change.from} → {change.to}</strong>
-                  <span>{change.at}</span>
-                  <small>{change.time}</small>
+                  <strong>{L(change.from)} → {L(change.to)}</strong>
+                  <span>{L(change.at)}</span>
+                  <small>{L(change.time)}</small>
                 </div>
               </div>
             ))}
@@ -162,7 +201,7 @@ function ShipmentDetail({ shipment, lang }) {
                 <div className="thi-dot" />
                 <div>
                   <strong>{trl(item.title, lang)}</strong>
-                  <span>{item.time} • {item.location}</span>
+                  <span>{L(item.time)} • {L(item.location)}</span>
                   <p>{trl(item.desc, lang)}</p>
                   {item.modeChange && <span className="thi-mode-badge">{isEn ? 'MODE CHANGE' : 'PERGANTIAN MODA'}</span>}
                 </div>
@@ -186,6 +225,7 @@ function ShipmentDetail({ shipment, lang }) {
 
 function TrackingList({ lang }) {
   const isEn = lang === 'en';
+  const L = (value) => localizeTrackingText(value, lang);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
 
@@ -193,7 +233,16 @@ function TrackingList({ lang }) {
     const q = query.toLowerCase().trim();
     if (!q) return SHIPMENTS;
     return SHIPMENTS.filter((shipment) =>
-      [shipment.id, shipment.resi, shipment.product, shipment.seller, shipment.buyer, shipment.origin, shipment.destination]
+      [
+        shipment.id,
+        shipment.resi,
+        shipment.product,
+        shipmentProductName(shipment, 'en'),
+        shipment.seller,
+        shipment.buyer,
+        shipment.origin,
+        shipment.destination,
+      ]
         .join(' ')
         .toLowerCase()
         .includes(q)
@@ -254,8 +303,8 @@ function TrackingList({ lang }) {
                   <span className="simulation-chip">{isEn ? 'SIMULATION' : 'SIMULASI'}</span>
                 </div>
                 <span className="tlc-resi">{shipment.resi}</span>
-                <h3>{shipment.product}</h3>
-                <p>{shipment.origin} → {shipment.destination}</p>
+                <h3>{shipmentProductName(shipment, lang)}</h3>
+                <p>{L(shipment.origin)} → {L(shipment.destination)}</p>
                 <div className="tlc-meta">
                   <span>{shipment.weightKg.toLocaleString()} kg</span>
                   <span>{trl((SHIPMENT_STATUSES.find((s) => s.step === shipment.currentStep) || {}).label, lang)}</span>
@@ -263,7 +312,7 @@ function TrackingList({ lang }) {
                 </div>
                 <div className="tlc-progress"><div style={{ width: `${shipment.progress}%` }} /></div>
                 <div className="tlc-footer">
-                  <span>{isEn ? 'ETA' : 'ETA'}: <strong>{shipment.eta}</strong></span>
+                  <span>{isEn ? 'ETA' : 'ETA'}: <strong>{L(shipment.eta)}</strong></span>
                   <span className="tlc-link">{isEn ? 'Track →' : 'Lacak →'}</span>
                 </div>
               </Link>

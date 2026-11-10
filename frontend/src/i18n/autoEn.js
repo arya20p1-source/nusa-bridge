@@ -175,6 +175,81 @@ export const AUTO_EN = {
   'Asisten Negosiasi Multi-Bahasa': 'Multi-Language Negotiation Assistant',
   'Membantu UMKM merespons email buyer berbahasa Inggris, Jerman, Jepang, atau Arab dengan tata bahasa bisnis profesional.':
     'Helping MSMEs respond to buyer emails in English, German, Japanese, or Arabic with professional business grammar.',
+  'PILAR 1': 'PILLAR 1',
+  'PILAR 2': 'PILLAR 2',
+  'PILAR 3': 'PILLAR 3',
+  'PILAR 4': 'PILLAR 4',
+  'Permintaan Buyer Masuk (Hamburg, DE):': 'Incoming Buyer Request (Hamburg, DE):',
+  'Harga Dasar FOB Tanjung Priok:': 'Base FOB Price Tanjung Priok:',
+  'Rekomendasi Penawaran CIF:': 'Recommended CIF Offer:',
+  'Margin Aman: +18.5% Net Profit': 'Safe Margin: +18.5% Net Profit',
+  'Otomatisasi Dokumen Ekspor & Impor Resmi': 'Official Export & Import Document Automation',
+  'Mengisi puluhan lembar dokumen ekspor yang rumit kini digantikan dengan satu klik. AI Agent NusaBridge menerbitkan dokumen resmi yang memenuhi persyaratan Bea Cukai dan International Chamber of Commerce (ICC).':
+    'Filling dozens of complex export forms is now replaced with one click. The NusaBridge AI Agent issues official documents that meet Customs and International Chamber of Commerce (ICC) requirements.',
+  'Kalkulasi berat bersih (net weight), berat kotor (gross weight), dan volume CBM peti kemas tanpa salah hitung.':
+    'Calculates net weight, gross weight, and container CBM volume without miscalculation.',
+  'Draft Pemberitahuan Ekspor Barang (PEB) & SKA': 'Draft Export Declaration (PEB) & Certificate of Origin',
+  'Terintegrasi dengan format data sistem kepabeanan Indonesia untuk mempercepat penerbitan Nota Pelayanan Ekspor (NPE).':
+    'Integrated with Indonesian customs data formats to speed up issuance of the Export Service Note (NPE).',
+  '16 Oktober 2026': '16 October 2026',
+  'KYC Hub & Validasi Kepatuhan Global': 'KYC Hub & Global Compliance Validation',
+  'Banyak transaksi ekspor gagal karena barang ditahan di pelabuhan tujuan akibat tidak memenuhi standar mutu atau sertifikasi negara setempat. KYC Hub NusaBridge melakukan audit otomatis sebelum barang dikirim.':
+    'Many export transactions fail because goods are held at the destination port for not meeting local quality standards or certification. NusaBridge KYC Hub performs an automated audit before shipment.',
+  'Validasi Format NIB & NPWP': 'NIB & NPWP Format Validation',
+  'Verifikasi status Nomor Induk Berusaha pada sistem OSS dan kelayakan izin kepabeanan.':
+    'Verifies the Business Identification Number status in the OSS system and customs permit eligibility.',
+  'Deteksi Standar Negara Tujuan': 'Destination Standard Detection',
+  'Mengecek otomatis apakah produk memerlukan sertifikat FDA (AS), CE Mark (Eropa), JAS (Jepang), atau Fumigasi ISPM 15.':
+    'Automatically checks whether the product requires an FDA certificate (US), CE Mark (Europe), JAS (Japan), or ISPM 15 fumigation.',
+  'Meningkatkan kepercayaan buyer internasional sehingga mereka bersedia membayar uang muka (DP) lebih awal.':
+    'Increases international buyer trust so they are willing to pay the down payment earlier.',
+  'Verifikasi Legalitas & Sertifikasi': 'Legality & Certification Verification',
+  'NIB Pelaku Usaha (OSS):': 'Business NIB (OSS):',
+  'Valid & Aktif Ekspor': 'Valid & Active for Export',
+  'NPWP Badan/Perorangan:': 'Company/Individual Tax ID:',
+  'Terdaftar Kemenkeu': 'Registered with the Ministry of Finance',
+  'Hasil Uji Lab Sucofindo/Baristand:': 'Sucofindo/Baristand Lab Result:',
+  'Lolos Uji Logam Berat': 'Passed Heavy Metal Test',
+  'Phytosanitary & Karantina:': 'Phytosanitary & Quarantine:',
+  'Bebas Hama Organisme': 'Free from Pest Organisms',
+  'Escrow Vault: Transaksi Aman Tanpa Risiko': 'Escrow Vault: Safe Transactions Without Risk',
+  'Kekhawatiran terbesar UMKM adalah barang sudah dikirim tetapi pembeli tidak membayar. Escrow Vault NusaBridge mengunci dana pembayaran di muka dan melepaskannya secara transparan berdasarkan milestone pelayaran.':
+    'The biggest MSME concern is shipping goods without being paid. NusaBridge Escrow Vault locks the advance payment and releases it transparently based on shipping milestones.',
+  'Milestone 1 (30% DP Masuk):': 'Milestone 1 (30% Down Payment Received):',
+  'Pelepasan dana produksi saat Sales Contract ditandatangani kedua belah pihak.':
+    'Production funds are released when the Sales Contract is signed by both parties.',
+  'Milestone 2 (30% Cargo Ready):': 'Milestone 2 (30% Cargo Ready):',
+  'Pelepasan dana saat barang tiba di pelabuhan muat dan dokumen PEB diterbitkan.':
+    'Funds are released when goods arrive at the loading port and the PEB document is issued.',
+  'Milestone 3 (20% On-Board Vessel):': 'Milestone 3 (20% On-Board Vessel):',
+  'Pelepasan dana saat kapal kargo berlayar dan Bill of Lading (B/L) resmi terbit.':
+    'Funds are released when the cargo vessel sails and the official Bill of Lading (B/L) is issued.',
+  'Milestone 4 (20% Final Settlement):': 'Milestone 4 (20% Final Settlement):',
+  'Pelepasan sisa dana saat kontainer tiba di pelabuhan tujuan dan lolos inspeksi penerimaan.':
+    'The remaining funds are released when the container arrives at the destination port and passes acceptance inspection.',
+  'Simulasi Escrow Vault': 'Escrow Vault Simulation',
+  '🔒 Terlindungi': '🔒 Protected',
+  'Tahap 2: PEB & Stuffing (30%)': 'Stage 2: PEB & Stuffing (30%)',
+  'Tahap 3: Kapal Berlayar (20%)': 'Stage 3: Vessel Sailing (20%)',
+  'Tahap 4: Tiba di Tujuan (20%)': 'Stage 4: Arrived at Destination (20%)',
+  'USD 6,000 (Cair)': 'USD 6,000 (Released)',
+  'USD 4,000 (Dalam Proses)': 'USD 4,000 (In Progress)',
+  'USD 4,000 (Terkunci di Vault)': 'USD 4,000 (Locked in Vault)',
+  'Daftar Akun Sekarang': 'Register Account Now',
+  'Lihat Paket & Harga': 'View Plans & Pricing',
+  'Pelajari Selengkapnya →': 'Learn More →',
+  'Untuk produk yang wajib SNI.': 'For products requiring SNI.',
+  'Untuk pangan, kosmetik, dan obat.': 'For food, cosmetics, and medicines.',
+  'Untuk produk pangan dan konsumen.': 'For food and consumer products.',
+  'Untuk komoditas pertanian antarpulau.': 'For inter-island agricultural commodities.',
+  'SNI / Standar Nasional Indonesia': 'SNI / Indonesian National Standard',
+  'BPOM / Izin Edar': 'BPOM / Distribution Permit',
+  'Halal BPJPH': 'Halal BPJPH',
+  'NIB & NPWP aktif': 'Active NIB & NPWP',
+  'Karantina Pertanian': 'Agricultural Quarantine',
+  'Legalitas dasar pelaku usaha.': 'Basic business legality.',
+  'Gudang pembeli, Hamburg': 'Buyer warehouse, Hamburg',
+  'Gudang pembeli, Makassar': 'Buyer warehouse, Makassar',
 
   // ===== PRICING PAGE =====
   '🎁 Terapkan Voucher 15%': '🎁 Apply 15% Voucher',

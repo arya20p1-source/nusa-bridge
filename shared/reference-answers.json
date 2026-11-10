@@ -1054,14 +1054,16 @@
       "keunggulan eksportir",
       "alat ekspor nusabridge",
       "export features",
-      "features for exporters"
+      "features for exporters",
+      "export feature",
+      "exporter features"
     ],
     "patterns": [
-      "\\b(fitur|fasilitas|layanan|alat|kegunaan)\\b.*\\b(ekspor|seller|eksportir)\\b",
-      "\\b(ekspor|seller|eksportir)\\b.*\\b(fitur|fasilitas|layanan|alat)\\b"
+      "\\b(fitur|fasilitas|layanan|alat|kegunaan|features?)\\b.*\\b(ekspor|seller|eksportir|export|exporter)\\b",
+      "\\b(ekspor|seller|eksportir|export|exporter)\\b.*\\b(fitur|fasilitas|layanan|alat|features?)\\b"
     ],
-    "answer": "Fitur ekspor di NusaBridge didesain khusus untuk memberdayakan UMKM Indonesia go global secara mandiri dan aman:\n\n1. **Showcase Katalog Ekspor**: Menampilkan komoditas Anda dengan standar spesifikasi internasional, kode HS kepabeanan, dan harga acuan pasar global.\n2. **RFQ Studio & AI Parser**: Menerima inquiry buyer luar negeri dan menyusun penawaran resmi terstruktur sesuai Incoterms 2020 (FOB/CIF).\n3. **Auto-PDF Generator**: Menerbitkan instan draf dokumen ekspor legal berstandar ICC (Proforma Invoice dan Sales Contract siap cetak/unduh).\n4. **KYC Hub Regulatory Screener**: Memvalidasi NIB 13 digit OSS RBA dan mengecek kesiapan regulasi ekspor ke negara tujuan (FDA USA, EUDR Eropa, JAS Jepang, Halal UEA).\n5. **Escrow Vault Milestone Protection**: Mencegah risiko gagal bayar dengan simulasi pencairan dana bertahap 4 fase (30% kontrak disepakati, 30% stuffing kargo & PEB, 20% penerbitan Bill of Lading, 20% kargo tiba).\n6. **Radar Maritim AIS**: Memantau pergerakan rute kapal kargo trans-samudera dari pelabuhan muat Indonesia ke pelabuhan tujuan buyer.",
-    "answerEn": "Export features on NusaBridge are built to empower Indonesian SMEs to enter global trade with confidence:\n\n1. **Export Catalog Showcase**: Displays commodities with international lab specifications, customs HS codes, and global reference prices.\n2. **RFQ Studio & AI Parser**: Processes overseas buyer inquiries into standardized Incoterms 2020 quotations (FOB/CIF).\n3. **Auto-PDF Generator**: Automatically drafts legal trade paperwork (Proforma Invoices and Sales Contracts under ICC rules).\n4. **KYC Hub Regulatory Screener**: Validates 13-digit OSS NIB and audits compliance for destination markets (FDA USA, EUDR Europe, JAS Japan, Halal UAE).\n5. **Escrow Vault Milestone Protection**: Eliminates buyer default risk with 4-phase milestone payouts (30% contract, 30% PEB/stuffing, 20% B/L, 20% arrival).\n6. **Maritime AIS Radar**: Tracks oceanic cargo vessel trajectories from Indonesian ports to destination terminals worldwide.",
+    "answer": "Fitur ekspor NusaBridge untuk eksportir Indonesia:\n\n1. **Showcase Katalog Ekspor**: Menampilkan komoditas dengan spesifikasi, kode HS kepabeanan, MOQ, dan harga acuan USD dari katalog.\n2. **RFQ Studio**: Mencatat permintaan penawaran terstruktur berisi jumlah, Incoterms 2020 (FOB/CIF/CNF/EXW), dan pelabuhan tujuan. RFQ tersimpan dengan status \"Diajukan — menunggu peninjauan\"; website tidak mengirim penawaran ke pemasok atau menjalankan negosiasi.\n3. **Auto-PDF Generator**: Membuat draf Proforma Invoice dan Sales Contract yang dapat dicetak atau disalin. Ini draf untuk ditinjau, bukan dokumen resmi terverifikasi atau berkekuatan hukum.\n4. **KYC Hub**: Simulasi pemeriksaan format NIB/NPWP dan menampilkan checklist edukatif standar negara tujuan (misalnya FDA USA, EUDR Eropa, JAS Jepang, Halal UEA). Ini bukan verifikasi resmi OSS, Bea Cukai, atau otoritas negara tujuan.\n5. **Simulasi Escrow Vault**: Menjelaskan skenario pencairan 4 fase (30% kontrak, 30% PEB/stuffing, 20% B/L, 20% tiba). Website tidak memproses pembayaran atau menyimpan dana sungguhan.\n6. **Halaman Transportasi & Pelacakan**: Halaman Transportasi memperkirakan rute multimoda, biaya, dan ETA dari input Anda; halaman Pelacakan menampilkan progres pengiriman dari data demo, bukan GPS langsung atau status ekspedisi.",
+    "answerEn": "Export features on NusaBridge for Indonesian exporters:\n\n1. **Export Catalog Showcase**: Displays commodities with specifications, customs HS codes, MOQ, and USD reference prices from the catalog.\n2. **RFQ Studio**: Records a structured quotation request with quantity, Incoterms 2020 (FOB/CIF/CNF/EXW), and destination port. It saves the request as \"submitted — awaiting review\"; it does not send offers to suppliers or run negotiations.\n3. **Auto-PDF Generator**: Creates printable/copyable draft Proforma Invoice and Sales Contract documents. These are drafts for review, not officially verified or legally binding documents.\n4. **KYC Hub**: Simulates a NIB/NPWP format check and shows an educational destination-country checklist (for example FDA USA, EUDR Europe, JAS Japan, Halal UAE). It is not official OSS, Customs, or foreign-authority verification.\n5. **Escrow Vault Simulation**: Explains a 4-phase payout scenario (30% contract, 30% PEB/stuffing, 20% B/L, 20% arrival). The website does not process real payments or hold funds.\n6. **Transport & Tracking Pages**: The Transport page estimates multimodal routes, cost, and ETA from your input; the Tracking page shows shipment progress from demo data, not live GPS or carrier status.",
     "sources": []
   },
   {
@@ -1078,14 +1080,15 @@
       "alat impor nusabridge",
       "import features",
       "features for importers",
-      "features for buyers"
+      "features for buyers",
+      "import feature"
     ],
     "patterns": [
-      "\\b(fitur|fasilitas|layanan|alat|kegunaan)\\b.*\\b(impor|buyer|importir)\\b",
-      "\\b(impor|buyer|importir)\\b.*\\b(fitur|fasilitas|layanan|alat)\\b"
+      "\\b(fitur|fasilitas|layanan|alat|kegunaan|features?)\\b.*\\b(impor|buyer|importir|import|importer)\\b",
+      "\\b(impor|buyer|importir|import|importer)\\b.*\\b(fitur|fasilitas|layanan|alat|features?)\\b"
     ],
-    "answer": "Fitur impor di NusaBridge dirancang untuk importir global yang ingin memesan dan mendatangkan komoditas terkurasi Indonesia dengan proteksi maksimal:\n\n1. **Katalog 50 Komoditas Unggulan**: Telusuri komoditas kurasi (Kopi Specialty, Rempah Nusantara, Kerajinan Anyaman/Kayu, Tekstil Wastra) dengan rincian kadar air, kadar abu, sertifikasi, dan MOQ.\n2. **Pengajuan RFQ Terstruktur**: Ajukan permintaan penawaran resmi dalam hitungan detik dengan memilih produk, kuantitas, Incoterms (FOB, CIF, CNF, EXW), dan pelabuhan tujuan kargo.\n3. **Verifikasi Kepatuhan Standar**: Pastikan pemasok dan produk memenuhi standar mutu serta karantina yang dipersyaratkan oleh negara Anda.\n4. **Draf Kontrak Perdagangan Instan**: Dapatkan draf Proforma Invoice dan Sales Contract berkekuatan hukum dengan klausul ICC dan arbitrase internasional.\n5. **Proteksi Dana Escrow Vault**: Dana pembayaran Anda aman di rekening escrow multi-valas dan hanya dicairkan kepada penjual setelah dokumen pengapalan resmi (B/L) terbit dan barang terverifikasi tiba.\n6. **Pelacakan Telemetri Kontainer**: Pantau posisi kapal kargo pengangkut kontainer pesanan Anda secara transparan melalui Radar Maritim AIS.",
-    "answerEn": "Import features on NusaBridge are tailored for international buyers seeking reliable commodity sourcing with complete financial protection:\n\n1. **50 Curated Commodities Catalog**: Explore Indonesian export commodities (Specialty Coffee, Spices, Rattan/Wood Crafts, Textiles) with lab parameters and MOQ.\n2. **Structured RFQ Generator**: Submit formal quotation requests with selected quantities, Incoterms (FOB, CIF, CNF, EXW), and destination ports.\n3. **Compliance & Standards Verification**: Ensure Indonesian exporters meet the safety, quarantine, and import criteria of your country.\n4. **Instant Legal Trade Drafts**: Receive standardized Proforma Invoices and Sales Contracts with clear ICC trade and arbitration clauses.\n5. **Escrow Vault Fund Protection**: Your payments remain safely locked in escrow and are only released to suppliers upon validated shipping documents (B/L) and confirmed port arrival.\n6. **Container Vessel Telemetry**: Track the exact position of your cargo vessel in real time using the Maritime AIS Radar.",
+    "answer": "Fitur impor NusaBridge untuk importir global:\n\n1. **Katalog 50 Komoditas Unggulan**: Telusuri komoditas kurasi (Kopi Specialty, Rempah Nusantara, Kerajinan Anyaman/Kayu, Tekstil Wastra) dengan spesifikasi, kode HS, MOQ, dan harga acuan USD.\n2. **Pengajuan RFQ Terstruktur**: Ajukan permintaan penawaran dengan produk, jumlah, Incoterms (FOB, CIF, CNF, EXW), dan pelabuhan tujuan. RFQ tercatat sebagai diajukan dan menunggu peninjauan.\n3. **Checklist Kepatuhan**: Tinjau persyaratan edukatif negara tujuan (FDA USA, EUDR Eropa, JAS Jepang, Halal UEA) melalui simulasi KYC Hub. Selalu konfirmasikan persyaratan final ke otoritas resmi.\n4. **Draf Dokumen Perdagangan**: Buat draf Proforma Invoice dan Sales Contract melalui Auto-PDF. Ini draf, bukan kontrak berkekuatan hukum atau dokumen resmi.\n5. **Simulasi Escrow Vault**: Pelajari gambaran pencairan 4 fase (30/30/20/20). Website tidak menyimpan atau melepas dana sungguhan.\n6. **Simulasi Transportasi & Pelacakan**: Perkirakan rute multimoda, biaya, dan ETA di halaman Transportasi, serta lihat contoh progres pengiriman di halaman Pelacakan. Tidak ada posisi kapal langsung atau AIS real-time.",
+    "answerEn": "Import features on NusaBridge for global importers:\n\n1. **50 Curated Commodities Catalog**: Explore Indonesian export commodities (Specialty Coffee, Spices, Rattan/Wood Crafts, Textiles) with specifications, HS codes, MOQ, and USD reference prices.\n2. **Structured RFQ Generator**: Submit a quotation request with product, quantity, Incoterms (FOB, CIF, CNF, EXW), and destination port. The RFQ is recorded as submitted and awaits review.\n3. **Compliance Checklist**: Review educational destination-country requirements (FDA USA, EUDR Europe, JAS Japan, Halal UAE) through the KYC Hub simulation. Always confirm final requirements with the official authority.\n4. **Trade Document Drafts**: Generate Proforma Invoice and Sales Contract drafts through Auto-PDF. These are drafts, not legally binding contracts or official documents.\n5. **Escrow Vault Simulation**: Learn how a 4-phase milestone payout would work (30/30/20/20). The website does not hold or release real funds.\n6. **Transport & Tracking Simulations**: Estimate multimodal routes, cost, and ETA on the Transport page, and view sample shipment progress on the Tracking page. Neither page shows live vessel position or real-time AIS.",
     "sources": []
   },
   {
@@ -1153,18 +1156,132 @@
       "pelacakan",
       "lacak",
       "tracking",
+      "track",
+      "track shipment",
+      "lacak pengiriman",
       "progres pengiriman",
       "status pengiriman",
       "posisi kapal",
       "shipment tracking",
-      "delivery status"
+      "delivery status",
+      "where track"
     ],
     "patterns": [
-      "\\b(pelacakan|lacak|tracking)\\b",
-      "\\b(status|progres|progress)\\b.*\\b(pengiriman|shipment|kiriman)\\b"
+      "\\b(pelacakan|lacak|tracking|track)\\b",
+      "\\b(status|progres|progress)\\b.*\\b(pengiriman|shipment|kiriman)\\b",
+      "\\b(where|di mana)\\b.*\\b(track|lacak|tracking)\\b"
     ],
     "answer": "Halaman Pelacakan (/pelacakan, alias /lacak) menampilkan status dan progres pengiriman dari data demonstrasi. Pengguna dapat mencari contoh ID pengiriman yang terlihat di layar dan melihat tahapan perjalanan. Data ini bukan GPS langsung, bukan status resmi ekspedisi atau Bea Cukai, dan tidak terhubung ke layanan pelacakan pihak ketiga.",
     "answerEn": "The Tracking page (/pelacakan, alias /lacak) displays shipment status and progress from demo data. Users can search for a sample shipment ID shown on screen and view the journey stages. This data is not live GPS, not official carrier or Customs status, and not connected to third-party tracking services.",
+    "sources": []
+  },
+  {
+    "id": "beda-ekspor-impor",
+    "title": "Perbedaan Ekspor dan Impor",
+    "keywords": [
+      "beda ekspor impor",
+      "perbedaan ekspor dan impor",
+      "difference between export and import",
+      "export vs import",
+      "ekspor vs impor",
+      "pengertian ekspor impor"
+    ],
+    "patterns": [
+      "\\b(beda|perbedaan|difference|versus|vs)\\b.*\\b(ekspor|impor|export|import)\\b",
+      "\\b(ekspor|impor|export|import)\\b.*\\b(beda|perbedaan|difference|versus|vs)\\b"
+    ],
+    "answer": "Ekspor dan impor berbeda pada arah barang serta kewajiban dokumennya.\n\n**Ekspor**: barang keluar dari Indonesia menuju negara tujuan. Pelakunya eksportir Indonesia. Dokumen inti: Commercial Invoice, Packing List, PEB, Bill of Lading/Air Waybill, Certificate of Origin, dan sertifikat negara tujuan bila diwajibkan. Fokus risikonya adalah pembayaran buyer, kepatuhan negara tujuan, dan keterlambatan pengiriman.\n\n**Impor**: barang masuk ke Indonesia dari pemasok luar negeri. Pelakunya importir Indonesia atau buyer global. Dokumen inti: Commercial Invoice, Packing List, PIB, Bill of Lading/Air Waybill, Certificate of Origin, dan izin impor bila diperlukan. Fokus risikonya adalah kualitas pemasok, akurasi dokumen, serta hitungan bea masuk, PPN, dan PPh 22.\n\nDi NusaBridge, halaman Produk dan RFQ mendukung permintaan ekspor, sedangkan halaman Domestik menangani jual-beli Rupiah antarsesama UMKM. Gunakan KYC Hub untuk checklist kepatuhan edukatif dan Auto-PDF untuk draf dokumen. Perhitungan dan persyaratan final harus dikonfirmasi ke Bea Cukai/INSW dan otoritas terkait.",
+    "answerEn": "Export and import differ in the direction of goods and their documentation obligations.\n\n**Export**: goods leave Indonesia for a destination country. The actor is an Indonesian exporter. Core documents: Commercial Invoice, Packing List, PEB (export declaration), Bill of Lading/Air Waybill, Certificate of Origin, and destination certificates when required. The risk focus is buyer payment, destination compliance, and shipping delay.\n\n**Import**: goods enter Indonesia from a foreign supplier. The actor is an Indonesian importer or global buyer. Core documents: Commercial Invoice, Packing List, PIB (import declaration), Bill of Lading/Air Waybill, Certificate of Origin, and import permits when required. The risk focus is supplier quality, document accuracy, and calculation of import duty, VAT, and income tax (PPh 22).\n\nOn NusaBridge, the Products page and RFQ flow support export inquiries, while the Domestic page handles Rupiah trade between Indonesian SMEs. Use KYC Hub for an educational compliance checklist and Auto-PDF for document drafts. Final calculations and requirements must be confirmed with Customs/INSW and the relevant authority.",
+    "sources": []
+  },
+  {
+    "id": "bea-masuk-ppn",
+    "title": "Cara Menghitung Bea Masuk, PPN, dan PPh 22 Impor",
+    "keywords": [
+      "bea masuk",
+      "ppn impor",
+      "pph 22",
+      "hitung bea masuk",
+      "import duty",
+      "import vat",
+      "calculate import duty",
+      "pajak impor",
+      "nilai pabean",
+      "customs value"
+    ],
+    "patterns": [
+      "\\b(bea masuk|ppn impor|pph 22|pajak impor|import duty|import vat|customs value|nilai pabean)\\b"
+    ],
+    "answer": "Perhitungan bea masuk dan pajak impor secara umum memakai nilai pabean (CIF: harga barang + asuransi + freight) sebagai dasar.\n\n1. **Bea masuk** = tarif bea masuk × nilai pabean. Tarif bergantung pada kode HS dan asal barang; ada tarif preferensi bila memakai skema FTA dan memiliki Certificate of Origin yang sah.\n2. **PPN impor** = tarif PPN × (nilai pabean + bea masuk). Tarif umum saat ini 11%, tetapi tarif dapat berubah sesuai ketentuan berlaku.\n3. **PPh 22 impor** = tarif PPh 22 × (nilai pabean + bea masuk). Tarif bergantung pada jenis barang dan status importir; importir dengan API tertentu dapat memperoleh tarif berbeda.\n4. **Cukai** hanya dikenakan pada barang kena cukai tertentu, bukan semua impor.\n\nContoh kerangka: bila nilai pabean USD 10.000, bea masuk 5%, maka bea masuk = USD 500; PPN dihitung dari USD 10.500; PPh 22 dihitung dari USD 10.500 dengan tarif yang berlaku. Kurs yang dipakai adalah kurs kepabeanan pada saat pendaftaran dokumen.\n\nIni kerangka edukatif, bukan penetapan resmi. Tarif final, klasifikasi HS, dan kurs harus dikonfirmasi melalui INSW/Bea Cukai atau konsultan kepabeanan.",
+    "answerEn": "Import duty and tax calculations generally use the customs value (CIF: goods value + insurance + freight) as the base.\n\n1. **Import duty** = duty rate × customs value. The rate depends on the HS code and origin; a preferential rate may apply under an FTA with a valid Certificate of Origin.\n2. **Import VAT** = VAT rate × (customs value + import duty). The general rate is currently 11%, but it can change under applicable rules.\n3. **Import income tax (PPh 22)** = PPh 22 rate × (customs value + import duty). The rate depends on the goods type and the importer's status; importers with a specific API may get a different rate.\n4. **Excise** applies only to specific excisable goods, not to every import.\n\nExample framework: if the customs value is USD 10,000 and the duty rate is 5%, import duty = USD 500; VAT is calculated from USD 10,500; PPh 22 is calculated from USD 10,500 at the applicable rate. The exchange rate is the customs rate at document registration.\n\nThis is an educational framework, not an official assessment. Final rates, HS classification, and exchange rates must be confirmed with INSW/Customs or a customs consultant.",
+    "sources": []
+  },
+  {
+    "id": "cuaca-pelayaran",
+    "title": "Pengaruh Cuaca terhadap Pengiriman dan Pelayaran",
+    "keywords": [
+      "cuaca pelabuhan",
+      "cuaca pelayaran",
+      "weather port",
+      "weather shipping",
+      "bad weather delay",
+      "gelombang laut",
+      "monsoon",
+      "musim hujan pengiriman",
+      "shipping delay weather"
+    ],
+    "patterns": [
+      "\\b(cuaca|weather|gelombang|monsoon|musim hujan|bad weather)\\b.*\\b(pelabuhan|port|pelayaran|shipping|pengiriman|kapal|vessel|kargo|cargo)\\b",
+      "\\b(pelabuhan|port|pelayaran|shipping|pengiriman|kapal|vessel|kargo|cargo)\\b.*\\b(cuaca|weather|gelombang|monsoon|musim hujan|bad weather)\\b"
+    ],
+    "answer": "Cuaca memang dapat memengaruhi pengiriman ekspor-impor, terutama untuk moda laut. Gelombang tinggi, badai tropis, kabut, dan penutupan pelabuhan dapat menyebabkan keterlambatan sandar, perubahan jadwal kapal, atau penundaan bongkar-muat. Musim hujan dan musim badai di suatu wilayah juga dapat menaikkan risiko keterlambatan.\n\nLangkah praktis: (1) cek prakiraan cuaca dan status pelabuhan sebelum menentukan jadwal; (2) beri buffer waktu pada kontrak dan ETA; (3) pastikan polis asuransi kargo mencakup risiko yang relevan; (4) komunikasikan force majeure dan klausul keterlambatan dengan buyer; dan (5) pantau status pengiriman melalui ekspedisi atau pelabuhan resmi.\n\nHalaman Transportasi NusaBridge hanya memberikan estimasi rute, biaya, dan ETA berdasarkan input, sedangkan halaman Pelacakan memakai data demo. Keduanya bukan layanan cuaca atau pelacakan kapal resmi. Untuk keputusan operasional, gunakan sumber resmi seperti BMKG, pelabuhan, dan ekspedisi.",
+    "answerEn": "Weather can affect export-import shipments, especially by sea. High waves, tropical storms, fog, and port closures can cause berthing delays, vessel schedule changes, or loading/unloading delays. Rainy and storm seasons in a region can also increase delay risk.\n\nPractical steps: (1) check weather forecasts and port status before scheduling; (2) add time buffers to contracts and ETA; (3) ensure cargo insurance covers the relevant risks; (4) communicate force majeure and delay clauses with the buyer; and (5) monitor shipment status through the carrier or official port channels.\n\nNusaBridge's Transport page only estimates routes, cost, and ETA from your input, while the Tracking page uses demo data. Neither is an official weather or vessel-tracking service. For operational decisions, use official sources such as the meteorological agency, ports, and carriers.",
+    "sources": []
+  },
+  {
+    "id": "ekspor-obat-herbal",
+    "title": "Ekspor Obat Herbal dan Produk Kesehatan",
+    "keywords": [
+      "ekspor obat herbal",
+      "ekspor jamu",
+      "ekspor suplemen",
+      "ekspor produk kesehatan",
+      "herbal export",
+      "export herbal medicine",
+      "export supplement",
+      "ekspor kosmetik herbal"
+    ],
+    "patterns": [
+      "\\b(ekspor|export)\\b.*\\b(obat|herbal|jamu|suplemen|supplement|kesehatan|cosmetic|kosmetik)\\b",
+      "\\b(obat|herbal|jamu|suplemen|supplement|kesehatan|cosmetic|kosmetik)\\b.*\\b(ekspor|export)\\b"
+    ],
+    "answer": "Obat herbal, jamu, suplemen, dan kosmetik dapat diekspor, tetapi jalurnya lebih ketat daripada komoditas biasa karena menyangkut kesehatan. Langkah umum: (1) pastikan izin edar dan legalitas produk di Indonesia sesuai kategori (BPOM untuk obat/suplemen/kosmetik, atau izin edar yang berlaku); (2) klasifikasikan kode HS dan cek larangan/pembatasan melalui INSW; (3) penuhi standar negara tujuan, misalnya registrasi produk, label bahasa setempat, sertifikasi halal, GMP, atau uji laboratorium; (4) siapkan dokumen ekspor seperti Invoice, Packing List, PEB, B/L/AWB, COO, dan sertifikat analisis; (5) gunakan eksportir atau distributor yang memahami regulasi farmasi di negara tujuan. NusaBridge AI hanya memberi panduan edukatif, bukan izin atau sertifikasi resmi. Konfirmasikan persyaratan terbaru ke BPOM, Kementerian Perdagangan/INSW, dan otoritas negara tujuan.",
+    "answerEn": "Herbal medicine, jamu, supplements, and cosmetics can be exported, but the route is stricter than for ordinary commodities because health is involved. General steps: (1) ensure the product has the required Indonesian distribution permit for its category (BPOM for medicines/supplements/cosmetics, or the applicable permit); (2) classify the HS code and check prohibitions/restrictions through INSW; (3) meet destination-country standards such as product registration, local-language labeling, halal certification, GMP, or laboratory testing; (4) prepare export documents such as Invoice, Packing List, PEB, B/L/AWB, COO, and a certificate of analysis; (5) use an exporter or distributor familiar with the destination country's pharmaceutical rules. NusaBridge AI provides educational guidance only, not official permits or certification. Confirm the latest requirements with BPOM, the Ministry of Trade/INSW, and the destination authority.",
+    "sources": []
+  },
+  {
+    "id": "regulasi-terbaru",
+    "title": "Cara Memeriksa Regulasi Ekspor-Impor Terbaru",
+    "keywords": [
+      "regulasi terbaru",
+      "aturan ekspor terbaru",
+      "kebijakan ekspor terbaru",
+      "latest export regulation",
+      "latest import regulation",
+      "peraturan pemerintah ekspor",
+      "update regulasi perdagangan",
+      "government regulation",
+      "government export regulation",
+      "peraturan pemerintah ekspor",
+      "kebijakan pemerintah ekspor"
+    ],
+    "patterns": [
+      "\\\\b(regulasi|aturan|kebijakan|peraturan|regulation|policy)\\\\b.*\\\\b(terbaru|terkini|latest|new|update|pemerintah|government)\\\\b",
+      "\\\\b(terbaru|terkini|latest|new|update|pemerintah|government)\\\\b.*\\\\b(regulasi|aturan|kebijakan|peraturan|regulation|policy)\\\\b",
+      "\\\\b(government|pemerintah)\\\\b.*\\\\b(regulation|regulasi|aturan|kebijakan|export|ekspor|import|impor)\\\\b"
+    ],
+    "answer": "NusaBridge AI tidak dapat menjamin regulasi yang paling baru karena aturan ekspor-impor sering berubah. Untuk memeriksa ketentuan terbaru, gunakan jalur resmi berikut:\n\n1. **INSW** (Indonesia National Single Window) untuk tarif, larangan/pembatasan, izin, dan prosedur kepabeanan.\n2. **Bea Cukai** untuk ketentuan PEB/PIB, nilai pabean, dan fasilitas kepabeanan.\n3. **OSS** untuk NIB, izin usaha, dan perizinan berusaha.\n4. **Kementerian/lembaga teknis** seperti Kementerian Perdagangan, Kementerian Pertanian, BPOM, atau Badan Karantina sesuai komoditas.\n5. **Kedutaan/otoritas negara tujuan** untuk standar impor, label, dan sertifikasi.\n\nLangkah praktis: cek kode HS produk, baca aturan yang berlaku pada tanggal pengiriman, simpan bukti kepatuhan, dan konsultasikan dengan konsultan kepabeanan bila perlu. Jawaban AI di NusaBridge bersifat edukatif dan bukan penetapan resmi.",
+    "answerEn": "NusaBridge AI cannot guarantee the very latest regulation because export-import rules change frequently. To check current requirements, use the official channels:\n\n1. **INSW** (Indonesia National Single Window) for tariffs, prohibitions/restrictions, permits, and customs procedures.\n2. **Indonesian Customs** for PEB/PIB rules, customs value, and customs facilities.\n3. **OSS** for NIB, business licenses, and business permits.\n4. **Technical ministries/agencies** such as the Ministry of Trade, Ministry of Agriculture, BPOM, or the Quarantine Agency depending on the commodity.\n5. **The destination country's embassy/authority** for import standards, labeling, and certification.\n\nPractical steps: check the product HS code, read the rule in force on the shipment date, keep compliance evidence, and consult a customs consultant if needed. AI answers on NusaBridge are educational and not an official determination.",
     "sources": []
   }
 ]

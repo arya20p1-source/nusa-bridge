@@ -162,7 +162,9 @@ const WEBSITE_FACTS_ID = `FAKTA WEBSITE NUSABRIDGE (hanya gunakan fakta ini):
 - Pelacakan: halaman menampilkan status/progres pengiriman dari data demo. Website tidak menampilkan GPS atau status ekspedisi/kepabeanan nyata.
 - Peran akun: Eksportir (seller) dan Importir (buyer). Peran memengaruhi tampilan panduan dan konteks jawaban AI; tidak membuka dashboard transaksi khusus.
 - Bahasa antarmuka: Indonesia dan Inggris, termasuk nama produk dan kategori. Akun menyimpan nama usaha, email, logo, dan peran di sesi browser.
-- AI: menjawab pertanyaan tentang website NusaBridge dan panduan umum ekspor-impor. AI tidak menjawab topik di luar itu dan tidak boleh mengarang fitur, harga, stok, status transaksi, atau regulasi.`;
+- Kontak & footer: bagian Kontak ada di Beranda (ajakan daftar/konsultasi). Footer berisi logo, deskripsi singkat, tautan navigasi (Beranda, Produk, Domestik, Solusi AI, Harga, Transportasi, Pelacakan), tautan sosial (LinkedIn, Instagram, Discord), dan tombol informasi yang membuka modal penjelasan. AI Assistant dapat dibuka dari halaman Solusi AI.
+- Cakupan AI: NusaBridge AI menjawab pertanyaan tentang seluruh halaman dan fitur website, katalog produk, peran akun, alur ekspor-impor, dokumen, kepabeanan, logistik, pembayaran, regulasi perdagangan, dan topik UMKM/perdagangan yang masih berkaitan. Pertanyaan yang memakai kata seperti "cuaca", "regulasi pemerintah", atau "hitungan" tetap dijawab bila konteksnya ekspor-impor, logistik, atau website. AI menolak topik yang benar-benar tidak berkaitan (resep, koding umum, hiburan, olahraga, politik non-perdagangan, kesehatan pribadi, kripto/judi) dan tidak boleh mengarang fitur, harga, stok, status transaksi, atau regulasi.
+- Batasan: semua transaksi, pembayaran, verifikasi, dokumen, dan pelacakan di website adalah demo/simulasi. Data domestik dan RFQ disimpan di memori/localStorage dan dapat hilang saat server atau browser direset. Untuk keputusan resmi, pengguna harus memeriksa Bea Cukai, INSW, OSS, dan otoritas negara tujuan.`;
 
 const WEBSITE_FACTS_EN = `NUSABRIDGE WEBSITE FACTS (use only these facts):
 - NusaBridge is an information and simulation website for Indonesian SME export-import trade. NusaBridge is not a seller, producer, bank, or official verification authority.
@@ -178,17 +180,26 @@ const WEBSITE_FACTS_EN = `NUSABRIDGE WEBSITE FACTS (use only these facts):
 - Tracking: the page displays shipment status/progress from demo data. The site does not show real GPS, carrier, or customs status.
 - Account roles: Exporter (seller) and Importer (buyer). The role changes guidance and AI context; it does not unlock a dedicated transaction dashboard.
 - Interface languages: Indonesian and English, including product names and categories. The browser session stores business name, email, logo, and role.
-- AI: answers questions about the NusaBridge website and general export-import guidance only. It must not answer unrelated topics or invent features, prices, stock, transaction status, or regulations.`;
+- Contact & footer: the Contact section is on the Home page (registration/consultation call to action). The footer contains the logo, short description, navigation links (Home, Products, Domestic, AI Solutions, Pricing, Transport, Tracking), social links (LinkedIn, Instagram, Discord), and info buttons that open explanation modals. The AI Assistant can be opened from the AI Solutions page.
+- AI scope: NusaBridge AI answers questions about every website page and feature, the product catalog, account roles, export-import flow, documents, customs, logistics, payments, trade regulations, and UMKM/trade topics that remain related. Questions using words such as "weather", "government regulation", or "calculation" are still answered when the context is export-import, logistics, or the website. AI rejects genuinely unrelated topics (recipes, general coding, entertainment, sports, non-trade politics, personal health, crypto/gambling) and must not invent features, prices, stock, transaction status, or regulations.
+- Limitations: all transactions, payments, verification, documents, and tracking on the website are demos/simulations. Domestic and RFQ data are stored in memory/localStorage and may disappear when the server or browser resets. For official decisions, users must check Customs, INSW, OSS, and the destination authority.`;
+
+// Konteks perdagangan/UMKM/website. Bila sebuah pertanyaan memakai kata yang
+// biasanya di luar topik tetapi masih membahas ekspor-impor, logistik, atau
+// website NusaBridge, pertanyaan itu tetap dijawab (bukan ditolak).
+const TRADE_OR_WEBSITE_CONTEXT = /(nusabridge|website|halaman|fitur|katalog|produk|komoditas|ekspor|impor|export|import|umkm|dagang|perdagangan|trade|buyer|seller|pembeli|penjual|pemasok|supplier|rfq|kuotasi|incoterm|fob|cif|cfr|cnf|exw|dokumen|document|invoice|packing|bill of lading|peb|pib|coo|hs code|kode hs|bea cukai|customs|pabean|karantina|quarantine|logistik|logistics|pengiriman|shipping|kargo|cargo|kontainer|container|pelabuhan|port|asuransi|insurance|pembayaran|payment|escrow|nib|npwp|oss|legalitas|izin|regulasi|regulation|tarif|tariff|pajak|ppn|vat|duty|negara tujuan|destination|jepang|japan|tiongkok|china|eropa|europe|amerika|usa|uea|uae|arab|australia|india|malaysia|singapura|singapore|thailand|vietnam|filipina|philippines|korea|ongkir|biaya kirim|rantai pasok|supply chain)/i;
 
 const OFF_TOPIC_GROUPS = [
   {
     id: 'math',
     re: /(\b\d+[\s]*[\+\-\*\/\^xX\:]+[\s]*\d+\b|\b(hitung|kalkulator|aljabar|integral|turunan|persamaan kuadrat|geometri|trigonometri|kalkulus|rumus fisika|rumus kimia|rumus matematika)\b)/i,
+    // "Hitung harga FOB 1000 kg" tetap pertanyaan perdagangan.
+    allowIf: TRADE_OR_WEBSITE_CONTEXT,
   },
   {
     id: 'recipes-food',
     re: /\b(resep|masakan|cara masak|cara membuat (?:kue|roti|donat|makanan|minuman|jus|sup|soto|bakso|mie|nasi)|cara bikin (?:kue|roti|donat|makanan|minuman|jus|sup|soto|bakso|mie|nasi)|bumbu (?:rendang|dapur|masak|opor|balado)|nasi goreng|mie goreng|memasak|baking|resep makanan|kuliner|recipe|recipes|cooking|fried rice|noodle|soup|bake|cake|pastry|cuisine)\b/i,
-    allowIf: /\b(nusabridge|website|katalog|produk|komoditas|ekspor|impor)\b/i,
+    allowIf: TRADE_OR_WEBSITE_CONTEXT,
   },
   {
     id: 'coding',
@@ -201,6 +212,8 @@ const OFF_TOPIC_GROUPS = [
   {
     id: 'politics',
     re: /\b(presiden|gubernur|walikota|dpr|pemilu|pilpres|partai|menteri|politik|berita artis|zodiak|ramalan bintang|ramalan jodoh|cuaca hari ini|cuaca besok|gempa|president|prime minister|election|politics|politician|government|weather today|weather tomorrow|earthquake|horoscope)\b/i,
+    // Regulasi/kebijakan pemerintah untuk ekspor-impor tetap relevan.
+    allowIf: TRADE_OR_WEBSITE_CONTEXT,
   },
   {
     id: 'religion',
@@ -209,16 +222,19 @@ const OFF_TOPIC_GROUPS = [
   {
     id: 'casual-science-trivia',
     re: /\b(puisi|pantun|cerpen|dongeng|curhat|pacar|cinta|jodoh|kucing|anjing|hewan peliharaan|burung|ikan cupang|bumi bulat|bumi datar|langit biru|gravitasi|tata surya|planet (?:mars|jupiter|saturnus|venus)|fotosintesis|dinosaurus|relativitas|kecepatan cahaya|kenapa hujan|kenapa laut asin|umur bumi|ibu kota (?:perancis|prancis|inggris|jepang|amerika|rusia)|siapa penemu|sejarah perang dunia|poem|poetry|short story|relativity|gravity|solar system|photosynthesis|dinosaur|speed of light|why is the sky blue|why is the sea salty|age of the earth|capital of)\b/i,
+    // Cuaca/ombak di pelabuhan adalah bagian dari risiko pengiriman.
+    allowIf: TRADE_OR_WEBSITE_CONTEXT,
   },
   {
     id: 'health',
     re: /\b(obat|penyakit|dokter|rumah sakit|vitamin|fitness|diet|sakit (?:gigi|kepala|perut|pinggang|tenggorokan)|batuk|pilek|flu|demam|pusing|maag|asam lambung|paracetamol|antibiotik|gejala|kanker|stroke|diabetes|tensi darah|kolesterol|medicine|medication|doctor|hospital|disease|headache|fever|cough|sick|pain|symptom|cancer|blood pressure|cholesterol)\b/i,
-    allowIf: /\b(nusabridge|website|katalog|produk|komoditas)\b/i,
+    // "Syarat ekspor obat herbal" tetap pertanyaan perdagangan.
+    allowIf: TRADE_OR_WEBSITE_CONTEXT,
   },
   {
     id: 'general-ai',
     re: /\b(apa itu ai|what is ai|cara kerja ai|how does ai work|machine learning|deep learning|neural network|llm|kecerdasan buatan|model ai|transformer)\b/i,
-    allowIf: /\b(nusabridge|website|fitur|asisten|chatbot|halaman)\b/i,
+    allowIf: TRADE_OR_WEBSITE_CONTEXT,
   },
   {
     id: 'homework-essays',
@@ -348,12 +364,23 @@ function isProductListQuery(text) {
   const listMarker = /(sebutkan|tampilkan|berikan|tunjukkan|list|daftar|contoh|apa\s*saja|apa\s*aja|macam|jenis|pilihan|tersedia|jual\s*apa|ada\s*apa|berapa|total|jumlah|banyak|count)/i.test(text);
   const productWord = /(produk|komoditas|katalog|koleksi)/i.test(text);
   const categoryWord = /(kopi|rempah|kriya|kerajinan|tekstil|wastra)/i.test(text);
+
+  // "Syarat ekspor kopi ke Jepang apa saja?" bukan permintaan daftar katalog,
+  // melainkan pertanyaan regulasi. Kecualikan konteks syarat/regulasi/dokumen
+  // selama pengguna tidak secara eksplisit meminta daftar produk/komoditas.
+  const requirementContext = /(syarat|persyaratan|regulasi|aturan|izin|dokumen|bea|pajak|tarif|cara|prosedur|karantina|negara tujuan|jepang|japan|eropa|amerika|china|tiongkok|uea|uae|australia|india|korea)/i.test(text);
+  if (requirementContext && !productWord) return false;
+
   return (productWord && listMarker) || (categoryWord && listMarker && !/(harga|spesifikasi|spek|moq|detail|sertifikat|asal|hs)/i.test(text));
 }
 
 function isProductDetailQuery(text, matches) {
   if (!matches.length) return false;
   if (isProductListQuery(text)) return false;
+  // Pertanyaan syarat/regulasi/dokumen tentang suatu komoditas bukan permintaan
+  // detail produk, meskipun menyebut nama komoditas.
+  const requirementContext = /(syarat|persyaratan|regulasi|aturan|kebijakan|izin|dokumen|bea|pajak|tarif|prosedur|karantina|negara tujuan|requirement|regulation|policy|permit|document|duty|tax|tariff|procedure|quarantine|destination)/i.test(text);
+  if (requirementContext) return false;
   return /(harga|spesifikasi|spek|moq|minimal|asal|sertifikat|detail|info|jelaskan|berapa|hs|kode|deskripsi|tentang|profil|apa itu|what is|what are|tell me about)/i.test(text);
 }
 
@@ -879,22 +906,22 @@ function exportFeaturesReply(lang = 'id') {
     ? [
         '**NusaBridge Export Features for Indonesian Exporters:**',
         '',
-        '1. **Export Catalog Showcase**: Displays commodities with international lab specifications, customs HS codes, and global reference prices.',
-        '2. **RFQ Studio & AI Parser**: Processes overseas buyer inquiries into standardized Incoterms 2020 quotations (FOB/CIF).',
-        '3. **Auto-PDF Generator**: Automatically drafts legal trade paperwork (Proforma Invoices and Sales Contracts under ICC rules).',
-        '4. **KYC Hub Regulatory Screener**: Validates 13-digit OSS NIB and audits compliance for destination markets (FDA USA, EUDR Europe, JAS Japan, Halal UAE).',
-        '5. **Escrow Vault Milestone Protection**: Eliminates buyer default risk with 4-phase milestone payouts (30% contract, 30% PEB/stuffing, 20% B/L, 20% arrival).',
-        '6. **Maritime AIS Radar**: Tracks oceanic cargo vessel trajectories from Indonesian ports to destination terminals worldwide.'
+        '1. **Export Catalog Showcase**: Displays commodities with specifications, customs HS codes, MOQ, and USD reference prices from the catalog.',
+        '2. **RFQ Studio**: Records a structured quotation request with quantity, Incoterms 2020 (FOB/CIF/CNF/EXW), and destination port. It saves the request as "submitted — awaiting review"; it does not send offers to suppliers or run negotiations.',
+        '3. **Auto-PDF Generator**: Creates printable/copyable draft Proforma Invoice and Sales Contract documents. These are drafts for review, not officially verified or legally binding documents.',
+        '4. **KYC Hub**: Simulates a NIB/NPWP format check and shows an educational destination-country checklist (for example FDA USA, EUDR Europe, JAS Japan, Halal UAE). It is not official OSS, Customs, or foreign-authority verification.',
+        '5. **Escrow Vault Simulation**: Explains a 4-phase payout scenario (30% contract, 30% PEB/stuffing, 20% B/L, 20% arrival). The website does not process real payments or hold funds.',
+        '6. **Transport & Tracking Pages**: The Transport page estimates multimodal routes, cost, and ETA from your input; the Tracking page shows shipment progress from demo data, not live GPS or carrier status.'
       ].join('\n')
     : [
         '**Fitur Ekspor NusaBridge untuk Eksportir Indonesia:**',
         '',
-        '1. **Showcase Katalog Ekspor**: Menampilkan komoditas Anda dengan standar spesifikasi internasional, kode HS kepabeanan, dan harga acuan pasar global.',
-        '2. **RFQ Studio & AI Parser**: Menerima inquiry buyer luar negeri dan menyusun penawaran resmi terstruktur sesuai Incoterms 2020 (FOB/CIF).',
-        '3. **Auto-PDF Generator**: Menerbitkan instan draf dokumen ekspor legal berstandar ICC (Proforma Invoice dan Sales Contract siap cetak/unduh).',
-        '4. **KYC Hub Regulatory Screener**: Memvalidasi NIB 13 digit OSS RBA dan mengecek kesiapan regulasi ekspor ke negara tujuan (FDA USA, EUDR Eropa, JAS Jepang, Halal UEA).',
-        '5. **Escrow Vault Milestone Protection**: Mencegah risiko gagal bayar dengan simulasi pencairan dana bertahap 4 fase (30% kontrak disepakati, 30% stuffing kargo & PEB, 20% penerbitan Bill of Lading, 20% kargo tiba).',
-        '6. **Radar Maritim AIS**: Memantau pergerakan rute kapal kargo trans-samudera dari pelabuhan muat Indonesia ke pelabuhan tujuan buyer.'
+        '1. **Showcase Katalog Ekspor**: Menampilkan komoditas dengan spesifikasi, kode HS kepabeanan, MOQ, dan harga acuan USD dari katalog.',
+        '2. **RFQ Studio**: Mencatat permintaan penawaran terstruktur berisi jumlah, Incoterms 2020 (FOB/CIF/CNF/EXW), dan pelabuhan tujuan. RFQ tersimpan dengan status "Diajukan — menunggu peninjauan"; website tidak mengirim penawaran ke pemasok atau menjalankan negosiasi.',
+        '3. **Auto-PDF Generator**: Membuat draf Proforma Invoice dan Sales Contract yang dapat dicetak atau disalin. Ini draf untuk ditinjau, bukan dokumen resmi terverifikasi atau berkekuatan hukum.',
+        '4. **KYC Hub**: Simulasi pemeriksaan format NIB/NPWP dan menampilkan checklist edukatif standar negara tujuan (misalnya FDA USA, EUDR Eropa, JAS Jepang, Halal UEA). Ini bukan verifikasi resmi OSS, Bea Cukai, atau otoritas negara tujuan.',
+        '5. **Simulasi Escrow Vault**: Menjelaskan skenario pencairan 4 fase (30% kontrak, 30% PEB/stuffing, 20% B/L, 20% tiba). Website tidak memproses pembayaran atau menyimpan dana sungguhan.',
+        '6. **Halaman Transportasi & Pelacakan**: Halaman Transportasi memperkirakan rute multimoda, biaya, dan ETA dari input Anda; halaman Pelacakan menampilkan progres pengiriman dari data demo, bukan GPS langsung atau status ekspedisi.'
       ].join('\n');
 }
 
@@ -903,22 +930,54 @@ function importFeaturesReply(lang = 'id') {
     ? [
         '**NusaBridge Import Features for Global Importers:**',
         '',
-        '1. **50 Curated Commodities Catalog**: Explore Indonesian export commodities (Specialty Coffee, Spices, Rattan/Wood Crafts, Textiles) with lab parameters and MOQ.',
-        '2. **Structured RFQ Generator**: Submit formal quotation requests with selected quantities, Incoterms (FOB, CIF, CNF, EXW), and destination ports.',
-        '3. **Compliance & Standards Verification**: Ensure Indonesian exporters meet the safety, quarantine, and import criteria of your country.',
-        '4. **Instant Legal Trade Drafts**: Receive standardized Proforma Invoices and Sales Contracts with clear ICC trade and arbitration clauses.',
-        '5. **Escrow Vault Fund Protection**: Your payments remain safely locked in escrow and are only released to suppliers upon validated shipping documents (B/L) and confirmed port arrival.',
-        '6. **Container Vessel Telemetry**: Track the exact position of your cargo vessel in real time using the Maritime AIS Radar.'
+        '1. **50 Curated Commodities Catalog**: Explore Indonesian export commodities (Specialty Coffee, Spices, Rattan/Wood Crafts, Textiles) with specifications, HS codes, MOQ, and USD reference prices.',
+        '2. **Structured RFQ Generator**: Submit a quotation request with product, quantity, Incoterms (FOB, CIF, CNF, EXW), and destination port. The RFQ is recorded as submitted and awaits review.',
+        '3. **Compliance Checklist**: Review educational destination-country requirements (FDA USA, EUDR Europe, JAS Japan, Halal UAE) through the KYC Hub simulation. Always confirm final requirements with the official authority.',
+        '4. **Trade Document Drafts**: Generate Proforma Invoice and Sales Contract drafts through Auto-PDF. These are drafts, not legally binding contracts or official documents.',
+        '5. **Escrow Vault Simulation**: Learn how a 4-phase milestone payout would work (30/30/20/20). The website does not hold or release real funds.',
+        '6. **Transport & Tracking Simulations**: Estimate multimodal routes, cost, and ETA on the Transport page, and view sample shipment progress on the Tracking page. Neither page shows live vessel position or real-time AIS.'
       ].join('\n')
     : [
         '**Fitur Impor NusaBridge untuk Importir Global:**',
         '',
-        '1. **Katalog 50 Komoditas Unggulan**: Telusuri komoditas kurasi (Kopi Specialty, Rempah Nusantara, Kerajinan Anyaman/Kayu, Tekstil Wastra) dengan rincian kadar air, kadar abu, sertifikasi, dan MOQ.',
-        '2. **Pengajuan RFQ Terstruktur**: Ajukan permintaan penawaran resmi dalam hitungan detik dengan memilih produk, kuantitas, Incoterms (FOB, CIF, CNF, EXW), dan pelabuhan tujuan kargo.',
-        '3. **Verifikasi Kepatuhan Standar**: Pastikan pemasok dan produk memenuhi standar mutu serta karantina yang dipersyaratkan oleh negara Anda.',
-        '4. **Draf Kontrak Perdagangan Instan**: Dapatkan draf Proforma Invoice dan Sales Contract berkekuatan hukum dengan klausul ICC dan arbitrase internasional.',
-        '5. **Proteksi Dana Escrow Vault**: Dana pembayaran Anda aman di rekening escrow multi-valas dan hanya dicairkan kepada penjual setelah dokumen pengapalan resmi (B/L) terbit dan barang terverifikasi tiba.',
-        '6. **Pelacakan Telemetri Kontainer**: Pantau posisi kapal kargo pengangkut kontainer pesanan Anda secara transparan melalui Radar Maritim AIS.'
+        '1. **Katalog 50 Komoditas Unggulan**: Telusuri komoditas kurasi (Kopi Specialty, Rempah Nusantara, Kerajinan Anyaman/Kayu, Tekstil Wastra) dengan spesifikasi, kode HS, MOQ, dan harga acuan USD.',
+        '2. **Pengajuan RFQ Terstruktur**: Ajukan permintaan penawaran dengan produk, jumlah, Incoterms (FOB, CIF, CNF, EXW), dan pelabuhan tujuan. RFQ tercatat sebagai diajukan dan menunggu peninjauan.',
+        '3. **Checklist Kepatuhan**: Tinjau persyaratan edukatif negara tujuan (FDA USA, EUDR Eropa, JAS Jepang, Halal UEA) melalui simulasi KYC Hub. Selalu konfirmasikan persyaratan final ke otoritas resmi.',
+        '4. **Draf Dokumen Perdagangan**: Buat draf Proforma Invoice dan Sales Contract melalui Auto-PDF. Ini draf, bukan kontrak berkekuatan hukum atau dokumen resmi.',
+        '5. **Simulasi Escrow Vault**: Pelajari gambaran pencairan 4 fase (30/30/20/20). Website tidak menyimpan atau melepas dana sungguhan.',
+        '6. **Simulasi Transportasi & Pelacakan**: Perkirakan rute multimoda, biaya, dan ETA di halaman Transportasi, serta lihat contoh progres pengiriman di halaman Pelacakan. Tidak ada posisi kapal langsung atau AIS real-time.'
+      ].join('\n');
+}
+
+function comparisonReply(lang = 'id') {
+  return lang === 'en'
+    ? [
+        '**Export vs Import — key differences:**',
+        '',
+        '| Aspect | Export | Import |',
+        '| --- | --- | --- |',
+        '| Direction | Goods leave Indonesia to a destination country | Goods enter Indonesia from a foreign supplier |',
+        '| Main actor | Indonesian exporter (seller) | Indonesian importer or global buyer |',
+        '| Core documents | Commercial Invoice, Packing List, PEB, B/L or AWB, COO, plus destination certificates | Commercial Invoice, Packing List, PIB, B/L or AWB, COO, plus import permits |',
+        '| Customs authority | Indonesian Customs (export declaration) and the destination customs | Indonesian Customs (import declaration) and related agencies |',
+        '| Tax/duty focus | Generally export duties only for specific commodities; destination taxes depend on the buyer\'s country | Import duty, VAT (PPN), income tax (PPh 22), and excise for certain goods |',
+        '| Risk focus | Buyer payment risk, destination compliance, shipping delay | Supplier quality, document accuracy, duty/tax calculation, restricted goods |',
+        '',
+        'On NusaBridge, the **Products** page and RFQ flow support export inquiries, while the **Domestic** page handles Rupiah trade between Indonesian SMEs. Use the **KYC Hub** for an educational compliance checklist and the **Auto-PDF** tab for document drafts. Final calculations and requirements must be confirmed with Customs/INSW and the relevant authority.'
+      ].join('\n')
+    : [
+        '**Ekspor vs Impor — perbedaan utama:**',
+        '',
+        '| Aspek | Ekspor | Impor |',
+        '| --- | --- | --- |',
+        '| Arah barang | Barang keluar dari Indonesia ke negara tujuan | Barang masuk ke Indonesia dari pemasok luar negeri |',
+        '| Pelaku utama | Eksportir Indonesia (seller) | Importir Indonesia atau buyer global |',
+        '| Dokumen inti | Commercial Invoice, Packing List, PEB, B/L atau AWB, COO, plus sertifikat negara tujuan | Commercial Invoice, Packing List, PIB, B/L atau AWB, COO, plus izin impor |',
+        '| Otoritas pabean | Bea Cukai Indonesia (deklarasi ekspor) dan pabean negara tujuan | Bea Cukai Indonesia (deklarasi impor) dan instansi terkait |',
+        '| Fokus pajak/bea | Umumnya bea ekspor hanya untuk komoditas tertentu; pajak tujuan bergantung negara buyer | Bea masuk, PPN, PPh 22, dan cukai untuk barang tertentu |',
+        '| Fokus risiko | Risiko pembayaran buyer, kepatuhan negara tujuan, keterlambatan kirim | Kualitas pemasok, akurasi dokumen, hitungan bea/pajak, barang dibatasi |',
+        '',
+        'Di NusaBridge, halaman **Produk** dan alur RFQ mendukung permintaan ekspor, sedangkan halaman **Domestik** menangani jual-beli Rupiah antarsesama UMKM. Gunakan **KYC Hub** untuk checklist kepatuhan edukatif dan tab **Auto-PDF** untuk draf dokumen. Perhitungan dan persyaratan final harus dikonfirmasi ke Bea Cukai/INSW dan otoritas terkait.'
       ].join('\n');
 }
 
@@ -965,11 +1024,11 @@ function generalWebsiteReply(text, lang = 'id') {
         'NusaBridge is an all-in-one trade facilitation and education platform for Indonesian SME export-import:',
         '- **Product Catalog** — 50 curated commodities (Coffee, Spices, Crafts, Textiles) with lab parameters and HS codes.',
         '- **Domestic Trade** — buy/sell between Indonesian SMEs in Rupiah with local/inter-island shipping, 11% VAT, 4-phase escrow, PO/Invoice/Delivery Note/BAST documents, seller listings, and order history.',
-        '- **RFQ Studio** — converts buyer inquiries into structured Incoterms 2020 quotations.',
-        '- **Auto-PDF Generator** — instantly drafts Proforma Invoices, Sales Contracts, and PEB drafts.',
-        '- **KYC Hub** — validates 13-digit NIB OSS and screens compliance for USA (FDA), EU (EUDR), Japan (JAS), and UAE (Halal BPJPH).',
-        '- **Escrow Vault** — simulates a 4-phase milestone payout (30% contract, 30% PEB, 20% B/L, 20% arrival) for safe transactions.',
-        '- **Maritime Radar** — tracks cargo vessel routes and telemetries across trans-oceanic voyages.',
+        '- **RFQ Studio** — records a structured quotation request with Incoterms 2020, quantity, and destination port.',
+        '- **Auto-PDF Generator** — drafts Proforma Invoices and Sales Contracts for review and printing.',
+        '- **KYC Hub** — simulates a NIB/NPWP format check and shows an educational compliance checklist for USA (FDA), EU (EUDR), Japan (JAS), and UAE (Halal).',
+        '- **Escrow Vault** — explains a 4-phase milestone payout simulation (30% contract, 30% PEB, 20% B/L, 20% arrival). No real funds are processed.',
+        '- **Transport & Tracking** — estimates multimodal routes, cost, and ETA, and shows sample shipment progress from demo data (not live AIS or GPS).',
         '',
         'You can ask specifically about product specifications, the export/import workflow, exporter vs importer roles, or step-by-step document guidance!'
       ].join('\n')
@@ -979,11 +1038,11 @@ function generalWebsiteReply(text, lang = 'id') {
         'NusaBridge adalah platform fasilitasi perdagangan dan edukasi ekspor-impor terpadu untuk UMKM Indonesia:',
         '- **Katalog Produk** — 50 komoditas ekspor kurasi (Kopi, Rempah, Kriya, Tekstil) lengkap dengan spesifikasi lab dan kode HS.',
         '- **Perdagangan Domestik** — jual-beli antarsesama UMKM Indonesia dalam Rupiah dengan ongkir lokal/antarpulau, PPN 11%, escrow 4 fase, dokumen PO/Invoice/Surat Jalan/BAST, listing penjual, dan riwayat pesanan.',
-        '- **RFQ Studio** — mengubah permintaan buyer menjadi kuotasi terstruktur berstandar Incoterms 2020.',
-        '- **Auto-PDF Generator** — menerbitkan draf resmi Proforma Invoice dan Sales Contract siap cetak.',
-        '- **KYC Hub** — memvalidasi NIB 13 digit OSS RBA dan memeriksa kepatuhan standar USA (FDA), Uni Eropa (EUDR), Jepang (JAS), dan UEA (Halal BPJPH).',
-        '- **Escrow Vault** — simulasi pencairan dana 4 tahap (30% kontrak, 30% PEB, 20% B/L, 20% tiba) untuk mencegah risiko gagal bayar.',
-        '- **Radar Maritim** — pelacakan rute dan telemetri AIS kapal kargo internasional.',
+        '- **RFQ Studio** — mencatat permintaan penawaran terstruktur dengan Incoterms 2020, jumlah, dan pelabuhan tujuan.',
+        '- **Auto-PDF Generator** — membuat draf Proforma Invoice dan Sales Contract untuk ditinjau dan dicetak.',
+        '- **KYC Hub** — simulasi pemeriksaan format NIB/NPWP dan checklist kepatuhan edukatif untuk USA (FDA), Uni Eropa (EUDR), Jepang (JAS), dan UEA (Halal).',
+        '- **Escrow Vault** — menjelaskan simulasi pencairan dana 4 tahap (30% kontrak, 30% PEB, 20% B/L, 20% tiba). Tidak ada dana sungguhan yang diproses.',
+        '- **Transportasi & Pelacakan** — memperkirakan rute multimoda, biaya, dan ETA, serta menampilkan contoh progres pengiriman dari data demo (bukan AIS atau GPS langsung).',
         '',
         'Silakan tanyakan langkah spesifik yang ingin Anda ketahui: cara pesan di katalog, panduan alur ekspor/impor, kegunaan akun seller/buyer, atau ketentuan dokumen perdagangan!'
       ].join('\n');
@@ -1012,6 +1071,9 @@ function detectIntent(message, products = FALLBACK_PRODUCTS) {
   }
   if (/(siapa|siapakah|tim|asal).*(pembuat|pengembang|bikin|buat|dibuat|developer|pencipta)|(pembuat|pengembang|bikin|buat|dibuat|developer|pencipta).*(siapa|siapakah)|arjika|antartika/i.test(text)) {
     return 'developer';
+  }
+  if (/(beda|perbedaan|difference|versus|vs\.?|dibandingkan|compared).*?(ekspor|impor|export|import)|(ekspor|impor|export|import).*?(beda|perbedaan|difference|versus|vs\.?|dibandingkan|compared)/i.test(text)) {
+    return 'comparison';
   }
   if (/(peran|role|seller|buyer|eksportir|importir|akun eksportir|akun importir|beda seller|difference between seller)/i.test(text)) {
     return 'roles';
@@ -1128,6 +1190,8 @@ function buildFallbackReply({
       return activeRef?.answer || exportFeaturesReply(lang);
     case 'import-features':
       return activeRef?.answer || importFeaturesReply(lang);
+    case 'comparison':
+      return comparisonReply(lang);
     case 'developer':
       return activeRef?.answer || developerReply(lang);
     case 'roles':
@@ -1213,7 +1277,7 @@ CORE PRINCIPLES:
 MANDATORY RULES:
 1. Answer ONLY the user's latest question directly and concisely. Do not go off-topic or repeat the question.
 2. Scope: NusaBridge website (pages, export/import features, account roles seller/buyer, RFQ flow, Auto-PDF, KYC Hub, Escrow Vault, pricing plans, commodity catalog) and general international trade for export-import.
-3. NEVER answer off-topic questions (recipes, coding, gossip, movies/games, sports, politics, health/medicine, math/general science, or AI theory). Politely refuse in 1-2 sentences and redirect to export-import or NusaBridge website topics. DO NOT answer the off-topic content.
+3. Off-topic guardrail: refuse questions that are clearly unrelated (recipes, general coding, gossip, movies/games, sports, non-trade politics, personal health/medicine, general math/science, or AI theory). IMPORTANT EXCEPTION: if a question uses such words but is clearly about export-import, logistics, UMKM, trade regulation, shipping, or the NusaBridge website (for example "how do I calculate the FOB price", "coffee export requirements to Japan", "weather delays at the Port of Rotterdam", or "government export regulation"), it IS in scope — answer it with trade context.
 4. If asked "can I chat freely?" or similar, respond that yes you can discuss anything related to NusaBridge website and export-import, and give examples.
 5. Do not invent features, menus, transaction status, prices, stock, regulations, or product data. Use only website facts and catalog data below. If unavailable, say it's not available.
 6. NusaBridge is a trade facilitation and education platform - not a direct seller, commodity producer, bank, or customs authority. Auto-PDF, KYC Hub, Escrow Vault are draft/simulation modules for education.
@@ -1239,7 +1303,7 @@ PRINSIP UTAMA:
 ATURAN WAJIB:
 1. Jawab HANYA pertanyaan terbaru pengguna secara langsung, padat, dan akurat. Jangan membahas di luar pertanyaan. Jangan mengulang pertanyaan.
 2. Cakupan: website NusaBridge (halaman, fitur ekspor/impor, peran akun seller/buyer, alur RFQ, Auto-PDF, KYC Hub, Escrow Vault, paket harga, katalog komoditas) dan tata niaga umum ekspor-impor internasional.
-3. JANGAN PERNAH menjawab pertanyaan di luar cakupan (resep masakan, koding, gosip, film/game, olahraga, politik, kesehatan/obat, matematika/sains umum, teori AI). Jika ditanya, tolak tegas dan sopan dalam 1-2 kalimat serta tawarkan topik perdagangan ekspor-impor atau website NusaBridge. JANGAN jawab isi pertanyaan luar cakupan.
+3. Batas topik: tolak pertanyaan yang benar-benar tidak berkaitan (resep masakan, koding umum, gosip, film/game, olahraga, politik non-perdagangan, kesehatan/obat pribadi, matematika/sains umum, atau teori AI). PENTING — PENGECUALIAN: jika pertanyaan memakai kata tersebut tetapi jelas membahas ekspor-impor, logistik, UMKM, regulasi perdagangan, pengiriman, atau website NusaBridge (misalnya "bagaimana menghitung harga FOB", "syarat ekspor kopi ke Jepang", "cuaca di Pelabuhan Rotterdam memengaruhi pengiriman", atau "regulasi pemerintah untuk ekspor"), pertanyaan itu MASUK cakupan — jawab dengan konteks perdagangan.
 4. Jika ditanya "bisa chat bebas?", jawab ramah bahwa bisa bertanya seputar website NusaBridge dan ekspor-impor, berikan contoh topik.
 5. Jangan mengarang fitur, menu, status transaksi, harga, stok, regulasi, atau data produk. Gunakan hanya fakta website dan data katalog. Jika tidak ada, katakan tidak tersedia.
 6. NusaBridge adalah platform fasilitasi perdagangan dan edukasi, bukan penjual langsung, produsen komoditas, bank, atau otoritas pabean. Auto-PDF, KYC Hub, Escrow Vault adalah modul draf dan simulasi edukatif.
@@ -1275,4 +1339,5 @@ module.exports = {
   buildSystemPrompt,
   getPageLabel,
   offTopicReply,
+  comparisonReply,
 };
